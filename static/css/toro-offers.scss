@@ -1,0 +1,270 @@
+
+
+
+.slide-img {
+   display: flex !important;
+   justify-content: center;
+   height: auto !important;
+   max-height: 500px;
+  align-items: flex-start;
+
+  img {
+    max-height: 375px;
+     max-width: 100%;
+   }
+ }
+
+.slide-nav-img {
+  display: flex !important;
+  justify-content: center;
+  height: 100px !important;
+  max-height: 100px;
+  width: auto !important;
+  margin-left: 10px;
+
+  img {
+    max-height: 100px;
+    width: auto !important;
+  }
+}
+
+.item-nav {
+  width: 64px;
+  height: auto;
+}
+
+.submenu {
+  display: none;
+}
+
+.showSubmenu {
+  &:hover {
+    .submenu {
+      display: block;
+    }
+  }
+}
+
+//.slick-slide {
+//  margin-left: 0;
+//  margin-right: 20px;
+//}
+
+
+.img-fluid {
+  width: auto;
+  max-width: 100%;
+}
+
+.max-height-img {
+  max-height: 250px;
+}
+
+.icon-small {
+  max-height: 24px;
+}
+
+.comming-soon {
+  font-size: 8px;
+  font-weight: 700;
+}
+
+.payment {
+  &__add {
+    .card-body {
+      padding: 1.25rem;
+    }
+
+    .btn {
+      margin: 0;
+    }
+
+    .card-footer {
+      border-top: none;
+      padding-top: 0;
+      padding-bottom: 1.25rem;
+    }
+  }
+
+  &__view {
+    .card-body {
+      padding: 1.25rem 0;
+    }
+  }
+}
+
+.description {
+  height: 100%;
+  overflow-y: scroll;
+  border: 1px solid  #9373d8;
+  padding: 10px 20px;
+  border-radius: 5px;
+
+  p {
+    margin-bottom: 0;
+  }
+}
+
+.offers {
+  &_item {
+    .card {
+      &-header {
+        padding: 1.5rem 1.5rem 0;
+      }
+
+      &-body {
+        padding: 1rem 1.5rem;
+      }
+
+      &-footer {
+        border: none;
+        padding: 0 1.5rem 1.5rem;
+      }
+    }
+
+    .description {
+      height: 200px;
+      overflow-y: scroll;
+      border: 1px solid  #9373d8;
+      padding: 10px 20px;
+      border-radius: 5px;
+
+      p {
+        margin-bottom: 0;
+      }
+    }
+
+    .description__title {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 16px;
+    }
+
+    .engagement {
+      width: 100%;
+      padding: 10px 20px;
+      line-height: normal;
+    }
+
+    &__header {
+      line-height: 11px;
+      font-size: 8px;
+      color: #9B9B9B;
+
+      &:last-child {
+        margin-top: 4px;
+        font-size: 12px;
+      }
+    }
+
+
+    .simple-gallery {
+      margin-bottom: 16px;
+
+      .large-image {
+        width: 100% !important;
+        max-height: 0 !important;
+        height: 0 !important;
+        border-radius: 0.25rem;
+        padding: 0px 0px 65%;
+        margin-bottom: 24px;
+      }
+
+      .thmb-wrap {
+        display: flex !important;
+        flex-direction: row;
+      }
+
+      .thumbnails {
+        margin-right: 16px;
+
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+
+      .gallery-item {
+        width: 100% !important;
+        max-height: 0 !important;
+        height: 0 !important;
+        border-radius: 0.25rem;
+        padding: 0px 0px 65%;
+      }
+
+      .active {
+        border: none;
+      }
+    }
+
+    .social {
+      padding-top: 8px;
+      display: flex;
+      align-items: center;
+
+      span:first-child {
+        margin-left: 8px;
+      }
+
+      a:first-child {
+        margin-left: 8px;
+      }
+
+      .fa {
+        margin-right: 3px;
+      }
+    }
+
+    &__profile-thumb {
+      max-height: 50px;
+      margin-right: 8px;
+    }
+
+    &__footer {
+      border-top: 1px solid #D8D8D8;
+    }
+
+    hr {
+      margin: 12px 0;
+      border: 0.5px solid #D8D8D8;
+    }
+
+    &__categories {
+      background-color: #E5E5E5;
+      padding: 0.35rem;
+      display: block;
+      margin-top: 0.5rem;
+      width: fit-content;
+      border-radius: 0.25rem;
+      margin-right: 5px;
+      font-size: 14px;
+    }
+
+    &__title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 12px;
+      padding: 8px 0;
+      font-family: Rubik, sans-serif;
+      font-weight: bold;
+      line-height: 17px;
+      font-size: 14px;
+      color: #6495ED;
+      border-bottom: 1px solid #D8D8D8;
+      word-break: break-all;
+    }
+  }
+}
+
+// arrangements - constant height
+
+.arrangements__container, .arrangements {
+  height: 48px;
+  overflow-y: scroll;
+}
+
+
+.categories__container, .categories {
+  height: 106px;
+  overflow-y: scroll;
+}

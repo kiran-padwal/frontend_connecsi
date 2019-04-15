@@ -1,0 +1,900 @@
+{% if session['type'] == 'brand' %}
+{% extends 'admin_layout.html' %}
+{% elif session['type'] == 'influencer' %}
+{% extends 'dashboard_layout_inf.html' %}
+{% endif %}
+{{ super() }}
+{% set glob={} %}
+{% block body %}
+
+
+{% set _ = glob.update({'from_email_id' : full_conv['data'][0]['from_email_id']}) %}
+{% set _ = glob.update({'channel_id' : full_conv['data'][0]['channel_id']}) %}
+{% set _ = glob.update({'message_id' : full_conv['data'][0]['message_id']}) %}
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="content-header">Messages - Inbox</div>
+        <p class="content-sub-header"></p>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="card-block padding-top-normal">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="email-search-box w-100 bg-white pb-2">
+                                <div class="media">
+                                    <div class="media-body">
+                                        <input type="text" class="form-control"
+                                               placeholder="search for emails">
+                                    </div>
+                                    <a href="#" class="email-app-sidebar-toggle font-medium-1 mr-2 d-xl-none">
+                                        <i class="fa fa-caret-square-right"></i>
+                                        <i class="fa fa-caret-square-left"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if  glob.from_email_id != session['email_id']  %}
+                    <div class="email-application" id="email-application" data-email="true">
+                        {% else %}
+                        <div class="email-application" id="email-application" data-email="false">
+                            {% endif %}
+                            {% if  glob.from_email_id != 'business@connecsi.com'  %}
+                            <div class="email-app-content">
+                                {% else %}
+                                <div class="email-app-content w-100">
+                                    {% endif %}
+                                    <div class="email-app-content-area w-100">
+                                        <div class="email-app-list-mails p-0">
+                                            <div class="email-app-list">
+                                                <div id="users-list">
+                                                    <div class="list-group">
+                                                        <div class="users-list-padding">
+                                                            {% for item in inbox['data'] %}
+                                                            <a id="message{{ item['message_id'] }}" href="/inbox/{{ item['message_id'] }}" class="list-group-item list-group-item-url list-group-item-action no-border">
+                                    <span class="media">
+                                        <span class="avatar avatar-md mr-2">
+                                            {% if item['img'] %}
+                                            <img class="media-object rounded-circle" src="static/app-assets/img/portrait/small/avatar-s-7.png" alt="Generic placeholder image">
+                                            {% else %}
+                                            <span class="media-object rounded-circle text-circle d-flex mr-2 justify-content-center align-items-center bg-blue">{{ item['from_email_id'][0] }}</span>
+                                            {% endif %}
+                                        </span>
+                                        <div class="media-body">
+                                            <h6 class="list-group-item-heading text-bold-500">{{ item['first_name'] }}</h6>
+                                            <span class="font-small-2 primary text-bold-300">{{ item['date'] }}</span>
+                                            <p class="list-group-item-text text-truncate text-bold-300">
+                                                {{ item['subject']|striptags|truncate(32, False, '...', 0) }}
+                                            </p>
+                                            <div class="list-group-item-text text-truncate font-small-1 text-bold-300">{{ item['message']|safe|striptags|truncate(32, False, '...', 0) }}</div>
+                                        </div>
+                                    </span>
+                                                            </a>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="email-app-mail-content">
+                                            <div class="email-app-mail-content-detail">
+                                                <div class="email-app-title">
+                                                    <button class="btn btn-raised btn-primary back-to-inbox font-medium-1 w-100">
+                                                        <i class="fa fa-angle-left"></i> Back to inbox</button>
+                                                    <h3 class="list-group-item-heading">{{ conv_title }}</h3>
+                                                    <p class="list-group-item-text">
+                            <span class="primary">
+                                <span class="badge badge-primary">{{ glob.from_email_id}}</span>
+                            </span>
+                                                    </p>
+                                                </div>
+                                                <div class="media-list">
+                                                    {% for item in full_conv['data'] %}
+                                                    <div id="headingCollapse{{ item['collapse_id'] }}" class="card-header p-0">
+                                                        <a data-toggle="collapse" href="#collapse{{ item['collapse_id'] }}" aria-expanded="false"
+                                                           aria-controls="collapse{{ item['collapse_id'] }}"
+                                                           class="email-app-sender list-group-item list-group-item-action no-border collapsed">
+
+                                                            <div class="media">
+                                    <span class="avatar avatar-md mr-2">
+                                            {% if item['img'] %}
+                                            <img class="media-object rounded-circle" src="static/app-assets/img/portrait/small/avatar-s-7.png" alt="Generic placeholder image">
+                                            {% else %}
+                                            <span class="media-object rounded-circle text-circle d-flex mr-2 justify-content-center align-items-center bg-purple">{{ item['from_email_id'][0] }}</span>
+                                            {% endif %}
+                                    </span>
+                                                                <div class="media-body">
+                                                                    <h6 class="list-group-item-heading text-bold-500">{{ item['first_name'] }}</h6>
+                                                                    <p class="list-group-item-text text-bold-300">
+                                                                        {{ item['subject']|striptags|truncate(35, False, '...', 0) }}
+                                                                        <span class="float-right">
+                                                {% if item['to_email_id'] == session['email_id'] %}
+                                                <button class="reply-message transparent-btn color2" data-modal-target="#replyMessage" data-from-email-id="{{ item['from_email_id'] }}" data-subject="{{ item['subject'] }}">
+                                                    <i class="fa fa-reply mr-1"></i>
+                                                </button>
+                                                {% endif %}
+                                                {% if  glob.from_email_id != 'business@connecsi.com'  %}
+                                                <button class="delete-message transparent-btn hover-color1" href="#" data-location="/delete/{{ item['message_id'] }}/{% if item['conv_id'] %}{{ item['conv_id'] }}{% else %}{% set number = 0 | int %}{{ number }}{% endif %}/{{ session['user_id'] }}'" class="#">
+                                                    <img src="/static/icons/delete.png" class="img-icon" alt="">
+                                                </button>
+                                                {% endif %}
+                                            </span>
+                                                                    </p>
+                                                                    <span class="float-left text muted text-bold-300">{{ item['date'] }}</span>
+                                                                </div>
+                                                            </div>
+
+                                                        </a>
+                                                    </div>
+                                                    <div id="collapse{{ item['collapse_id'] }}" role="tabpanel" aria-labelledby="headingCollapse{{ item['collapse_id'] }}"
+                                                         class="card-collapse collapse" aria-expanded="false">
+                                                        <div class="card-body">
+                                                            <div class="card-block text-bold-300">
+                                                                {{ item['message']|safe }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% if  glob.from_email_id != 'business@connecsi.com'  %}
+                            <div class="email-app-sidebar hide">
+                                <h5 class="w-100 text-bold-500">Campaigns
+                                    {% if glob.message_id %}
+                                    {% if  glob.from_email_id == session['email_id']  %}
+                                    <a href="#" data-toggle="modal" data-target="#campaignList" data-backdrop="true" class="color1 float-right add-campaign" data-channel-id="{{ glob.channel_id }}" data-message-id="{{ glob.message_id }}"><i class="fa fa-plus-circle"></i></a>
+                                    {% endif %}
+                                    {% endif %}
+                                </h5>
+                                <div class="campaign-list-container">
+                                    <ul class="campaign-list" id="campaignNameList"></ul>
+                                </div>
+                                <div class="tabs-container">
+                                    <ul class="tabs">
+                                        <li class="tab width-1/3 active"><a class="active-border left-border-round"
+                                                                            href="#tab-proposal">Proposals</a></li>
+                                        <li class="tab width-1/3"><a class="active-border no-border-round"
+                                                                     href="#tab-agreements">Agreements</a></li>
+                                        <li class="tab width-1/3"><a class="active-border right-border-round"
+                                                                     href="#tab-files">Files</a></li>
+                                    </ul>
+                                    <div class="tabs-content tabs-content-messages">
+                                        <div class="tabs-content-item active" id="tab-proposal">
+                                            {% if glob.message_id %}
+                                            {% if  glob.from_email_id == session['email_id']  %}
+                                            <button class="btn btn-raised btn-primary bg-color1 w-100" data-toggle="modal" data-target="#proposal" data-backdrop="true">New Proposal</button>
+                                            {% endif %}
+                                            {% endif %}
+                                            <div class="messages-tab-list-container">
+                                                <ul class="tab-list"></ul>
+                                            </div>
+                                        </div>
+                                        <div class="tabs-content-item" id="tab-agreements">
+                                            <form method="POST" action="/uploadMessageAgreements" name="message_agreements_form" id="message_agreements_form" enctype="multipart/form-data">
+                                                <div>
+                                                    <input type="hidden" name="message_id" value="{{ glob.message_id }}">
+                                                    <input type="hidden" name="channel_id" value="{{ glob.channel_id }}">
+                                                    <!--<input  type="file" name="message_agreements" id="message_agreements1" class="message_agreements" required>-->
+                                                    <label class="agreement_file_input btn btn-raised btn-primary bg-color1 w-100 custom-file-upload">
+                                                        Add Agreement
+                                                        <input type="file" name="message_agreements"  class="message_agreements" required>
+                                                    </label>
+                                                    <br class="displayMessageAgreements">
+                                                    <button type="submit" class="btn-info btn btn-sm">Upload Agreement</button>
+                                                </div>
+                                            </form>
+                                            <div class="messages-tab-list-container">
+                                                <ul class="tab-list"></ul>
+                                            </div>
+                                        </div>
+                                        <div class="tabs-content-item" id="tab-files">
+                                            <form method="POST" action="/uploadMessageFiles" name="message_files_form" id="message_files_form" enctype="multipart/form-data">
+                                                <div>
+                                                    <input type="hidden" name="message_id" value="{{ glob.message_id }}">
+                                                    <input type="hidden" name="channel_id" value="{{ glob.channel_id }}">
+
+                                                    <label class="file_message_input btn btn-raised btn-primary bg-color1 w-100 custom-file-upload">
+                                                        Add File
+                                                        <input  type="file" name="message_files"  class="message_files" required>
+                                                    </label>
+                                                    <br class="displayMessageFiles">
+                                                    <button type="submit" class="btn-info btn btn-sm">Upload Files</button>
+                                                </div>
+                                            </form>
+                                            <div class="messages-tab-list-container">
+                                                <ul class="tab-list"></ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--<div id="campaignNameList"></div>-->
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+
+    {% block footer %}
+    <div class="modal fade" id="campaignList" role="dialog" data-backdrop="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <b class="modal-title">Campaign List</b>
+                    <button  type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <form name="add_campaign_to_message" id="add_campaign_to_message" action="/addCampaignsToMessage" method="POST">
+                    <input type="hidden" name="message_id" id="message_id" value="{{ glob.message_id }}">
+                    <input type="hidden" value="" name="channel_id" id="campaign_channel_id">
+                    <div class="modal-body">
+                        <div class="table-responsive-md" style="background-color: white;">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th scope="col"><b style="font-weight: 500; font-size:16px;">Select</b></th>
+                                    <th scope="col"><b style="font-weight: 500; font-size:16px;">Campaign</b></th>
+                                    <th scope="col"><b style="font-weight: 500; font-size:16px;">Status</b></th>
+                                    <th scope="col"><b style="font-weight: 500; font-size:16px;">Period</b></th>
+                                    <th scope="col"><b style="font-weight: 500; font-size:16px;">Channels</b></th>
+                                    <!--<th scope="col"><b style="font-weight: 500; font-size:16px;">Countries</b></th>-->
+                                    <th scope="col"><b style="font-weight: 500; font-size:16px;">Influencers</b></th>
+                                    <!--<th scope="col"><b style="font-weight: 500; font-size:16px;">Budget</b></th>-->
+                                    <!--<th scope="col"><b style="font-weight: 500; font-size:16px;">ROI</b></th>-->
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for item in view_campaign_data['data'] %}
+                                {% set channels_ids = [] %}
+                                {% for item1 in item['youtube_inf_data'] %}
+                                {{ channels_ids.append(item1['channel_id'])|default("", True) }}
+                                {% endfor %}
+                                <tr>
+                                    <td>
+                                        <div class="custom-control custom-checkbox custom-control-inline text-left">
+                                            <input type="checkbox" id="campaign_id{{ item['campaign_id'] }}"
+                                                   class="filled-in custom-control-input custom-control-input campaign_ids campaign_id{{ item['campaign_id'] }}"
+                                                   data-campaign-id="{{ item['campaign_id'] }}" type="checkbox"
+                                                   multiple value="{{ item['campaign_id'] }}" name="campaign_id">
+                                            <label class="custom-control-label campaignCheckbox"
+                                                   for="campaign_id{{ item['campaign_id'] }}"></label>
+                                        </div>
+                                    </td>
+                                    <td class="max-width-150"><a href="/viewCampaignDetails/{{ item['campaign_id'] }}">{{ item['campaign_name'] }}</a></td>
+                                    <td>Cell</td>
+                                    <td>{{ item['from_date'] }}- {{ item['to_date'] }}</td>
+                                    <td>
+                                        {% set channels = item['channels'].split(',') %}
+                                        {% for channel in channels %}
+                                        {% if channel == 'youtube' %}
+                                        <a href="#" class="fa fa-youtube red"></a>
+                                        {% elif channel == 'facebook' %}
+                                        <a href="#" class="fa fa-facebook blue"></a>
+                                        {% elif channel == 'twitter' %}
+                                        <a href="#" class="fa fa-twitter"></a>
+                                        {% elif channel == 'instagram' %}
+                                        <a href="#" class="fa fa-instagram pink"></a>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                    <!--<td>-->
+                                    <!--{% for region_name in item['region_name_list'] %}-->
+                                    <!--{{ region_name }},-->
+                                    <!--{% endfor %}-->
+                                    <!--</td>-->
+                                    <td>{{ item['no_of_influencers'] }}
+                                        <span class="float-right text muted">
+                                <!--<a onclick="searchInfluencers('{{ item['campaign_name'] }}','{{ item['campaign_id'] }}','{{ item['channels'] }}','{{ item['video_cat_name'] }}','{{ item['min_lower_followers'] }}','{{ item['max_upper_followers'] }}','{{ item['regions'] }}')" class="fa fa-user-plus black" data-toggle="modal" data-target="#create_alert_modal" data-tooltip="true" title="Add Influencer" style="font-size:20px;"></a>-->
+                                            <!--<button class="btn btn-sm btn-outline-secondary fa fa-user-plus"></button>-->
+                        </span>
+                                    </td>
+                                    <!--<td>{{ item['budget'] }} {{ item['currency'] }}</td>-->
+                                    <!--<td>Coming Soon</td>-->
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" id="addcampaigntomessage" class="btn btn-primary bg-color1">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Send message Modal form-->
+    <div class="modal fade" id="replyMessage" role="dialog"  data-backdrop="static">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <b class="modal-title">Reply</b>
+                    <button  type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <form name="create_alert_form" id="reply_message_form" action="/replyMessage" method="POST">
+                    <div class="modal-body">
+                        <input type="hidden" value="{{ glob.channel_id }}" name="channel_id" id="reply_channel_id">
+                        <input type="hidden" value="{{ glob.message_id }}" name="message_id" id="reply_message_id">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="to_email_id">*To:</label>
+                                    <input type="text" class="form-control" name="to_email_id" id="to_email_id" readonly>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="to_subject">*Subject:</label>
+                                    <input required type="text" class="form-control" id="to_subject" name="subject">
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="to_message">*Message:</label>
+                                    <textarea class="form-control" name="message" id="to_message"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit"  class="btn btn-primary bg-color1">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Campaign Proposal Modal-->
+    <div class="modal fade" id="proposal" role="dialog" data-backdrop="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <b class="modal-title">Proposal</b>
+                    <button  type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <form name="sent_proposal_form" id="sent_proposal_form" action="/sendProposal" method="POST" class="form">
+                    <div class="modal-body">
+                        <input type="hidden" name="message_id" value="{{ glob.message_id }}">
+                        <input type="hidden" name="channel_id" value="{{ glob.channel_id }}">
+                        <input type="hidden" name="influencer_id" value="">
+                        <!--<div>message id = {{ glob.message_id }} Channel id = {{ glob.channel_id }}</div>-->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="proposal_campaign_name">Select Campaign:</label>
+                                    <select class="form-control" id="proposal_campaign_name" name="campaign_id" data-channel-id="{{ glob.channel_id }}" required></select>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="proposal_description">Description:</label>
+                                    <input class="form-control" type="text"  name="proposal_description" id="proposal_description" required>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="proposal_from_date">From Date:</label>
+                                    <input type="text" class="form-control" name="proposal_from_date" id="proposal_from_date" readonly>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="proposal_to_date">To Date:</label>
+                                    <input type="text" class="form-control" name="proposal_to_date" id="proposal_to_date" readonly>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="proposal_to_date">Channels:</label>
+                                    <div id="proposal_channels"></div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="proposal_target_url">Target url:</label>
+                                    <input type="text" class="form-control" name="target_url" id="proposal_target_url" readonly>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="proposal_ref_link">Proposal ref. link:</label>
+                                    <input type="text" class="form-control" name="ref_link" id="proposal_ref_link" placeholder="ref link" required>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="proposal_arrangements">Arrangements:</label>
+                                    <div id="proposal_arrangements"></div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="proposal_kpis">Kpis:</label>
+                                    <div id="proposal_kpis"></div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="proposal_currency">Currency:</label>
+                                    <select name="currency" id="proposal_currency" class="form-control">
+                                        <option value="USD">USD</option>
+                                        <option value="EUR">EUR</option>
+                                        <option value="PLN">PLN</option>
+                                        <option value="INR">INR</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="price">Price:</label>
+                                    <input class="form-control" type="number" name="proposal_price" id="price" required placeholder="amount">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" id="saveProposal" class="btn btn-primary bg-color1">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="viewProposal" role="dialog" data-backdrop="false">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header alert-primary">
+                    <b class="modal-title">View Proposal</b>
+                    <button  type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <!--<form name="sent_proposal_form" id="sent_proposal_form" action="/sendProposal" method="POST">-->
+                <div class="modal-body">
+                    <input type="hidden" name="message_id" value="{{ glob.message_id }}">
+                    <input type="hidden" name="channel_id" value="{{ glob.channel_id }}">
+                    <input type="hidden" name="influencer_id" value="">
+                    <!--<div>message id = {{ glob.message_id }} Channel id = {{ glob.channel_id }}</div>-->
+
+                    <div id="view_proposal_campaign_name"></div>
+
+
+                    <div id="view_proposal_description"></div>
+
+
+                    <div id="view_proposal_from_date"></div>
+
+
+                    <div id="view_proposal_to_date"></div>
+
+
+                    <div id="view_proposal_channels"></div>
+
+
+                    <div id="view_proposal_target_url">Target URL : </div>
+
+                    <div id="view_proposal_ref_link">Ref Link : </div>
+
+                    <div id="view_proposal_arrangements">Arrangements : </div>
+
+                    <div id="view_proposal_kpis">Kpis : </div>
+
+                    <div id="view_proposal_price">Price : </div>
+
+
+                </div>
+                <!--<div class="modal-footer">-->
+                <!--<button type="submit" id="saveProposal" class="btn btn-default">Save</button>-->
+                <!--</div>-->
+                <!--</form>-->
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="editProposal" role="dialog" data-backdrop="false">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header alert-primary">
+                    <b class="modal-title">Edit Proposal</b>
+                    <button  type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <form name="update_proposal_form" id="update_proposal_form" action="/updateProposal" method="POST">
+                    <div class="modal-body">
+                        <input type="hidden" name="message_id" value="{{ glob.message_id }}">
+                        <input type="hidden" name="channel_id" value="{{ glob.channel_id }}">
+                        <input type="hidden" id="edit_proposal_id" name="proposal_id" value="">
+                        <!--<div>message id = {{ glob.message_id }} Channel id = {{ glob.channel_id }}</div>-->
+
+                        <div id="edit_proposal_campaign_name"></div>
+
+
+                        <div>
+                            Description : <input id="edit_proposal_description" type="text"  name="edit_proposal_description" required>
+                        </div>
+
+
+                        <div id="edit_proposal_from_date"></div>
+
+
+                        <div id="edit_proposal_to_date"></div>
+
+                        <div>Channels :
+                            <div id="edit_proposal_channels">
+
+                            </div>
+                        </div>
+
+                        <div id="edit_proposal_target_url">Target URL : </div>
+
+                        <div>
+                            Ref Link : <input  style="clear:both;" type="text" name="edit_proposal_ref_link" id="edit_proposal_ref_link" required>
+                        </div>
+
+                        <div>Arrangements : </div>
+                        <div id="edit_proposal_arrangements">Arrangements : </div>
+                        <div>Kpis : </div>
+                        <div id="edit_proposal_kpis">Kpis : </div>
+
+
+                        <select id="edit_proposal_currency" name="currency" class="float-left">
+                            <option id="USD" value="USD">USD</option>
+                            <option id="EUR" value="EUR">EUR</option>
+                            <option id="PLN" value="PLN">PLN</option>
+                            <option id="INR" value="INR">INR</option>
+                        </select>
+                        <input class="form-control" style="clear:both;" type="number" name="proposal_price" id="edit_proposal_price" required placeholder="amount">
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" id="updateProposal" class="btn btn-default">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+function editProposal(message_id,campaign_id){
+        if(confirm("Are you sure you want to EDIT this Proposal?")){
+            $( '#edit_proposal_channels').empty();
+            getAllMappedChannel_ids1('{{ glob.channel_id }}');
+            $('#edit_proposal_arrangements').empty();
+            $('#edit_proposal_kpis').empty();
+            $.ajax({
+                   type: "GET",
+                   url: '/getCampaignDetails/'+campaign_id,
+                   async:false,
+                   success: function(data)
+                   {
+                       <!--alert(data); // show response from the python script.-->
+                       jQuery.each(data.results, function(i, val) {
+                           var arrangements = val.arrangements.split(",");
+                           for(i=0;i<arrangements.length;i++){
+                               $("#edit_proposal_arrangements").append('<input id="'+arrangements[i]+'" class="edit_proposal_arrangements_checkbox" multiple type ="checkbox" name="edit_proposal_arrangements" value="'+arrangements[i]+'">'+arrangements[i]);
+                           }
+                           var kpis = val.kpis.split(",");
+                           for(i=0;i<kpis.length;i++){
+                               $("#edit_proposal_kpis").append('<input id="'+kpis[i]+'" class="edit_proposal_kpis_checkbox" multiple type ="checkbox" name="edit_proposal_kpis" value="'+kpis[i]+'">'+kpis[i]);
+                           }
+
+                       });
+
+                   }
+                 });
+            $.ajax({
+                   type: "GET",
+                   url: '/getProposal/'+message_id+'/'+campaign_id,
+                   async:false,
+                   success: function(data)
+                   {
+                       <!--alert(data); // show response from the python script.-->
+                       jQuery.each(data.results, function(i, val) {
+                            <!--alert(val.campaign_name);-->
+                            $('#edit_proposal_id').val(val.proposal_id);
+                            $('#edit_proposal_campaign_name').empty();
+                            $('#edit_proposal_campaign_name').append('Campaign Name : '+val.campaign_name);
+                            $('#edit_proposal_description').empty();
+                            $('#edit_proposal_description').val(val.proposal_description);
+                            $('#edit_proposal_from_date').empty();
+                            $('#edit_proposal_from_date').append('From Date : '+val.proposal_from_date);
+                            $('#edit_proposal_to_date').empty();
+                            $('#edit_proposal_to_date').append('To Date : '+val.proposal_to_date);
+                            <!--$('#edit_proposal_channels').empty();-->
+                            <!--$('#edit_proposal_channels').append(val.proposal_channels);-->
+                            <!--alert(val.proposal_channels);-->
+                            var channels = val.proposal_channels.split(',');
+                            for(i=0;i<channels.length;i++){
+                                $(".edit_proposal_channels_checkbox[name='edit_proposal_channels']").each(function(){
+                                    var proposal_channel_id = $(this).attr('id');
+                                    if(channels[i]==proposal_channel_id){
+                                        $(this).attr('checked',true);
+                                    }
+                                });
+
+                            }
+                            var arrangements = val.proposal_arrangements.split(',');
+                            for(i=0;i<arrangements.length;i++){
+                                <!--alert(arrangements[i]);-->
+                                $(".edit_proposal_arrangements_checkbox").each(function(){
+                                   if(arrangements[i]==$(this).attr('id')){
+                                        $(this).attr('checked',true);
+                                    }
+                                });
+
+                            }
+
+
+                            var kpis = val.proposal_kpis.split(',');
+                            for(i=0;i<kpis.length;i++){
+                                <!--alert(kpis[i]);-->
+                                $(".edit_proposal_kpis_checkbox").each(function(){
+                                   if(kpis[i]==$(this).attr('id')){
+                                        $(this).attr('checked',true);
+                                    }
+                                });
+
+                            }
+
+                            <!--$('#edit_proposal_currency').empty();-->
+                            <!--$('#edit_proposal_price').val(val.currency);-->
+                            $('#edit_proposal_price').empty();
+                            $('#edit_proposal_price').val(val.proposal_price);
+                            $('#edit_proposal_target_url').empty();
+                            $('#edit_proposal_target_url').append('Target Url : '+val.target_url);
+                            $('#edit_proposal_ref_link').empty();
+                            $('#edit_proposal_ref_link').val(val.ref_link);
+
+                            $('#editProposal').modal('show');
+
+                       });
+
+                   }
+                 });
+        }
+        else {
+            return false;
+        }
+
+    }
+
+
+function campaignList(channel_id,message_id) {
+    $( "input#campaign_id" ).prop('checked', false);
+    $( "input#campaign_id" ).prop('disabled', false);
+    $("#campaign_channel_id").val(channel_id);
+    $.ajax({
+               type: "GET",
+               url: '/getCampaignsAddedToMessage/'+message_id,
+               contentType: 'application/json;charset=UTF-8',
+               success: function(data)
+               {
+                   if (data.results.length != 0){
+                   jQuery.each(data.results, function(i, val) {
+                        {% for item in view_campaign_data['data'] %}
+                                var campaign_campaign_id = val.campaign_id;
+                                var campaign_id = "{{ item['campaign_id'] }}";
+                                if (campaign_id == campaign_campaign_id){
+
+                                    $('.campaign_id'+campaign_id).attr('disabled', true);
+                                 }
+                                 else{
+
+                                      <!--$('.campaign_id'+campaign_id).attr('disabled', false);-->
+                                 }
+
+                        {% endfor %}
+                    });
+                    }
+                    else{
+
+                    }
+                    }
+                });
+
+}
+
+
+
+
+function getAllMappedChannel_ids(channel_id){
+    $.ajax({
+               type: "GET",
+               url: '/getMappedChannels/'+channel_id,
+               contentType: 'application/json;charset=UTF-8',
+               success: function(data)
+               {
+                   $( '#proposal_channels').empty();
+                   if (data.results.length != 0){
+                   jQuery.each(data.results, function(i, val) {
+                        <!--alert(val.youtube_channel_id);-->
+                        <!--alert(val.twitter_channel_id);-->
+                            if(val.youtube_channel_id){
+
+                                $("#proposal_channels").append('<input class="custom-control-inline proposal_channels_checkbox" checked multiple type ="checkbox" name="proposal_channels" value="youtube@'+val.youtube_channel_id+'"><span data-toggle="tooltip" title="'+val.youtube_first_name+'"><a target="_blank" href="https://www.youtube.com/channel/'+val.youtube_channel_id+'" class="fa fa-youtube red"></a></span>&nbsp&nbsp&nbsp');
+
+                            }
+                            if(val.twitter_channel_id){
+
+                                $("#proposal_channels").append('<input class="custom-control-inline proposal_channels_checkbox" checked multiple type ="checkbox" name="proposal_channels" value="twitter@'+val.twitter_channel_id+'"><span data-toggle="tooltip" title="'+val.twitter_first_name+'"><a href="#" class="fa fa-twitter"></span></a>');
+
+                            }
+
+                    });
+                    }
+                    else{
+                        alert('no channels mapped');
+                    }
+               }
+             });
+
+}
+function getAllMappedChannel_ids1(channel_id){
+    $.ajax({
+               type: "GET",
+               url: '/getMappedChannels/'+channel_id,
+               async:false,
+               contentType: 'application/json;charset=UTF-8',
+               success: function(data)
+               {
+
+                   if (data.results.length != 0){
+                   jQuery.each(data.results, function(i, val) {
+                            if(val.youtube_channel_id){
+                                $("#edit_proposal_channels").append('<input class="edit_proposal_channels_checkbox"  multiple type ="checkbox" name="edit_proposal_channels" value="youtube@'+val.youtube_channel_id+'" id="youtube@'+val.youtube_channel_id+'"><span data-toggle="tooltip" title="'+val.youtube_first_name+'"><a target="_blank" href="https://www.youtube.com/channel/'+val.youtube_channel_id+'" class="fa fa-youtube red"></a></span>');
+                            }
+                            if(val.twitter_channel_id){
+                                $("#edit_proposal_channels").append('<input class="edit_proposal_channels_checkbox"  multiple type ="checkbox" name="edit_proposal_channels" value="twitter@'+val.twitter_channel_id+'" id="twitter@'+val.twitter_channel_id+'"><span data-toggle="tooltip" title="'+val.twitter_first_name+'"><a href="#" class="fa fa-twitter"></span></a>');
+                            }
+                    });
+                    }
+                    else{
+                        alert('no channels mapped');
+                    }
+               }
+             });
+
+}
+
+
+
+
+function getCampaignsAddedToMessage(){
+        var message_id = $("#message_id").val();
+
+        $.ajax({
+               type: "GET",
+               url: '/getCampaignsAddedToMessage/'+message_id,
+               async:false,
+               <!--data: form.serialize(), // serializes the form's elements.-->
+               contentType: 'application/json;charset=UTF-8',
+
+               success: function(data)
+               {
+                   var myjson =  JSON.stringify(data);
+                   <!--alert(myjson); // show response from the python script.-->
+                   <!--var value = $("#campaignNameList").text();-->
+                   $( "#campaignNameList" ).empty();
+                   $( "#proposal_campaign_name" ).empty();
+                   $("#tab-proposal .tab-list").empty();
+                   $('#proposal_campaign_name').append('<option value=""></option>');
+                   jQuery.each(data.results, function(i, val) {
+                        {% if  glob.from_email_id != session['email_id']  %}
+                            if(val.status == 'Proposal Sent'){
+                                var status = 'Proposal Received';
+                                var accepted = 'Accept';
+                                var rejected = 'Reject';
+                                $('#campaignNameList').append('<tr><td><a href="#" class="btn-info btn-sm">'+val.campaign_name+'<a/></td><td>'+status+'</td></tr>');
+                                $('#tab-proposal .tab-list').append('<tr><td><a href="#" onclick="getProposal('+val.message_id+','+val.campaign_id+')" class="btn-info btn-sm">'+val.campaign_name+'<a/></td><td><a href="#" onclick="accept_decline('+val.message_id+','+val.campaign_id+',\'' + accepted + '\')" data-toggle = "tooltip" title="Accept" class="fa fa-thumbs-up green"></a></td><td><a href="#" onclick ="accept_decline('+val.message_id+','+val.campaign_id+',\'' + rejected + '\')" data-toggle = "tooltip" title="Decline" class="fa fa-thumbs-down red"></a></td></tr>');
+                            }
+                            else if(val.status == 'Current Partner'){
+                                $('#campaignNameList').append('<tr><td><a href="#" class="btn-info btn-sm">'+val.campaign_name+'<a/></td><td>'+val.status+'</td></tr>');
+                                $('#tab-proposal .tab-list').append('<tr><td><a href="#" onclick="getProposal('+val.message_id+','+val.campaign_id+')" class="btn-info btn-sm">'+val.campaign_name+'<a/></td></tr>');
+                            }
+                            else{
+                                $('#campaignNameList').append('<tr><td><a href="#" class="btn-info btn-sm">'+val.campaign_name+'<a/></td><td>'+val.status+'</td></tr>');
+                            }
+                        {% else %}
+                            $('#campaignNameList').append('<tr><td><a href="#" class="btn-info btn-sm">'+val.campaign_name+'<a/></td><td>'+val.status+'</td></tr>');
+                            if(val.status == 'Proposal Sent'){
+                                $('#tab-proposal .tab-list').append('<tr><td><a href="#" onclick="getProposal('+val.message_id+','+val.campaign_id+')" class="btn-info btn-sm">'+val.campaign_name+'<a/></td><td><a href="#" onclick="editProposal('+val.message_id+','+val.campaign_id+')" data-toggle="tooltip" title="Edit Proposal"><img src="/static/icons/edit.png" height="19px" width="17px"></a></td></tr>');
+                            }
+                            if(val.status == 'Current Partner'){
+
+                                $('#tab-proposal .tab-list').append('<tr><td><a href="#" onclick="getProposal('+val.message_id+','+val.campaign_id+')" class="btn-info btn-sm">'+val.campaign_name+'<a/></td><td><a href="#" onclick="editProposal('+val.message_id+','+val.campaign_id+')" data-toggle="tooltip" title="Edit Proposal"><img src="/static/icons/edit.png" height="19px" width="17px"></a></td></tr>');
+                            }
+                        {% endif %}
+                        if(val.status!="Proposal Sent" && val.status!="Current Partner"){
+                            $('#proposal_campaign_name').append('<option value="'+val.campaign_id+'">'+val.campaign_name+'</option>');
+                        }
+                        <!--else if(val.status != "Current Partner" ){-->
+                            <!--$('#proposal_campaign_name').append('<option value="'+val.campaign_id+'">'+val.campaign_name+'</option>');-->
+                        <!--}-->
+                    });
+
+               }
+             });
+
+    }
+
+function getProposal(message_id,campaign_id){
+
+        <!--alert(campaign_id);-->
+        <!--alert(message_id);-->
+
+        $.ajax({
+            type: "GET",
+            url: '/getProposal/'+message_id+'/'+campaign_id,
+            success: function(data)
+            {
+                jQuery.each(data.results, function(i, val) {
+
+                    console.log(val.proposal_channels);
+                    $('#view_proposal_campaign_name').empty();
+                    $('#view_proposal_campaign_name').append('Campaign Name : '+val.campaign_name);
+                    $('#view_proposal_description').empty();
+                    $('#view_proposal_description').append('Description : '+val.proposal_description);
+                    $('#view_proposal_from_date').empty();
+                    $('#view_proposal_from_date').append('From Date : '+val.proposal_from_date);
+                    $('#view_proposal_to_date').empty();
+                    $('#view_proposal_to_date').append('To Date : '+val.proposal_to_date);
+                    $('#view_proposal_channels').empty();
+                    $('#view_proposal_channels').append('Channels : '+val.proposal_channels);
+                    $('#view_proposal_arrangements').empty();
+                    $('#view_proposal_arrangements').append('Arrangements : '+val.proposal_arrangements);
+                    $('#view_proposal_kpis').empty();
+                    $('#view_proposal_kpis').append('Kpis : '+val.proposal_kpis);
+                    $('#view_proposal_price').empty();
+                    $('#view_proposal_price').append('Price : '+val.proposal_price+' '+val.currency);
+                    $('#view_proposal_target_url').empty();
+                    $('#view_proposal_target_url').append('Target Url : '+val.target_url);
+                    $('#view_proposal_ref_link').empty();
+                    $('#view_proposal_ref_link').append('Ref Link : '+val.ref_link);
+
+                    $('#viewProposal').modal('show');
+
+                });
+
+            }
+        });
+    }
+
+<!--$( document ).ready(function() {-->
+
+
+    <!--alert('hello');-->
+    <!--$("#getCampaignsAddedToMessage").on("click",function(){-->
+        <!--getCampaignsAddedToMessage();-->
+    <!--});-->
+
+    <!--getCampaignsAddedToMessage();-->
+    <!--getAllProposals();-->
+    <!--getMessageFiles('{{ glob.message_id }}');-->
+    <!--getMessageAgreements('{{ glob.message_id }}');-->
+
+
+<!--});-->
+
+</script>
+
+
+{% endblock %}
+

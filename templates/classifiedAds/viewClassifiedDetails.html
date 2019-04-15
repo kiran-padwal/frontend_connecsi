@@ -1,0 +1,174 @@
+{% if session['type']=='brand' %}
+{% extends 'admin_layout.html' %}
+{% elif session['type'] == 'influencer'%}
+{% extends 'dashboard_layout_inf.html' %}
+{% endif %}
+{{ super() }}
+{% block body %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="content-header">Classified Ads - Details</div>
+        </div>
+    </div>
+    <div class="row">
+        {% for item in classified_details['data'] %}
+        <div class="card offers_item">
+            <div class="card-header">
+                <div class="row offers_item__header">
+                    <div class="col-6"><i class="ft ft-eye"></i> visibility:</div>
+                    <div class="col-6 text-right"><i class="ft ft-calendar"></i> posted on:</div>
+                </div>
+                <div class="row offers_item__header">
+                    <div class="col-6">{{item['no_of_views']}}</div>
+                    <div class="col-6 text-right">{{ item['posted_date'] }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="offers_item__title d-flex align-items-center justify-content-between">
+                            {{ item['classified_name'] }}
+
+                            {% if session['type']=='brand' %}
+                            <div class="text-right">
+                                <a href="/editClassified/{{ item['classified_id'] }}" data-toggle="tooltip"
+                                   title="Edit Classified"><img class=" mx-1 icon-small"
+                                                                src="/static/icons/edit.png"></a>
+                                <a href="/deleteClassified/{{ item['classified_id'] }}" data-toggle="tooltip"
+                                   title="Delete Classified"><img class=" mx-1 icon-small"
+                                                                  src="/static/icons/delete.png"></a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="slider-for mb-2">
+                            {% set files = item['files'].split(',') %}
+                            {% for file in files %}
+                            <div class="slide-img">
+                                <img src="../static/campaign_files/{{ file }}" class="rounded">
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="slider-nav mb-3">
+                            {% set files = item['files'].split(',') %}
+                            {% for file in files %}
+                            <div class="slide-nav-img">
+                                <img src="../static/campaign_files/{{ file }}" class="rounded">
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-12">
+                                <span>General Info: </span>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="engagement">
+                                    <div class="rating">
+                                        {{ item['min_lower_followers'] }} - {{ item['max_upper_followers'] }}
+                                    </div>
+                                    <div class="rating-txt">
+                                        Total Fallowers
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="engagement">
+                                    <div class="rating">
+                                        {{ item['budget'] }}
+                                    </div>
+                                    <div class="rating-txt">
+                                        {{ item['currency'] }}
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-12">
+                                <span>Channels:</span>
+                                {% set channels = item['channels'].split(',') %}
+                                {% for channel in channels %}
+                                {% if channel == 'youtube' %}
+                                <a href="#" class="fa fa-youtube-square fa-lg icons"></a>
+                                {% elif channel == 'facebook' %}
+                                <a href="#" class="fa fa-facebook-square fa-lg icons"></a>
+                                {% elif channel == 'twitter' %}
+                                <a href="#" class="fa fa-twitter-square fa-lg icons"></a>
+                                {% elif channel == 'instagram' %}
+                                <a href="#" class="fa fa-instagram fa-lg icons"></a>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div class="col-12">
+                                <hr>
+                            </div>
+                            <div class="col-12">
+                                <span>Categories: </span>
+                            </div>
+                            <div class="col-12">
+                                {% set video_cat_names = item['video_cat_name'].split(',') %}
+                                {% for video_cat_name in video_cat_names %}
+                                <span class="offers_item__categories">{{ video_cat_name }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="col-12">
+                                <hr>
+                            </div>
+                            <div class="col-12">
+                                <span>Content Type: </span>
+                            </div>
+                            <div class="col-12">
+                                {% set arrangements = item['arrangements'].split(',') %}
+                                {% for arrangement in arrangements %}
+                                <span class="color1">{{ arrangement }}, </span>
+                                {% endfor %}
+                            </div>
+                            <div class="col-12">
+                                <hr>
+
+                                <div class="description">
+                                    <span class="description__title">Description</span>
+
+                                    <p>{{ item['classified_description'] }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="offers_item__footer">
+                    <div class="row d-flex align-items-center mt-2">
+                        <div class="col-md-6">
+                            {% if profile_data['data']['profile_pic'] %}
+                            <img src="/static/img/{{ profile_data['data']['profile_pic'] }}"
+                                 class="rounded offers_item__profile-thumb">
+                            {% else %}
+                            <img src="/static/img/fixed_image.png" class="rounded offers_item__profile-thumb">
+                            {% endif %}
+                            {{ profile_data['data']['first_name'] }} {{ profile_data['data']['last_name'] }}
+                        </div>
+                        <div class="col-md-6 text-right ">
+                            {% if session['type']=='influencer' %}
+                            <a href="#"
+                               class="btn btn-raised btn-secondary bg-color1 m-0">Reply</a>
+                            {% endif %}
+
+                            <button  onclick="goBack()"
+                               class="btn btn-raised btn-primary bg-color2 m-0">Back</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

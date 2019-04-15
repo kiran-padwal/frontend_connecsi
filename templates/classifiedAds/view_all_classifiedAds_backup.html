@@ -1,0 +1,67 @@
+{% extends 'admin_layout.html' %}
+{{ super() }}
+{% block body %}
+
+
+<div class="row" style="justify-content: center">
+    <div class="col-xl-12 col-lg-12  col-md-12 col-12">
+        <div class="card">
+            <div class="card-body" style="padding: 1%;">
+                <b><p style="text-align:center; color:#50A9E4;">Classified Ads</p></b>
+                <div class="row" style="padding-top:1%;">
+                    {% for item in all_classified_data['data'] %}
+                    {% set images = item['files'].split(',') %}
+                    <div class="col-xl-6 col-lg-6 col-md-6 mb-2">
+                        <div class="table-responsive shadow-sm" style="border:1px solid grey;">
+                            <table cellpadding="5">
+                                <tbody>
+                                <tr>
+                                    <td rowspan="5"><img src="../static/brands_classified_files/{{ images[0] }}" height="150px" width="155px"></td>
+                                    <td colspan="3" style="font-size:14px;">{{ item['classified_name'] }}</td>
+                                    <td style="font-size:10px;"><a href="#">Convert to Campaign</a></td>
+                                    <td>Views:67 <br/> Replies:25</td>
+
+                                </tr>
+                                <tr>
+                                    <td><button type="button" class="btn-sm btn-primary" style="font-size:10px;">{{ item['video_cat_name'] }} &emsp;<i class="fa fa-times" ></i></button></td>
+                                </tr>
+                                <tr>
+                                    <td><b style="font-size:12px;">Channels</b></td>
+                                    <td><b style="font-size:12px;">Followers</b></td>
+                                    <td><b style="font-size:12px;">Budget</b></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        {% set channels = item['channels'].split(',') %}
+                                        {% for channel in channels %}
+                                        {% if channel == 'youtube' %}
+                                        <a href="#" class="fa fa-youtube-square fa-lg red"></a>
+                                        {% elif channel == 'facebook' %}
+                                        <a href="#" class="fa fa-facebook-square fa-lg blue"></a>
+                                        {% elif channel == 'twitter' %}
+                                        <a href="#" class="fa fa-twitter-square fa-lg"></a>
+                                        {% elif channel == 'instagram' %}
+                                        <a href="#" class="fa fa-instagram fa-lg pink"></a>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                    <td style="font-size:12px;">{{ item['min_lower_followers'] }} - {{ item['max_upper_followers'] }}</td>
+                                    <td style="font-size:12px;">{{ item['budget'] }}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6">
+                                        <a href="/viewClassifiedDetails/{{ item['classified_id'] }}" type="button" class="btn-sm btn-primary" style="font-size:12px; margin-left:35%;">Details</a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,191 @@
+{% extends 'admin_layout.html' %}
+{{ super() }}
+{% block body %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="content-header">Campaign - Create New</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-block">
+                        <form class="form" name="campaign_form" id="campaign_form" method="POST" action="/saveCampaign"
+                              enctype="multipart/form-data">
+                            <div class="row">
+                                <div class="col-xl-6 col-lg-12 col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-6 my-1">
+                                            <label for="campaign_name">Campaign Name</label>
+                                            <input id="campaign_name" type="text" class="form-control"
+                                                   name="campaign_name" required>
+                                        </div>
+                                        <div class="col-md-3 my-1">
+                                            <label for="from_date">Start Date</label>
+                                            <input id="from_date"
+                                                   class="form-control datepicker"
+                                                   name="from_date"
+                                                   placeholder="yyyy-mm-dd"
+                                                   required></div>
+                                        <div class="col-md-3 my-1">
+                                            <label for="to_date">End Date</label>
+                                            <input id="to_date"
+                                                   class="form-control datepicker"
+                                                   name="to_date"
+                                                   placeholder="yyyy-mm-dd"
+                                                   required>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3 my-1">
+                                            <label for="budget">Budget</label>
+                                            <input type="number"
+                                                   class="form-control"
+                                                   name="budget"
+                                                   id="budget"
+                                                   placeholder="Budget" required>
+                                        </div>
+                                        <div class="col-md-3 my-1">
+                                            <label for="currency">Currency</label>
+                                            <select class="form-control" name="currency" id="currency" required>
+                                                <option value="USD">USD</option>
+                                                <option value="EUR">EUR</option>
+                                                <option value="GBP">GBP</option>
+                                                <option value="INR">INR</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3 my-1">
+                                            <label for="channels">Channels</label>
+                                            <select class="form-control" id="channels" name="channels"
+                                                    multiple="multiple" required>
+                                                <option value="youtube">Youtube</option>
+                                                <option value="twitter">Twitter</option>
+                                                <option value="instagram">Instagram</option>
+                                                <option value="facebook">Facebook</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-3 my-1">
+                                            <label for="country">Country</label>
+                                            <select class="form-control" name="country" id="country" multiple
+                                                    required data-live-search="true" data-live-search-style="begins">
+                                                {% for item in regionCodes['data'] %}
+                                                <option value="{{ item['region_code'] }}">{{ item['country_name']
+                                                    }}
+                                                </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6 my-1">
+                                            <div class="form-field sliderContainer">
+                                                <div class="form-group">
+                                                    <label>Followers</label>
+                                                    <div id="slider" class="sliderUI"></div>
+                                                </div>
+                                                <input class="form-control form-control-xs bg-light-grey slider-input round left lower-value"
+                                                       name="min_lower" value="0" data-range="0" id="lower-value">
+                                                <input class="form-control form-control-xs bg-light-grey slider-input round right upper-value"
+                                                       name="max_upper" value="100000000" data-range="100000000"
+                                                       id="upper-value">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 my-1">
+                                            <label for="target_url">Target URL</label>
+                                            <input type="url" id="target_url" class="form-control"
+                                                   name="target_url"
+                                                   required>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 my-1">
+                                            <label for="videoCategories">Categories</label>
+                                            <select class="form-control" name="video_cat" id="videoCategories" required>
+                                                {% for item in videoCategories['data'] %}
+                                                <option value="{{ item['video_cat_id'] }}">{{ item['video_cat_name']
+                                                    }}
+                                                </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 my-1">
+                                            <label for="arrangements">Content Type </label>
+                                            <select multiple id="arrangements" name="arrangements"
+                                                    class="form-control"
+                                                    required>
+                                                <option value="Review">Review</option>
+                                                <option value="Unboxing / Gameplay">Unboxing / Gameplay</option>
+                                                <option value="Shout out/Mention">Shout out/Mention</option>
+                                                <option value="giveaway">giveaway</option>
+                                                <option value='Video Intro/Outro'>video Intro/Outro</option>
+                                                <option value="Tutorial">Tutorial</option>
+                                                <option value="Banner placement / URL placement">Banner placement /
+                                                    URL
+                                                    placement
+                                                </option>
+                                                <option value="Sponsorship">Sponsorship</option>
+                                                <option value="Other (Explain in description)">Other (Explain in
+                                                    description)
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 my-1 d-flex flex-column">
+                                            <label for="kpis">Kpis</label>
+                                            <select name="kpis" id="kpis" class="form-control" multiple required>
+                                                <option value="No of Clicks">No of Clicks</option>
+                                                <option value="New Users">New Users</option>
+                                                <option value="Revenue Generated">Revenue Generated</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 my-1">
+                                            <label for="campaign_files">Brands Files</label>
+                                            <input type="file" name="campaign_files"
+                                                   id="campaign_files"
+                                                   class="campaign_files" multiple required>
+                                            <div class="displayFiles"></div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 my-1">
+                                            <input type="checkbox" class="form-check-input" id="classifiedAds"
+                                                   name="is_classified_post" style="margin-left: 0rem">
+                                            <label class="form-check-label"
+                                                   for="classifiedAds" style="margin-left: 1.25rem">Post as classified ads</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 col-lg-12 col-md-12">
+                                    <div class="row">
+                                        <div class="col-12 my-1">
+                                            <label for="campaign_description">Description</label>
+                                            <textarea class="form-control"
+                                                      ROWS="17" id="campaign_description"
+                                                      name="campaign_description"
+                                                      required></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <hr style="margin: 1rem 0; border-color: #d3dce9;">
+                                </div>
+                                <div class="col-12 my-1 d-flex justify-content-end">
+                                    <button type="submit" id="savecampaign" class="btn btn-primary m-0 bg-color1">
+                                        Save
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

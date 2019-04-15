@@ -1,0 +1,107 @@
+a:hover {
+  color: #6697ea; }
+a.color2:hover {
+  color: #9373d8; }
+
+.color2 {
+  color: #6697ea; }
+
+.color1 {
+  color: #9373d8; }
+
+.break {
+  clear: both;
+  display: block; }
+
+body .custom-checkbox .custom-control-input:checked ~ .custom-control-label::before {
+  background-color: #9373d8; }
+body .alert-success {
+  background-color: #9373d8 !important;
+  border: transparent !important;
+  margin-bottom: 2rem;
+  color: #fff !important; }
+body .form-control-position {
+  top: -1px; }
+body #forgotpass {
+  margin-top: 20px; }
+body .row {
+  margin-bottom: 0; }
+body .bottom-icon a {
+  margin-left: 15px;
+  font-size: 1.5rem; }
+body h5 {
+  font-weight: 400;
+  border-bottom: 1px solid #000;
+  padding: 15px 0; }
+body .card {
+  -webkit-box-shadow: none;
+          box-shadow: none; }
+  body .card .card-content {
+    -webkit-box-shadow: 0 6px 0px 0 rgba(0, 0, 0, 0.01), 0 15px 32px 0 rgba(0, 0, 0, 0.06);
+            box-shadow: 0 6px 0px 0 rgba(0, 0, 0, 0.01), 0 15px 32px 0 rgba(0, 0, 0, 0.06); }
+body .tabs {
+  background-color: transparent;
+  padding: 30px 0;
+  height: auto;
+  font-family: "Montserrat", "Segoe UI", "Roboto", "Helvetica Neue","Arial", "sans-serif"; }
+  body .tabs .indicator {
+    display: none !important; }
+  body .tabs .tab {
+    line-height: 32px;
+    height: 32px;
+    text-transform: none; }
+    body .tabs .tab a.active-border {
+      border: 1px solid #9373d8;
+      background-color: transparent;
+      color: #9373d8;
+      font-size: 1rem;
+      border-radius: 3px 0 0 3px; }
+      body .tabs .tab a.active-border.influencer-tab {
+        border-radius: 0 3px 3px 0; }
+      body .tabs .tab a.active-border.active {
+        background-color: #9373d8 !important;
+        color: #fff; }
+body .card-transparent {
+  background-color: transparent; }
+body .loginCheckboxLabel {
+  text-transform: none;
+  font-weight: 400;
+  color: #000;
+  font-size: 0.875rem;
+  letter-spacing: 0; }
+body .form-actions {
+  width: 100%;
+  margin-top: 0; }
+body .btn-purple {
+  border: 1px solid transparent;
+  outline: none;
+  color: #fff !important;
+  background-color: #9373d8 !important;
+  -webkit-box-shadow: none !important;
+          box-shadow: none !important;
+  border: 1px solid transparent;
+  text-transform: none; }
+  body .btn-purple:hover {
+    background-color: #A88CE2 !important;
+    color: #fff !important; }
+body .btn-purple-border {
+  background: transparent !important;
+  -webkit-box-shadow: none !important;
+          box-shadow: none !important;
+  color: #9373d8 !important;
+  position: relative;
+  border: 1px solid #9373d8;
+  border-radius: 5px;
+  text-transform: none; }
+  body .btn-purple-border:hover {
+    background-color: #A88CE2 !important;
+    color: #fff !important;
+    border: 1px solid transparent; }
+  body .btn-purple-border:hover:before {
+    background-image: linear-gradient(45deg, #FF396f, #9B3cb7) !important; }
+
+@media all and (max-width: 767px) {
+  .card .card-block {
+    padding: 0; } }
+
+/*# sourceMappingURL=toro_auth.css.map */

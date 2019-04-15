@@ -1,0 +1,62 @@
+{% if session['type'] == 'brand' %}
+{% extends 'admin_layout.html' %}
+{% elif session['type'] == 'influencer' %}
+{% extends 'dashboard_layout_inf.html' %}
+{% endif %}
+{{ super() }}
+{% block body %}
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="content-header">Messages - Compose</div>
+        <p class="content-sub-header"></p>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="card-block">
+                    <form action="/sendEmail" method="POST">
+                        <div class="row">
+                            <div class="col-12">
+                                 <div class="form-group">
+                                     <label for="to_email_id">*To:</label>
+                                     <input required type="email" class="form-control" name="to_email_id" id="to_email_id">
+                                 </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="subject">*Subject:</label>
+                                    <input required type="text" class="form-control" name="subject" id="subject">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="email-message">Message:</label>
+                                    <textarea class="form-control email-message" name="message" id="email-message"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label></label>
+                                    <button class="btn btn-primary" type="submit">Send</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

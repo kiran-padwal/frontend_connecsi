@@ -1,0 +1,48 @@
+{% extends 'admin_layout.html' %}
+{{ super() }}
+{% block body %}
+
+<div class="container-fluid payment__add">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="content-header">Payment - Add Funds</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <form action="/saveFundsBrands" method="POST">
+                        <div class="row">
+                            <div class="col-12 mb-1">
+                                <label for="campaign_name">Currency:</label>
+                                <select name="currency" class="form-control" id="currency">
+                                    <option value="USD">USD</option>
+                                    <option value="EUR">EUR</option>
+                                    <option value="GBP">GBP</option>
+                                    <option value="INR">INR</option>
+                                </select>
+                            </div>
+                            <div class="col-12 mb-1">
+                                <label for="amount">Amount:</label>
+                                <input required type="number" class="form-control" id="amount" name="amount">
+                            </div>
+                            <div class="col-12">
+                                <label for="description">Description:</label>
+                                <textarea required class="form-control" rows="9" id="description"
+                                          name="description"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer d-flex justify-content-end">
+                    <button class="btn btn-primary bg-color1" type="submit">Save</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

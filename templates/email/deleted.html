@@ -1,0 +1,102 @@
+{% if session['type'] == 'brand' %}
+{% extends 'admin_layout.html' %}
+{% elif session['type'] == 'influencer' %}
+{% extends 'dashboard_layout_inf.html' %}
+{% endif %}
+{{ super() }}
+{% block body %}
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="content-header">Messages - Deleted</div>
+        <p class="content-sub-header"></p>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="card-block padding-top-normal">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="email-search-box w-100  pb-2">
+                                <div class="media">
+                                    <div class="media-body">
+                                        <input type="text" class="form-control"
+                                               placeholder="search for emails">
+                                    </div>
+                                    <a href="#" class="email-app-sidebar-toggle font-medium-1 mr-2 d-xl-none">
+                                        <i class="fa fa-ellipsis-h"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="email-application sent" id="email-application" data-email="false">
+                        <div class="email-app-content w-100">
+                            <div class="email-app-content-area w-100">
+                                <div class="email-app-mail-content-sent">
+                                    <div class="email-app-mail-content-detail">
+                                        <div class="email-app-title card-block">
+                                            <h3 class="list-group-item-heading">{{ conv_title }}</h3>
+                                            <p class="list-group-item-text">
+                                            </p>
+                                        </div>
+                                        <div class="media-list">
+                                            {% if deleted_dict['data'] %}
+                                            {{ 'Deleted' }}
+                                            {% else %}
+                                            {{ 'Nothing To Show...' }}
+                                            {% endif %}
+                                            {% for item in deleted_dict['data'] %}
+                                            <div id="headingCollapse{{ item['collapse_id'] }}" class="card-header p-0">
+                                                <a data-toggle="collapse" href="#collapse{{ item['collapse_id'] }}" aria-expanded="false"
+                                                   aria-controls="collapse{{ item['collapse_id'] }}"
+                                                   class="email-app-sender list-group-item list-group-item-action no-border collapsed">
+
+                                                    <div class="media">
+                                    <span class="avatar avatar-md mr-2">
+                                            {% if item['img'] %}
+                                            <img class="media-object rounded-circle" src="static/app-assets/img/portrait/small/avatar-s-7.png" alt="Generic placeholder image">
+                                            {% else %}
+                                            <span class="media-object rounded-circle text-circle d-flex mr-2 justify-content-center align-items-center bg-purple">{{ item['from_email_id'][0] }}</span>
+                                            {% endif %}
+                                    </span>
+                                                        <div class="media-body">
+                                                            <h6 class="list-group-item-heading text-bold-500">{{ item['first_name'] }}</h6>
+                                                            <p class="list-group-item-text text-bold-300">{{ item['subject'] }}
+                                                                <span class="float-right"></span>
+                                                            </p>
+                                                            <span class="float-left text muted text-bold-300">{{ item['date'] }}</span>
+                                                        </div>
+                                                    </div>
+
+                                                </a>
+                                            </div>
+                                            <div id="collapse{{ item['collapse_id'] }}" role="tabpanel" aria-labelledby="headingCollapse{{ item['collapse_id'] }}"
+                                                 class="card-collapse collapse" aria-expanded="false">
+                                                <div class="card-body">
+                                                    <div class="card-block text-bold-300">
+                                                        {{ item['message']|safe }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+{% endblock %}
+

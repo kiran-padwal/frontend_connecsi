@@ -1,0 +1,468 @@
+{% extends 'admin_layout.html' %}
+{{ super() }}
+{% block body %}
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="card-block">
+                    <div>
+                        <ul class="tabrow">
+                            <li class="selected">Youtube</li>
+                            <li>Facebook</li>
+                            <li >Instagram</li>
+                            <li>Twitter</li>
+                        </ul>
+                    </div>
+                    <div class="row" style="padding-top: 2%;">
+                        <a class="btn btn-sm" style="background-color: purple; margin-left: 2%; color:white; border-radius: 10px; font-size:15px; type="button"  href="/home/kiranLocalBackup/connecsiFrontendBackup/infList.csv" download>Export CSV</a>
+                        <select style="margin-left: 60%">
+                            <option value="High To Low">High To Low</option>
+                            <option value="Low To High">Low To High</option>
+
+                        </select>
+                    </div>
+                    <br>
+                    <div class="container">
+                        {% for item in data['data'] %}
+                        <div class="row">
+                            <div class="">
+                                <table cellspacing="1" border="solid 1px #E1DEDD;">
+                                    <tr>
+                                        <td rowspan="3" style="border-left:solid 1px white;">
+                                            <span data-toggle="modal" data-target="#sendMessage">
+                                                <a  onclick="sendMessage('{{ item['channel_id'] }}','{{ item['business_email'] }}')" class="fa fa-envelope" data-toggle="tooltip"  title="Message" style="position: relative; z-index: 1; font-size:25px;"></a>
+                                            </span>
+                                            <br>
+                                            <a href="#" class="fa fa-bullseye red" data-toggle="tooltip" title="Add To Campaign" style="font-size:25px;"><i class="fa fa-plus-circle green" style="font-size:10px; position:relative; top:5px; left:-8px;"></i>
+                                            </a>
+                                            <br>
+                                            <!--href="/createAlert/{{ item['channel_id'] }}"-->
+                                            <!--onclick="createAlert('{{ item['channel_id'] }}')"-->
+                                            <!--<button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#change_pass_modal">Change Password</button>-->
+                                            <a onclick="createAlert('{{ item['channel_id'] }}','{{ item['subscriberCount_gained'] }}','{{ (item['total_100video_views']/100)|int }}','{{ (item['total_100video_likes']/100)|int }}','{{ (item['total_100video_comments']/100)|int }}')" class="fa fa-bell black" data-toggle="modal" data-target="#create_alert_modal" data-tooltip="true" title="Create Alerts" style="font-size:25px;"><i class="fa fa-plus-circle green" style="font-size:10px; position:relative; top:1px; left:-10px;"></i></a>
+                                        </td>
+                                        <td rowspan="4">
+                                            <img src="{{ item['channel_img'] }}" height="150px" width="155px">
+                                        </td>
+                                        <td colspan="2" style="border-right: solid 1px #E1DEDD;">
+                                            <table width="400px" cellpadding="1">
+                                                <tr>
+                                                    <td colspan="2"><b style="font-size:15px;"><a href="https://www.youtube.com/channel/{{ item['channel_id'] }}" target="_blank">{{ item['title'] }}</a></b> <i class="fa fa-youtube-square-play font-medium-3 red"></i></td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="text-align:center;border-right: solid 1px #E1DEDD; border-bottom:solid 1px #E1DEDD; border-top:solid 1px #E1DEDD; font-size:14px;">
+                                                        <b>{{ item['subscriberCount_gained'] }}</b>
+                                                        <br>
+                                                        Total followers
+                                                    </td>
+                                                    <td style="text-align:center;border-bottom:solid 1px #E1DEDD; border-top:solid 1px #E1DEDD;  font-size:14px;">
+                                                        <b>{{ (item['total_100video_likes']/100)|int }}</b>
+                                                        <br>
+                                                        Avg Likes/ video
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="text-align:center;border-right: solid 1px #E1DEDD; border-bottom:solid 1px #E1DEDD;  font-size:14px;">
+                                                        <b>{{ (item['total_100video_views']/100)|int }}</b>
+                                                        <br>
+                                                        Avg Views/ video
+                                                    </td>
+                                                    <td style="text-align:center;font-size:14px;">
+                                                        <b>{{ (item['total_100video_comments']/100)|int }}</b>
+                                                        <br>
+                                                        Avg Comments/ video
+                                                    </td>
+                                                </tr>
+                                                <tr><td colspan="2">
+                                                    <b style="font-size:12px">Other Channels</b> &emsp;
+                                                    {% if item['facebook_url'] %}
+                                                    <a href="{{ item['facebook_url'] }}" target="_blank" class="fa fa-facebook-square-official blue" style="font-size:20px;"></a>&emsp;
+                                                    {% endif %}
+                                                    {% if item['insta_url'] %}
+                                                    <a href="{{ item['insta_url'] }}" target="_blank" class="fa fa-instagram pink" style="font-size:20px;"></a>&emsp;
+                                                    {% endif %}
+                                                    {% if item['twitter_url'] %}
+                                                    <a href="{{ item['twitter_url'] }}" target="_blank" class="fa fa-twitter-square cyan" style="font-size:20px;"></a>&emsp;
+                                                    {% endif %}
+                                                </td></tr>
+                                            </table>
+                                        </td>
+                                        <td rowspan="4" width="400" style="border-right: solid 1px #E1DEDD;" >
+                                            <div>
+                                                <canvas id="lineChart{{ item['linechart_id'] }}" height="150px" width="250px"></canvas>
+                                            </div></td>
+                                        <td rowspan="4" style="border-right:solid 2px white;">
+                                            <div class="scroll">
+                                                <ul class="nav nav-tabs" style="background-color:#DFDEDE  ;">
+                            <li style="margin-left:3%; font-size:15px; font-weight:bold; "><a data-toggle="tab" href="#status{{ item['channel_id'] }}" style="color:black;">Status<i class="fa fa-bullseye red"></i></a></li>&nbsp;&ensp;
+                            <!--<li style="margin-left:3%; font-size:15px; font-weight:bold; "><a onclick="updateChannelStatusForCampaign('{{ item['channel_id'] }}')" href="#" style="color:black;">Status<i class="fa fa-bullseye red"></i></a></li>&nbsp;&ensp;-->
+                            <li style="font-size:15px; font-weight:bold; "><a data-toggle="tab" href="#alert{{ item['channel_id'] }}" style="color:black;">Alert<i class="fa fa-bell black"></i></a></li>
+                          </ul>
+                                                <div class="tab-content">
+                                                    <div id="status{{ item['channel_id'] }}" class="tab-pane fade show active">
+                                                        <!--<input type="hidden" id="campaign_id[]" name="campaign_id[]">-->
+                                                    </div>
+
+                                                    <div id="alert{{ item['channel_id'] }}" class="tab-pane fade">
+                                                        {% if item['channel_id'] in favInfList_data['data']|map(attribute="channel_id") %}
+                                                        {% for favitem in favInfList_data['data'] %}
+                                                        {% if item['channel_id'] == favitem['channel_id'] %}
+                                                        <b style="font-weight:450; font-size:15px;">Followers<br/></b>
+                                                        <b style="font-weight:400;font-size:15px; color:red;">{{ favitem['alert_followers'] }}</b>
+                                                        <hr style="height:0px; margin:auto;">
+                                                        <b style="font-weight:450; font-size:15px;">Avg Views/video<br/></b>
+                                                        <b style="font-weight: 400; color:red; font-size:15px;">{{ favitem['alert_views'] }}
+                                                        </b>
+                                                        <hr style="height:0px; margin:auto;">
+                                                        <b style="font-weight:450; font-size:15px;">Avg Likes/video<br/></b>
+                                                        <b style="font-weight: 400; color:red; font-size:15px;">{{ favitem['alert_likes'] }}
+                                                        </b>
+                                                        <hr style="height:0px; margin:auto;">
+                                                        <b style="font-weight:450; font-size:15px;">Avg Comments<br/></b>
+                                                        <b style="font-weight: 400; color:red; font-size:15px;">{{ favitem['alert_comments'] }}</b>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                        {% else %}
+                                                        <b> No Alerts Set</b>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <br>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create alert Modal form-->
+<div class="modal fade" id="create_alert_modal" role="dialog" data-backdrop="false">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header alert-primary">
+                <b class="modal-title">Create Alert</b>
+                <button  type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <form name="create_alert_form" id="create_alert_form" action="/createAlerts" method="POST">
+                <div class="modal-body">
+                            <span class="display-block overflow-hidden">
+                            <!--<label for="channel_id">Channel ID:</label>-->
+                        <input  class="form-control" type="hidden" value="" name="channel_id" id="channel_id"></span>
+                    <span class="display-block overflow-hidden">
+                            <label for="total_followers">Total Followers:</label>
+        <input class="form-control"  type="number" value="" name="alert_followers" id="total_followers" placeholder="Total Followers"></span><br>
+                    <span class="display-block overflow-hidden">
+                            <label for="total_views">Avg Views/Videos:</label>
+        <input class="form-control"  type="number" value="" name="alert_views" id="total_views" placeholder="Total Views"></span><br>
+                    <span class="display-block overflow-hidden">
+                            <label for="total_likes">Avg Likes/Videos:</label>
+        <input class="form-control"  type="number" value="" name="alert_likes" id="total_likes" placeholder="Total Likes"></span><br>
+                    <span class="display-block overflow-hidden">
+                            <label for="total_comments">Avg Comments/Videos:</label>
+        <input class="form-control"  type="number" value="" name="alert_comments" id="total_comments" placeholder="Total Comments"></span><br>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-default">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Send message Modal form-->
+<div class="modal fade" id="sendMessage" role="dialog"  data-backdrop="static">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header alert-primary">
+        <b class="modal-title">Send Message</b>
+        <button  type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <form name="create_alert_form" id="send_message_form" action="/sendMessage" method="POST">
+        <div class="modal-body">
+          <input  class="form-control" type="hidden" value="" name="channel_id" id="message_channel_id">
+          <div class="row">
+            <div class="col-12">
+              <ul class="no-list-style">
+                <li class="mb-2">
+                  <span class="text-bold-500 primary"><a><i class=" font-small-3"></i>*To :</a></span>
+                  <span class="display-block"><input type="text" class="form-control" name="to_email_id" id="to_email_id" readonly> </span>
+                </li>
+                <li class="mb-2">
+                  <span class="text-bold-500 primary"><a><i class=" font-small-3"></i>*Subject :</a></span>
+                  <span class="display-block"><input required type="text" class="form-control" name="subject" > </span>
+                </li>
+                <li class="mb-2">
+                  <span class="text-bold-500 primary"><a><i class=" font-small-3"></i>Message:</a></span>
+                  <span class="display-block"><textarea class="form-control" name="message"></textarea> </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit"  class="btn btn-default">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<style>
+    div.scroll {
+        height: 150px;
+        width: 150px;
+        overflow-y: auto;
+    }
+    .tabrow {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        line-height: 24px;
+    }
+    .tabrow li {
+        padding: 0 10px;
+        border: 1px solid #AAA;
+        background: #ECECEC;
+        display: inline-block;
+    }
+</style>
+<style>
+    /* width */
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+    /* Track */
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: #888;
+    }
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.3/Chart.min.js"></script>
+<script src="js/main.js"></script>
+<script>
+    {% for item in data['data'] %}
+    const CHART{{ item['linechart_id'] }} = document.getElementById("lineChart{{ item['linechart_id'] }}");
+    let lineChart{{ item['linechart_id'] }} = new Chart(CHART{{ item['linechart_id'] }}, {
+        type: 'line',
+        data: {
+            labels: ["May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov"],
+            datasets: [
+            {
+                label: "Youtube",
+                fill: true,
+                backgroundColor: "rgb(255, 0, 0,0.1)",
+                <!--lineTension: 0.1,-->
+                borderColor: "rgb(255, 0, 0,0.5)",
+                borderCapStyle: 'butt',
+                borderDash: [],
+                borderWidth:1,
+                borderDashOffset: 0.0,
+                borderJoinStyle: 'miter',
+                pointBorderColor: "rgba(75,192,192,1)",
+                pointBackgroundColor: "#fff",
+                pointBorderWidth: 0.3,
+                pointHoverRadius: 2,
+                pointHoverBackgroundColor: "rgba(75,192,192,1)",
+                pointHoverBorderColor: "rgba(220,220,220,1)",
+                pointHoverBorderWidth: 1,
+                pointRadius: 1,
+                pointHitRadius: 10,
+                data: [65, 59, 80, 81, 56, 55, 40, 50],
+            },         {
+                label: "Twitter",
+                fill: true,
+                backgroundColor: "rgb(0, 255, 255,0.1)",
+                borderColor: "rgb(0, 255, 255,0.5)",
+                borderCapStyle: 'butt',
+                borderDash: [],
+                borderDashOffset: 0.0,
+                borderWidth: 1,
+                borderJoinStyle: 'miter',
+                pointBorderColor: "rgba(75,72,192,1)",
+                pointBackgroundColor: "#fff",
+                pointBorderWidth: 0.3,
+                pointHoverRadius: 2,
+                pointHoverBackgroundColor: "rgba(75,72,192,1)",
+                pointHoverBorderColor: "rgba(220,220,220,1)",
+                pointHoverBorderWidth: 1,
+                pointRadius: 1,
+                pointHitRadius: 10,
+                data: [100, 20, 60, 20, 80, 55, 90],
+            }
+        ]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+    {% endfor %}
+</script>
+
+<script>
+function createAlert(channel_id,followers,views,likes,comments) {
+    <!--alert(channel_id);-->
+    $("#channel_id").val(channel_id);
+    $("#total_followers").val(followers);
+    $("#total_views").val(views);
+    $("#total_likes").val(likes);
+    $("#total_comments").val(comments);
+}
+</script>
+<script>
+function getCampaign_ids(channel_id){
+
+  $.ajax({
+               type: "GET",
+               url: '/getChannelStatusForCampaign/'+channel_id,
+               contentType: 'application/json;charset=UTF-8',
+               success: function(data)
+               {
+
+                   if (data.results.length != 0){
+                   jQuery.each(data.results, function(i, val) {
+                        <!--alert(val.campaign_id);-->
+                        $('.campaign_id'+val.campaign_id).attr('disabled', true);
+
+                    });
+                    }
+
+               }
+  });
+
+}
+
+function campaignList(channel_id) {
+
+    $( "input#campaign_id" ).prop('checked', false);
+    $( "input#campaign_id" ).prop('disabled', false)
+    $("#youtube_channel_id").val(channel_id);
+    var campaign_ids = getCampaign_ids(channel_id);
+    <!--alert(campaign_ids);-->
+    {% for item in view_campaign_data['data'] %}
+        {% for item1 in item['youtube_inf_data'] %}
+            var campaign_channel_id = "{{ item1['channel_id'] }}";
+            var campaign_id = "{{ item['campaign_id'] }}";
+
+            if (channel_id == campaign_channel_id){
+                <!--alert("equal");-->
+                $('.campaign_id'+campaign_id).attr('disabled', true);
+             }
+             else{
+                 <!--alert("not equal");-->
+                  <!--$('.campaign_id'+campaign_id).attr('disabled', false);-->
+             }
+        {% endfor %}
+    {% endfor %}
+}
+
+function updateChannelStatusForCampaign(channel_id){
+    <!--alert(channel_id);-->
+    $.ajax({
+               type: "GET",
+               url: '/getChannelStatusForCampaign/'+channel_id,
+               contentType: 'application/json;charset=UTF-8',
+               success: function(data)
+               {
+                   $( '#status'+channel_id).empty();
+                   if (data.results.length != 0){
+                   jQuery.each(data.results, function(i, val) {
+                        <!--alert(val.campaign_name);-->
+                        <!--alert(val.status);-->
+
+                            $('#status'+channel_id).append('<b style="font-weight:450; font-size:15px;">'+val.campaign_name+'<br/></b>');
+                            $('#status'+channel_id).append('<b style="font-weight:400; color:orange; font-size:15px;">'+val.status+'</b>');
+                            $('#status'+channel_id).append('<hr style="height:0px; margin:auto;">');
+                    });
+                    }
+                    else{
+                        $('#status'+channel_id).append('<b>No Campaigns</b>');
+                    }
+               }
+             });
+
+}
+</script>
+
+<script>
+  $(document).ready(function () {
+        $("#add_influencer_to_campaign").submit(function(e) {
+        var form = $(this);
+        var url = form.attr('action');
+        var channel_id = $('#youtube_channel_id').val();
+        $.ajax({
+               type: "POST",
+               url: url,
+               data: form.serialize(), // serializes the form's elements.
+               success: function(data)
+               {
+                   alert(data); // show response from the python script.
+                   $('#campaignList').modal('toggle');
+                   updateChannelStatusForCampaign(channel_id);
+               }
+             });
+        e.preventDefault(); // avoid to execute the actual submit of the form.
+    });
+
+$("#send_message_form").submit(function(e) {
+        var form = $(this);
+        var url = form.attr('action');
+        var channel_id = $('#message_channel_id').val();
+        $.ajax({
+               type: "POST",
+               url: url,
+               data: form.serialize(), // serializes the form's elements.
+               success: function(data)
+               {
+                   alert(data); // show response from the python script.
+                   $('#sendMessage').modal('toggle');
+                   updateChannelStatusForCampaign(channel_id);
+               }
+             });
+        e.preventDefault(); // avoid to execute the actual submit of the form.
+    });
+
+
+{% for item in data['data'] %}
+  updateChannelStatusForCampaign('{{ item['channel_id'] }}');
+{% endfor %}
+
+
+
+        <!--alert('lazy');-->
+        <!--$(".lazy").hide();-->
+        <!--$(".lazy").addClass("loader");-->
+        $(window).lazyScript({
+        selectorClass: 'lazy',
+        callback: jQuery.noop,
+        threshold: 0,
+        scrollInterval: 500
+        });
+   });
+
+
+</script>
+
+
+
+{% endblock %}

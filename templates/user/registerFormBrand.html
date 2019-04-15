@@ -1,0 +1,122 @@
+{% extends 'auth_layout.html' %}
+{{ super() }}
+{% block body %}
+<title xmlns="http://www.w3.org/1999/html">{{title}}</title>
+<img src="{{ url_for('static', filename='img/logo_full.png') }}" alt="connecsi logo"/>
+
+<ul class="tabs">
+    <li class="tab col s6"><a class="active active-border brand-tab" href="#brand">Brand</a></li>
+    <li class="tab col s6"><a class="active-border influencer-tab" href="#influencer">Influencer</a></li>
+</ul>
+
+<div id="brand" class="card-content cardheight bg-white">
+
+    <form class="form" id="brand_register" name="brand_register" method="POST" action="/saveBrand">
+        <div class="form-body">
+            <h4 class="form-section text-left"><i class="fa fa-pencil"></i> Brand Registration</h4>
+
+            <div class="form-group">
+                <div class="position-relative has-icon-left">
+                    <input type="email" id="email" name="email"
+                           class="validate browser-default form-control" required
+                           placeholder="Business Email">
+                    <div class="form-control-position">
+                        <i class="fa fa-user"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="position-relative has-icon-left">
+                    <input type="password" id="password" name="password" required placeholder="Password"
+                           class="validate browser-default form-control" >
+                    <div class="form-control-position">
+                        <i class="fa fa-lock"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="position-relative has-icon-left">
+                    <input type="password" id="confirm_password" name="confirm_password" required placeholder="Confirm Password"
+                           class="validate browser-default form-control">
+                    <div class="form-control-position">
+                        <i class="fa fa-lock"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="custom-control custom-checkbox custom-control-inline text-left">
+                <input type="checkbox" id="loginCheckbox" class="filled-in custom-control-input" required>
+                <label class="custom-control-label loginCheckboxLabel" for="loginCheckbox">
+                    I have read and agreed to the <a href="#" class="color1 break">Terms & Conditions</a>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" onclick="return check('brand_register','password','confirm_password')" id="registerBtn" class="btn btn-block btn-purple password-check">Free Registration</button>
+        </div>
+
+        <div class="form-actions bottom text-left">
+            <a class="color2" href="/">Already have an account</a>
+        </div>
+    </form>
+</div>
+<div id="influencer" class="card-content cardheight bg-white">
+    <form class="form" method="POST" action="/login">
+        <div class="form-body">
+            <h4 class="form-section text-left"><i class="fa fa-unlock"></i> Influencer Login</h4>
+
+            <div class="form-group">
+                <div class="position-relative has-icon-left">
+                    <input type="email" id="inf_email_id" name="email"
+                           class="validate browser-default form-control" required
+                           placeholder="Email or Username">
+                    <div class="form-control-position">
+                        <i class="fa fa-user"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="position-relative has-icon-left">
+                    <input type="password" id="inf_password" name="password" required placeholder="Password"
+                           class="validate browser-default form-control">
+                    <div class="form-control-position">
+                        <i class="fa fa-lock"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="custom-control custom-checkbox custom-control-inline text-left">
+                <input type="checkbox" id="loginCheckbox2" class="filled-in custom-control-input">
+                <label class="custom-control-label loginCheckboxLabel" for="loginCheckbox2">Remember me</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <button type="button" class="btn btn-block btn-purple">Login</button>
+        </div>
+
+        <div class="form-actions bottom text-left">
+            <div class="bottom-icon">Join us for free with:
+                <a href="/google_login" class="fa fa-youtube-square color1 right"></a>
+                <a href="/twitter_login" class="fa fa-twitter-square color1 right"></a>
+            </div>
+        </div>
+
+        <div class="form-actions bottom text-left">
+            <a class="color2" href="/forgotPassword">Recover Password</a>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+
+</script>
+{% endblock %}

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <!-- Compiled and minified CSS -->
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='app-assets/css/app.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='app-assets/fonts/font-awesome/css/font-awesome.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/toro_auth.css') }}">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- jquery function for initializing login tabs -->
+</head>
+<body data-col="1-column" class=" 1-column  blank-page blank-page">
+
+
+<div class="wrapper">
+    <div class="main-panel">
+        <div class="main-content">
+            <div class="content-wrapper"><!--Login Page Starts-->
+                <section id="login" class="login">
+                    <div class="container-fluid">
+                        <div class="row full-height-vh">
+                            <div class="col-12 d-flex align-items-center justify-content-center">
+                                <div class="card card-transparent text-center width-400">
+                                    <div class="card-body">
+                                        <div class="card-block">
+                                            {% include 'includes/_flash_messages.html' %}
+                                            {% block body %}{% endblock %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!--Login Page Ends-->
+            </div>
+        </div>
+    </div>
+</div>
+    <script src="{{ url_for('static', filename='app-assets/vendors/js/core/jquery-3.2.1.min.js') }}" type="text/javascript"></script>
+    <script src="{{ url_for('static', filename='app-assets/js/custom_auth.js') }}" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
+</body>
+</html>

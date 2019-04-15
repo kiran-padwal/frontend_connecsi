@@ -1,0 +1,428 @@
+{% extends 'admin_layout.html' %}
+{{ super() }}
+{% block body %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="content-header">Classified Ads - Edit Detail</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-block">
+                        <form class="form" name="classified_form" id="classified_form" method="POST"
+                              action="/updateClassified" enctype="multipart/form-data">
+                            {% for item in view_classified_details_data['data'] %}
+                            <input type="hidden" name="classified_id" value="{{ item['classified_id'] }}">
+                            <div class="row">
+                                <div class="col-xl-6 col-lg-12 col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-6 my-1">
+                                            <label for="classified_name">Headline</label>
+                                            <input id="classified_name" type="text" class="form-control"
+                                                   name="classified_name" value="{{item['classified_name']}}">
+                                        </div>
+                                        <div class="col-md-3 my-1">
+                                            <label for="from_date">Start Date</label>
+                                            <input id="from_date"
+                                                   class="form-control datepicker"
+                                                   name="from_date"
+                                                   placeholder="yyyy-mm-dd"
+                                                   value="{{item['from_date']}}"></div>
+                                        <div class="col-md-3 my-1">
+                                            <label for="to_date">End Date</label>
+                                            <input id="to_date"
+                                                   class="form-control datepicker"
+                                                   name="to_date"
+                                                   placeholder="yyyy-mm-dd"
+                                                   value="{{item['to_date']}}">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3 my-1">
+                                            <label for="budget">Budget</label>
+                                            <input type="number"
+                                                   class="form-control"
+                                                   name="budget"
+                                                   id="budget"
+                                                   placeholder="Budget" value="{{item['budget']}}">
+                                        </div>
+                                        <div class="col-md-3 my-1">
+                                            <label for="currency">Currency</label>
+                                            <select class="form-control" name="currency" id="currency">
+                                                <option value="{{ item['currency'] }}">{{ item['currency'] }}</option>
+                                                <option value="USD">USD</option>
+                                                <option value="EUR">EUR</option>
+                                                <option value="GBP">GBP</option>
+                                                <option value="INR">INR</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3 my-1">
+                                            <label for="channels">Channels</label>
+                                            <select class="form-control" id="channels" name="channels"
+                                                    multiple="multiple" >
+                                                {% set all_channels = ['youtube','twitter','instagram','facebook'] %}
+                                                {% for channel in all_channels %}
+                                                {% if channel|string in item['channels']|string %}
+                                                <option id="{{ channel }}" value="{{ channel }}" selected>{{ channel }}</option>
+                                                {% else %}
+                                                <option id="{{ channel }}" value="{{ channel }}">{{ channel }}</option>
+                                                {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3 my-1">
+                                            <label for="country">Country</label>
+                                            <select class="form-control" name="country" id="country" multiple
+                                                    data-live-search="true">
+                                                {% for itemb in regionCodes['data'] %}
+                                                {% if itemb['region_code']|string in item['regions']|string %}
+                                                <option id="{{itemb['region_code']}}" value="{{ itemb['region_code'] }}" selected>{{ itemb['country_name'] }}</option>
+                                                {% else %}
+                                                <option id="{{itemb['region_code']}}" value="{{ itemb['region_code'] }}">{{ itemb['country_name'] }}</option>
+                                                {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6 my-1">
+                                            <div class="form-field sliderContainer">
+                                                <div class="form-group">
+                                                    <label>Followers</label>
+                                                    <div id="slider" class="sliderUI"></div>
+                                                </div>
+                                                <input class="form-control form-control-xs bg-light-grey slider-input round left lower-value"
+                                                       name="min_lower" value="{{item['min_lower_followers']}}" data-range="0" id="lower-value">
+                                                <input class="form-control form-control-xs bg-light-grey slider-input round right upper-value"
+                                                       name="max_upper" value="{{item['max_upper_followers']}}" data-range="100000000"
+                                                       id="upper-value">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 my-1">
+                                            <label for="target_url">Target url</label>
+                                            <input type="url" id="target_url" class="form-control"
+                                                   name="target_url"
+                                                   value="{{item['target_url']}}">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 my-1">
+                                            <label for="videoCategories">Categories</label>
+                                            <select class="form-control" name="video_cat" >
+                                                {% for itemb in videoCategories['data'] %}
+                                                {% if item['video_cat_name']|string in itemb['video_cat_name']|string %}
+                                                <option id="{{itemb['video_cat_id']}}" value="{{ itemb['video_cat_id'] }}" selected>{{ itemb['video_cat_name'] }}</option>
+                                                {% else %}
+                                                <option id="{{itemb['video_cat_id'] }}" value="{{ itemb['video_cat_id'] }}">{{ itemb['video_cat_name'] }}</option>
+                                                {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 my-1">
+                                            <label for="arrangements">Content Type</label>
+
+                                            <select multiple id="arrangements" name="arrangements"
+                                                    class="form-control"
+                                                    >
+                                                <option id="Review" value="Review" {{ 'selected' if 'Review' in item['arrangements']|string else '' }}>Review</option>
+                                                <option id="UnboxingGameplay" value="Unboxing / Gameplay" {{ 'selected' if 'UnboxingGameplay' in item['arrangements']|string else '' }}>Unboxing / Gameplay</option>
+                                                <option id="ShoutoutMention" value="Shout out/Mention" {{ 'selected' if 'ShoutoutMention' in item['arrangements']|string else '' }}>Shout out/Mention</option>
+                                                <option id="Giveaway" value="Giveaway" {{ 'selected' if 'Giveaway' in item['arrangements']|string else '' }}>Giveaway</option>
+                                                <option id="VideoIntroOutro" value="Video Intro/Outro" {{ 'selected' if 'VideoIntroOutro' in item['arrangements']|string else '' }}>video Intro/Outro</option>
+                                                <option id="Tutorial" value="Tutorial" {{ 'selected' if 'Tutorial' in item['arrangements']|string else '' }}>Tutorial</option>
+                                                <option id="BannerplacementURLplacement" value="Banner placement / URL placement" {{ 'selected' if 'BannerplacementURLplacement' in item['arrangements']|string else '' }}>Banner placement / URL placement</option>
+                                                <option id="Sponsorship" value="Sponsorship" {{ 'selected' if 'Sponsorship' in item['arrangements']|string else '' }}>Sponsorship</option>
+                                                <option id="OtherExplainindescription" value="Other (Explain in description)" {{ 'selected' if 'OtherExplainindescription' in item['arrangements']|string else '' }}>Other (Explain in description)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 my-1">
+                                            <label for="kpis">Kpis:</label>
+                                            <select name="kpis" id="kpis" class="form-control" multiple >
+                                                    <option id="NoofClicks" value="No of Clicks" {{ 'selected' if 'NoofClicks' in item['kpis']|string else '' }}>No of Clicks</option>
+                                                    <option id="NewUsers" value="New Users" {{ 'selected' if 'NewUsers' in item['kpis']|string else '' }}>New Users</option>
+                                                    <option id="RevenueGenerated" value="Revenue Generated" {{ 'selected' if 'RevenueGenerated' in item['kpis']|string else '' }}>Revenue Generated</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 my-1 d-flex flex-column">
+                                            <label for="campaign_files">Attachments</label>
+                                            <input type="file" name="campaign_files"
+                                                   id="campaign_files"
+                                                   class="brands_classified_files" >
+                                            <div class="displayFiles"></div>
+                                        </div>
+                                        <div class="col-md-12 my-1">
+                                            <label>Files</label>
+                                            <div class="d-block">
+                                                {% set files = item['files'].split(',') %}
+                                                {% for file in files %}
+                                                {% set ext = file[-3:] %}
+                                                <a href="../static/campaign_files/{{ file }}" download>
+                                                    {% if ext == "jpg" %}
+                                                    <i class="fa fa-file-image-o"></i>
+                                                    {% elif ext == "doc" %}
+                                                    <i class="fa fa-file-word-o"></i>
+                                                    {% else %}
+                                                    <i class="fa fa-file"></i>
+                                                    {% endif %}
+                                                </a>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 my-1">
+                                            {% if item['convert_to_campaign'] == 'TRUE' %}
+                                            Already Posted As Campaign
+                                            {% else %}
+                                            <input type="checkbox" class="form-check-input" id="convert_to_campaign"
+                                                   name="convert_to_campaign" style="margin-left: 0rem">
+                                            <label class="form-check-label"
+                                                   for="convert_to_campaign" style="margin-left: 1.25rem">POST AS CAMPAIGN</label>
+                                            {% endif %}
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 col-lg-12 col-md-12">
+                                    <div class="row">
+                                        <div class="col-12 my-1">
+                                            <label for="classified_description">Description</label>
+                                            <textarea class="form-control"
+                                                      rows="17" id="descritpion"
+                                                      name="classified_description"
+                                                      id="classified_description"
+                                                      >{{item['classified_description']}}</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <hr style="margin: 1rem 0; border-color: #d3dce9;">
+                                </div>
+                                <div class="col-12 my-1 d-flex justify-content-end">
+                                    <button type="submit" id="saveclassified" class="btn btn-primary m-0 bg-color1">
+                                        Update
+                                    </button>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div class="row">-->
+<!--<div class="col-sm-12">-->
+<!--<div class="card">-->
+<!--<div class="row">-->
+<!--<div class="col-12">-->
+<!--<div class="card-header">Edit Classified</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="card-body">-->
+<!--<div class="card-block">-->
+<!--<form class="form" name="classified_form" id="classified_form" method="POST" action="/updateClassified" enctype="multipart/form-data">-->
+<!--<div class="container-fluid">-->
+<!--{% for item in view_classified_details_data['data'] %}-->
+<!--<div class="row">-->
+<!--<div class="col-sm-6 col-md-6" >-->
+<!--<div class="row">-->
+<!--<input type="hidden" name="classified_id" id="classified_id" value="{{ item['classified_id'] }}">-->
+<!--<div class="col-sm-4"><label for="classified_name">Ad Name:</label><input value="{{ item['classified_name'] }}" id="classified_name" type="text" class="form-control" name="classified_name" ></div>-->
+<!--<div class="col-sm-4"><label for="from_date">From:</label><input value="{{ item['from_date'] }}" id="from_date" type="date" class="form-control" name="from_date" ></div>-->
+<!--<div class="col-sm-4"><label for="to_date">To:</label><input value="{{ item['to_date'] }}" id="to_date" type="date" class="form-control" name="to_date" ></div>-->
+<!--</div>-->
+<!--<br>-->
+<!--<div class="row">-->
+<!--<div class="col-sm-3">-->
+<!--<select class="form-control" name="currency" id="currency">-->
+<!--<option value="{{ item['currency'] }}">{{ item['currency'] }}</option>-->
+<!--<option value="USD">USD</option>-->
+<!--<option value="EUR">EUR</option>-->
+<!--<option value="GBP">GBP</option>-->
+<!--<option value="INR">INR</option>-->
+<!--</select>-->
+<!--</div>-->
+<!--<div class="col-sm-5">-->
+<!--<span class="text-bold-500 primary"><input value="{{ item['budget'] }}" type="number" class="form-control" name="budget" placeholder="Budget" >-->
+<!--</span>-->
+<!--</div>-->
+<!--<div class="col-sm-4">-->
+<!--<span class="text-bold-500 primary">-->
+<!--<div class="form-group">-->
+<!--&lt;!&ndash;<label for="channels">Channels</label>&ndash;&gt;-->
+<!--<select class="form-control" id="channels" name="channels" multiple="multiple" >-->
+<!--<option value="" disabled>Channels</option>-->
+<!--<script>-->
+<!--$( document ).ready(function() {-->
+<!--{% set channels = item['channels'].split(',') %}-->
+<!--{% for channel in channels %}-->
+<!--$('#{{channel}}').attr("selected", "selected");-->
+<!--{% endfor %}-->
+<!--});-->
+<!--</script>-->
+<!--<option id="youtube" value="youtube">youtube</option>-->
+<!--<option id="twitter" value="twitter">twitter</option>-->
+<!--<option id="instagram" value="instagram">instagram</option>-->
+<!--<option id="facebook" value="facebook">facebook</option>-->
+<!--</select>-->
+<!--</div>-->
+<!--</span>-->
+<!--</div>-->
+<!--<br>-->
+<!--</div>-->
+<!--<div class="row">-->
+<!--<div class="col-sm-4">-->
+<!--<span class="text-bold-500 primary">-->
+<!--<div class="form-group">-->
+<!--<label for="country" class="text-bold-500 primary">Country</label>-->
+<!--<select class="form-control" name="country" id="country" multiple >-->
+<!--{% for item in regionCodes['data'] %}-->
+<!--<option id="{{item['region_code']}}" value="{{ item['region_code'] }}">{{ item['country_name'] }}</option>-->
+<!--{% endfor %}-->
+<!--</select>-->
+<!--<script>-->
+<!--$( document ).ready(function() {-->
+<!--{% set countries = item['regions'].split(',') %}-->
+<!--{% for country in countries %}-->
+<!--$('#{{country}}').attr("selected", "selected");-->
+<!--{% endfor %}-->
+<!--});-->
+<!--</script>-->
+
+<!--</div>-->
+<!--</span>-->
+<!--</div>-->
+<!--<div class="col-sm-8">-->
+<!--<span class="text-bold-500 primary">-->
+<!--<div class="form-field col s7">-->
+<!--<div class="form-group">-->
+<!--<p>-->
+<!--<label>Followers range:</label>-->
+<!--</p>-->
+<!--<div id="add_campaign_followers_slider" style="height:10px; width: 190px; border-radius: 55px;" ></div>-->
+<!--</div>-->
+<!--<div class="float-left">Min Followers : </div>-->
+<!--<div id="lower-value" ></div>-->
+<!--<div class="float-left">Max Followers : </div>-->
+<!--<div id="upper-value"></div>-->
+<!--<input type="hidden" name="min_lower" value="" id="min_lower">-->
+<!--<input type="hidden" name="max_upper" value="" id="max_upper">-->
+<!--</div>-->
+<!--</span>-->
+<!--</div>-->
+<!--</div>-->
+<!--<span class="text-bold-500 primary">-->
+<!--<div class="form-group">-->
+<!--<label for="videoCategories">Categories</label>-->
+<!--<select class="form-control" name="video_cat" >-->
+<!--{% for item in videoCategories['data'] %}-->
+
+<!--<option id="{{item['video_cat_id']}}" value="{{ item['video_cat_id'] }}">{{ item['video_cat_name'] }}</option>-->
+<!--{% endfor %}-->
+<!--</select>-->
+<!--<script>-->
+<!--$( document ).ready(function() {-->
+
+<!--$('#{{item['video_cat_id']}}').attr("selected", "selected");-->
+
+<!--});-->
+<!--</script>-->
+<!--</div>-->
+<!--</span>-->
+<!--<span class="text-bold-500 primary"> <input value="{{ item['target_url'] }}" type="url" class="form-control" name="target_url" placeholder="Target URL" ></span><br>-->
+<!--<span>-->
+<!--<input  type="file" name="brands_classified_files" id="brands_classified_files" class="brands_classified_files" >-->
+<!--</span><div class="displayFiles"></div>-->
+<!--<div class="col-sm-4 col-md-4"><b style="font-weight: 500">Files</b><br>-->
+<!--{% set files = item['files'].split(',') %}-->
+<!--{% for file in files %}-->
+<!--{% set ext = file[-3:] %}-->
+<!--<a href="../static/brands_classified_files/{{ file }}" download>-->
+<!--{% if ext == "jpg" %}-->
+<!--<i class="fa fa-file-image-o"></i>-->
+<!--{% elif ext == "doc" %}-->
+<!--<i class="fa fa-file-word-o"></i>-->
+<!--{% else %}-->
+<!--<i class="fa fa-file"></i>-->
+<!--{% endif %}-->
+<!--</a>-->
+<!--{% endfor %}-->
+<!--</div>-->
+<!--</div>-->
+
+<!--<div class="col-sm-6 col-md-6">-->
+<!--<label for="classified_description">Description:</label><textarea  class="form-control" rows="9" id="classified_description" name="classified_description" >{{ item['classified_description'] }}</textarea>-->
+<!--<br>-->
+<!--<span class="text-bold-500 primary">-->
+<!--<select multiple id="arrangements" name="arrangements" class="form-control" >-->
+<!--<option value="" disabled>Arrangements / Content Type</option>-->
+<!--<option id="Review" value="Review">Review</option>-->
+<!--<option id="UnboxingGameplay" value="Unboxing / Gameplay">Unboxing / Gameplay</option>-->
+<!--<option id="ShoutoutMention" value="Shout out/Mention">Shout out/Mention</option>-->
+<!--<option id="Giveaway" value="Giveaway">Giveaway</option>-->
+<!--<option id="VideoIntroOutro" value="Video Intro/Outro">video Intro/Outro</option>-->
+<!--<option id="Tutorial" value="Tutorial">Tutorial</option>-->
+<!--<option id="BannerplacementURLplacement" value="Banner placement / URL placement">Banner placement / URL placement</option>-->
+<!--<option id="Sponsorship" value="Sponsorship">Sponsorship</option>-->
+<!--<option id="OtherExplainindescription" value="Other (Explain in description)">Other (Explain in description)</option>-->
+<!--</select>-->
+<!--<script>-->
+<!--$( document ).ready(function() {-->
+<!--{% set arrangements = item['arrangements'].split(',') %}-->
+<!--{% for arrangement in arrangements %}-->
+
+<!--$('#{{arrangement}}').attr("selected", "selected");-->
+
+
+<!--{% endfor %}-->
+<!--});-->
+<!--</script>-->
+<!--</span>-->
+<!--<br>-->
+<!--<span class="text-bold-500 primary">-->
+<!--<select name="kpis" id="kpis" class="form-control" multiple >-->
+<!--<option disabled>KPIs</option>-->
+<!--<option id="NoofClicks" value="No of Clicks">No of Clicks</option>-->
+<!--<option id="NewUsers" value="New Users">New Users</option>-->
+<!--<option id="RevenueGenerated" value="Revenue Generated">Revenue Generated</option>-->
+<!--</select>-->
+<!--<script>-->
+<!--$( document ).ready(function() {-->
+<!--{% set kpis = item['kpis'].split(',') %}-->
+<!--{% for kpi in kpis %}-->
+<!--$('#{{kpi}}').attr("selected", "selected");-->
+<!--{% endfor %}-->
+<!--});-->
+<!--</script>-->
+<!--</span><br>-->
+<!--<span>-->
+<!--{% if item['convert_to_campaign'] == 'TRUE' %}-->
+<!--Already Posted As Campaign-->
+<!--{% else %}-->
+<!--<input type="checkbox" class="form-check-input" id="convert_to_campaign" name="convert_to_campaign">-->
+<!--<label class="form-check-label" for="convert_to_campaign">Post as Campaign</label>-->
+<!--{% endif %}-->
+<!--</span>-->
+<!--</div>-->
+<!--</div>-->
+<!--{% endfor %}-->
+<!--<button type="submit" id="saveclassified" class="btn btn-success"  style="margin-left: 45%">Update</button>-->
+<!--</div>-->
+<!--</form>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+{% endblock %}

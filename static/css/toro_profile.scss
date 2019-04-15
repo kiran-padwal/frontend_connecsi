@@ -1,0 +1,121 @@
+$color1: #9373d8; //purple
+$color2: #6697ea; //blue
+$color3: #8acee9; //light blue
+$color4: #69dbdc; //light green
+
+.btn {
+  letter-spacing: inherit;
+}
+
+.width-68 {
+  max-width: 68px;
+}
+
+
+
+.user-profile {
+  .displayFiles {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    img {
+      width: 150px !important;
+      height: 150px !important;
+    }
+  }
+}
+
+
+.user {
+  margin-left: 0.75rem;
+  word-break: break-word;
+
+  @media (max-width: 564px) {
+    margin: 0.75rem 0 2rem;
+  }
+
+  .nickname {
+    margin: 0;
+    font-weight: 700;
+  }
+
+  &_content {
+    margin: 0.45rem 0;
+
+    @media (max-width: 564px) {
+      margin: 0.75rem 0;
+    }
+
+    .role {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .subscription {
+      margin: 0;
+      font-size: 14px;
+    }
+  }
+
+  .btn {
+    margin-bottom: 0;
+  }
+}
+
+.social-media {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  &_title {
+    font-family: Rubik, sans-serif;
+    font-weight: bold;
+    line-height: 14px;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #75787D;
+  }
+
+  &_icon {
+    font-size: 24px;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+    width: 48px;
+    color: #fff;
+    border-radius: 50%;
+    margin-right: 16px;
+    margin-bottom: 16px;
+
+    @media (max-width: 564px) {
+      height: 38px;
+      width: 38px;
+      font-size: 18px;
+      margin-bottom: 0;
+    }
+
+    &.none-active {
+      background-color: #BDBDBD;
+      cursor: default;
+      pointer-events: none;
+
+      &:hover {
+        color: #fff;
+        background-color: #BDBDBD;
+      }
+
+      &:focus {
+        color: #fff;
+        background-color: #BDBDBD;
+      }
+    }
+
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}

@@ -1,0 +1,201 @@
+{% extends 'dashboard_layout_inf.html' %}
+{{ super() }}
+{% block body %}
+<!--Basic User Details Starts-->
+
+<section id="user-profile">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="content-header">Profile - Edit Profile</div>
+            <p class="content-sub-header"></p>
+        </div>
+    </div>
+    <div class="row">
+        {% for item in data['data'] %}
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row px-3 py-3">
+                        <div class="col-xl-6">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h6 class="social-media_title">Profile Picture</h6>
+                                </div>
+                                <div class="col-12 d-flex flex-lg-row flex-md-column flex-sm-column flex-column align-items-lg-start align-items-md-start align-items-sm-start align-items-start">
+                                    {% if item['profile_pic'] %}
+                                    <img id="profile_pic" src="static/img/{{ item['profile_pic'] }}"
+                                         class="img-border width-150" alt="Card image" height="150px"
+                                         width="150px">
+                                    {% else %}
+                                    <img id="profile_pic" src="static/img/fixed_image.png"
+                                         class="img-border width-150" alt="Card image">
+                                    {% endif %}
+                                    <div class="user">
+                                        <h4 class="nickname">{{ item['title'] }}</h4>
+                                        <div class="user_content">
+                                            <div class="subscription">Subscription Type : Basic</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 mt-2">
+                            <h6 class="social-media_title">Social media accounts</h6>
+                            <div class="social-media">
+                                {% if data['data']['facebook_url'] %}
+                                <a href="#facebook_url" class="social-media_icon fa fa-facebook-square"
+                                   title="facebook"></a>
+                                {% else %}
+                                <a href="#facebook_url" class="social-media_icon none-active fa fa-facebook-square"
+                                   title="facebook"></a>
+                                {% endif %}
+                                {% if data['data']['twitter_url'] %}
+                                <a href="#twitter_url" class="social-media_icon fa fa-twitter-square"
+                                   title="twitter"></a>
+                                {% else %}
+                                <a href="#twitter_url" class="social-media_icon none-active fa fa-twitter-square"
+                                   title="twitter"></a>
+                                {% endif %}
+                                {% if data['data']['insta_url'] %}
+                                <a href="#insta_url" class="social-media_icon fa fa-instagram" title="instagram"></a>
+                                {% else %}
+                                <a href="#insta_url" class="social-media_icon none-active fa fa-instagram "
+                                   title="instagram"></a>
+                                {% endif %}
+                                {% if data['data']['youtube_url'] %}
+                                <a href="#youtube_url" class="social-media_icon fa fa-youtube" title="youtube"></a>
+                                {% else %}
+                                <a href="#youtube_url" class="social-media_icon none-active fa fa-youtube"
+                                   title="youtube"></a>
+                                {% endif %}
+                                <!--<a href="#" target="_blank" class="fa fa-plus grey" title="plus" style="font-size:40px;"></a>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <form action="/updateProfile_inf" method="POST" class="form">
+                    <div class="card-body">
+                        <div class="px-3 py-2">
+                            <h4 class="form-section"><i class="ft-user"></i> Personal Information </h4>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="first_name">*First Name</label>
+                                        <input type="text" id="first_name" class="form-control" name="first_name"
+                                               value="{{item['first_name']}}">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="last_name">*Last Name</label>
+                                        <input type="text" id="last_name" class="form-control" name="last_name"
+                                               value="{{item['last_name']}}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="phone">Phone</label>
+                                        <input type="text" id="phone" class="form-control" name="phone"
+                                               value="{{ item['phone'] }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="website">WEBSITE</label>
+                                        <input type="text" id="website" class="form-control" name="website"
+                                               value="{{ item['website']}}" placeholder="Website">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="videoCategories">Categories</label>
+                                        <select class="form-control" id="videoCategories" name="categories"
+                                                multiple>
+                                            {% for item in videoCat['data'] %}
+                                            <option id="{{item['video_cat_id']}}"
+                                                    value="{{ item['video_cat_id'] }}">{{ item['video_cat_name'] }}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="country">*Country</label>
+                                        <select class="form-control" name="country" id="country" required data-live-search="true">
+                                            {% for item in regionCodes['data'] %}
+                                            <option id="{{item['region_code']}}" value="{{ item['region_code'] }}">
+                                                {{ item['country_name'] }}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="city">City</label>
+                                        <input type="text" id="city" name="city" class="form-control"
+                                               value="{{ item['city']}}" placeholder="City"
+                                               style="width:400px;"> </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="full-width">&nbsp;</label>
+                                        <button type="button" class="btn btn-raised bg-color1 color-white"
+                                                data-toggle="modal" data-backdrop="true"
+                                                data-target="#change_pass_modal">Change Password
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-end border-0 mb-2">
+                        <button type="submit" class="btn btn-raised bg-color1 color-white ml-auto mb-0">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
+{% block footer %}
+<div class="modal fade" id="change_pass_modal" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <b class="modal-title">Change Password</b>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <form name="change_password_form" id="change_password_form" action="/changePassword" method="POST">
+                <div class="modal-body">
+                    <!--<input class="form-control" required type="text" name="old_password" id="old_password" placeholder="Old Password"><br>-->
+                    <input class="form-control" required type="password" name="new_password" id="new_password"
+                           placeholder="New Password"><br>
+                    <input class="form-control" required type="password" name="con_new_password" id="con_new_password"
+                           placeholder="Confirm New Password">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn bg-color1 color-white"
+                            onclick="return check('change_password_form','new_password','con_new_password')">Save
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'admin_layout.html' %}
+{{ super() }}
+{% block body %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="content-header">Calendar</div>
+            <p class="content-sub-header">{{data}}</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-block">
+                        <p class="card-text"></p>
+                        <div id="calendar" data-calendar="
+{% for item in campaign_data['data'] %}
+    {{ item['campaign_name'] }}:{{ item['from_date'] }}:{{ item['to_date'] }}:{{ item['color'] }}; {% endfor %}
+                        "></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

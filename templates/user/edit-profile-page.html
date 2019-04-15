@@ -1,0 +1,485 @@
+{% extends 'admin_layout.html' %}
+{{ super() }}
+{% block body %}
+<!--Basic User Details Starts-->
+<section id="user-profile">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="content-header">Profile - Edit Profile</div>
+            <p class="content-sub-header"></p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row px-3 py-3">
+                        <div class="col-xl-6">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h6 class="social-media_title">Profile Picture</h6>
+                                </div>
+                                <div class="col-12 d-flex flex-lg-row flex-md-column flex-sm-column flex-column align-items-lg-center align-items-md-start align-items-sm-start align-items-start">
+                                    {% if data['data']['profile_pic'] %}
+                                    <img id="profile_pic" src="static/img/{{ data['data']['profile_pic'] }}"
+                                         class="img-border width-150" alt="Card image" height="150px"
+                                         width="150px">
+                                    {% else %}
+                                    <img id="profile_pic" src="static/img/fixed_image.png"
+                                         class="img-border width-150" alt="Card image">
+                                    {% endif %}
+                                    <div class="displayFilesProfile"></div>
+                                    <form name="avtar_form" method="POST" action="/uploadProfilePic"
+                                          enctype=multipart/form-data>
+                                        <div class="file-field file">
+                                            <!--<form id="form1" runat="server">-->
+                                            <label class="btn btn-raised bg-color2 color-white my-2 mx-md-2 text-capitalize"
+                                                   for="profile_pic_fileinp">
+                                                Select File
+                                            </label>
+                                            <input class="hide_file form-control-file" type='file'
+                                                   id="profile_pic_fileinp"
+                                                   name="profile_pic"
+                                                   style="display:none;" required/><br>
+                                            <button id="save_profile_pic" type="submit"
+                                                    class="btn btn-sm btn-primary mx-md-2">Save
+                                            </button>
+                                            <!--<img id="blah" src="#" alt="your image" />-->
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 mt-2">
+                            <h6 class="social-media_title">Social media accounts</h6>
+                            <div class="social-media">
+                                {% if data['data']['facebook_url'] %}
+                                <a href="#facebook_url" class="social-media_icon fa fa-facebook-square"
+                                   title="facebook"></a>
+                                {% else %}
+                                <a href="#facebook_url" class="social-media_icon none-active fa fa-facebook-square"
+                                   title="facebook"></a>
+                                {% endif %}
+
+                                {% if data['data']['twitter_url'] %}
+                                <a href="#twitter_url" class="social-media_icon fa fa-twitter-square"
+                                   title="twitter"></a>
+                                {% else %}
+                                <a href="#twitter_url" class="social-media_icon none-active fa fa-twitter-square"
+                                   title="twitter"></a>
+                                {% endif %}
+                                {% if data['data']['insta_url'] %}
+                                <a href="#insta_url" class="social-media_icon fa fa-instagram" title="instagram"></a>
+                                {% else %}
+                                <a href="#insta_url" class="social-media_icon none-active fa fa-instagram "
+                                   title="instagram"></a>
+                                {% endif %}
+                                {% if data['data']['youtube_url'] %}
+                                <a href="#youtube_url" class="social-media_icon fa fa-youtube" title="youtube"></a>
+                                {% else %}
+                                <a href="#youtube_url" class="social-media_icon none-active fa fa-youtube"
+                                   title="youtube"></a>
+                                {% endif %}
+                                <!--<a href="#" target="_blank" class="fa fa-plus grey" title="plus" style="font-size:40px;"></a>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+
+                <div class="card">
+                    <div class="card-body">
+                        <form action="/updateProfile" method="POST" class="form">
+                        <div class="px-3 py-2">
+                            <div class="form-body">
+                                <h4 class="form-section"><i class="ft-user"></i> Personal Information </h4>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="first_name">*First Name</label>
+                                            <input type="text" id="first_name" class="form-control" name="first_name"
+                                                   value="{{data['data']['first_name']}}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="last_name">*Last Name</label>
+                                            <input type="text" id="last_name" class="form-control" name="last_name"
+                                                   value="{{data['data']['last_name']}}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="position">Phone</label>
+                                            <input type="text" id="phone" class="form-control" name="phone"
+                                                   value="{{data['data']['phone']}}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="email">*Business Email</label>
+                                            <input type="text" id="email" class="form-control" name="email"
+                                                   value="{{data['data']['email_id']}}" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="position">Position</label>
+                                            <input type="text" id="position" class="form-control" name="position"
+                                                   value="{{data['data']['position']}}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="full-width">&nbsp;</label>
+                                            <button type="button" class="btn btn-raised bg-color1 color-white"
+                                                    data-toggle="modal" data-backdrop="true"
+                                                    data-target="#change_pass_modal">Change Password
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h4 class="form-section"><i class="ft-file-text"></i> Company Information </h4>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Company_name">*Company Name:</label>
+                                            <input type="text" id="company_name" required name="company_name"
+                                                   class="form-control" value="{{data['data']['company_name']}}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="country">*Country</label>
+                                            <input type="text" id="country" required name="country" class="form-control"
+                                                   value="{{data['data']['country']}}" placeholder="Country">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="city">City:</label>
+                                            <input type="text" id="city" name="city" class="form-control"
+                                                   value="{{data['data']['city']}}" placeholder="City">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="business_sector">*Business Sector:</label>
+                                            <select id="business_sector" required name="business_sector"
+                                                    class="form-control">
+                                                {% if data['data']['business_sector'] %}
+                                                <option value="{{data['data']['business_sector']}}">
+                                                    {{data['data']['business_sector']}}
+                                                </option>
+                                                {% else %}
+                                                <option value=""></option>
+                                                {% endif %}
+                                                <option value="Aerospace Industry">Aerospace Industry</option>
+                                                <option value="Fishing Industry">Fishing Industry</option>
+                                                <option value="Timber Industry">Timber Industry</option>
+                                                <option value="Tobacco Industry">Tobacco Industry</option>
+                                                <option value="Pharmaceutical Industry">Pharmaceutical Industry</option>
+                                                <option value="Software Industry">Software Industry</option>
+                                                <option value="Construction Industry">Construction Industry</option>
+                                                <option value="Defense Industry">Defense Industry</option>
+                                                <option value="Education Industry">Education Industry</option>
+                                                <option value="Electrical power Industry">Electrical power Industry
+                                                </option>
+                                                <option value="Petroleum Industry">Petroleum Industry</option>
+                                                <option value="Entertainment Industry">Entertainment Industry</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="no_of_employees">*No. of Employees:</label>
+                                            <!--<input type="text" id="no_of_employees" required name="no_of_employees" class="form-control" value="{{data['data']['no_of_employees']}}" style="width:400px;"> </span>-->
+                                            <select id="no_of_employees" required name="no_of_employees"
+                                                    class="form-control" value="{{data['data']['no_of_employees']}}">
+                                                {% if data['data']['no_of_employees'] %}
+                                                <option value="{{data['data']['no_of_employees']}}">
+                                                    {{data['data']['no_of_employees']}}
+                                                </option>
+                                                {% else %}
+                                                <option value=""></option>
+                                                {% endif %}
+                                                <option value="0-10">0-10</option>
+                                                <option value="11-50">11-50</option>
+                                                <option value="50-200">50-200</option>
+                                                <option value="201-500">201-500</option>
+                                                <option value="501-1000">501-1000</option>
+                                                <option value="1001-5000">1001-5000</option>
+                                                <option value="5001-10000">5001-10000</option>
+                                                <option value="10000+">10000+</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="monthly_budget">Budget(monthly):</label>
+                                            <input type="text" id="monthly_budget" name="monthly_budget"
+                                                   class="form-control" value="{{data['data']['monthly_budget']}}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="url">URL:</label>
+                                            <input type="url" id="url" required name="url" class="form-control"
+                                                   value="{{data['data']['url']}}" placeholder="Title"> </a>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="facebook_url">Facebook Url:</label>
+                                            <input type="url" id="facebook_url" name="facebook_url" class="form-control"
+                                                   value="{{data['data']['facebook_url']}}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="twitter_url">Twitter Url:</label>
+                                            <input type="url" id="twitter_url" name="twitter_url" class="form-control"
+                                                   value="{{data['data']['twitter_url']}}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="insta_url">Instragram Url:</label>
+                                            <input type="url" id="insta_url" name="insta_url" class="form-control"
+                                                   value="{{data['data']['insta_url']}}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="youtube_url">Youtube Url:</label>
+                                            <input type="url" id="youtube_url" name="youtube_url" class="form-control"
+                                                   value="{{data['data']['youtube_url']}}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="budget_currency">Currency:</label>
+                                            <select id="budget_currency" name="budget_currency" class="form-control"
+                                                    value="{{data['data']['budget_currency']}}">
+                                                <option value="USD">&#36; USD</option>
+                                                <option value="EUR">&#8364; EUR</option>
+                                                <option value="GBP">&#163; GBP</option>
+                                                <option value="INR">&#8377; INR</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div id="team-members" data-tooltip="true" title="This Section is under Developement">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h4 class="form-section"><i class="ft-users"></i> Team Members(3) <span
+                                                    class="comming-soon">(Comming soon)</span></h4>
+
+                                            <table class="table table-striped">
+                                                <thead>
+                                                <tr>
+                                                    <th scope="col"></th>
+                                                    <th scope="col">Name:</th>
+                                                    <th scope="col">Position:</th>
+                                                    <th scope="col">Role:</th>
+                                                    <th scope="col"></th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr>
+                                                    <td><img src="static/img/fixed_image.png"
+                                                             class="img-border gradient-summer width-50"
+                                                             alt="Card image"></td>
+                                                    <td>Mohit Kumar</td>
+                                                    <td>CEO</td>
+                                                    <td>Admin</td>
+                                                    <td>
+                                                        <a href="#" target="_blank" class="fa fa-wrench grey"
+                                                           title="settings"
+                                                           style="font-size:20px; padding-right:10px;"></a>
+                                                        <a href="#" target="_blank" class="fa fa-times-circle-o red"
+                                                           title="cross"
+                                                           style="font-size:20px; padding-right:10px;"></a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><img src="static/img/fixed_image.png"
+                                                             class="img-border gradient-summer width-50"
+                                                             alt="Card image"></td>
+                                                    <td>Abhinav</td>
+                                                    <td>Lead Developer</td>
+                                                    <td>Moderator</td>
+                                                    <td>
+                                                        <a href="#" target="_blank" class="fa fa-wrench grey"
+                                                           title="settings"
+                                                           style="font-size:20px; padding-right:10px;"></a>
+                                                        <a href="#" target="_blank" class="fa fa-times-circle-o red"
+                                                           title="cross"
+                                                           style="font-size:20px; padding-right:10px;"></a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><img src="static/img/fixed_image.png"
+                                                             class="img-border gradient-summer width-50"
+                                                             alt="Card image"></td>
+                                                    <td>Sandeep</td>
+                                                    <td>Marketing Head</td>
+                                                    <td>Moderator</td>
+                                                    <td>
+                                                        <a href="#" target="_blank" class="fa fa-wrench grey"
+                                                           title="settings"
+                                                           style="font-size:20px; padding-right:10px;"></a>
+                                                        <a href="#" target="_blank" class="fa fa-times-circle-o red"
+                                                           title="cross"
+                                                           style="font-size:20px; padding-right:10px;"></a>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-end border-0 mb-2">
+                        <button type="submit" class="btn btn-raised bg-color1 color-white ml-auto mb-0">Save</button>
+                    </div>
+                    </form>
+                </div>
+        </div>
+    </div>
+</section>
+<!--Basic User Details Ends-->
+<script>
+    (function (document, history, location) {
+        var HISTORY_SUPPORT = !!(history && history.pushState);
+
+        var anchorScrolls = {
+            ANCHOR_REGEX: /^#[^ ]+$/,
+            OFFSET_HEIGHT_PX: 100,
+
+            /**
+             * Establish events, and fix initial scroll position if a hash is provided.
+             */
+            init: function () {
+                this.scrollToCurrent();
+                window.addEventListener('hashchange', this.scrollToCurrent.bind(this));
+                document.body.addEventListener('click', this.delegateAnchors.bind(this));
+            },
+
+            /**
+             * Return the offset amount to deduct from the normal scroll position.
+             * Modify as appropriate to allow for dynamic calculations
+             */
+            getFixedOffset: function () {
+                return this.OFFSET_HEIGHT_PX;
+            },
+
+            /**
+             * If the provided href is an anchor which resolves to an element on the
+             * page, scroll to it.
+             * @param  {String} href
+             * @return {Boolean} - Was the href an anchor.
+             */
+            scrollIfAnchor: function (href, pushToHistory) {
+                var match, rect, anchorOffset;
+
+                if (!this.ANCHOR_REGEX.test(href)) {
+                    return false;
+                }
+
+                match = document.getElementById(href.slice(1));
+
+                if (match) {
+                    rect = match.getBoundingClientRect();
+                    anchorOffset = window.pageYOffset + rect.top - this.getFixedOffset();
+                    window.scrollTo(window.pageXOffset, anchorOffset);
+
+                    // Add the state to history as-per normal anchor links
+                    if (HISTORY_SUPPORT && pushToHistory) {
+                        history.pushState({}, document.title, location.pathname + href);
+                    }
+                }
+
+                return !!match;
+            },
+
+            /**
+             * Attempt to scroll to the current location's hash.
+             */
+            scrollToCurrent: function () {
+                this.scrollIfAnchor(window.location.hash);
+            },
+
+            /**
+             * If the click event's target was an anchor, fix the scroll position.
+             */
+            delegateAnchors: function (e) {
+                var elem = e.target;
+
+                if (
+                    elem.nodeName === 'A' &&
+                    this.scrollIfAnchor(elem.getAttribute('href'), true)
+                ) {
+                    e.preventDefault();
+                }
+            }
+        };
+
+        window.addEventListener(
+            'DOMContentLoaded', anchorScrolls.init.bind(anchorScrolls)
+        );
+    })(window.document, window.history, window.location);
+</script>
+{% endblock %}
+
+{% block footer %}
+<!-- Change passowrd Modal -->
+<div class="modal fade" id="change_pass_modal" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <b class="modal-title">Change Password</b>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <form name="change_password_form" id="change_password_form" action="/changePassword" method="POST">
+                <div class="modal-body">
+                    <!--<input class="form-control" required type="text" name="old_password" id="old_password" placeholder="Old Password"><br>-->
+                    <input class="form-control" required type="password" name="new_password" id="new_password"
+                           placeholder="New Password"><br>
+                    <input class="form-control" required type="password" name="con_new_password" id="con_new_password"
+                           placeholder="Confirm New Password">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn bg-color1 color-white"
+                            onclick="return check('change_password_form','new_password','con_new_password')">Save
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

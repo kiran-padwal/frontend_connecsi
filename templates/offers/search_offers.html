@@ -1,0 +1,158 @@
+{% extends 'admin_layout.html' %}
+{{ super() }}
+{% block body %}
+<!--<script>-->
+<!--$(document).ready(function () {-->
+
+<!--$('#{#item['-->
+<!--video_cat_id-->
+<!--']#}'-->
+<!--).-->
+<!--attr("selected", "selected");-->
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="content-header">Search - Offers</div>
+        <p class="content-sub-header"></p>
+    </div>
+</div>
+
+<!-- Grid With Label start -->
+<div class="row">
+    <div class="col-12">
+        <div class="card filters">
+            <div class="card-header">
+                <h4 class="text-left head-border card-title no-transform mb-0">
+                    <i class="fa fa-filter"></i> Filters<a href="#" class="filter-toggle"><i
+                        class="fa fa-caret-up"></i><i class="fa fa-caret-down"></i></a>
+                </h4>
+            </div>
+            <div class="card-body">
+                    <form action="/getOffers" id="search_offers" data-clicked="false" method="POST" name="form_search">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label>Channel</label>
+                                        <select id="channel_name" name="channel_name" class="form-control">
+                                            <option value="Youtube">Youtube</option>
+                                            <option value="Twitter">Twitter</option>
+                                            <option value="Instagram">Instagram</option>
+                                            <option value="Facebook">Facebook</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label>Category</label>
+                                        <select class="form-control" id="video_cat" name="video_cat">
+                                            <option value=""></option>
+                                            {% for item in videoCategories['data'] %}
+                                            <option id="{{item['video_cat_id']}}" value="{{ item['video_cat_id'] }}">{{
+                                                item['video_cat_name'] }}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label>Country</label>
+                                        <select id="country" name="country" class="form-control" data-live-search="true" data-live-search-style="begins">
+                                            <option value="" style="display: none;"></option>
+                                            {% for item in regionCodes['data'] %}
+                                            <option id="{{item['region_code']}}" value="{{ item['region_code'] }}">{{
+                                                item['country_name'] }}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label>Content-Type</label>
+                                        <select id="arrangements" name="arrangements" class="form-control" multiple>
+                                            <option value=""></option>
+                                            <option id="Review" value="Review">Review</option>
+                                            <option id="UnboxingGameplay" value="Unboxing / Gameplay">Unboxing /
+                                                Gameplay
+                                            </option>
+                                            <option id="ShoutoutMention" value="Shout out/Mention">Shout out/Mention
+                                            </option>
+                                            <option id="Giveaway" value="Giveaway">Giveaway</option>
+                                            <option id="VideoIntroOutro" value="Video Intro/Outro">video Intro/Outro
+                                            </option>
+                                            <option id="Tutorial" value="Tutorial">Tutorial</option>
+                                            <option id="BannerplacementURLplacement"
+                                                    value="Banner placement / URL placement">Banner placement / URL
+                                                placement
+                                            </option>
+                                            <option id="Sponsorship" value="Sponsorship">Sponsorship</option>
+                                            <option id="OtherExplainindescription"
+                                                    value="Other (Explain in description)">Other (Explain in
+                                                description)
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 sliderContainer">
+                                    <label>Followers range</label>
+                                    <div id="slider2" class="sliderUI"></div>
+
+                                    <div class="row">
+                                        <div class="col-sm-12 padding-top-xs">
+                                            <input class="form-control form-control-xs bg-light-grey slider-input round left lower-value"
+                                                   name="min_lower" value="0" data-range="0" id="lower-value2">
+                                            <input class="form-control form-control-xs bg-light-grey slider-input round right upper-value"
+                                                   name="max_upper" value="100000000" data-range="100000000"
+                                                   id="upper-value2">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-5 sliderContainer">
+                                    <label>Price range</label>
+                                    <div id="slider3" class="sliderUI"></div>
+                                    <div class="row">
+                                        <div class="col-sm-12 padding-top-xs">
+                                            <input class="form-control form-control-xs bg-light-grey slider-input round left lower-value"
+                                                   name="min_lower_price" value="0" data-range="0" id="lower-value3">
+                                            <input class="form-control form-control-xs bg-light-grey slider-input round right upper-value"
+                                                   name="max_upper_price" value="100000000" data-range="100000000"
+                                                   id="upper-value3">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Currency</label>
+                                    <select class="form-control" name="currency" id="currency">
+                                        <option value="USD">USD</option>
+                                        <option value="EUR">EUR</option>
+                                        <option value="GBP">GBP</option>
+                                        <option value="INR">INR</option>
+                                    </select>
+                                </div>
+                            </div>
+                        <div class="form-actions no-padding-bottom">
+                            <div class="text-right">
+                                <button type="submit"
+                                        class="btn btn-primary bg-color1 no-margin-bottom mr-1">Submit <i
+                                        class="fa fa-search"></i></button>
+                                <a href="#" class="btn btn-raised reset-button btn-warning color-white no-margin-bottom">
+                                    Reset <i class="fa fa-close"></i></a>
+                            </div>
+                        </div>
+                    </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="row" id="offerData">
+            <div class="card">
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Grid With Label end -->
+{% endblock %}

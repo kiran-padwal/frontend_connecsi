@@ -1,0 +1,188 @@
+{% extends 'dashboard_layout_inf.html' %}
+{{ super() }}
+{% block body %}
+<div class="row">
+    <div class="col-sm-12">
+        <div class="content-header">Dashboard
+            <div class="btn-wrapper">
+                <!-- Single Button Dropdown -->
+                <div class="btn-group mr-1 mb-1">
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-primary dropdown-toggle gradient-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Search
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item" href="/searchInfluencers">Influencers</a>
+                            <div role="separator" class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">Classified Ads</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="btn-group mr-1 mb-1">
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-primary dropdown-toggle border-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Create
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item" href="/searchInfluencers">Campaigns</a>
+                            <div role="separator" class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">Classified Ads</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <p class="content-sub-header"></p>
+    </div>
+</div>
+<span class="demo_data">Currently showing demo data</span>
+
+<div class="row">
+    <div class="col-xl-12 col-lg-12  col-md-12 col-12">
+        <div class="row match-height">
+            <div class="col-xl-3 col-lg-6 col-md-6 col-12">
+                <div class="card bg-color1 tail">
+                    <div class="card-body">
+                        <div class="px-3 py-3">
+                            <div class="media quotes">
+                                <div class="quote-item" style="display: none">
+                                    <div class="media-body white text-left">
+                                        <h3>5</h3>
+                                        <span>Active Campaigns</span>
+                                    </div>
+                                    <div class="media-right align-self-center">
+                                        <i class="fa fa-bullseye white font-large-2"></i>
+                                    </div>
+                                </div>
+                                <div class="quote-item" style="display: none">
+                                    <div class="media-body white text-left">
+                                        <h3>10</h3>
+                                        <span>New Campaigns</span>
+                                    </div>
+                                    <div class="media-right align-self-center">
+                                        <i class="fa fa-bullseye white font-large-2"></i>
+                                    </div>
+                                </div>
+                                <div class="quote-item" style="display: none">
+                                    <div class="media-body white text-left">
+                                        <h3>4</h3>
+                                        <span>Completed Campaigns</span>
+                                    </div>
+                                    <div class="media-right align-self-center">
+                                        <i class="fa fa-bullseye white font-large-2"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6 col-12">
+                <div class="card bg-color2 tail">
+                    <div class="card-body">
+                        <div class="px-3 py-3">
+                            <div class="media quotes">
+                                <div class="quote-item" style="display: none">
+                                    <div class="media-body white text-left">
+                                        <h3>25</h3>
+                                        <span>Active Partners</span>
+                                    </div>
+                                    <div class="media-right align-self-center">
+                                        <i class="fa fa-handshake-o white font-large-2"></i>
+                                    </div>
+                                </div>
+                                <div class="quote-item" style="display: none">
+                                    <div class="media-body white text-left">
+                                        <h3>50</h3>
+                                        <span>Favorites</span>
+                                    </div>
+                                    <div class="media-right align-self-center">
+                                        <i class="fa fa-star white font-large-2"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6 col-12">
+                <div class="card bg-color3 tail">
+                    <div class="card-body">
+                        <div class="px-3 py-3">
+                            <div class="media quotes">
+                                <div class="quote-item" style="display: none">
+                                    <div class="media-body white text-left">
+                                        <h3>$20 000</h3>
+                                        <span>Spent this Month</span>
+                                    </div>
+                                    <div class="media-right align-self-center">
+                                        <i class="fa fa-dollar white font-large-2"></i>
+                                    </div>
+                                </div>
+                                <div class="quote-item" style="display: none">
+                                    <div class="media-body white text-left">
+                                        <h3>$4 000</h3>
+                                        <span>Budget in Hand</span>
+                                    </div>
+                                    <div class="media-right align-self-center">
+                                        <i class="fa fa-usd white font-large-2"></i>
+                                    </div>
+                                </div>
+                                <div class="quote-item" style="display: none">
+                                    <div class="media-body white text-left">
+                                        <h3>$25 000</h3>
+                                        <span>Total Budget</span>
+                                    </div>
+                                    <div class="media-right align-self-center">
+                                        <i class="fa fa-usd white font-large-2"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6 col-12">
+                <div class="card bg-color4 tail">
+                    <div class="card-body">
+                        <div class="px-3 py-3">
+                            <div class="media quotes">
+                                <div class="quote-item" style="display: none">
+                                    <div class="media-body white text-left">
+                                        <h3>$20 000</h3>
+                                        <span>Revenue</span>
+                                    </div>
+                                    <div class="media-right align-self-center">
+                                        <i class="fa fa-money white font-large-2"></i>
+                                    </div>
+                                </div>
+                                <div class="quote-item" style="display: none">
+                                    <div class="media-body white text-left">
+                                        <h3>4000</h3>
+                                        <span>New Users</span>
+                                    </div>
+                                    <div class="media-right align-self-center">
+                                        <i class="fa fa-user-plus white font-large-2"></i>
+                                    </div>
+                                </div>
+                                <div class="quote-item" style="display: none">
+                                    <div class="media-body white text-left">
+                                        <h3>5 000</h3>
+                                        <span>New Followers</span>
+                                    </div>
+                                    <div class="media-right align-self-center">
+                                        <i class="fa fa-users white font-large-2"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
