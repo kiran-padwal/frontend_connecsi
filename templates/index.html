@@ -204,7 +204,7 @@
                                         <th>#</th>
                                         <th>Influencers</th>
                                         <th>Channels</th>
-                                        <th>Engagemnets</th>
+                                        <th>Eng Rate</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -237,7 +237,7 @@
                                         {% set total = (total/item['subscriberCount_gained']) %}
                                         {% set total = total|round(4, 'floor')*100 %}
                                         {% set total = total|round(2, 'floor') %}
-                                        {{ total }}
+                                            <b>{{ total }} %</b>
                                         {% endif %}
                                             <div class="engagement-bar">
                                                 <div class="engagement-bar__block engagement-color--forestgreen"></div>
