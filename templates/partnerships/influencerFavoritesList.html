@@ -480,4 +480,169 @@
         </div>
     </div>
 </div>
+
+
+
+<script>
+
+function updateChannelStatusForCampaignByCampaignId(campaign_id){
+    <!--alert(channel_id);-->
+    <!--alert(campaign_id);-->
+    $.ajax({
+               type: "GET",
+               url: '/getChannelStatusForCampaignByCampaignId/'+campaign_id,
+               contentType: 'application/json;charset=UTF-8',
+               success: function(data)
+               {
+
+                   if (data.results.length != 0){
+                   jQuery.each(data.results, function(i, val) {
+                        <!--alert(val.channel_id);-->
+                        <!--alert(val.campaign_name);-->
+                        <!--alert(val.status);-->
+                            var color = '';
+                            if (val.status == 'Added'){
+                                color = 'purple'
+                            }
+                            if (val.status == 'Contacted'){
+                                color = 'orange'
+                            }
+                            if (val.status == 'Negotiations'){
+                                color = 'orange'
+                            }
+                            if (val.status == 'Proposal Sent'){
+                                color = 'light green'
+                            }
+                            if (val.status == 'Current Partner'){
+                                color = 'dark green'
+                            }
+                            $('#status'+val.channel_id).append('<b style="font-weight:450; font-size:12px;">'+val.campaign_name+'<br/></b>');
+                            $('#status'+val.channel_id).append('<b style="font-weight:400; color:'+color+'; font-size:11px;">'+val.status+'</b>');
+                            $('#status'+val.channel_id).append('<hr style="height:0px; margin:auto;">');
+                    });
+                    }
+                    else{
+                        $('#status'+val.channel_id).append('<b>No Campaigns</b>');
+                    }
+               }
+             });
+
+    }
+
+
+function getCampaign_ids(channel_id){
+
+  $.ajax({
+               type: "GET",
+               url: '/getChannelStatusForCampaign/'+channel_id,
+               contentType: 'application/json;charset=UTF-8',
+               success: function(data)
+               {
+
+                   if (data.results.length != 0){
+                   jQuery.each(data.results, function(i, val) {
+                        <!--alert(val.campaign_id);-->
+                        $('.campaign_id'+val.campaign_id).attr('disabled', true);
+
+                    });
+                    }
+
+               }
+  });
+
+}
+
+
+
+    function campaignList(channel_id) {
+    <!--alert('i m called');-->
+    $( "input#campaign_id" ).prop('checked', false);
+    $( "input#campaign_id" ).prop('disabled', false)
+    $("#youtube_channel_id").val(channel_id);
+    var campaign_ids = getCampaign_ids(channel_id);
+    <!--alert(campaign_ids);-->
+    {% for item in view_campaign_data['data'] %}
+        {% for item1 in item['youtube_inf_data'] %}
+            var campaign_channel_id = "{{ item1['channel_id'] }}";
+            var campaign_id = "{{ item['campaign_id'] }}";
+
+            if (channel_id == campaign_channel_id){
+                <!--alert("equal");-->
+                $('.campaign_id'+campaign_id).attr('disabled', true);
+             }
+             else{
+                 <!--alert("not equal");-->
+                  <!--$('.campaign_id'+campaign_id).attr('disabled', false);-->
+             }
+        {% endfor %}
+    {% endfor %}
+    }
+</script>
+<script>
+  $(document).ready(function () {
+
+      $('#sort').on('change', function() {
+            <!--alert('i m on change');-->
+            $('#btn-search-inf').click();
+      });
+
+      {% for item1 in view_campaign_data['data'] %}
+         <!--alert('{{item1['campaign_id']}}');-->
+        updateChannelStatusForCampaignByCampaignId('{{ item1['campaign_id'] }}');
+      {% endfor %}
+
+
+
+      $("#add_influencer_to_campaign").submit(function (e) {
+        <!--alert(' i m here ');-->
+        var form = $(this);
+        var url = form.attr('action');
+        var channel_id = $('#youtube_channel_id').val();
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: form.serialize(), // serializes the form's elements.
+            success: function (data) {
+                alert('Influencer Added to Campaigns');
+                 $('#campaignList').modal('toggle');
+                 <!--updateChannelStatusForCampaign(channel_id);-->
+                 $( 'div[id*=status]').empty();
+
+                 {% for item1 in view_campaign_data['data'] %}
+                    <!--alert('{{item1['campaign_id']}}');-->
+                    updateChannelStatusForCampaignByCampaignId('{{ item1['campaign_id'] }}');
+                 {% endfor %}
+               <!--window.location.reload();-->
+            }
+        });
+        e.preventDefault(); // avoid to execute the actual submit of the form.
+    });
+
+    $("#send_message_form").submit(function (e) {
+        var form = $(this);
+        var url = form.attr('action');
+        var channel_id = $('#message_channel_id').val();
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: form.serialize(), // serializes the form's elements.
+            success: function (data) {
+                alert(data); // show response from the python script.
+                $('#sendMessage').modal('toggle');
+                <!--$( '#status'+channel_id).empty();-->
+                $( 'div[id*=status]').empty();
+
+                {% for item1 in view_campaign_data['data'] %}
+                    <!--alert('{{item1['campaign_id']}}');-->
+                    updateChannelStatusForCampaignByCampaignId('{{ item1['campaign_id'] }}');
+                 {% endfor %}
+            }
+        });
+        e.preventDefault(); // avoid to execute the actual submit of the form.
+    });
+
+   });
+
+
+</script>
 {% endblock %}

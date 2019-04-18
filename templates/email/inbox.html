@@ -573,6 +573,24 @@
 
 
 <script>
+function accept_decline(message_id,campaign_id,status){
+            if(confirm("Are you sure you want to "+status+" this Proposal?")){
+                $.ajax({
+                       type: "GET",
+                       url: '/accept_decline_proposal/'+message_id+'/'+campaign_id+'/'+status,
+                       success: function(data)
+                       {
+                           alert(data); // show response from the python script.
+                           window.location.reload();
+
+                       }
+                     });
+            }
+            else{
+                return false;
+            }
+    }
+
 
 function editProposal(message_id,campaign_id){
         if(confirm("Are you sure you want to EDIT this Proposal?")){

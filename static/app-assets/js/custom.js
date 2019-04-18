@@ -390,9 +390,12 @@ $(document).ready(function () {
         getProposal($(this).attr('data-message-id'), $(this).attr('data-campaign-id'));
     });
 
-    $(document).on('click', '.accept-decline', function(){
-        accept_decline($(this).attr('data-message-id'), $(this).attr('data-campaign-id'), $(this).attr('data-status'));
-    });
+
+
+
+//    $(document).on('click', '.accept-decline', function(){
+//        accept_decline($(this).attr('data-message-id'), $(this).attr('data-campaign-id'), $(this).attr('data-status'));
+//    });
 
     if($('#email-application').length){
         getCampaignsAddedToMessage();
