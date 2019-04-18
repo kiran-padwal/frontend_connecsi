@@ -1545,7 +1545,9 @@ def sendMessage():
            response = requests.post(url=url, json=payload)
            data = response.json()
            print(data)
+           # if data['resposne'] == 1:
            return 'Your email has been sent'
+           # else: return "Failed to sent mail"
        except:
            pass
            return  'Server Error'
@@ -2255,6 +2257,22 @@ def addYoutubeInfToCampaignList():
 def getChannelStatusForCampaign(channel_id):
     print(channel_id)
     url=base_url+'Campaign/channel_status_for_campaign/'+str(channel_id)
+    print(url)
+    try:
+        channel_status_for_campaign = requests.get(url=url)
+        response_json = channel_status_for_campaign.json()
+        print(response_json)
+        return jsonify(results=response_json['data'])
+    except Exception as e:
+        print(e)
+
+
+@connecsiApp.route('/channel_status_for_campaign_by_channel_id_and_campaign_id/<string:channel_id>/<string:campaign_id>',methods=['GET'])
+@is_logged_in
+def channel_status_for_campaign_by_channel_id_and_campaign_id(channel_id,campaign_id):
+    print(channel_id)
+    print(campaign_id)
+    url=base_url+'Campaign/channel_status_for_campaign_by_channel_id_and_campaign_id/'+str(channel_id)+'/'+str(campaign_id)
     print(url)
     try:
         channel_status_for_campaign = requests.get(url=url)

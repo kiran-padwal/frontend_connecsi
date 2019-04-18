@@ -80,13 +80,14 @@
                     <div class="form-actions no-padding-bottom">
                         <div class="text-right">
                             <button type="submit"
+                                    id="btn-search-inf"
                                     class="btn btn-raised btn-primary bg-color1 no-margin-bottom mr-1">Submit <i
                                     class="fa fa-search"></i></button>
                             <!--<a href="#" class="btn btn-raised btn-warning reset-button color-white no-margin-bottom">-->
                                 <!--Reset <i class="fa fa-close"></i></a>-->
                         </div>
                     </div>
-                </form>
+
             </div>
         </div>
     </div>
@@ -99,7 +100,7 @@
             <div class="btn-wrapper">
                 <!-- Single Button Dropdown -->
                 <div class="btn-group mr-1 mb-1" style="max-width: 115px">
-                    <select class="bg-transparent" name="sort_order">
+                    <select class="bg-transparent" name="sort_order" id="sort" style="font-size:12px;">
                         {% if form_filters['sort_order'] %}
                         <option value="{{ form_filters['sort_order'] }}">{{ form_filters['sort_order'] }}
                         </option>
@@ -125,7 +126,7 @@
                     </div>
                 </div>
             </div>
-
+        </form>
         </div>
         <p class="content-sub-header"></p>
     </div>
@@ -719,15 +720,30 @@ function updateChannelStatusForCampaignByCampaignId(campaign_id){
                contentType: 'application/json;charset=UTF-8',
                success: function(data)
                {
-                   <!--$( '#status'+channel_id).empty();-->
+
                    if (data.results.length != 0){
                    jQuery.each(data.results, function(i, val) {
-
+                        <!--alert(val.channel_id);-->
                         <!--alert(val.campaign_name);-->
                         <!--alert(val.status);-->
-
-                            $('#status'+val.channel_id).append('<b style="font-weight:450; font-size:15px;">'+val.campaign_name+'<br/></b>');
-                            $('#status'+val.channel_id).append('<b style="font-weight:400; color:orange; font-size:15px;">'+val.status+'</b>');
+                            var color = '';
+                            if (val.status == 'Added'){
+                                color = 'purple'
+                            }
+                            if (val.status == 'Contacted'){
+                                color = 'orange'
+                            }
+                            if (val.status == 'Negotiations'){
+                                color = 'orange'
+                            }
+                            if (val.status == 'Proposal Sent'){
+                                color = 'light green'
+                            }
+                            if (val.status == 'Current Partner'){
+                                color = 'dark green'
+                            }
+                            $('#status'+val.channel_id).append('<b style="font-weight:450; font-size:12px;">'+val.campaign_name+'<br/></b>');
+                            $('#status'+val.channel_id).append('<b style="font-weight:400; color:'+color+'; font-size:11px;">'+val.status+'</b>');
                             $('#status'+val.channel_id).append('<hr style="height:0px; margin:auto;">');
                     });
                     }
@@ -789,11 +805,10 @@ function getCampaign_ids(channel_id){
     }
 </script>
 <script>
-
-
   $(document).ready(function () {
 
       $('#sort').on('change', function() {
+            <!--alert('i m on change');-->
             $('#btn-search-inf').click();
       });
 
@@ -804,7 +819,53 @@ function getCampaign_ids(channel_id){
 
 
 
+      $("#add_influencer_to_campaign").submit(function (e) {
+        <!--alert(' i m here ');-->
+        var form = $(this);
+        var url = form.attr('action');
+        var channel_id = $('#youtube_channel_id').val();
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: form.serialize(), // serializes the form's elements.
+            success: function (data) {
+                alert('Influencer Added to Campaigns');
+                 $('#campaignList').modal('toggle');
+                 <!--updateChannelStatusForCampaign(channel_id);-->
+                 $( 'div[id*=status]').empty();
 
+                 {% for item1 in view_campaign_data['data'] %}
+                    <!--alert('{{item1['campaign_id']}}');-->
+                    updateChannelStatusForCampaignByCampaignId('{{ item1['campaign_id'] }}');
+                 {% endfor %}
+               <!--window.location.reload();-->
+            }
+        });
+        e.preventDefault(); // avoid to execute the actual submit of the form.
+    });
+
+    $("#send_message_form").submit(function (e) {
+        var form = $(this);
+        var url = form.attr('action');
+        var channel_id = $('#message_channel_id').val();
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: form.serialize(), // serializes the form's elements.
+            success: function (data) {
+                alert(data); // show response from the python script.
+                $('#sendMessage').modal('toggle');
+                <!--$( '#status'+channel_id).empty();-->
+                $( 'div[id*=status]').empty();
+
+                {% for item1 in view_campaign_data['data'] %}
+                    <!--alert('{{item1['campaign_id']}}');-->
+                    updateChannelStatusForCampaignByCampaignId('{{ item1['campaign_id'] }}');
+                 {% endfor %}
+            }
+        });
+        e.preventDefault(); // avoid to execute the actual submit of the form.
+    });
 
    });
 

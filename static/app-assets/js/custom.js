@@ -139,10 +139,10 @@ $(document).ready(function () {
 
 
 
-    function updateChannelStatusForCampaign(channel_id) {
+    function updateChannelStatusForCampaign(channel_id,campaign_id) {
         $.ajax({
             type: "GET",
-            url: '/getChannelStatusForCampaign/' + channel_id,
+            url: '/channel_status_for_campaign_by_channel_id_and_campaign_id/' + channel_id+'/'+campaign_id,
             contentType: 'application/json;charset=UTF-8',
             success: function (data) {
 //                $('#status' + channel_id).find('.tab-content-item-list-container').empty();
@@ -150,15 +150,15 @@ $(document).ready(function () {
                 var $ul = $("<ul class='tab-content-item-list'></ul>");
                 if (data.results.length != 0) {
                     jQuery.each(data.results, function (i, val) {
-                        <!--alert(val.campaign_name);-->
-                        <!--alert(val.status);-->
+                        alert(val.campaign_name);
+                        alert(val.status);
                         //$ul.append();
                         $ul.append($('<li>' + val.campaign_name + ' <span class="color1">' + val.status + '</span></li>'));
                         $('#status' + channel_id).find('.tab-content-item-list-container').append($ul);
                     });
                 } else {
                     $ul.append($('<li>No Campaigns</li>'));
-                    $('#status' + channel_id).find('.tab-content-item-list-container').append($ul);
+//                    $('#status' + channel_id).find('.tab-content-item-list-container').append($ul);
                 }
             }
         });
@@ -732,40 +732,9 @@ $(document).ready(function () {
         });
     });
 
-    $("#add_influencer_to_campaign").submit(function (e) {
-        var form = $(this);
-        var url = form.attr('action');
-        var channel_id = $('#youtube_channel_id').val();
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: form.serialize(), // serializes the form's elements.
-            success: function (data) {
-                alert('Influencer Added to Campaigns');
-                 $('#campaignList').modal('toggle');
-                 updateChannelStatusForCampaign(channel_id);
-//                window.location.reload();
-            }
-        });
-        e.preventDefault(); // avoid to execute the actual submit of the form.
-    });
 
-    $("#send_message_form").submit(function (e) {
-        var form = $(this);
-        var url = form.attr('action');
-        var channel_id = $('#message_channel_id').val();
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: form.serialize(), // serializes the form's elements.
-            success: function (data) {
-                alert(data); // show response from the python script.
-                $('#sendMessage').modal('toggle');
-                updateChannelStatusForCampaign(channel_id);
-            }
-        });
-        e.preventDefault(); // avoid to execute the actual submit of the form.
-    });
+
+
 
     $("#brand_report_form").submit(function(e) {
         var form = $(this);
