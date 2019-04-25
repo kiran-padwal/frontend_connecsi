@@ -68,7 +68,7 @@
                                                        name="min_lower" value="{{form_filters['min_lower']}}" data-range="0"
                                                        id="lower-value">
                                                 <input class="form-control form-control-xs bg-light-grey slider-input round right upper-value"
-                                                       name="max_upper" value="{{form_filters['max_upper']}}" data-range="1000000"
+                                                       name="max_upper" value="{{form_filters['max_upper']}}" data-range="100000000"
                                                        id="upper-value">
                                             </div>
                                         </div>
@@ -118,7 +118,7 @@
                 <div class="btn-group mr-1 mb-1">
                     <div class="input-group-btn">
                         {% if data['data'] %}
-                        <a href="/home/kiranLocalBackup/connecsiFrontendBackup/infList.csv"
+                        <a href="{{ url_for('static',filename='infList.csv') }}"
                            class="btn btn-primary" download>Export CSV</a>
                         {% else %}
                         <!--<button type="button"  style="background-color: purple; margin-left: 2%; color:white; border-radius: 10px; font-size:15px;">Export CSV</button>-->
@@ -291,16 +291,17 @@
                                     <div class="v-block"></div>
                                     <div class="engagement">
                                         <div class="rating">
+
                                             {% if item['total_videos'] %}
-                              {% set total = (item['total_100video_likes'] + item['total_100video_comments'] + item['total_100video_shares'])%}
-                                        <!--{{ total }} <br>-->
-                                        {% set total = (total/item['total_videos'])|round|int %}
-                                        <!--{{ total }} <br>-->
-                                        {% set total = (total/item['subscriberCount_gained']) %}
-                                        {% set total = total|round(4, 'floor')*100 %}
-                                        {% set total = total|round(2, 'floor') %}
-                                        {{ total }} %
-                              {% endif %}
+                                                {% set total = (item['total_100video_likes'] + item['total_100video_comments'] + item['total_100video_shares'])%}
+                                                    <!--{{ total }} <br>-->
+                                                {% set total = (total/item['total_videos'])|round|int %}
+                                                <!--{{ total }} <br>-->
+                                                {% set total = (total/item['subscriberCount_gained']) %}
+                                                {% set total = total|round(4, 'floor')*100 %}
+                                                {% set total = total|round(2, 'floor') %}
+                                                {{ total }} %
+                                            {% endif %}
                                         </div>
                                         <div class="rating-txt">Engagement Rate</div>
                                         <div class="engagement-bar">
@@ -318,22 +319,24 @@
                                     <div class="v-block"></div>
                                     <ul class="analyse-list">
                                         <li>
-                                            <div class="analyse-result">{{ item['subscriberCount_gained'] }}</div>
+                                            <div class="analyse-result" data-integers="{{item['subscriberCount_gained']}}">
+
+
+                                            </div>
                                             <div>Total Followers</div>
                                         </li>
                                         <li>
-                                            <div class="analyse-result">{{ (item['total_100video_views']/100)|int }}
+                                            <div class="analyse-result" data-integers="{{ (item['total_100video_views']/100)|int }}">
                                             </div>
                                             <div>Avg Views / video</div>
                                         </li>
                                         <li>
-                                            <div class="analyse-result">{{ (item['total_100video_likes']/100)|int }}
+                                            <div class="analyse-result" data-integers="{{ (item['total_100video_likes']/100)|int }}">
                                             </div>
                                             <div>Avg Likes / video</div>
                                         </li>
                                         <li>
-                                            <div class="analyse-result">{{ (item['total_100video_comments']/100)|int
-                                                }}
+                                            <div class="analyse-result" data-integers="{{ (item['total_100video_comments']/100)|int }}">
                                             </div>
                                             <div>Avg Comments / video</div>
                                         </li>
@@ -711,6 +714,12 @@
 <!-- end of autocomplete -->
 <script>
 
+
+
+
+
+
+
 function updateChannelStatusForCampaignByCampaignId(campaign_id){
     <!--alert(channel_id);-->
     <!--alert(campaign_id);-->
@@ -867,11 +876,20 @@ function getCampaign_ids(channel_id){
         e.preventDefault(); // avoid to execute the actual submit of the form.
     });
 
+
+
+
+
    });
 
 
 </script>
-
+<script>
+    $(document).ready(function () {
+       var subscriberCount_gained = abbrNum(1234,2);
+        <!--alert(subscriberCount_gained);-->
+    });
+</script>
 
 
 {% endblock %}

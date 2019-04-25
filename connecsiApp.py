@@ -452,7 +452,11 @@ def searchInfluencers():
                 item.update({'linechart_id':linechart_id})
                # print(item)
                 linechart_id+=1
-            exportCsv(data=data)
+            try:
+                exportCsv(data=data)
+            except Exception as e:
+                print(e)
+                pass
             for item in data['data']:
                 total_videos_url = base_url + 'Youtube/totalVideos/' + str(item['channel_id'])
                 try:
@@ -460,8 +464,10 @@ def searchInfluencers():
                     total_videos = response.json()
                     for item1 in total_videos['data']:
                         item.update(item1)
+                    print(item)
                 except:
                     pass
+
             return render_template('search/searchInfluencers.html', regionCodes=regionCodes_json,
                                    lookup_string=lookup_string, form_filters=form_filters,data=data,view_campaign_data=view_campaign_data
                                    ,favInfList_data=favInfList_data,payload_form_filter=payload)
@@ -499,7 +505,11 @@ def searchInfluencers():
         except:
             pass
 
-        exportCsv(data=data)
+        try:
+            exportCsv(data=data)
+        except Exception as e:
+            print(e)
+            pass
         for item in data['data']:
             total_videos_url = base_url + 'Youtube/totalVideos/' + str(item['channel_id'])
             try:
@@ -507,6 +517,7 @@ def searchInfluencers():
                 total_videos = response.json()
                 for item1 in total_videos['data']:
                     item.update(item1)
+                print(item)
             except:
                 pass
         return render_template('search/searchInfluencers.html', regionCodes=regionCodes_json,
@@ -2473,9 +2484,9 @@ scope=[
     ],
     offline=True,
     reprompt_consent=True,
-    redirect_to='google_login'
-
+    redirect_to='google_login',
 )
+
 twitter_blueprint = make_twitter_blueprint(
     api_key="lOhkeJRZhYXvkm0lYq1ZgTtYa",
     api_secret="TbMKSZBbcqhnedjjqG66JuStxunBdKLelfjgxTW4UNJndbatJa",
@@ -2496,6 +2507,8 @@ def google_login():
     channel_data = google.get(url).json()
     print('channel details = ',channel_data)
     print(resp.json())
+    print(google.authorized)
+    # exit()
     resp_json = resp.json()
     payload = {}
     channel_id=channel_data['items'][0]['id']
@@ -2505,6 +2518,14 @@ def google_login():
     payload.update({'channel_id':channel_id,'business_email':resp_json['email']})
     url = base_url+'Influencer/saveInfluencer'
     print(url)
+
+    youtube_url = base_url+'Youtube/addYoutubeChannel/'+channel_id+'/'+resp_json['email']
+    try:
+        requests.post(url=youtube_url)
+    except Exception as e :
+        print(e)
+        pass
+
     try:
         response = requests.post(url,json=payload)
         print(response.json())
@@ -2558,50 +2579,20 @@ def twitter_login():
     # user_data = twitter.get('users/show.json?screen_name=' +screen_name)
     # assert resp.ok, resp.text
     # print(user_data.json())
-    payload = {}
+    # payload = {}
     channel_id = resp_json['id_str']
-    payload.update({'channel_id': channel_id, 'business_email': resp_json['email']})
-    url = base_url + 'Influencer/saveInfluencer'
-    print(url)
+    screen_name = resp_json['screen_name']
+    # payload.update({'channel_id': channel_id, 'business_email': resp_json['email']})
+    twitter_url = base_url+'Twitter/addTwitterChannel/'+screen_name+'/'+resp_json['email']+'/'+session['user_id']
+    print(twitter_url)
     try:
-        response = requests.post(url, json=payload)
-        print(response.json())
-        response_json = response.json()
-        if response_json['response'] == 1:
-            payload1 = {
-                "from_email_id": "business@connecsi.com",
-                "to_email_id": resp_json['email'],
-                "date": datetime.datetime.now().strftime("%A, %d. %B %Y %I:%M%p"),
-                "subject": "Twitter Influencer, Welcome To Connecsi",
-                "message": "Hello Twitter Influencer "+ resp_json['name'] +", your email address is "+resp_json['email']+
-                           " Welcome to Connecsi"
-            }
-            user_id = 1
-            type = 'brand'
-            url = base_url + 'Messages/sentWelcomeEmail/' + str(user_id) + '/' + type
-            try:
-                response = requests.post(url=url, json=payload1)
-                data = response.json()
-                print('email sent')
-            except:
-                pass
+        requests.post(url=twitter_url)
+        return redirect(url_for("inf_editProfile"))
     except Exception as e:
         print(e)
         pass
+        return redirect(url_for("inf_editProfile"))
 
-    if resp.ok:
-        user_id = resp_json['id_str']
-        print(user_id)
-        # exit()
-        if user_id:
-            flash("logged in", 'success')
-            session['logged_in'] = True
-            session['email_id'] = resp_json['email']
-            session['type'] = 'influencer'
-            session['user_id'] = user_id
-            # print(session['user_id'])
-            return redirect(url_for('admin_inf'))
-    else:return redirect(url_for('login'))
 
 
 @connecsiApp.route('/admin_inf')

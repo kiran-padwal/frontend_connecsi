@@ -456,7 +456,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="viewProposal" role="dialog" data-backdrop="false">
+    <div class="modal fade" id="viewProposal" role="dialog" data-backdrop="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header alert-primary">
@@ -504,7 +504,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="editProposal" role="dialog" data-backdrop="false">
+    <div class="modal fade" id="editProposal" role="dialog" data-backdrop="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header alert-primary">
@@ -518,46 +518,89 @@
                         <input type="hidden" id="edit_proposal_id" name="proposal_id" value="">
                         <!--<div>message id = {{ glob.message_id }} Channel id = {{ glob.channel_id }}</div>-->
 
-                        <div id="edit_proposal_campaign_name"></div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="edit_proposal_campaign_name">Campaign Name:</label>
+                                    <input class="form-control" type="text" id="edit_proposal_campaign_name" name="edit_proposal_campaign_name" readonly>
+                                </div>
+                            </div>
 
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="edit_proposal_description">Description:</label>
+                                    <input class="form-control" type="text" id="edit_proposal_description" name="edit_proposal_description" required>
+                                </div>
+                            </div>
 
-                        <div>
-                            Description : <input id="edit_proposal_description" type="text"  name="edit_proposal_description" required>
-                        </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="edit_proposal_from_date">From Date:</label>
+                                    <input type="text" class="form-control" name="edit_proposal_from_date" id="edit_proposal_from_date" readonly>
+                                </div>
+                            </div>
 
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="edit_proposal_to_date">To Date:</label>
+                                    <input type="text" class="form-control" name="edit_proposal_to_date" id="edit_proposal_to_date" readonly>
+                                </div>
+                            </div>
 
-                        <div id="edit_proposal_from_date"></div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="edit_proposal_channels">Channels:</label>
+                                    <div id="edit_proposal_channels"></div>
+                                </div>
+                            </div>
 
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="edit_proposal_target_url">Target url:</label>
+                                    <input type="text" class="form-control" name="edit_proposal_target_url" id="edit_proposal_target_url" readonly>
+                                </div>
+                            </div>
 
-                        <div id="edit_proposal_to_date"></div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="proposal_ref_link">Ref link:</label>
+                                    <input type="text" class="form-control" name="edit_proposal_ref_link" id="edit_proposal_ref_link" placeholder="ref link" required>
+                                </div>
+                            </div>
 
-                        <div>Channels :
-                            <div id="edit_proposal_channels">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="edit_proposal_arrangements">Arrangements:</label>
+                                    <div id="edit_proposal_arrangements"></div>
+                                </div>
+                            </div>
 
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="edit_proposal_kpis">Kpis:</label>
+                                    <div id="edit_proposal_kpis"></div>
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="edit_proposal_currency">Currency:</label>
+                                    <select name="currency" id="edit_proposal_currency" class="form-control">
+                                        <option id="USD" value="USD">USD</option>
+                                        <option id="EUR" value="EUR">EUR</option>
+                                        <option id="PLN" value="PLN">PLN</option>
+                                        <option id="INR" value="INR">INR</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="price">Price:</label>
+                                    <input class="form-control" type="number" name="proposal_price" id="edit_proposal_price" required placeholder="amount">
+                                </div>
                             </div>
                         </div>
-
-                        <div id="edit_proposal_target_url">Target URL : </div>
-
-                        <div>
-                            Ref Link : <input  style="clear:both;" type="text" name="edit_proposal_ref_link" id="edit_proposal_ref_link" required>
-                        </div>
-
-                        <div>Arrangements : </div>
-                        <div id="edit_proposal_arrangements">Arrangements : </div>
-                        <div>Kpis : </div>
-                        <div id="edit_proposal_kpis">Kpis : </div>
-
-
-                        <select id="edit_proposal_currency" name="currency" class="float-left">
-                            <option id="USD" value="USD">USD</option>
-                            <option id="EUR" value="EUR">EUR</option>
-                            <option id="PLN" value="PLN">PLN</option>
-                            <option id="INR" value="INR">INR</option>
-                        </select>
-                        <input class="form-control" style="clear:both;" type="number" name="proposal_price" id="edit_proposal_price" required placeholder="amount">
-
-
                     </div>
                     <div class="modal-footer">
                         <button type="submit" id="updateProposal" class="btn btn-default">Update</button>
@@ -591,7 +634,7 @@ function accept_decline(message_id,campaign_id,status){
             }
     }
 
-
+// edit proposal
 function editProposal(message_id,campaign_id){
         if(confirm("Are you sure you want to EDIT this Proposal?")){
             $( '#edit_proposal_channels').empty();
@@ -630,13 +673,13 @@ function editProposal(message_id,campaign_id){
                             <!--alert(val.campaign_name);-->
                             $('#edit_proposal_id').val(val.proposal_id);
                             $('#edit_proposal_campaign_name').empty();
-                            $('#edit_proposal_campaign_name').append('Campaign Name : '+val.campaign_name);
+                            $('#edit_proposal_campaign_name').val(val.campaign_name);
                             $('#edit_proposal_description').empty();
                             $('#edit_proposal_description').val(val.proposal_description);
                             $('#edit_proposal_from_date').empty();
-                            $('#edit_proposal_from_date').append('From Date : '+val.proposal_from_date);
+                            $('#edit_proposal_from_date').val(val.proposal_from_date);
                             $('#edit_proposal_to_date').empty();
-                            $('#edit_proposal_to_date').append('To Date : '+val.proposal_to_date);
+                            $('#edit_proposal_to_date').val(val.proposal_to_date);
                             <!--$('#edit_proposal_channels').empty();-->
                             <!--$('#edit_proposal_channels').append(val.proposal_channels);-->
                             <!--alert(val.proposal_channels);-->
@@ -678,7 +721,7 @@ function editProposal(message_id,campaign_id){
                             $('#edit_proposal_price').empty();
                             $('#edit_proposal_price').val(val.proposal_price);
                             $('#edit_proposal_target_url').empty();
-                            $('#edit_proposal_target_url').append('Target Url : '+val.target_url);
+                            $('#edit_proposal_target_url').val(val.target_url);
                             $('#edit_proposal_ref_link').empty();
                             $('#edit_proposal_ref_link').val(val.ref_link);
 

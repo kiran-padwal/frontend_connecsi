@@ -19,7 +19,7 @@
                         <div class="col-xl-6">
                             <div class="row">
                                 <div class="col-12">
-                                    <h6 class="social-media_title">Profile Picture</h6>
+                                    <!--<h6 class="social-media_title">Profile Picture</h6>-->
                                 </div>
                                 <div class="col-12 d-flex flex-lg-row flex-md-column flex-sm-column flex-column align-items-lg-start align-items-md-start align-items-sm-start align-items-start">
                                     {% if item['profile_pic'] %}
@@ -31,9 +31,15 @@
                                          class="img-border width-150" alt="Card image">
                                     {% endif %}
                                     <div class="user">
-                                        <h4 class="nickname">{{ item['title'] }}</h4>
+                                        <h4 class="nickname">
+                                            {% if item['first_name'] or item['last_name'] %}
+                                    {{ item['first_name'] }} {{item['last_name']}}
+                                    {% else %}
+                                    {{ item['title'] }}
+                                    {% endif %}
+                                        </h4>
                                         <div class="user_content">
-                                            <div class="subscription">Subscription Type : Basic</div>
+                                            <div class="subscription">Subscription Type : Beta</div>
                                         </div>
                                     </div>
                                 </div>
@@ -46,29 +52,37 @@
                                 <a href="#facebook_url" class="social-media_icon fa fa-facebook-square"
                                    title="facebook"></a>
                                 {% else %}
+                                <span data-toggle="tooltip" title="Feature coming soon">
                                 <a href="#facebook_url" class="social-media_icon none-active fa fa-facebook-square"
                                    title="facebook"></a>
+                                </span>
+                                &nbsp&nbsp&nbsp&nbsp
                                 {% endif %}
-                                {% if data['data']['twitter_url'] %}
-                                <a href="#twitter_url" class="social-media_icon fa fa-twitter-square"
+                                {% if item['mapped_twitter_channel_id'] %}
+                                <a href="https://www.twitter.com/{{item['screen_name']}}" class="social-media_icon fa fa-twitter-square"
                                    title="twitter"></a>
                                 {% else %}
-                                <a href="#twitter_url" class="social-media_icon none-active fa fa-twitter-square"
+                                <a href="#twitter" class="social-media_icon none-active fa fa-twitter-square"
                                    title="twitter"></a>
+
                                 {% endif %}
                                 {% if data['data']['insta_url'] %}
                                 <a href="#insta_url" class="social-media_icon fa fa-instagram" title="instagram"></a>
                                 {% else %}
-                                <a href="#insta_url" class="social-media_icon none-active fa fa-instagram "
-                                   title="instagram"></a>
+                                <span data-toggle="tooltip" title="Feature coming soon">
+                                <a href="#insta_url" class="social-media_icon fa fa-instagram none-active"
+                                   title="instagram" ></a>
+                                </span>
                                 {% endif %}
-                                {% if data['data']['youtube_url'] %}
-                                <a href="#youtube_url" class="social-media_icon fa fa-youtube" title="youtube"></a>
+                                &nbsp&nbsp&nbsp&nbsp
+                                <a href="https://www.youtube.com/channel/{{item['channel_id']}}" class="social-media_icon fa fa-youtube" title="youtube"></a>
+                                {% if item['mapped_twitter_channel_id'] %}
                                 {% else %}
-                                <a href="#youtube_url" class="social-media_icon none-active fa fa-youtube"
-                                   title="youtube"></a>
+                                <a  class="fa fa-plus green"
+                                                data-toggle="modal" data-backdrop="true"
+                                                data-target="#add_channel_modal">
+                                        </a>
                                 {% endif %}
-                                <!--<a href="#" target="_blank" class="fa fa-plus grey" title="plus" style="font-size:40px;"></a>-->
                             </div>
                         </div>
                     </div>
@@ -121,10 +135,18 @@
                                         <label for="videoCategories">Categories</label>
                                         <select class="form-control" id="videoCategories" name="categories"
                                                 multiple>
+                                            {% set categories = item['categories'] %}
+                                            {% set category = categories.split(',') %}
                                             {% for item in videoCat['data'] %}
+                                            {% if item['video_cat_id']|string in category %}
+                                            <option id="{{item['video_cat_id']}}"
+                                                    value="{{ item['video_cat_id'] }}" selected>{{ item['video_cat_name'] }}
+                                            </option>
+                                            {% else %}
                                             <option id="{{item['video_cat_id']}}"
                                                     value="{{ item['video_cat_id'] }}">{{ item['video_cat_name'] }}
                                             </option>
+                                            {% endif %}
                                             {% endfor %}
                                         </select>
                                     </div>
@@ -132,13 +154,26 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="country">*Country</label>
+                                        {% set country =  item['country'] %}
                                         <select class="form-control" name="country" id="country" required data-live-search="true">
-                                            {% for item in regionCodes['data'] %}
-                                            <option id="{{item['region_code']}}" value="{{ item['region_code'] }}">
-                                                {{ item['country_name'] }}
+                                            {% for item1 in regionCodes['data'] %}
+                                            {% if item1['region_code'] == country %}
+                                            <option  value="{{ item1['region_code'] }}" selected>
+                                                {{ item1['country_name'] }}
                                             </option>
+                                            {% else %}
+                                            <option  value="{{ item1['region_code'] }}">
+                                                {{ item1['country_name'] }}
+                                            </option>
+                                            {% endif %}
                                             {% endfor %}
+
                                         </select>
+                                         <!--<script>-->
+                                                        <!--$( document ).ready(function() {-->
+                                                           <!--$('#{{item['country']}}').prop("selected", "selected");-->
+                                                        <!--});-->
+                                            <!--</script>-->
                                     </div>
                                 </div>
                             </div>
@@ -151,15 +186,15 @@
                                                style="width:400px;"> </span>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="full-width">&nbsp;</label>
-                                        <button type="button" class="btn btn-raised bg-color1 color-white"
-                                                data-toggle="modal" data-backdrop="true"
-                                                data-target="#change_pass_modal">Change Password
-                                        </button>
-                                    </div>
-                                </div>
+                                <!--<div class="col-md-6">-->
+                                    <!--<div class="form-group">-->
+                                        <!--<label class="full-width">&nbsp;</label>-->
+                                        <!--<button type="button" class="btn btn-raised bg-color1 color-white"-->
+                                                <!--data-toggle="modal" data-backdrop="true"-->
+                                                <!--data-target="#change_pass_modal">Change Password-->
+                                        <!--</button>-->
+                                    <!--</div>-->
+                                <!--</div>-->
                             </div>
                         </div>
                     </div>
@@ -195,6 +230,20 @@
                     </button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="add_channel_modal" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <b class="modal-title">Add Channel</b>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <a class="social-media_icon fa fa-twitter" href="/twitter_login"></a>
+
+
         </div>
     </div>
 </div>

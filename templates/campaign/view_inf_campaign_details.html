@@ -190,107 +190,10 @@
     <div class="col-sm-12">
         <div class="card">
             <div class="card-body">
-                <div class="card-block">
-                    <!--<div>-->
-                        <!--<a href="/viewInfCampaigns"><b style="color: #9C27B0; font-weight:400; letter-spacing: 1px; font-size:15px; ">Back to List</b></a>-->
-                        <!--{% for item in view_inf_campaign_details_data['data'] %}-->
-                        <!--<span><p style="text-align: center;"><b style="color:#11D2DA;font-size:20px; letter-spacing: 2px; font-weight: 500">{{ item['campaign_name'] }}</b>-->
-                            <!--<br />{{ item['campaign_status'] }}-->
-                        <!--</p>-->
-                        <!--</span>-->
-                    <!--</div>-->
+                <div class="card-block campaign-item padding-top-normal">
 
-                    <!--<div class="container-fluid" style="margin-bottom:15px;">-->
-                        <!--<div class="row" style="box-shadow: 2px 2px 2px 0px lightgrey; ">-->
-                            <!--<div class="col-sm-9 col-md-6">-->
-                                <!--<div class="row">-->
-                                    <!--<div class="col-sm-6 col-md-4 mystyle"><b>Period</b>-->
-                                        <!--<br />{{ item['proposal_from_date'] }} - {{ item['proposal_to_date'] }}-->
-                                    <!--</div>-->
-
-                                    <!--<div class="col-sm-4 col-md-4 mystyle"><b>Countries</b>-->
-                                        <!--<br />-->
-                                        <!--{{ item['regions'] }}-->
-                                    <!--</div>-->
-
-                                    <!--<div class="col-sm-4 col-md-4 mystyle"><b>Channels</b>-->
-                                        <!--<br />-->
-                                        <!--{% set channels = item['proposal_channels'].split(',') %}-->
-                                        <!--{% for channel in channels %}-->
-                                        <!--{% set final_channels = channel.split('@') %}-->
-                                        <!--{% for item_final_channel in final_channels %}-->
-                                        <!--<a href="#" class="fa fa-{{ item_final_channel }} fa-lg" style="color:#9E57DD"></a>-->
-                                        <!--{% endfor %}-->
-                                        <!--{% endfor %}-->
-                                    <!--</div>-->
-                                <!--</div>-->
-
-                                <!--<div class="row">-->
-                                    <!--<div class="col-sm-6 col-md-4 mystyle"><b>Remuneration</b><br />-->
-                                        <!--{{ item['currency'] }} {{ item['proposal_price'] }}-->
-
-                                    <!--</div>-->
-                                    <!--<div class="col-sm-4 col-md-4 mystyle"><b>Kpi's</b><br>-->
-                                        <!--{{ item['proposal_kpis'] }}-->
-
-
-                                    <!--</div>-->
-                                    <!--<div class="col-sm-4 col-md-4 mystyle"><b>Sponsor</b><br>-->
-                                        <!--{% if item['profile_pic'] %}-->
-                            <!--<img  src="/static/img/{{ item['profile_pic'] }}" class="img" height="19px" width="19px">-->
-                            <!--{% else %}-->
-                            <!--<img  src="/static/img/fixed_image.png" class="img" height="19px" width="19px">-->
-                            <!--{% endif %}-->
-                                        <!--{{ item['brand_first_name'] }}-->
-
-                                    <!--</div>-->
-                                <!--</div>-->
-                                <!--<div class="row">-->
-                                    <!--<div class="col-sm-4 col-md-4 mystyle"><b>Categories</b>-->
-                                        <!--<br />-->
-                                        <!--&lt;!&ndash;<i class="fa fa-link"></i><a href="{{ item['target_url'] }}" target="_blank">Target Url</a>&ndash;&gt;-->
-                                        <!--{{ item['video_cat_name'] }}-->
-                                    <!--</div>-->
-
-                                    <!--<div class="col-sm-6 col-md-4 mystyle"><b>Arrangements</b><br>-->
-                                        <!--&lt;!&ndash;{% set arrangements = item['proposal_arrangements'].split(',') %}&ndash;&gt;-->
-                                        <!--&lt;!&ndash;{% for content_type in arrangements %}&ndash;&gt;-->
-                                        <!--&lt;!&ndash;{{ content_type }}&ndash;&gt;-->
-                                        <!--&lt;!&ndash;{% endfor %}&ndash;&gt;-->
-                                        <!--{{item['proposal_arrangements']}}-->
-                                    <!--</div>-->
-
-                                    <!--<div class="col-sm-4 col-md-4 mystyle"><b>Attachments</b>-->
-                                        <!--<br />-->
-                                        <!--{% set files = item['campaign_files'].split(',') %}-->
-                                        <!--{% for file in files %}-->
-                                        <!--{% set ext = file[-3:] %}-->
-                                        <!--<a href="../static/campaign_files/{{ file }}" download>-->
-                                            <!--{% if ext == "jpg" %}-->
-                                            <!--<i class="fa fa-file-image-o"></i>-->
-                                            <!--{% elif ext == "doc" %}-->
-                                            <!--<i class="fa fa-file-word-o"></i>-->
-                                            <!--{% else %}-->
-                                            <!--<i class="fa fa-file"></i>-->
-                                            <!--{% endif %}-->
-                                        <!--</a>-->
-                                        <!--{% endfor %}-->
-                                    <!--</div>-->
-
-                                <!--</div>-->
-                            <!--</div>-->
-                            <!--<div class="col-sm-3 col-md-6 mystyle" style="margin-left:-1px;">-->
-                                <!--<b>Description:</b>-->
-                                <!--<br>-->
-                                <!--<p style="text-align:left; font-size:12px;">{{ item['proposal_description'] }}</p>-->
-
-                            <!--</div>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--{% endfor %}-->
-
-                    <div style="background-color: white;" class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover mystyle" style="background-color: white;">
+                    <div style="background-color: white;">
+                        <table class="text-center table table-bordered table-responsive-xl table-striped table-hover mystyle" style="background-color: white;">
                             <tr class="mystyle">
                                 <th>Sponsor</th>
                                 <th>Status</th>
@@ -308,36 +211,45 @@
 
                             {% for youtube_inf_data in view_inf_campaign_details_data['data'] %}
                             <tr>
-                                <td>
-                                    <img  src="/static/img/{{ youtube_inf_data['profile_pic'] }}" class="dropdown rounded-circle img-border gradient-summer width-50">
-                                    <div class="submenu"  style="display: None">
+                                <td class="align-middle">
+                                    <div class="menu d-flex flex-column align-items-center">
+                                        <img  src="/static/img/{{ youtube_inf_data['profile_pic'] }}" class="showSubmenu rounded-circle width-50">
 
-                                                <span data-toggle="modal" data-target="#sendMessage">
-                        <a  onclick="sendMessage('{{ youtube_inf_data['user_id'] }}','{{ youtube_inf_data['email_id'] }}')" class="fa fa-envelope " data-toggle="tooltip"  title="Message" style="position: relative; z-index: 1; font-size:14px; color:#9E57DD;"></a>
-                        </span>
-                                        {% if youtube_inf_data['proposal_ref_link'] %}
-                                        <span data-toggle="modal" data-target="#addReport" id="reportIcon{{ youtube_inf_data['channel_id'] }}">
-                                        <a onclick="addReport('{{ view_inf_campaign_details_data['data'][0]['campaign_id'] }}','{{ youtube_inf_data['proposal_channels'] }}')" data-toggle="tooltip" title="Add Report" ><img src="/static/icons/writing.png" height="14px" width="13px"></a>
-                                        </span>
-                                        <span data-toggle="modal" data-target="#edit_del_report_screen" id="editReportIcon{{ youtube_inf_data['channel_id'] }}" style="display:None;">
-                                        <a onclick="edit_del_Report('{{ view_inf_campaign_details_data['data'][0]['campaign_id'] }}','{{ youtube_inf_data['proposal_channels'] }}')" data-toggle="tooltip" title="Edit/Delete Report" ><img src="/static/icons/writing.png" height="14px" width="13px"></a>
-                                        </span>
-                                        <a  href="{{ youtube_inf_data['proposal_ref_link'] }}" class="fa fa-link " data-toggle="tooltip"  title="Reference Link" style="position: relative; z-index: 1; font-size:14px; color:#9E57DD;"></a>
-                                        {% endif %}
-                                        <a data-toggle="tooltip" title="Payment Feature Coming Soon" href="#"><img src="/static/icons/payment-method.png" height="14px" width="13px"></a>
+                                        <div class="submenu">
+                                            <div class="submenu__content">
+                                            <span data-toggle="modal" data-target="#sendMessage">
+                                                <a  onclick="sendMessage('{{ youtube_inf_data['user_id'] }}','{{ youtube_inf_data['email_id'] }}')" class="fa fa-envelope "  title="Message" style="position: relative; z-index: 1; font-size:14px; color:#9E57DD;"></a>
+                                            </span>
+
+                                                <!-- optional -->
+                                                {% if youtube_inf_data['proposal_ref_link'] %}
+                                                <span data-toggle="modal" data-target="#addReport" id="reportIcon{{ youtube_inf_data['channel_id'] }}">
+                                                    <a onclick="addReport('{{ view_inf_campaign_details_data['data'][0]['campaign_id'] }}','{{ youtube_inf_data['proposal_channels'] }}')" title="Add Report" ><img src="/static/icons/writing.png" height="14px" width="13px"></a>
+                                                </span>
+                                                <span data-toggle="modal" data-target="#edit_del_report_screen" id="editReportIcon{{ youtube_inf_data['channel_id'] }}" style="display:None;">
+                                                    <a onclick="edit_del_Report('{{ view_inf_campaign_details_data['data'][0]['campaign_id'] }}','{{ youtube_inf_data['proposal_channels'] }}')" title="Edit/Delete Report" ><img src="/static/icons/writing.png" height="14px" width="13px"></a>
+                                                </span>
+                                                <a  href="{{ youtube_inf_data['proposal_ref_link'] }}" class="fa fa-link "  title="Reference Link" style="position: relative; z-index: 1; font-size:14px; color:#9E57DD;"></a>
+                                                {% endif %}
+                                                <!-- end of optional -->
+
+                                                <a title="Payment Feature Coming Soon" href="#"><img src="/static/icons/payment-method.png" height="14px" width="13px"></a>
+                                            </div>
+                                        </div>
+
+                                        <a class="show" id="{{ session['user_id'] }}">
+                                            {{ youtube_inf_data['brand_first_name'] }}
+                                        </a>
+
                                     </div>
-
-                                    <a class="show" id="{{ session['user_id'] }}">
-                                        {{ youtube_inf_data['brand_first_name'] }}
-                                    </a>
                                 </td>
 
-                                <td>
+                                <td class="align-middle">
                                     {% for status in view_inf_campaign_details_data['data'] %}
                                     {{status['channel_campaign_status']}}
                                     {% endfor %}
                                 </td>
-                                <td>
+                                <td class="align-middle">
                                     {% if youtube_inf_data['proposal_channels'] %}
                                     {% set channels = youtube_inf_data['proposal_channels'].split(',') %}
                                     {% for channel in channels %}
@@ -355,15 +267,15 @@
                                     {% endif %}
                                 </td>
                                 {% set _ = glob.update({'proposal_price': youtube_inf_data['proposal_price']}) %}
-                                <td >{{ youtube_inf_data['proposal_price'] }}</td>
-                                <td id="revenue_total{{ session['user_id'] }}"></td>
-                                <td id="total_posts{{ session['user_id'] }}"></td>
-                                <td id="total_views{{ session['user_id'] }}"></td>
-                                <td id="total_clicks{{ session['user_id'] }}"></td>
-                                <td id="new_users_total{{ session['user_id'] }}"></td>
-                                <td id="total_eng_rate{{ session['user_id'] }}"></td>
-                                <td id="total_cpa{{session['user_id']}}"></td>
-                                <td>Comming soon..</td>
+                                <td class="align-middle" >{{ youtube_inf_data['proposal_price'] }}</td>
+                                <td class="align-middle" id="revenue_total{{ session['user_id'] }}"></td>
+                                <td class="align-middle" id="total_posts{{ session['user_id'] }}"></td>
+                                <td class="align-middle" id="total_views{{ session['user_id'] }}"></td>
+                                <td class="align-middle" id="total_clicks{{ session['user_id'] }}"></td>
+                                <td class="align-middle" id="new_users_total{{ session['user_id'] }}"></td>
+                                <td class="align-middle" id="total_eng_rate{{ session['user_id'] }}"></td>
+                                <td class="align-middle" id="total_cpa{{session['user_id']}}"></td>
+                                <td class="align-middle">Comming soon..</td>
                             </tr>
                             {% if youtube_inf_data['proposal_channels'] %}
                             {% set channels = youtube_inf_data['proposal_channels'].split(',') %}
@@ -498,9 +410,14 @@
     </div>
 </div>
 
+
+{% endblock %}
+
+{% block footer %}
+
 <!-- Send message Modal form-->
-<div class="modal fade" id="sendMessage" role="dialog" data-backdrop="false">
-    <div class="modal-dialog modal-sm">
+<div class="modal fade" id="sendMessage" role="dialog" data-backdrop="true">
+    <div class="modal-dialog modal-medium-wide modal-centered">
         <div class="modal-content">
             <div class="modal-header alert-primary">
                 <b class="modal-title">Send Message</b>
@@ -511,7 +428,7 @@
                     <input  class="form-control" type="hidden" value="" name="channel_id" id="message_channel_id">
                     <div class="row">
                         <div class="col-12">
-                            <ul class="no-list-style">
+                            <ul class="no-list-style p-0">
                                 <li class="mb-2">
                                     <span class="text-bold-500 primary"><a><i class=" font-small-3"></i>*To :</a></span>
                                     <span class="display-block"><input type="text" class="form-control" name="to_email_id" id="to_email_id" readonly> </span>
@@ -538,28 +455,28 @@
 
 
 <!-- add report Modal form-->
-<div class="modal fade" id="addReport" role="dialog"  data-backdrop="false" style="margin-top:200px; margin-right:100px;">
-    <div class="modal-dialog modal-lg">
+<div class="modal fade" id="addReport" role="dialog"  data-backdrop="true">
+    <div class="modal-dialog modal-centered modal-wide modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header alert-primary">
                 <b class="modal-title">Add Report</b>
                 <button  type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <!--<form name="add_inf_report_form" id="inf_report_form" action="/saveInfReport" method="POST">-->
-                <div class="modal-body">
-                    <!--<input type="hidden" name="campaign_id" id="inf_report_campaign_id" value="">-->
-                    <div class="row">
-                        <ul class="nav nav-tabs" id="inf_report_tabs">
+            <div class="modal-body">
+                <!--<input type="hidden" name="campaign_id" id="inf_report_campaign_id" value="">-->
+                <div class="row">
+                    <ul class="nav nav-tabs" id="inf_report_tabs">
 
-                        </ul>
-                        <div class="tab-content">
+                    </ul>
+                    <div class="tab-content">
 
-                        </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button  type="button" class="btn-sm btn" data-dismiss="modal">Save</button>
-                </div>
+            </div>
+            <div class="modal-footer">
+                <button  type="button" class="btn-sm btn" data-dismiss="modal">Save</button>
+            </div>
             <!--</form>-->
         </div>
     </div>
@@ -567,23 +484,23 @@
 
 
 <!-- edit report Modal form-->
-<div class="modal fade" id="edit_inf_Report_modal" role="dialog"  data-backdrop="false">
-    <div class="modal-dialog modal-lg">
+<div class="modal fade" id="edit_inf_Report_modal" role="dialog"  data-backdrop="true">
+    <div class="modal-dialog modal-top modal-wide modal-lg">
         <div class="modal-content">
             <div class="modal-header alert-primary">
                 <b class="modal-title">Edit</b>
                 <button  type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-12" id="edit_inf_report">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12" id="edit_inf_report">
 
-                        </div>
                     </div>
                 </div>
-                <!--<div class="modal-footer">-->
-                    <!--<button type="submit"  class="btn btn-default">Save</button>-->
-                <!--</div>-->
+            </div>
+            <!--<div class="modal-footer">-->
+            <!--<button type="submit"  class="btn btn-default">Save</button>-->
+            <!--</div>-->
 
         </div>
     </div>
@@ -592,7 +509,7 @@
 
 <!-- add report Modal form-->
 <div class="modal fade" id="edit_del_report_screen" role="dialog"  data-backdrop="false">
-    <div class="modal-dialog modal-sm">
+    <div class="modal-dialog modal-centered modal-sm">
         <div class="modal-content">
             <div class="modal-header alert-primary">
                 <b class="modal-title">Alert</b>
@@ -620,65 +537,48 @@
             <!--&lt;!&ndash;alert(id);&ndash;&gt;-->
             <!--$(this).addClass('active');-->
             <!--&lt;!&ndash;$(this).closest().removeClass('active');&ndash;&gt;-->
-        <!--});-->
+            <!--});-->
     <!--});-->
 </script>
 <script>
-$(document).ready(function(){
-    $(".dropdown").mouseover(function(){
-    <!--$(".submenu").show();-->
-    $(this).next().toggleClass().show();
-  });
-
-  $(".submenu").mouseleave(function(){
-    <!--$(".submenu").hide();-->
-    $(this).toggleClass().hide();
-  });
-
-
-
     $(".show").click(function(){
         var channel_id = $(this).attr("id");
         <!--alert(channel_id);-->
         $('tr.'+channel_id).slideToggle("slow");
     });
 
+    $(document).ready(function(){
+
+        $("#send_message_form").submit(function(e) {
+            var form = $(this);
+            var url = form.attr('action');
+            var channel_id = $('#message_channel_id').val();
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: form.serialize(), // serializes the form's elements.
+                success: function(data)
+                {
+                    alert(data); // show response from the python script.
+                    $('#sendMessage').modal('toggle');
+                    <!--updateChannelStatusForCampaign(channel_id);-->
+                }
+            });
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+        });
 
 
-
-
-
-
-  $("#send_message_form").submit(function(e) {
-        var form = $(this);
-        var url = form.attr('action');
-        var channel_id = $('#message_channel_id').val();
-        $.ajax({
-               type: "POST",
-               url: url,
-               data: form.serialize(), // serializes the form's elements.
-               success: function(data)
-               {
-                   alert(data); // show response from the python script.
-                   $('#sendMessage').modal('toggle');
-                   <!--updateChannelStatusForCampaign(channel_id);-->
-               }
-             });
-        e.preventDefault(); // avoid to execute the actual submit of the form.
-    });
-
-
-    $(document).on('submit','#inf_report_form', function(e){
-    <!--$("#inf_report_formyoutube").submit(function(e) {-->
-        var form = $(this);
-        var url = form.attr('action');
-        alert(url);
-        $.ajax({
-               type: "POST",
-               url: url,
-               data: form.serialize(), // serializes the form's elements.
-               success: function(data)
-               {
+        $(document).on('submit','#inf_report_form', function(e){
+            <!--$("#inf_report_formyoutube").submit(function(e) {-->
+            var form = $(this);
+            var url = form.attr('action');
+            alert(url);
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: form.serialize(), // serializes the form's elements.
+                success: function(data)
+                {
                     if (data.results.length != 0){
                         <!--$('.tab-pane').empty();-->
                         jQuery.each(data.results, function(i, val) {
@@ -687,7 +587,7 @@ $(document).ready(function(){
                         jQuery.each(data.results, function(i, val) {
 
                             $('#'+val.channel_name).prepend(
-                            '<div class="row '+ val.channel_name +'">'+
+                                '<div class="row '+ val.channel_name +'">'+
                                 '<div class="col-sm-1"><a href="'+val.link_posted+'" target="_blank"><i class="fa fa-link"></i></a></div>'+
                                 '<div class="col-sm-3">'+val.date_posted+'</div>'+
                                 '<div class="col-sm-2">'+val.content_type+'</div>'+
@@ -698,375 +598,375 @@ $(document).ready(function(){
                                 '<div class="col-sm-1">'+val.post_shares+'</div>'+
                                 '<div class="col-sm-1"><a onclick="editInfReport('+val.inf_campaign_report_id+')"  data-toggle="tooltip" title="Edit"><img src="/static/icons/edit.png" height="15px" width="14px"></a>'+
                                 '&nbsp<a onclick="delInfReport('+val.inf_campaign_report_id+')" data-toggle="tooltip" title="Delete"><img src="/static/icons/delete.png" height="15px" width="14px"></a></div>'+
-                            '</div>'
+                                '</div>'
                             );
                         });
 
                     }
                     $(form).trigger("reset");
-                   <!--alert(data); // show response from the python script.-->
 
-                   <!--$('#addReport').modal('toggle');-->
+                    <!--$('#addReport').modal('toggle');-->
 
-               }
-             });
-        e.preventDefault(); // avoid to execute the actual submit of the form.
+                }
+            });
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+        });
+
+
+        $(document).on('submit','#edit_inf_report_form', function(e){
+            var form = $(this);
+            var url = form.attr('action');
+            alert(url);
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: form.serialize(), // serializes the form's elements.
+                success: function(data)
+                {
+                    alert(data); // show response from the python script
+                    addReport('{{ view_inf_campaign_details_data['data'][0]['campaign_id'] }}','{{ view_inf_campaign_details_data['data'][0]['proposal_channels'] }}');
+                    <!--location.reload();-->
+                    $('#edit_inf_Report_modal').modal('toggle');
+                }
+            });
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+        });
+
+
+
+
+
+        $("#edit_brand_report_form").submit(function(e) {
+            var form = $(this);
+            var url = form.attr('action');
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: form.serialize(), // serializes the form's elements.
+                success: function(data)
+                {
+                    alert(data); // show response from the python script.
+                    $('#edit_brand_Report_modal').modal('toggle');
+                    location.reload();
+                    <!--updateChannelStatusForCampaign(channel_id);-->
+                }
+            });
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+        });
+
+
+
+        <!--alert('i m before');-->
+        <!--getBrandReport('{{ view_inf_campaign_details_data['data'][0]['campaign_id'] }}','{{ view_inf_campaign_details_data['data'][0]['proposal_channels'] }}');-->
+
+
+
     });
 
-
-$(document).on('submit','#edit_inf_report_form', function(e){
-        var form = $(this);
-        var url = form.attr('action');
-        alert(url);
-        $.ajax({
-               type: "POST",
-               url: url,
-               data: form.serialize(), // serializes the form's elements.
-               success: function(data)
-               {
-                   alert(data); // show response from the python script
-                   addReport('{{ view_inf_campaign_details_data['data'][0]['campaign_id'] }}','{{ view_inf_campaign_details_data['data'][0]['proposal_channels'] }}');
-                   <!--location.reload();-->
-                   $('#edit_inf_Report_modal').modal('toggle');
-               }
-             });
-        e.preventDefault(); // avoid to execute the actual submit of the form.
-    });
-
-
-
-
-
-    $("#edit_brand_report_form").submit(function(e) {
-        var form = $(this);
-        var url = form.attr('action');
-        $.ajax({
-               type: "POST",
-               url: url,
-               data: form.serialize(), // serializes the form's elements.
-               success: function(data)
-               {
-                   alert(data); // show response from the python script.
-                   $('#edit_brand_Report_modal').modal('toggle');
-                   location.reload();
-                   <!--updateChannelStatusForCampaign(channel_id);-->
-               }
-             });
-        e.preventDefault(); // avoid to execute the actual submit of the form.
-    });
-
-
-
-    <!--alert('i m before');-->
-    <!--getBrandReport('{{ view_inf_campaign_details_data['data'][0]['campaign_id'] }}','{{ view_inf_campaign_details_data['data'][0]['proposal_channels'] }}');-->
-
-
-
-});
-
-<!--$(document).on('submit', function(evt){-->
+    <!--$(document).on('submit', function(evt){-->
     <!--alert('form submited');-->
     <!--evt.preventDefault();-->
-<!--});-->
+    <!--});-->
 
-function editReport(channel_id,to_email_id) {
-    <!--alert(channel_id);-->
-    $("#message_channel_id").val(channel_id);
-    $("#to_email_id").val(to_email_id);
-}
-
-
-
-function sendMessage(channel_id,to_email_id) {
-    <!--alert(channel_id);-->
-    $("#message_channel_id").val(channel_id);
-    $("#to_email_id").val(to_email_id);
-}
+    function editReport(channel_id,to_email_id) {
+        <!--alert(channel_id);-->
+        $("#message_channel_id").val(channel_id);
+        $("#to_email_id").val(to_email_id);
+    }
 
 
 
-function addReport(campaign_id,proposal_channels) {
+    function sendMessage(channel_id,to_email_id) {
+        <!--alert(channel_id);-->
+        $("#message_channel_id").val(channel_id);
+        $("#to_email_id").val(to_email_id);
+    }
 
-    $("#inf_report_campaign_id").empty();
-    $("#inf_report_campaign_id").val(campaign_id);
-    var channels  = proposal_channels.split(',');
-    var channel;
-    $('.tab-content').empty();
-    $('#inf_report_tabs').empty();
-    for (channel of channels) {
-        var channel_final  = channel.split('@');
-        var active_tab = '';
-        if (channel_final[0]=='youtube'){
-            var active_tab = 'active';
+
+
+    function addReport(campaign_id,proposal_channels) {
+
+        $("#inf_report_campaign_id").empty();
+        $("#inf_report_campaign_id").val(campaign_id);
+        var channels  = proposal_channels.split(',');
+        var channel;
+        $('.tab-content').empty();
+        $('#inf_report_tabs').empty();
+        for (channel of channels) {
+            var channel_final  = channel.split('@');
+            var active_tab = '';
+            if (channel_final[0]=='youtube'){
+                var active_tab = 'active';
+            }
+            $('#inf_report_tabs').append(
+                '<li class="nav-item">'+
+                '<a class="nav-link '+ active_tab +'" data-toggle="tab" href="#'+channel_final[0]+'">'+channel_final[0]+'</a>'+
+                '</li>');
+
         }
-        $('#inf_report_tabs').append(
-        '<li class="nav-item">'+
-            '<a class="nav-link '+ active_tab +'" data-toggle="tab" href="#'+channel_final[0]+'">'+channel_final[0]+'</a>'+
-        '</li>');
+        for (channel of channels) {
+            var channel_final  = channel.split('@');
+            var active_tab = '';
+            if (channel_final[0]=='youtube'){
+                var active_tab = 'active';
+            }
 
-        }
-    for (channel of channels) {
-        var channel_final  = channel.split('@');
-        var active_tab = '';
-        if (channel_final[0]=='youtube'){
-            var active_tab = 'active';
-        }
+            $('.tab-content').append(
+                '<div class="col-sm tab-pane container '+ active_tab +'" id="'+channel_final[0]+'">'+
 
-        $('.tab-content').append(
-        '<div class="col-sm tab-pane container '+ active_tab +'" id="'+channel_final[0]+'">'+
-
-            '<form name="add_inf_report_form" id="inf_report_form" action="/saveInfReport" method="POST">'+
-            '<div class="row">'+
+                '<form name="add_inf_report_form" id="inf_report_form" action="/saveInfReport" method="POST">'+
+                '<div class="row">'+
+                '<div class="col-12">' +
                 '<input type="hidden"  name="campaign_id" value="{{ view_inf_campaign_details_data['data'][0]['campaign_id'] }}">'+
                 '<input type="hidden"  name="proposal_id" value="{{ view_inf_campaign_details_data['data'][0]['proposal_id'] }}">'+
                 '<input type="hidden"  name="channel_id" value="'+channel_final[1]+'">'+
                 '<input type="hidden"  name="channel_name" value="'+channel_final[0]+'">'+
-                '<div class="col-sm-1"><input style="font-size:8pt; width:70px;" class="form-control-xs bg-light-grey" type="URL" placeholder="Post Link" name="link_posted"></div>'+
-                '<div class="col-sm-2"><input style="font-size:8pt; width:130px;" class="form-control-xs" type="date" name="date_posted"></div>'+
-                '<div class="col-sm-2"><select style="font-size:8pt; width:150px;" class="form-control-xs" name="content_type">'+
-                    '<option id="Review" value="Review">Review</option>'+
-                    '<option id="UnboxingGameplay" value="Unboxing / Gameplay">Unboxing / Gameplay</option>'+
-                    '<option id="ShoutoutMention" value="Shout out/Mention">Shout out/Mention</option>'+
-                    '<option id="Giveaway" value="Giveaway">Giveaway</option>'+
-                    '<option id="VideoIntroOutro" value="Video Intro/Outro">video Intro/Outro</option>'+
-                    '<option id="Tutorial" value="Tutorial">Tutorial</option>'+
-                    '<option id="BannerplacementURLplacement" value="Banner placement / URL placement">Banner placement / URL placement</option>'+
-                    '<option id="Sponsorship" value="Sponsorship">Sponsorship</option>'+
-                    '</select>'+
+                '<div class="special-form__grid">' +
+                '<input class="form-control" type="URL" placeholder="Post Link" name="link_posted">'+
+                '<input class="form-control" type="date" name="date_posted">'+
+                '<select class="form-control" name="content_type">'+
+                '<option id="Review" value="Review">Review</option>'+
+                '<option id="UnboxingGameplay" value="Unboxing / Gameplay">Unboxing / Gameplay</option>'+
+                '<option id="ShoutoutMention" value="Shout out/Mention">Shout out/Mention</option>'+
+                '<option id="Giveaway" value="Giveaway">Giveaway</option>'+
+                '<option id="VideoIntroOutro" value="Video Intro/Outro">video Intro/Outro</option>'+
+                '<option id="Tutorial" value="Tutorial">Tutorial</option>'+
+                '<option id="BannerplacementURLplacement" value="Banner placement / URL placement">Banner placement / URL placement</option>'+
+                '<option id="Sponsorship" value="Sponsorship">Sponsorship</option>'+
+                '</select>'+
+                '<input class="form-control" type="number" placeholder="Clicks" name="post_clicks">'+
+                '<input class="form-control" type="number" placeholder="Views" name="post_views">'+
+                '<input class="form-control" type="number" placeholder="Likes" name="post_likes">'+
+                '<input class="form-control" type="number" placeholder="Comments" name="post_comments">'+
+                '<input class="form-control" type="number" placeholder="Shares" name="post_shares">'+
+                '<input class="form-control btn-sm btn btn_inf_report_form" type="submit" value="Add">'+
+                '</div>' +
                 '</div>'+
-                '<div class="col-sm-1"><input style="font-size:8pt; width:70px;" class="form-control-xs bg-light-grey" type="number" placeholder="Clicks" name="post_clicks"></div>'+
-                '<div class="col-sm-1"><input style="font-size:8pt; width:70px;" class="form-control-xs bg-light-grey" type="number" placeholder="Views" name="post_views"></div>'+
-                '<div class="col-sm-1"><input style="font-size:8pt; width:70px;" class="form-control-xs bg-light-grey" type="number" placeholder="Likes" name="post_likes"></div>'+
-                '<div class="col-sm-1"><input style="font-size:8pt; width:70px;" class="form-control-xs bg-light-grey" type="number" placeholder="Comments" name="post_comments"></div>'+
-                '<div class="col-sm-1"><input style="font-size:8pt; width:70px;" class="form-control-xs bg-light-grey" type="number" placeholder="Shares" name="post_shares"></div>'+
-                '<div class="col-sm-1"><input class="form-control-xs btn-sm btn btn_inf_report_form" type="submit" value="Add"></div>'+
-            '</div>'+
-            '</form>'+
-        '</div>');
-        <!--alert('i m here before');-->
-        getInfCampaignReports('{{ view_inf_campaign_details_data['data'][0]['campaign_id'] }}','{{ view_inf_campaign_details_data['data'][0]['proposal_id'] }}',channel_final[1]);
+                '</div>'+
+                '</form>'+
+                '</div>');
+                <!--alert('i m here before');-->
+            getInfCampaignReports('{{ view_inf_campaign_details_data['data'][0]['campaign_id'] }}','{{ view_inf_campaign_details_data['data'][0]['proposal_id'] }}',channel_final[1]);
+        }
+
     }
 
-}
 
 
-
-function getBrandReport(campaign_id,proposal_channels) {
+    function getBrandReport(campaign_id,proposal_channels) {
         alert(campaign_id);
         $.ajax({
-               type: "GET",
-               url: '/getBrandReportByCampaignIdAndChannelIds/'+campaign_id+'/'+proposal_channels,
+            type: "GET",
+            url: '/getBrandReportByCampaignIdAndChannelIds/'+campaign_id+'/'+proposal_channels,
 
-               success: function(data)
-               {
-                   <!--alert(data); // show response from the python script-->
-                   if (data.results.length != 0){
-                       {% for youtube_inf_data in view_inf_campaign_details_data['data'] %}
-                            {% if youtube_inf_data['proposal_channels'] %}
-                                {% set channels = youtube_inf_data['proposal_channels'].split(',') %}
-                                                    var total_revenue = 0;
-                                                    var total_new_users = 0;
-                                                    var channel_id = '';
-                                                jQuery.each(data.results, function(i, val) {
-                                                    {% for channel in channels %}
-                                                    {% set channel_final = channel.split('@') %}
-                                                            alert("jquery"+val.channel_id);
-                                                            alert("jinja"+'{{channel}}');
-                                                        if(val.channel_id == '{{channel_final[1]}}'){
-                                                            alert('equal');
-                                                            total_revenue += val.revenue_generated;
-                                                            total_new_users += val.new_users;
-                                                            alert(total_revenue);
-                                                            alert(val.channel_id);
-                                                        }
+            success: function(data)
+            {
+                if (data.results.length != 0){
+                    {% for youtube_inf_data in view_inf_campaign_details_data['data'] %}
+                    {% if youtube_inf_data['proposal_channels'] %}
+                    {% set channels = youtube_inf_data['proposal_channels'].split(',') %}
+                    var total_revenue = 0;
+                    var total_new_users = 0;
+                    var channel_id = '';
+                    jQuery.each(data.results, function(i, val) {
+                        {% for channel in channels %}
+                        {% set channel_final = channel.split('@') %}
+                        alert("jquery"+val.channel_id);
+                        alert("jinja"+'{{channel}}');
+                        if(val.channel_id == '{{channel_final[1]}}'){
+                            alert('equal');
+                            total_revenue += val.revenue_generated;
+                            total_new_users += val.new_users;
+                            alert(total_revenue);
+                            alert(val.channel_id);
+                        }
 
-                                                    {% endfor %}
+                        {% endfor %}
 
-                                                });
+                    });
 
-                                        <!--alert(total_revenue);-->
+                    <!--alert(total_revenue);-->
 
-                             {% endif %}
-                       {% endfor %}
+                    {% endif %}
+                    {% endfor %}
 
-                       jQuery.each(data.results, function(i, val) {
+                    jQuery.each(data.results, function(i, val) {
 
-                            $('#revenue'+val.channel_id).html(val.revenue_generated);
-                            $('#new_users'+val.channel_id).html(val.new_users);
-                            $('#delReport'+val.channel_id).attr("onclick","delBrandReport("+val.brand_campaign_report_id+")");
-                            if(val.revenue_generated && val.new_users){
-                                $('#reportIcon'+val.channel_id).hide();
-                                $('#editReportIcon'+val.channel_id).show();
-                            }
-                            else{
-                                $('#reportIcon'+val.channel_id).show();
-                            }
+                        $('#revenue'+val.channel_id).html(val.revenue_generated);
+                        $('#new_users'+val.channel_id).html(val.new_users);
+                        $('#delReport'+val.channel_id).attr("onclick","delBrandReport("+val.brand_campaign_report_id+")");
+                        if(val.revenue_generated && val.new_users){
+                            $('#reportIcon'+val.channel_id).hide();
+                            $('#editReportIcon'+val.channel_id).show();
+                        }
+                        else{
+                            $('#reportIcon'+val.channel_id).show();
+                        }
 
-                        });
+                    });
 
-                    }
+                }
 
-               }
-             });
+            }
+        });
 
-}
+    }
 
 
-function getBrandReportByCampaignIdAndChannelIds(campaign_id,proposal_channels) {
+    function getBrandReportByCampaignIdAndChannelIds(campaign_id,proposal_channels) {
         confirm("Do you want to edit ?");
-            $("#edit_brand_report_campaign_id").empty();
-            $("#edit_brand_report").empty();
-            $("#edit_brand_report_campaign_id").val(campaign_id);
+        $("#edit_brand_report_campaign_id").empty();
+        $("#edit_brand_report").empty();
+        $("#edit_brand_report_campaign_id").val(campaign_id);
         $.ajax({
-               type: "GET",
-               url: '/getBrandReportByCampaignIdAndChannelIds/'+campaign_id+'/'+proposal_channels,
+            type: "GET",
+            url: '/getBrandReportByCampaignIdAndChannelIds/'+campaign_id+'/'+proposal_channels,
 
-               success: function(data)
-               {
-                   <!--alert(data); // show response from the python script-->
-                   if (data.results.length != 0){
+            success: function(data)
+            {
+                if (data.results.length != 0){
 
-                       jQuery.each(data.results, function(i, val) {
-                            $('#edit_del_report_screen').modal('toggle');
+                    jQuery.each(data.results, function(i, val) {
+                        $('#edit_del_report_screen').modal('toggle');
 
-                                $('#edit_brand_report').append('<tr>'+
-                                '<td>'+
-                                    '<input type="hidden" name="channel_id" value="'+val.channel_id+'">'+
-                                    '<i class="fa fa-'+val.channel+' purple">&nbsp'+val.channel+'</i></td>&nbsp'+
-                                '<td><input type="number" name="revenue" placeholder="Revenue Generated" value="'+val.revenue_generated+'"></td>'+
-                                '<td><input type="number" name="new_users" placeholder="New Users" value="'+val.new_users+'"></td>'+
-                                '<td><select name="currency">'+
-                                    '<option value="'+val.currency+'">'+val.currency+'</option>'+
-                                    '<option value="USD">USD</option>'+
-                                    '<option value="EUR">EUR</option>'+
-                                    '<option value="INR">INR</option>'+
-                                    '<option value="PLN">PLN</option>'+
-                                    '</select></td>'+
-                                '</tr>');
-                                $('#edit_brand_Report_modal').modal('toggle');
-                        });
+                        $('#edit_brand_report').append('<tr>'+
+                            '<td>'+
+                            '<input type="hidden" name="channel_id" value="'+val.channel_id+'">'+
+                            '<i class="fa fa-'+val.channel+' purple">&nbsp'+val.channel+'</i></td>&nbsp'+
+                            '<td><input type="number" name="revenue" placeholder="Revenue Generated" value="'+val.revenue_generated+'"></td>'+
+                            '<td><input type="number" name="new_users" placeholder="New Users" value="'+val.new_users+'"></td>'+
+                            '<td><select name="currency">'+
+                            '<option value="'+val.currency+'">'+val.currency+'</option>'+
+                            '<option value="USD">USD</option>'+
+                            '<option value="EUR">EUR</option>'+
+                            '<option value="INR">INR</option>'+
+                            '<option value="PLN">PLN</option>'+
+                            '</select></td>'+
+                            '</tr>');
+                        $('#edit_brand_Report_modal').modal('toggle');
+                    });
 
-                   }
+                }
 
-               }
+            }
 
-             });
+        });
 
-}
-
+    }
 
 
-function delInfReport(inf_campaign_report_id) {
+
+    function delInfReport(inf_campaign_report_id) {
 
         alert(inf_campaign_report_id);
         confirm("Are You Sure You Want To Delete ?")
         $.ajax({
-               type: "GET",
-               url: '/delInfReport/'+inf_campaign_report_id,
+            type: "GET",
+            url: '/delInfReport/'+inf_campaign_report_id,
 
-               success: function(data)
-               {
-                   alert(data); // show response from the python script
-                   addReport('{{ view_inf_campaign_details_data['data'][0]['campaign_id'] }}','{{ view_inf_campaign_details_data['data'][0]['proposal_channels'] }}');
-                   <!--location.reload();-->
-                   <!--$('#edit_del_report_screen').modal('toggle');-->
-               }
+            success: function(data)
+            {
+                alert(data); // show response from the python script
+                addReport('{{ view_inf_campaign_details_data['data'][0]['campaign_id'] }}','{{ view_inf_campaign_details_data['data'][0]['proposal_channels'] }}');
+                <!--location.reload();-->
+                <!--$('#edit_del_report_screen').modal('toggle');-->
+            }
 
-             });
+        });
 
-}
+    }
 
 
-function editInfReport(inf_campaign_report_id) {
+    function editInfReport(inf_campaign_report_id) {
 
         alert(inf_campaign_report_id);
 
         $.ajax({
-               type: "GET",
-               url: '/getInfReportByReportId/'+inf_campaign_report_id,
+            type: "GET",
+            url: '/getInfReportByReportId/'+inf_campaign_report_id,
 
-               success: function(data)
-               {
-                   <!--alert(data); // show response from the python script-->
-
-                   <!--addReport('{{ view_inf_campaign_details_data['data'][0]['campaign_id'] }}','{{ view_inf_campaign_details_data['data'][0]['proposal_channels'] }}');-->
-                   <!--location.reload();-->
-                   $('#edit_inf_report').empty();
-                   jQuery.each(data.results, function(i, val) {
-                       $('#edit_inf_report').append(
-                            '<form  id="edit_inf_report_form" action="/updateInfReport" method="POST">'+
-                            '<div class="row">'+
+            success: function(data)
+            {
+                <!--addReport('{{ view_inf_campaign_details_data['data'][0]['campaign_id'] }}','{{ view_inf_campaign_details_data['data'][0]['proposal_channels'] }}');-->
+                <!--location.reload();-->
+                $('#edit_inf_report').empty();
+                jQuery.each(data.results, function(i, val) {
+                    $('#edit_inf_report').append(
+                        '<form  id="edit_inf_report_form" action="/updateInfReport" method="POST">'+
+                        '<div class="row">'+
+                            '<div class="col-12">'+
                                 '<input type="hidden"  name="inf_campaign_report_id" value="'+val.inf_campaign_report_id+'">'+
-
-                                '<div class="col-sm-1"><input type="URL" name="link_posted" value="'+val.link_posted+'"></div>'+
-                                '<div class="col-sm-3"><input type="date" name="date_posted" value="'+val.date_posted+'"></div>'+
-                                '<div class="col-sm-2"><select name="content_type">'+
-                                    '<option value="'+val.content_type+'">'+val.content_type+'</option>'+
-                                    '<option id="Review" value="Review">Review</option>'+
-                                    '<option id="UnboxingGameplay" value="Unboxing / Gameplay">Unboxing / Gameplay</option>'+
-                                    '<option id="ShoutoutMention" value="Shout out/Mention">Shout out/Mention</option>'+
-                                    '<option id="Giveaway" value="Giveaway">Giveaway</option>'+
-                                    '<option id="VideoIntroOutro" value="Video Intro/Outro">video Intro/Outro</option>'+
-                                    '<option id="Tutorial" value="Tutorial">Tutorial</option>'+
-                                    '<option id="BannerplacementURLplacement" value="Banner placement / URL placement">Banner placement / URL placement</option>'+
-                                    '<option id="Sponsorship" value="Sponsorship">Sponsorship</option>'+
+                                '<div class="special-form__grid">' +
+                                    '<input class="form-control" type="URL" name="link_posted" value="'+val.link_posted+'">'+
+                                    '<input class="form-control" type="date" name="date_posted" value="'+val.date_posted+'">'+
+                                    '<select class="form-control" name="content_type">'+
+                                        '<option value="'+val.content_type+'">'+val.content_type+'</option>'+
+                                        '<option id="Review" value="Review">Review</option>'+
+                                        '<option id="UnboxingGameplay" value="Unboxing / Gameplay">Unboxing / Gameplay</option>'+
+                                        '<option id="ShoutoutMention" value="Shout out/Mention">Shout out/Mention</option>'+
+                                        '<option id="Giveaway" value="Giveaway">Giveaway</option>'+
+                                        '<option id="VideoIntroOutro" value="Video Intro/Outro">video Intro/Outro</option>'+
+                                        '<option id="Tutorial" value="Tutorial">Tutorial</option>'+
+                                        '<option id="BannerplacementURLplacement" value="Banner placement / URL placement">Banner placement / URL placement</option>'+
+                                        '<option id="Sponsorship" value="Sponsorship">Sponsorship</option>'+
                                     '</select>'+
+                                    '<input class="form-control" value="'+val.post_clicks+'" type="number" placeholder="Clicks" name="post_clicks">'+
+                                    '<input class="form-control" value="'+val.post_views+'" type="number" placeholder="Views" name="post_views">'+
+                                    '<input class="form-control" value="'+val.post_likes+'" type="number" placeholder="Likes" name="post_likes">'+
+                                    '<input class="form-control" value="'+val.post_comments+'" type="number" placeholder="Comments" name="post_comments">'+
+                                    '<input class="form-control" value="'+val.post_shares+'" type="number" placeholder="Shares" name="post_shares">'+
+                                    '<input class="form-control btn-sm btn btn_inf_report_form" type="submit" value="Update">'+
                                 '</div>'+
-                                '<div class="col-sm-1"><input value="'+val.post_clicks+'" type="number" placeholder="Clicks" name="post_clicks"></div>'+
-                                '<div class="col-sm-1"><input value="'+val.post_views+'" type="number" placeholder="Views" name="post_views"></div>'+
-                                '<div class="col-sm-1"><input value="'+val.post_likes+'" type="number" placeholder="Likes" name="post_likes"></div>'+
-                                '<div class="col-sm-1"><input value="'+val.post_comments+'" type="number" placeholder="Comments" name="post_comments"></div>'+
-                                '<div class="col-sm-1"><input value="'+val.post_shares+'" type="number" placeholder="Shares" name="post_shares"></div>'+
-                                '<div class="col-sm-1"><input class="btn-sm btn" type="submit" value="Update"></div>'+
                             '</div>'+
-                            '</form>');
-                        });
-                   $('#edit_inf_Report_modal').modal('toggle');
-               }
+                        '</div>'+
+                        '</form>');
+                });
+                $('#edit_inf_Report_modal').modal('toggle');
+            }
 
-             });
-
-}
-
-
-
-function getInfCampaignReports(campaign_id,proposal_id,channel_id){
-
-        $.ajax({
-               type: "GET",
-               url: '/getInfCampaignReports/'+campaign_id+'/'+proposal_id+'/'+channel_id,
-               success: function(data)
-               {
-                    <!--alert('inside success');-->
-                    if (data.results.length != 0){
-                        jQuery.each(data.results, function(i, val) {
-                        <!--alert(val.channel_name);-->
-                            $('#'+val.channel_name).prepend(
-                            '<div class="row '+ val.channel_name +'">'+
-                                '<div class="col-sm-1"><a href="'+val.link_posted+'" target="_blank"><i class="fa fa-link"></i></a></div>'+
-                                '<div class="col-sm-3">'+val.date_posted+'</div>'+
-                                '<div class="col-sm-2">'+val.content_type+'</div>'+
-                                '<div class="col-sm-1">'+val.post_clicks+'</div>'+
-                                '<div class="col-sm-1">'+val.post_views+'</div>'+
-                                '<div class="col-sm-1">'+val.post_likes+'</div>'+
-                                '<div class="col-sm-1">'+val.post_comments+'</div>'+
-                                '<div class="col-sm-1">'+val.post_shares+'</div>'+
-                                '<div class="col-sm-1"><a onclick="editInfReport('+val.inf_campaign_report_id+')"  data-toggle="tooltip" title="Edit"><img src="/static/icons/edit.png" height="15px" width="14px"></a>'+
-                                '&nbsp<a onclick="delInfReport('+val.inf_campaign_report_id+')" data-toggle="tooltip" title="Delete"><img src="/static/icons/delete.png" height="15px" width="14px"></a></div>'+
-                            '</div>'
-                            );
-                        });
-
-                    }
-                   <!--alert(data); // show response from the python script.-->
-
-                   <!--$('#addReport').modal('toggle');-->
-
-               }
         });
 
-}
+    }
+
+
+
+    function getInfCampaignReports(campaign_id,proposal_id,channel_id){
+
+        $.ajax({
+            type: "GET",
+            url: '/getInfCampaignReports/'+campaign_id+'/'+proposal_id+'/'+channel_id,
+            success: function(data)
+            {
+                <!--alert('inside success');-->
+                if (data.results.length != 0){
+                    jQuery.each(data.results, function(i, val) {
+                        <!--alert(val.channel_name);-->
+                        $('#'+val.channel_name).prepend(
+                            '<div class="row '+ val.channel_name +'">'+
+                            '<div class="col-sm-1"><a href="'+val.link_posted+'" target="_blank"><i class="fa fa-link"></i></a></div>'+
+                            '<div class="col-sm-3">'+val.date_posted+'</div>'+
+                            '<div class="col-sm-2">'+val.content_type+'</div>'+
+                            '<div class="col-sm-1">'+val.post_clicks+'</div>'+
+                            '<div class="col-sm-1">'+val.post_views+'</div>'+
+                            '<div class="col-sm-1">'+val.post_likes+'</div>'+
+                            '<div class="col-sm-1">'+val.post_comments+'</div>'+
+                            '<div class="col-sm-1">'+val.post_shares+'</div>'+
+                            '<div class="col-sm-1"><a onclick="editInfReport('+val.inf_campaign_report_id+')"  data-toggle="tooltip" title="Edit"><img src="/static/icons/edit.png" height="15px" width="14px"></a>'+
+                            '&nbsp<a onclick="delInfReport('+val.inf_campaign_report_id+')" data-toggle="tooltip" title="Delete"><img src="/static/icons/delete.png" height="15px" width="14px"></a></div>'+
+                            '</div>'
+                        );
+                    });
+
+                }
+
+                <!--$('#addReport').modal('toggle');-->
+
+            }
+        });
+
+    }
 
 
 </script>
+
 {% endblock %}
