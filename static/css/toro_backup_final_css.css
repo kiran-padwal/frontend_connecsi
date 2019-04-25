@@ -271,10 +271,7 @@ button, input, select, a {
 .bg-color4:hover {
   background-color: #8ee5e6 !important;
 }
-.demo_data{
-  color:red;
-  font-size:7pt;
-}
+
 .color1 {
   color: #9370DB !important;
 }
@@ -888,7 +885,7 @@ body .engagement .engagement-bar {
 }
 body .engagement .rating {
   color: #9370DB;
-  font-size: 1.5rem;
+  font-size: 2rem;
   clear: both;
   font-weight: 300;
   text-align: center;
@@ -909,7 +906,6 @@ body .engagement .rating-status {
 }
 body .engagement-col {
   position: relative;
-  text-align:center;
 }
 body .engagement-bar {
   position: absolute;
@@ -983,7 +979,7 @@ body .tabs-content {
   position: relative;
   margin: 0;
   width: 100%;
-  height: 170px;
+  height: auto;
   overflow: auto;
 }
 body .tabs-content .tabs-content-messages {
@@ -1298,7 +1294,7 @@ body .tab-content-item-list-container {
   display: block;
   width: 100%;
   position: relative;
-  //height: 170px;
+  height: 170px;
   overflow: auto;
 }
 body .custom-control-input:disabled ~ .custom-control-label {
