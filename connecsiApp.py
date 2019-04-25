@@ -2000,7 +2000,8 @@ def saveClassified():
             result_json = response.json()
             print(result_json)
             flash('saved Classified', 'success')
-            return viewAllClassifiedAds()
+            return redirect(url_for("viewAllClassifiedAds"))
+            # return viewAllClassifiedAds()
         except Exception as e:
             print(e)
             flash('Classified didnt saved Please try again later','danger')
