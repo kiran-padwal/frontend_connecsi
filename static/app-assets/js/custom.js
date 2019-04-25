@@ -1164,7 +1164,7 @@ $(document).ready(function () {
                             '<div class="col-xl-6 col-lg-12">' +
                             '<div class="row photo__row">' +
                             '<div class="col-12">' +
-                            '<div class="main__image" style="background-image: url(static/offer_files/' + file[0] + ')"></div>'+
+                            '<div class="main__image" style="background-image: url(static/campaign_files/' + file[0] + ')"></div>'+
                             '</div>' +
                             '</div>'+
                             '</div>'+
