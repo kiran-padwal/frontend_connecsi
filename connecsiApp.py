@@ -352,6 +352,7 @@ def changePassword():
 @connecsiApp.route('/searchInfluencers',methods=['POST','GET'])
 @is_logged_in
 def searchInfluencers():
+    start = time.time()
     user_id = session['user_id']
     url_regionCodes = base_url + 'Youtube/regionCodes'
     url_videoCat = base_url + 'Youtube/videoCategories'
@@ -505,11 +506,11 @@ def searchInfluencers():
         except:
             pass
 
-        try:
-            exportCsv(data=data)
-        except Exception as e:
-            print(e)
-            pass
+        # try:
+        #     exportCsv(data=data)
+        # except Exception as e:
+        #     print(e)
+        #     pass
         for item in data['data']:
             total_videos_url = base_url + 'Youtube/totalVideos/' + str(item['channel_id'])
             try:
@@ -520,6 +521,8 @@ def searchInfluencers():
                 # print(item)
             except:
                 pass
+        end = time.time()
+        print(end - start)
         return render_template('search/searchInfluencers.html', regionCodes=regionCodes_json,
                                lookup_string=lookup_string,form_filters=form_filters,data=data,pagination='',view_campaign_data=view_campaign_data,
                                favInfList_data=favInfList_data,payload_form_filter=payload)

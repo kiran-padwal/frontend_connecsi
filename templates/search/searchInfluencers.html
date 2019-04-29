@@ -45,11 +45,17 @@
                             <div class="form-group">
                                 <label>Country</label>
                                 <select class="form-control" name="country" data-live-search="true" data-live-search-style="begins">
+                                    <!--<select class="form-control" name="country">-->
                                     {% for item in regionCodes['data'] %}
                                         {% if item['region_code']|string == form_filters['country']|string %}
                                             <option  value="{{ item['region_code'] }}" selected>{{ item['country_name'] }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+
+                                    {% for item in regionCodes['data'] %}
+                                        {% if item['region_code']|string == form_filters['country']|string %}
                                         {% else %}
-                                            <option  value="{{ item['region_code'] }}">{{ item['country_name'] }}</option>
+                                            <option  value="{{ item['region_code'] }}" >{{ item['country_name'] }}</option>
                                         {% endif %}
                                     {% endfor %}
                                 </select>
@@ -408,11 +414,11 @@
                                             class="fa fa-bell"></i> Alert</a></li>
                                 </ul>
                                 <div class="tabs-content">
-                                    <div class="tabs-content-item active" id="status{{ item['channel_id'] }}">
+                                    <div class="tabs-content-item " id="status{{ item['channel_id'] }}">
                                         <div class="tab-content-item-list-container">
                                         </div>
                                     </div>
-                                    <div class="tabs-content-item" id="alert{{ item['channel_id'] }}">
+                                    <div class="tabs-content-item active" id="alert{{ item['channel_id'] }}">
                                         <div class="tab-content-item-list-container">
                                             <ul class="tab-content-item-list">
                                             {% if item['channel_id'] in

@@ -558,8 +558,8 @@ body .slider-nav {
   padding: 0 25px;
 }
 body .dropdown .dropdown-menu li {
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 2px;
+  padding-bottom: 2px;
 }
 body .dropdown .dropdown-menu li .dropdown-item {
   word-wrap: break-word;
