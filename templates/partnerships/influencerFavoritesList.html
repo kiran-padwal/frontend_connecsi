@@ -1,6 +1,7 @@
 {% extends 'admin_layout.html' %}
 {{ super() }}
 {% block body %}
+{% set glob={} %}
 <div class="row">
     <div class="col-sm-12">
         <div class="content-header">Favourites Infulencers list
@@ -15,7 +16,7 @@
                 <div class="btn-group mr-1 mb-1">
                     <div class="input-group-btn">
                         {% if data['data'] %}
-                        <a href="/home/kiranLocalBackup/connecsiFrontendBackup/infList.csv"
+                        <a href="{{ url_for('static',filename='infList.csv')}}"
                            class="btn btn-primary bg-info" download>Export CSV</a>
                         {% else %}
                         <!--<button type="button"  style="background-color: purple; margin-left: 2%; color:white; border-radius: 10px; font-size:15px;">Export CSV</button>-->
@@ -42,21 +43,25 @@
 
 <div class="row">
     {% for item in data['data'] %}
-    <div class="col-md-6 col-nc-lg-6 col-lg-12">
+    {% set _ = glob.update({'total_rows':item['total_rows']}) %}
 
-        <!-- old card -->
+    <div class="col-md-6 col-nc-lg-6 col-lg-12">
+        <!-- influencer card -->
         <div class="card">
             <div class="card-body">
-                <div class="card-block influencer-item" data-channel-id="{{ item['channel_id'] }}">
+                <div class="card-block padding-top-normal influencer-item" data-channel-id="{{ item['channel_id'] }}">
                     <div class="row padding-cols-xs">
+
                         <!-- user -->
                         <div class="col-lg-6 col-nc-lg-12 offer-user">
 
                             <!-- title -->
                             <div class="row">
                                 <div class="col-12">
-                                    <h5 class="no-padding-bottom no-margin-bottom">{{ item['title'] }} <i
-                                            class="fa fa-youtube-square red"></i></h5>
+                                    <h5 class="no-padding-bottom no-margin-bottom">
+                                        <a href="https://www.youtube.com/channel/{{ item['channel_id'] }}" target="_blank">{{ item['title'] }}</a>
+                                            <i class="fa fa-youtube"></i>
+                                    </h5>
                                     <hr class="divide">
                                 </div>
                             </div>
@@ -78,6 +83,7 @@
                                                 <a href="#" class="send-message"
                                                    data-channel-id="{{ item['channel_id'] }}"
                                                    data-business-email="{{ item['business_email'] }}"
+                                                   data-title="{{ item['title'] }}"
                                                    data-backdrop="true" data-toggle="modal" data-target="#sendMessage">
                                                     <svg data-toggle="tooltip" title="Messages" width="24" height="18"
                                                          viewBox="0 0 24 18" fill="none"
@@ -88,7 +94,7 @@
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="#" data-channel-id="{{ item['channel_id'] }}"
+                                                <a href="#" onclick="campaignList('{{ item['channel_id'] }}')" data-val="a2" data-channel-id="{{ item['channel_id'] }}"
                                                    class="add-to-campaign" data-toggle="modal" data-backdrop="true"
                                                    data-target="#campaignList">
                                                     <svg data-toggle="tooltip" title="Add To Campaign" width="24"
@@ -106,7 +112,7 @@
                                             </li>
                                             <li>
                                                 {% if item['channel_id'] in
-                                                favInfList_data['data']|map(attribute="channel_id") %}
+                                                data['data']|map(attribute="channel_id") %}
                                                 <a href="#" class="delete-fav-inf"
                                                    data-channel-id="{{ item['channel_id'] }}"
                                                    data-user-id="{{ session['user_id'] }}">
@@ -121,6 +127,7 @@
                                                         <path d="M19.196 14.1279C18.4448 14.1279 17.7496 14.3185 17.1105 14.6998C16.4713 15.0698 15.9612 15.5743 15.5799 16.2135C15.2099 16.8526 15.0249 17.5478 15.0249 18.299C15.0249 19.0503 15.2099 19.7454 15.5799 20.3846C15.9612 21.0237 16.4713 21.5282 17.1105 21.8983C17.7496 22.2795 18.4448 22.4701 19.196 22.4701C19.9472 22.4701 20.6424 22.2795 21.2815 21.8983C21.9207 21.5282 22.4252 21.0237 22.7953 20.3846C23.1765 19.7454 23.3671 19.0503 23.3671 18.299C23.3671 17.5478 23.1765 16.8526 22.7953 16.2135C22.4252 15.5743 21.9207 15.0698 21.2815 14.6998C20.6424 14.3185 19.9472 14.1279 19.196 14.1279ZM16.9759 18.9718C16.9198 18.9718 16.8694 18.9549 16.8245 18.9213C16.7909 18.8765 16.7741 18.826 16.7741 18.7699V17.8281C16.7741 17.772 16.7909 17.7272 16.8245 17.6935C16.8694 17.6487 16.9198 17.6263 16.9759 17.6263H21.4161C21.4722 17.6263 21.517 17.6487 21.5506 17.6935C21.5955 17.7272 21.6179 17.772 21.6179 17.8281V18.7699C21.6179 18.826 21.5955 18.8765 21.5506 18.9213C21.517 18.9549 21.4722 18.9718 21.4161 18.9718H16.9759Z"
                                                               fill="#D0021B"/>
                                                     </svg>
+
                                                 </a>
                                                 {% else %}
                                                 <a href="/addToFavInfList/{{ item['channel_id'] }}">
@@ -137,6 +144,7 @@
                                                     </svg>
                                                 </a>
                                                 {% endif %}
+
                                             </li>
                                             <li><a href="#" data-toggle="modal" data-backdrop="true"
                                                    data-target="#create_alert_modal" class="create-alert"
@@ -165,7 +173,19 @@
                                 <div class="col-lg-3 col-nc-lg-6 col-6 txt-center vertically-centered">
                                     <div class="v-block"></div>
                                     <div class="engagement">
-                                        <div class="rating">25%</div>
+                                        <div class="rating">
+
+                                            {% if item['total_videos'] %}
+                                                {% set total = (item['total_100video_likes'] + item['total_100video_comments'] + item['total_100video_shares'])%}
+                                                    <!--{{ total }} <br>-->
+                                                {% set total = (total/item['total_videos'])|round|int %}
+                                                <!--{{ total }} <br>-->
+                                                {% set total = (total/item['subscriberCount_gained']) %}
+                                                {% set total = total|round(4, 'floor')*100 %}
+                                                {% set total = total|round(2, 'floor') %}
+                                                {{ total }} %
+                                            {% endif %}
+                                        </div>
                                         <div class="rating-txt">Engagement Rate</div>
                                         <div class="engagement-bar">
                                             <div class="engagement-bar__block engagement-color--forestgreen"></div>
@@ -182,22 +202,24 @@
                                     <div class="v-block"></div>
                                     <ul class="analyse-list">
                                         <li>
-                                            <div class="analyse-result">{{ item['subscriberCount_gained'] }}</div>
+                                            <div class="analyse-result" data-integers="{{item['subscriberCount_gained']}}">
+
+
+                                            </div>
                                             <div>Total Followers</div>
                                         </li>
                                         <li>
-                                            <div class="analyse-result">{{ (item['total_100video_views']/100)|int }}
+                                            <div class="analyse-result" data-integers="{{ (item['total_100video_views']/100)|int }}">
                                             </div>
                                             <div>Avg Views / video</div>
                                         </li>
                                         <li>
-                                            <div class="analyse-result">{{ (item['total_100video_likes']/100)|int }}
+                                            <div class="analyse-result" data-integers="{{ (item['total_100video_likes']/100)|int }}">
                                             </div>
                                             <div>Avg Likes / video</div>
                                         </li>
                                         <li>
-                                            <div class="analyse-result">{{ (item['total_100video_comments']/100)|int
-                                                }}
+                                            <div class="analyse-result" data-integers="{{ (item['total_100video_comments']/100)|int }}">
                                             </div>
                                             <div>Avg Comments / video</div>
                                         </li>
@@ -206,37 +228,50 @@
                             </div>
                             <!-- end of data -->
 
-                            <!-- channels -->
+                            <!-- channel -->
                             <div class="row">
                                 <div class="col-12">
                                     <hr class="divide">
                                     <span>Other Channels:</span>
                                     <ul class="other-channels">
                                         {% if item['facebook_url'] %}
-                                        <li><a href="{{ item['facebook_url'] }}" target="_blank"><i
-                                                class="fa fa-facebook-square-square color3"></i></a></li>
+                                        <li>
+                                            <a href="{{ item['facebook_url'] }}" target="_blank">
+                                                <i class="fa fa-facebook-square"></i>
+                                            </a>
+                                        </li>
                                         {% endif %}
                                         {% if item['insta_url'] %}
                                         <li><a href="{{ item['insta_url'] }}" target="_blank"><i
-                                                class="fa fa-instagram color4"></i></a></li>
+                                                class="fa fa-instagram"></i></a></li>
                                         {% endif %}
                                         {% if item['twitter_url'] %}
                                         <li><a href="{{ item['twitter_url'] }}" target="_blank"><i
-                                                class="fa fa-twitter-square-square color1"></i></a></li>
+                                                class="fa fa-twitter-square"></i></a></li>
                                         {% endif %}
+                                        <!--<li><a href="#"><i class="fa fa-youtube-square-square color2"></i></a></li>-->
                                     </ul>
                                     <hr class="divide no-margin-bottom">
                                 </div>
                             </div>
-                            <!-- end of channels -->
+                            <!-- end of channel -->
                         </div>
                         <!-- end of user -->
+
+                        <!--<div class="col-md-3 offer-analysis">-->
+                        <!--<ul class="analyse-list">-->
+                        <!--<li>Total Followers <span class="to-right analyse-result">6.2M</span></li>-->
+                        <!--<li>Avg Views / video <span class="to-right analyse-result">55M</span></li>-->
+                        <!--<li>Avg Likes / video <span class="to-right analyse-result">902.2K</span></li>-->
+                        <!--<li>Avg Comments / video <span class="to-right analyse-result">235.4K</span></li>-->
+                        <!--</ul>-->
+                        <!--</div>-->
 
                         <!-- chart -->
                         <div class="col-lg-4 col-nc-lg-12 line-area vertically-centered">
                             <canvas id="lineChart{{ item['linechart_id'] }}" class="line-chart"
                                     data-labels="May,Jun,Jul,Aug,Sep,Oct,Nov" data-grafs="
-                            Youtube:rgba(255,0,0,0.1):rgba(255,0,0,0.5):65,59,80,81,56,55,40,50;
+                            Youtube:rgba(255,0,0,0.1):rgba(255,0,0,0.5):90,59,180,81,120,55,10,20;
                             Twitter:rgba(0,255,255,0.1):rgba(0,255,255,0.5):100,20,60,20,80,55,90;
                             Instagram:rgba(193, 53, 132,0.1):rgba(193, 53, 132,0.5):23,20,50,20,80,23,54;
                             Facebook:rgba(59,89,152,0.1):rgba(59,89,152,0.5):23,54,60,63,65,23,65;
@@ -263,24 +298,24 @@
                                     <div class="tabs-content-item" id="alert{{ item['channel_id'] }}">
                                         <div class="tab-content-item-list-container">
                                             <ul class="tab-content-item-list">
-                                                {% if item['channel_id'] in
-                                                favInfList_data['data']|map(attribute="channel_id") %}
-                                                {% for favitem in favInfList_data['data'] %}
-                                                {% if item['channel_id'] == favitem['channel_id'] %}
-                                                <li>Followers <span class="color1">{{ favitem['alert_followers'] }}</span>
-                                                </li>
-                                                <li>Avg Views/video <span class="color1">{{ favitem['alert_views'] }}</span>
-                                                </li>
-                                                <li>Avg Likes/video <span class="color1">{{ favitem['alert_likes'] }}</span>
-                                                </li>
-                                                <li>Avg Comments <span class="color1">{{ favitem['alert_comments'] }}</span>
-                                                </li>
-                                                {% endif %}
-                                                {% endfor %}
-                                                {% else %}
-                                                <li>No Alerts Set</li>
-                                                {% endif %}
-                                            </ul>
+                                            {% if item['channel_id'] in
+                                            data['data']|map(attribute="channel_id") %}
+                                            {% for favitem in data['data'] %}
+                                            {% if item['channel_id'] == favitem['channel_id'] %}
+                                            <li>Followers <span class="color1">{{ favitem['alert_followers'] }}</span>
+                                            </li>
+                                            <li>Avg Views/video <span class="color1">{{ favitem['alert_views'] }}</span>
+                                            </li>
+                                            <li>Avg Likes/video <span class="color1">{{ favitem['alert_likes'] }}</span>
+                                            </li>
+                                            <li>Avg Comments <span class="color1">{{ favitem['alert_comments'] }}</span>
+                                            </li>
+                                            {% endif %}
+                                            {% endfor %}
+                                            {% else %}
+                                            <li>No Alerts Set</li>
+                                            {% endif %}
+                                        </ul>
                                         </div>
                                     </div>
                                 </div>
@@ -291,11 +326,12 @@
                 </div>
             </div>
         </div>
-        <!-- end of the old card -->
-
+        <!-- end of influencer card -->
     </div>
     {% endfor %}
 </div>
+
+
 {% endblock %}
 
 {% block footer %}
@@ -456,13 +492,25 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label for="to_email_id">*To:</label>
-                                <input type="text" class="form-control" name="to_email_id" id="to_email_id" readonly>
+                                <input type="text" class="form-control" value="" id="title" readonly>
+                                <input type="hidden" class="form-control" name="to_email_id" id="to_email_id">
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="form-group">
                                 <label for="to_subject">*Subject:</label>
                                 <input required type="text" class="form-control" id="to_subject" name="subject">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="to_subject">Campaign:</label>
+                                 <select name="campaign_id" id="message_campaign_id">
+                                      <option value=""></option>
+                                      {% for item in view_campaign_data['data'] %}
+                                      <option value="{{item['campaign_id']}}">{{item['campaign_name']}}</option>
+                                      {% endfor %}
+                                 </select>
                             </div>
                         </div>
                         <div class="col-12">
@@ -481,9 +529,24 @@
     </div>
 </div>
 
-
-
+<!-- added autocomplete -->
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.2.24/jquery.autocomplete.min.js"></script>
 <script>
+    $('#string_word').autocomplete({
+        width: 348,
+        delimiter: /(,|;)\s*/,
+        lookup: '{{ lookup_string }}'.split(',')
+    });
+</script>
+<!-- end of autocomplete -->
+<script>
+
+
+
+
+
+
 
 function updateChannelStatusForCampaignByCampaignId(campaign_id){
     <!--alert(channel_id);-->
@@ -641,8 +704,20 @@ function getCampaign_ids(channel_id){
         e.preventDefault(); // avoid to execute the actual submit of the form.
     });
 
+
+
+
+
    });
 
 
 </script>
+<script>
+    $(document).ready(function () {
+       var subscriberCount_gained = abbrNum(1234,2);
+        <!--alert(subscriberCount_gained);-->
+    });
+</script>
+
+
 {% endblock %}

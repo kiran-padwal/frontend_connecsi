@@ -58,7 +58,7 @@
                                 </span>
                                 &nbsp&nbsp&nbsp&nbsp
                                 {% endif %}
-                                {% if item['mapped_twitter_channel_id'] %}
+                                {% if item['mapped_twitter_channel_id'] and item['confirmed']=='true' %}
                                 <a href="https://www.twitter.com/{{item['screen_name']}}" class="social-media_icon fa fa-twitter-square"
                                    title="twitter"></a>
                                 {% else %}
@@ -76,11 +76,9 @@
                                 {% endif %}
                                 &nbsp&nbsp&nbsp&nbsp
                                 <a href="https://www.youtube.com/channel/{{item['channel_id']}}" class="social-media_icon fa fa-youtube" title="youtube"></a>
-                                {% if item['mapped_twitter_channel_id'] %}
+                                {% if item['mapped_twitter_channel_id']  %}
                                 {% else %}
-                                <a  class="fa fa-plus green"
-                                                data-toggle="modal" data-backdrop="true"
-                                                data-target="#add_channel_modal">
+                                <a onclick="return check_category_and_country()" class="fa fa-plus green">
                                         </a>
                                 {% endif %}
                             </div>
@@ -135,26 +133,34 @@
                                         <label for="videoCategories">Categories</label>
                                         <select class="form-control" id="videoCategories" name="categories"
                                                 multiple>
-                                            {% set categories = item['categories'] %}
-                                            {% set category = categories.split(',') %}
-                                            {% for item in videoCat['data'] %}
-                                            {% if item['video_cat_id']|string in category %}
-                                            <option id="{{item['video_cat_id']}}"
-                                                    value="{{ item['video_cat_id'] }}" selected>{{ item['video_cat_name'] }}
-                                            </option>
+                                            {% if item['youtube_video_cat'] %}
+                                                {% set categories = item['youtube_video_cat'] %}
+                                                {% set category = categories.split(',') %}
+                                                {% for item in videoCat['data'] %}
+                                                {% if item['video_cat_name']|string in category %}
+                                                <option id="{{item['video_cat_id']}}"
+                                                        value="{{ item['video_cat_id'] }}" selected>{{ item['video_cat_name'] }}
+                                                </option>
+                                                {% else %}
+                                                <option id="{{item['video_cat_id']}}"
+                                                        value="{{ item['video_cat_id'] }}">{{ item['video_cat_name'] }}
+                                                </option>
+                                                {% endif %}
+                                                {% endfor %}
                                             {% else %}
-                                            <option id="{{item['video_cat_id']}}"
-                                                    value="{{ item['video_cat_id'] }}">{{ item['video_cat_name'] }}
-                                            </option>
+                                                {% for item in videoCat['data'] %}
+                                                <option id="{{item['video_cat_id']}}"
+                                                        value="{{ item['video_cat_id'] }}">{{ item['video_cat_name'] }}
+                                                </option>
+                                                {% endfor %}
                                             {% endif %}
-                                            {% endfor %}
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="country">*Country</label>
-                                        {% set country =  item['country'] %}
+                                        {% set country =  item['youtube_country'] %}
                                         <select class="form-control" name="country" id="country" required data-live-search="true">
                                             {% for item1 in regionCodes['data'] %}
                                             {% if item1['region_code'] == country %}
@@ -247,4 +253,24 @@
         </div>
     </div>
 </div>
+<script>
+    function check_category_and_country(){
+        <!--alert('i m here');-->
+        {% for item in data['data'] %}
+        var country = '{{ item['youtube_country'] }}';
+        var category = '{{ item['youtube_video_cat'] }}';
+
+            if(country!='None' && category!='None'){
+               $('#add_channel_modal').modal("show");
+            }
+            else{
+                alert('Please Add Category And Country below');
+                $("#videoCategories").focus();
+                return false;
+            }
+
+        {% endfor %}
+    }
+
+</script>
 {% endblock %}

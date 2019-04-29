@@ -517,7 +517,7 @@ def searchInfluencers():
                 total_videos = response.json()
                 for item1 in total_videos['data']:
                     item.update(item1)
-                print(item)
+                # print(item)
             except:
                 pass
         return render_template('search/searchInfluencers.html', regionCodes=regionCodes_json,
@@ -1865,11 +1865,24 @@ def influencerFavoritesList():
         view_campaign_data = campaignObj.get_all_campaigns()
         print('i m n search')
 
-        url = base_url + '/Brand/getInfluencerFavList/' + str(user_id)
-        response = requests.get(url=url)
-        favInfList_data = response.json()
+        # url = base_url + '/Brand/getInfluencerFavList/' + str(user_id)
+        # response = requests.get(url=url)
+        # favInfList_data = response.json()
+        print('data=',data)
+        # print('fav list=',favInfList_data)
         exportCsv(data=data)
-        return render_template('partnerships/influencerFavoritesList.html',data=data,favInfList_data=favInfList_data,view_campaign_data=view_campaign_data)
+        for item in data['data']:
+            total_videos_url = base_url + 'Youtube/totalVideos/' + str(item['channel_id'])
+            try:
+                response = requests.get(total_videos_url)
+                total_videos = response.json()
+                for item1 in total_videos['data']:
+                    item.update(item1)
+                print(item)
+            except:
+                pass
+
+        return render_template('partnerships/influencerFavoritesList.html',data=data,view_campaign_data=view_campaign_data)
     except:
         pass
         return render_template('partnerships/influencerFavoritesList.html')
@@ -2481,7 +2494,8 @@ google_blueprint = make_google_blueprint(
 scope=[
         "openid",
         "https://www.googleapis.com/auth/userinfo.email",
-        "https://www.googleapis.com/auth/youtube.readonly"
+        "https://www.googleapis.com/auth/youtube.readonly",
+        "https://www.googleapis.com/auth/yt-analytics.readonly"
     ],
     offline=True,
     reprompt_consent=True,
@@ -2509,6 +2523,7 @@ def google_login():
     print('channel details = ',channel_data)
     print(resp.json())
     print(google.authorized)
+    print(google_blueprint.backend)
     # exit()
     resp_json = resp.json()
     payload = {}
@@ -2650,6 +2665,7 @@ def updateProfile_inf():
         url = base_url+ 'Influencer/'+str(user_id)
         payload = request.form.to_dict()
         youtube_video_categories = request.form.getlist('categories')
+
         categories_string = ','.join(youtube_video_categories)
         payload.update({'categories':categories_string})
         try:
@@ -2660,8 +2676,21 @@ def updateProfile_inf():
         try:
             response = requests.put(url=url,json=payload)
             result_json = response.json()
-            return inf_profile()
-        except:pass
+            res_mapped_channels = requests.get(url=base_url + 'Influencer/getMappedChannels/' + str(user_id))
+            res_mapped_channels_json = res_mapped_channels.json()
+
+            for item in youtube_video_categories:
+                print(item)
+                res = requests.get(url=base_url+'Influencer/addCategoriesToChannel/'+str(user_id)+'/'+str(item))
+                for item_twitter_id in res_mapped_channels_json['data']:
+                    print(item_twitter_id['twitter_channel_id'])
+                    if item_twitter_id['twitter_channel_id']:
+                       res = requests.get(url=base_url + 'Influencer/addCategoriesToTwitterChannel/' + str(item_twitter_id['twitter_channel_id']) + '/' + str(item))
+                print(res.json())
+            return redirect(url_for("inf_editProfile"))
+        except:
+            pass
+            return redirect(url_for("inf_editProfile"))
 
 @connecsiApp.route('/addOffer')
 @is_logged_in
