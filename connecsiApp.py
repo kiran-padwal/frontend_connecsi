@@ -2810,6 +2810,7 @@ def viewAllOffers():
 @is_logged_in
 def viewOfferDetails(offer_id):
     user_id = session['user_id']
+    print(user_id)
     channel_id=''
     from templates.offers.offer import Offer
     offerObj = Offer(user_id=user_id, offer_id=offer_id)
