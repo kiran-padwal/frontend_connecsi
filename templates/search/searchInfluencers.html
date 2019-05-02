@@ -28,8 +28,8 @@
 
                                 <select class="form-control" name="channel">
                                     <option id="Youtube" value="Youtube" {{ 'selected' if 'Youtube' in form_filters['channel']|string else '' }} >Youtube</option>
-                                    <option id="Twitter"  value="Twitter" {{ 'selected' if 'Twitter' in form_filters['channel']|string else '' }} >Twitter</option>
-                                    <option id="Instagram" value="Instagram" {{ 'selected' if 'Instagram' in form_filters['channel']|string else '' }} >Instagram</option>
+                                    <option id="Twitter"  disabled value="Twitter" {{ 'selected' if 'Twitter' in form_filters['channel']|string else '' }} >Twitter</option>
+                                    <option id="Instagram" disabled value="Instagram" {{ 'selected' if 'Instagram' in form_filters['channel']|string else '' }} >Instagram</option>
                                     <option value="Facebook" disabled>Facebook</option>
                                 </select>
                             </div>

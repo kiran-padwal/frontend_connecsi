@@ -383,8 +383,12 @@ def searchInfluencers():
     from templates.campaign import campaign
     campaignObj = campaign.Campaign(user_id=user_id)
     view_campaign_data = campaignObj.get_all_campaigns()
-    print('after getting campaigns')
+    for item in view_campaign_data['data']:
+        if item['deleted']=='true':
+            view_campaign_data['data'].remove(item)
 
+    print('after getting campaigns')
+    print(view_campaign_data)
     try:
         url = base_url + '/Brand/getInfluencerFavList/' + str(user_id)
         response = requests.get(url=url)
@@ -1866,6 +1870,9 @@ def influencerFavoritesList():
         from templates.campaign import campaign
         campaignObj = campaign.Campaign(user_id=user_id)
         view_campaign_data = campaignObj.get_all_campaigns()
+        for item in view_campaign_data['data']:
+            if item['deleted'] == 'true':
+                view_campaign_data['data'].remove(item)
         print('i m n search')
 
         # url = base_url + '/Brand/getInfluencerFavList/' + str(user_id)
