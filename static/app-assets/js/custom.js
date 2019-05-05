@@ -1242,7 +1242,10 @@ $(document).ready(function () {
                             '<span>'+value.first_name + ' ' + value.last_name +'</span>'+
                             '</div>' +
                             ' <div class="col-md-6 text-right">' +
-                            '<a href="#" class="btn btn-raised btn-primary bg-color2 mt-0 mr-1 mb-0">Reply</a>' +
+                            '<a  href="#"   class="reply-classified btn btn-raised btn-primary bg-color2 mt-0 mr-1 mb-0"'+
+                                                   'data-business-email="'+value.email_id+'"'+
+                                                   'data-title="'+value.first_name+'"'+
+                                                   'data-backdrop="true" data-toggle="modal" data-target="#sendMessage">Reply</a>' +
                             '<a href="/viewClassifiedDetails/' + value.classified_id + '" class="btn btn-raised btn-primary bg-color1 mt-0 mb-0">Details</a>' +
                             '</div>' +
                             '</div>' +
@@ -1412,7 +1415,10 @@ $(document).ready(function () {
                         '<span>' + value.first_name + ' ' + value.last_name + '</span>' +
                         '</div>' +
                         ' <div class="col-md-6 text-right">' +
-                        '<a href="#" class="btn btn-raised btn-primary bg-color2 mt-0 mr-1 mb-0">Reply</a>' +
+                        '<a  href="#"   class="reply-offer btn btn-raised btn-primary bg-color2 mt-0 mr-1 mb-0"'+
+                                                   'data-business-email="'+value.email_id+'"'+
+                                                   'data-title="'+value.first_name+'"'+
+                                                   'data-backdrop="true" data-toggle="modal" data-target="#sendMessage">Reply</a>' +
                         '<a href="/viewOfferDetails/' + value.offer_id + '" class="btn btn-raised btn-primary bg-color1 mt-0 mb-0">Details</a>' +
                         '</div>' +
                         '</div>' +
@@ -1598,6 +1604,15 @@ $(document).ready(function () {
 
         }
     });
+
+
+$(document.body).on('click','.reply-offer', function (e) {
+        $("#message_channel_id").val($(this).attr('data-channel-id'));
+        <!--alert('i m clicked');-->
+        $("#to_email_id").val($(this).attr('data-business-email'));
+        $("#title").val($(this).attr('data-title'));
+    });
+
 
 });
 function goBack() {
