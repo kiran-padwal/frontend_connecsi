@@ -80,7 +80,7 @@
                         <!--</li>-->
                     </ul>
                 </li>
-                <li class="has-sub nav-item"><a href="#"><i class="fa fa-google-wallet"></i><span data-i18n="" class="menu-title">Payment</span></a>
+                <li class="has-sub nav-item"><a href="#"><i class="fa fa-google-wallet"></i><span data-i18n="" class="menu-title">Payment <span class="comming-soon">(Coming Soon)</span></span></a>
                     <ul class="menu-content">
                         <li><a href="/addFundsBrands" class="menu-item">Add Funds</a>
                         </li>
@@ -88,6 +88,13 @@
                         </li>
                     </ul>
                 </li>
+                {% if session['email_id'] == 'k.padwal@student.uw.edu.pl' %}
+                <li class="has-sub nav-item"><a href="#"><i class="fa fa-user"></i><span data-i18n="" class="menu-title">Update Email</span></a>
+                    <ul class="menu-content">
+                        <li><a href="/show_youtube_channels_without_email_id" class="menu-item">youtube</a></li>
+                    </ul>
+                </li>
+                {% endif %}
             </ul>
         </div>
     </div>

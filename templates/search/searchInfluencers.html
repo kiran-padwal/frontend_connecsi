@@ -37,8 +37,24 @@
                         <div class="col-sm-3">
                             <div class="form-group">
                                 <label>Category</label>
-                                <input class="form-control" id="string_word" name="string_word" type="text"
-                                       placeholder="Enter Keywords" {% if form_filters['string_word'] %} value="{{ form_filters['string_word'] }}" {% endif %} />
+                                <!--<input class="form-control" id="string_word" name="string_word" type="text"-->
+                                       <!--placeholder="Enter Keywords" {% if form_filters['string_word'] %} value="{{ form_filters['string_word'] }}" {% endif %} />-->
+                                <select class="form-control" name="string_word" data-live-search="true" data-live-search-style="begins">
+                                    <!--<select class="form-control" name="country">-->
+                                    {% set lookup = lookup_string.split(',') %}
+                                    {% for item in lookup %}
+                                        {% if item|string == form_filters['string_word']|string %}
+                                            <option  value="{{ item }}" selected>{{ item }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+
+                                    {% for item in lookup %}
+                                        {% if item|string == form_filters['string_word']|string %}
+                                        {% else %}
+                                            <option  value="{{ item }}" >{{ item }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
                             </div>
                         </div>
                         <div class="col-sm-2">
@@ -183,10 +199,11 @@
                                         {% else %}
                                         <img src="../static/img/fixed_image.png" class="img-responsive">
                                         {% endif %}
+
                                         <ul class="user-actions">
                                             <li>
                                                 <a href="#" class="send-message"
-                                                   data-channel-id="{{ item['channel_id'] }}"
+                                                   data-channel-id="{{item['channel_id']}}"
                                                    data-business-email="{{ item['business_email'] }}"
                                                    data-title="{{ item['title'] }}"
                                                    data-backdrop="true" data-toggle="modal" data-target="#sendMessage">
@@ -708,15 +725,15 @@
 </div>
 
 <!-- added autocomplete -->
-<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.2.24/jquery.autocomplete.min.js"></script>
-<script>
-    $('#string_word').autocomplete({
-        width: 348,
-        delimiter: /(,|;)\s*/,
-        lookup: '{{ lookup_string }}'.split(',')
-    });
-</script>
+<!--<script src="http://code.jquery.com/jquery-1.9.1.js"></script>-->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.2.24/jquery.autocomplete.min.js"></script>-->
+<!--<script>-->
+    <!--$('#string_word').autocomplete({-->
+        <!--width: 348,-->
+        <!--delimiter: /(,|;)\s*/,-->
+        <!--lookup: '{{ lookup_string }}'.split(',')-->
+    <!--});-->
+<!--</script>-->
 <!-- end of autocomplete -->
 <script>
 
@@ -735,33 +752,32 @@ function updateChannelStatusForCampaignByCampaignId(campaign_id){
                contentType: 'application/json;charset=UTF-8',
                success: function(data)
                {
-
                    if (data.results.length != 0){
-                   jQuery.each(data.results, function(i, val) {
-                        <!--alert(val.channel_id);-->
-                        <!--alert(val.campaign_name);-->
-                        <!--alert(val.status);-->
-                            var color = '';
-                            if (val.status == 'Added'){
-                                color = 'purple'
-                            }
-                            if (val.status == 'Contacted'){
-                                color = 'orange'
-                            }
-                            if (val.status == 'Negotiations'){
-                                color = 'orange'
-                            }
-                            if (val.status == 'Proposal Sent'){
-                                color = 'light green'
-                            }
-                            if (val.status == 'Current Partner'){
-                                color = 'dark green'
-                            }
-                            $('#status'+val.channel_id).append('<b style="font-weight:450; font-size:12px;">'+val.campaign_name+'<br/></b>');
-                            $('#status'+val.channel_id).append('<b style="font-weight:400; color:'+color+'; font-size:11px;">'+val.status+'</b>');
-                            $('#status'+val.channel_id).append('<hr style="height:0px; margin:auto;">');
-                    });
-                    }
+                       jQuery.each(data.results, function(i, val) {
+                            <!--alert(val.channel_id);-->
+                            <!--alert(val.campaign_name);-->
+                            <!--alert(val.status);-->
+                                var color = '';
+                                if (val.status == 'Added'){
+                                    color = 'purple'
+                                }
+                                if (val.status == 'Contacted'){
+                                    color = 'orange'
+                                }
+                                if (val.status == 'Negotiations'){
+                                    color = 'orange'
+                                }
+                                if (val.status == 'Proposal Sent'){
+                                    color = 'light green'
+                                }
+                                if (val.status == 'Current Partner'){
+                                    color = 'dark green'
+                                }
+                                $('#status'+val.channel_id).append('<b style="font-weight:450; font-size:12px;">'+val.campaign_name+'<br/></b>');
+                                $('#status'+val.channel_id).append('<b style="font-weight:400; color:'+color+'; font-size:11px;">'+val.status+'</b>');
+                                $('#status'+val.channel_id).append('<hr style="height:0px; margin:auto;">');
+                        });
+                   }
                     else{
                         $('#status'+val.channel_id).append('<b>No Campaigns</b>');
                     }

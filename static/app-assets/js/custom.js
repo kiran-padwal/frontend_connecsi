@@ -554,7 +554,7 @@ $(document).ready(function () {
 
 
     $("#sent_proposal_form").submit(function(e) {
-        alert('i m before');
+//        alert('i m before');
 
                 var proposal_channels_boxes = $('.proposal_channels_checkbox:checkbox');
                 if(proposal_channels_boxes.length > 0) {
@@ -583,7 +583,7 @@ $(document).ready(function () {
                 }
 
 
-        alert('i m after');
+//        alert('i m after');
         var form = $(this);
         var url = form.attr('action');
         $.ajax({
@@ -789,12 +789,12 @@ $(document).ready(function () {
         e.preventDefault(); // avoid to execute the actual submit of the form.
     });
 
-    $(window).lazyScript({
-        selectorClass: 'lazy',
-        callback: jQuery.noop,
-        threshold: 0,
-        scrollInterval: 500
-    });
+//    $(window).lazyScript({
+//        selectorClass: 'lazy',
+//        callback: jQuery.noop,
+//        threshold: 0,
+//        scrollInterval: 500
+//    });
 
 
     $('.filter-toggle').on('click touch', function (e) {
@@ -1520,9 +1520,9 @@ $(document).ready(function () {
 
     $('#alert').fadeOut('fast');
 
-    if($('textarea#email-message').length) {
-        tinymce.init({selector: 'textarea#email-message', branding: false});
-    }
+//    if($('textarea#email-message').length) {
+//        tinymce.init({selector: 'textarea#email-message', branding: false});
+//    }
 
     $('.add-campaign').on('click', function(e) {
         var $channel_id = $(this).attr('data-channel-id');

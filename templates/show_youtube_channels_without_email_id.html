@@ -1,0 +1,52 @@
+{% extends 'admin_layout.html' %}
+{{ super() }}
+{% block body %}
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="content-header">Interested Youtube Channels without email ids</div>
+        <p class="content-sub-header"></p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+<div class="card">
+    <div class="card-header">
+        <h4 class="card-title">List</h4>
+        <p></p>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col"><b style="font-weight: 500; font-size:16px;">From</b></th>
+                    <th scope="col"><b style="font-weight: 500; font-size:16px;">To</b></th>
+                    <th scope="col"><b style="font-weight: 500; font-size:16px;">Channel URL</b></th>
+                    <th scope="col"><b style="font-weight: 500; font-size:16px;">Date</b></th>
+                    <th scope="col"><b style="font-weight: 500; font-size:16px;">Action</b></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in data['data'] %}
+                <tr>
+                    <td>{{ item['from_email_id'] }}</td>
+                    <td><input type="email" id="to_email_id" name="to_email_id" value="" placeholder="Email ID"></td>
+                    <td><a href="https://www.youtube.com/channel/{{ item['channel_id'] }}/about" target="_blank">Url</a></td>
+                    <td>{{ item['date'] }}</td>
+                    <td><a href="#" type="submit" class="btn btn-sm">Update</a></td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}

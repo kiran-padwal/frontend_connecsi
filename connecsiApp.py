@@ -1553,9 +1553,10 @@ def sendMessage():
        # print(payload)
        date = datetime.datetime.now().strftime("%A, %d. %B %Y %I:%M%p")
        payload.update({'date':date})
+       if payload['to_email_id'] == '':
+          payload.update({'to_email_id':'kiran.padwal@connecsi.com'})
        print(payload)
 
-       # exit()
        user_id= session['user_id']
        type = session['type']
        url = base_url + 'Messages/' + str(user_id) +'/' + type
@@ -1569,6 +1570,18 @@ def sendMessage():
        except:
            pass
            return  'Server Error'
+
+
+@connecsiApp.route('/show_youtube_channels_without_email_id',methods = ['POST','GET'])
+@is_logged_in
+def show_youtube_channels_without_email_id():
+    to_email_id = 'kiran.padwal@connecsi.com'
+    url = base_url+'Messages/getMessagesByToEmailId/'+to_email_id
+    response = requests.get(url=url)
+    print(response.json())
+    return render_template('show_youtube_channels_without_email_id.html',data = response.json())
+
+
 
 
 
