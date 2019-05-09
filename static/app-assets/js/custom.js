@@ -1613,6 +1613,37 @@ $(document.body).on('click','.reply-offer', function (e) {
         $("#title").val($(this).attr('data-title'));
     });
 
+$('.update-and-send-email').on('click', function(e){
+        var channel_id = $(this).attr('data-channel-id');
+        var message_id = $(this).attr('data-message-id');
+        var email_id = $('#'+channel_id).val();
+        var subject = $(this).attr('data-subject');
+        var message = $(this).attr('data-message');
+//        alert(message);
+//        alert(subject);
+        if(email_id!='')
+            if(confirm("Update and Send Email to "+email_id)){
+                $.ajax({
+                    type: "GET",
+                    url: '/update_and_send_email_youtube/'+channel_id+'/'+message_id+'/'+email_id+'/'+subject+'/'+message,
+                    contentType: 'application/json;charset=UTF-8',
+                    success: function(data)
+                    {
+                        alert(data);
+                        location.reload();
+                    }
+                });
+            }
+            else{
+                return false;
+            }
+        else{
+            alert('Please Enter Email Address !');
+        }
+
+    });
+
+
 
 });
 function goBack() {

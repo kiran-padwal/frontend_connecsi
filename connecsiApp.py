@@ -1565,7 +1565,7 @@ def sendMessage():
            data = response.json()
            print(data)
            # if data['resposne'] == 1:
-           return 'Your email has been sent'
+           return 'Your message has been sent'
            # else: return "Failed to sent mail"
        except:
            pass
@@ -1579,9 +1579,34 @@ def show_youtube_channels_without_email_id():
     url = base_url+'Messages/getMessagesByToEmailId/'+to_email_id
     response = requests.get(url=url)
     print(response.json())
-    return render_template('show_youtube_channels_without_email_id.html',data = response.json())
+    data = []
+    response_json = response.json()
+    for item in response_json['data']:
+        print(item)
+        channel_name_list = item['channel_id'].split('@')
+        print(channel_name_list)
+        channel_name = channel_name_list[1]
+        if channel_name == 'Youtube':
+           item['channel_id']=channel_name_list[0]
+           data.append(item)
+
+    return render_template('show_youtube_channels_without_email_id.html',data = data)
 
 
+
+
+@connecsiApp.route('/update_and_send_email_youtube/<channel_id>/<message_id>/<email_id>/<subject>/<message>',methods = ['POST','GET'])
+@is_logged_in
+def update_and_send_email(channel_id,message_id,email_id,subject,message):
+    print(channel_id)
+    url = base_url+"Messages/update_and_send_email_youtube/"+channel_id+'/'+message_id+'/'+email_id+'/'+subject+'/'+message
+    res = requests.get(url=url)
+    print(res.json())
+    response = res.json()
+    if response['data']==1:
+        return 'Updated and sent Email Successfully'
+    else:
+        return 'Server Error'
 
 
 

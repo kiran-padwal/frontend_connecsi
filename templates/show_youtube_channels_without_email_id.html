@@ -29,13 +29,18 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for item in data['data'] %}
+                {% for item in data %}
                 <tr>
                     <td>{{ item['from_email_id'] }}</td>
-                    <td><input type="email" id="to_email_id" name="to_email_id" value="" placeholder="Email ID"></td>
+                    <td><input type="email" id="{{item['channel_id']}}" name="to_email_id" value="" placeholder="Email ID"></td>
                     <td><a href="https://www.youtube.com/channel/{{ item['channel_id'] }}/about" target="_blank">Url</a></td>
                     <td>{{ item['date'] }}</td>
-                    <td><a href="#" type="submit" class="btn btn-sm">Update</a></td>
+                    <td><a href="#"
+                           data-channel-id="{{item['channel_id']}}"
+                           data-message-id="{{item['message_id']}}"
+                           data-subject="{{item['subject']}}"
+                           data-message="{{item['message']}}"
+                           type="submit" class="btn btn-sm update-and-send-email">Update</a></td>
                 </tr>
                 {% endfor %}
                 </tbody>
