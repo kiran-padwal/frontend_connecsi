@@ -8,7 +8,8 @@ import time
 #
 import copy
 import requests
-from flask import Flask, render_template, flash, redirect, url_for, session, request, logging, jsonify, make_response
+from flask import Flask, render_template, flash, redirect, url_for, session, request, logging, jsonify, make_response,abort
+from itsdangerous import URLSafeSerializer, BadSignature
 # from model.ConnecsiModel import ConnecsiModel
 # from passlib.hash import sha256_crypt
 #from flask_oauthlib.client import OAuth
@@ -147,12 +148,17 @@ def saveBrand():
             result = result_json['response']
             # exit()
             if result == 1:
+                user = {'email_id': payload['email']}
+                activation_link = get_activation_link(user=user)
+                print(activation_link)
+                email_content = welcomemail(activation_link=activation_link)
                 payload1 = {
                   "from_email_id": "business@connecsi.com",
                   "to_email_id": request.form.get('email'),
                   "date": datetime.datetime.now().strftime("%A, %d. %B %Y %I:%M%p"),
                   "subject": "Welcome To Connecsi",
-                  "message": "Hello User welcome to Connecsi"
+                  # "message": "Please click "+activation_link+" to activate your account"
+                  "message": "'"+email_content+"'"
                 }
                 user_id = 1
                 type = 'brand'
@@ -163,7 +169,7 @@ def saveBrand():
                     print('email sent')
                 except:
                     pass
-                flash("Brand Details Successfully Registered", 'success')
+                flash("Successfully Registered and Activation link has been sent to your email address", 'success')
                 title = 'Connesi App Login Panel'
                 return render_template('user/login.html', title=title)
             else:
@@ -175,6 +181,45 @@ def saveBrand():
 #
 #
 #
+@connecsiApp.route('/welcomemail')
+def welcomemail(activation_link='hello'):
+    resp_template = render_template('welcomemail_template.html',activation_link=activation_link)
+    # print(resp_template)
+    return resp_template
+    # return render_template('welcomemail_template.html',activation_link=activation_link)
+
+def get_serializer(secret_key=None):
+    if secret_key is None:
+        secret_key = connecsiApp.secret_key
+    return URLSafeSerializer(secret_key)
+
+@connecsiApp.route('/users/activate/<payload>')
+def activate_user(payload):
+    s = get_serializer()
+    email_id=''
+    try:
+        email_id = s.loads(payload)
+        print(email_id)
+    except BadSignature:
+        abort(404)
+    activate_user_url = base_url+'Brand/Confirm_email/'+str(email_id)
+    requests.post(url=activate_user_url)
+    flash('Brand User with '+email_id+' is Activated now you can login','success')
+    return redirect(url_for('index'))
+
+def get_activation_link(user):
+    s = get_serializer()
+    payload = s.dumps(user['email_id'])
+    print('payload = ',payload)
+    return url_for('activate_user', payload=payload, _external=True)
+
+# @connecsiApp.route('/test_activate_user')
+# def test_activate_user():
+#     user = {'id':'123'}
+#     activation_link = get_activation_link(user=user)
+#     print('activation_link =',activation_link)
+#     return activation_link
+
 #Logout
 @connecsiApp.route('/logout')
 def logout():
@@ -196,19 +241,26 @@ def login():
             title = ''
             try:
                 response = requests.post(url, json=payload)
-                print(response.json())
+                print('user response =',response.json())
                 result_json = response.json()
                 user_id = result_json['user_id']
+                confirmed_email = result_json['confirmed_email']
+                print('confirmed email = ',confirmed_email)
                 print(user_id)
                 # exit()
                 if user_id:
-                    flash("logged in", 'success')
-                    session['logged_in'] = True
-                    session['email_id']=payload.get('email')
-                    session['type'] = 'brand'
-                    session['user_id']=user_id
-                    print(session['user_id'])
-                    return redirect(url_for('admin'))
+                    if confirmed_email =='confirmed':
+                        flash("logged in", 'success')
+                        session['logged_in'] = True
+                        session['email_id']=payload.get('email')
+                        session['type'] = 'brand'
+                        session['user_id']=user_id
+                        print(session['user_id'])
+                        return redirect(url_for('admin'))
+                    else:
+                        flash("You have not Activated your account, To Activate your account please click on the activation link sent to your email address", 'danger')
+                        return render_template('user/login.html', title=title)
+
                 else:
                     flash("Internal error please try later", 'danger')
                     return render_template('user/login.html', title=title)
