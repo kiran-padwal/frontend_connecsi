@@ -149,12 +149,12 @@
                                     </div>
                                 </div>
                             </div>
-                            {% if  glob.from_email_id != 'business1@connecsi.com'  %}
+                            {% if  glob.from_email_id != 'business@connecsi.com'  %}
                             <div class="email-app-sidebar hide">
                                 <h5 class="w-100 text-bold-500">Campaigns
                                     {% if glob.message_id %}
                                     <!--{{glob.from_email_id}}-->
-                                        {% if  glob.from_email_id == session['email_id'] or glob.from_email_id == 'business@connecsi.com' %}
+                                        {% if  glob.from_email_id == session['email_id']  %}
                                             {% if session['type']=='brand' %}
                                                 <a href="#" data-toggle="modal" data-target="#campaignList" data-backdrop="true" class="color1 float-right add-campaign" data-channel-id="{{ glob.channel_id }}" data-message-id="{{ glob.message_id }}"><i class="fa fa-plus-circle"></i></a>
                                             {% endif %}
