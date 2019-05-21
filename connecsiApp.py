@@ -283,21 +283,21 @@ def admin():
         response = requests.get(top10Inf_url)
         # print(response.json())
         top10Inf = response.json()
-        # print(top10Inf)
-        for item in top10Inf['data']:
-            # print(item)
-            # print(item['channel_id'])
-            total_videos_url = base_url + 'Youtube/totalVideos/'+str(item['channel_id'])
-            try:
-                response = requests.get(total_videos_url)
-                total_videos = response.json()
-                # print(total_videos)
-                for item1 in total_videos['data']:
-                    # print(item1)
-                    item.update(item1)
-
-            except:pass
-            print(item)
+        print(top10Inf)
+        # for item in top10Inf['data']:
+        #     # print(item)
+        #     # print(item['channel_id'])
+        #     total_videos_url = base_url + 'Youtube/totalVideos/'+str(item['channel_id'])
+        #     try:
+        #         response = requests.get(total_videos_url)
+        #         total_videos = response.json()
+        #         # print(total_videos)
+        #         for item1 in total_videos['data']:
+        #             # print(item1)
+        #             item.update(item1)
+        #
+        #     except:pass
+        #     print(item)
         return render_template('index.html', title=title, top10Inf=top10Inf)
     except Exception as e:
         print(e)
@@ -1281,7 +1281,10 @@ def inbox(message_id):
                 influencer_details_url = base_url + '/Influencer/GetDetailsByEmailId/' + str(full_conv_email_id)
                 influencer_details_resposne = requests.get(url=influencer_details_url)
                 influencer_details_json = influencer_details_resposne.json()
-                # print(influencer_details_json)
+                print('INF DETAILS=======',influencer_details_json)
+                inf_channel_id = influencer_details_json['data']['channel_id']
+                print('INF CHANNEL ID ======',inf_channel_id)
+                item.update({'channel_id':inf_channel_id})
                 first_name = influencer_details_json['data']['first_name']
                 if first_name =='':
                     first_name=full_conv_email_id
@@ -1334,8 +1337,17 @@ def inbox(message_id):
             print(item)
         print('campaign data = ',view_campaign_data)
         print('final inbox =',inbox)
+        ############## sort inbox according to date ################
+        for item in inbox['data']:
+            print('message inbox = ',item)
+
+        inbox['data'].sort(key=lambda x: datetime.datetime.strptime(x['date'], '%A, %d. %B %Y %I:%M%p'),reverse=True)
+        for item in inbox['data']:
+            print('after sorting inbox = ',item)
+        ############## sort end ####################################
         return render_template('email/inbox.html', inbox = inbox, full_conv = full_conv, conv_title=conv_title,view_campaign_data=view_campaign_data)
-    except:
+    except Exception as e:
+        print(e)
         pass
 
     from templates.campaign.campaign import Campaign
@@ -1353,9 +1365,11 @@ def addCampaignsToMessage():
     if request.method=='POST':
         message_id=request.form.get('message_id')
         campaign_ids= request.form.getlist('campaign_id')
-        print(message_id)
-        print(campaign_ids)
         channel_id = request.form.get('channel_id')
+        print('message_id = ',message_id)
+        print('campaign_ids = ',campaign_ids)
+        print('channel_id = ',channel_id)
+        # exit()
         for campaign_id in campaign_ids:
             url = base_url + 'Messages/addCampaignIdToMessageId/' + message_id + '/' + campaign_id+'/'+str(channel_id)
             print(url)

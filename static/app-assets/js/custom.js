@@ -679,7 +679,9 @@ $(document).ready(function () {
         $("#string_word").val($(this).attr('data-video-cat-name'));
         $("#min_lower").val($(this).attr('data-min-followers'));
         $("#max_upper").val($(this).attr('data-max-followers'));
-        $("#country").val('US');
+        var country = $(this).attr('data-regions').split(',');
+//        alert(country);
+        $("#country").val(country[0]);
     });
 
     $('.delete-fav-inf').on('click', function(e){

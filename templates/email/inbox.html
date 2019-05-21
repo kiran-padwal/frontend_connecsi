@@ -93,6 +93,7 @@
                                                     <p class="list-group-item-text">
                             <span class="primary">
                                 <span class="badge badge-primary">{{ glob.from_email_id}}</span>
+                                <!--<span class="badge badge-primary">{{ glob.channel_id }}</span>-->
                             </span>
                                                     </p>
                                                 </div>
@@ -154,11 +155,11 @@
                                 <h5 class="w-100 text-bold-500">Campaigns
                                     {% if glob.message_id %}
                                     <!--{{glob.from_email_id}}-->
-                                        {% if  glob.from_email_id == session['email_id']  %}
+
                                             {% if session['type']=='brand' %}
                                                 <a href="#" data-toggle="modal" data-target="#campaignList" data-backdrop="true" class="color1 float-right add-campaign" data-channel-id="{{ glob.channel_id }}" data-message-id="{{ glob.message_id }}"><i class="fa fa-plus-circle"></i></a>
                                             {% endif %}
-                                        {% endif %}
+
                                     {% endif %}
                                 </h5>
                                 <div class="campaign-list-container">
@@ -176,9 +177,9 @@
                                     <div class="tabs-content tabs-content-messages">
                                         <div class="tabs-content-item active" id="tab-proposal">
                                             {% if glob.message_id %}
-                                            {% if  glob.from_email_id == session['email_id']  %}
+                                            {# if  glob.from_email_id == session['email_id']  #}
                                             <button class="btn btn-raised btn-primary bg-color1 w-100" data-toggle="modal" data-target="#proposal" data-backdrop="true">New Proposal</button>
-                                            {% endif %}
+                                            {# endif #}
                                             {% endif %}
                                             <div class="messages-tab-list-container">
                                                 <ul class="tab-list"></ul>
@@ -262,10 +263,10 @@
                                 </thead>
                                 <tbody>
                                 {% for item in view_campaign_data['data'] %}
-                                {% set channels_ids = [] %}
-                                {% for item1 in item['youtube_inf_data'] %}
-                                {{ channels_ids.append(item1['channel_id'])|default("", True) }}
-                                {% endfor %}
+                                    {% set channels_ids = [] %}
+                                    {% for item1 in item['youtube_inf_data'] %}
+                                    {{ channels_ids.append(item1['channel_id'])|default("", True) }}
+                                    {% endfor %}
                                 <tr>
                                     <td>
                                         <div class="custom-control custom-checkbox custom-control-inline text-left">
@@ -278,7 +279,7 @@
                                         </div>
                                     </td>
                                     <td class="max-width-150"><a href="/viewCampaignDetails/{{ item['campaign_id'] }}">{{ item['campaign_name'] }}</a></td>
-                                    <td>Cell</td>
+                                    <td>{{item['campaign_status']}}</td>
                                     <td>{{ item['from_date'] }}- {{ item['to_date'] }}</td>
                                     <td>
                                         {% set channels = item['channels'].split(',') %}
