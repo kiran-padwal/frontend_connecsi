@@ -188,6 +188,14 @@ def welcomemail(activation_link):
     return resp_template
     # return render_template('brand_activation_link_template.html',activation_link=activation_link)
 
+
+# @connecsiApp.route('/welcomemail_inf')
+def welcomemail_inf():
+    resp_template = render_template('welcomemail_inf_template.html')
+    # print(resp_template)
+    return resp_template
+    # return render_template('brand_activation_link_template.html',activation_link=activation_link)
+
 def get_serializer(secret_key=None):
     if secret_key is None:
         secret_key = connecsiApp.secret_key
@@ -2687,12 +2695,13 @@ def google_login():
         print(response.json())
         response_json = response.json()
         if response_json['response'] == 1:
+            email_content = welcomemail_inf()
             payload1 = {
                 "from_email_id": "business@connecsi.com",
                 "to_email_id": resp_json['email'],
                 "date": datetime.datetime.now().strftime("%A, %d. %B %Y %I:%M%p"),
-                "subject": "Youtube Influencer Welcome To Connecsi",
-                "message": "Hello Youtube Influencer "+ title +", your email address is "+ resp_json['email'] +" welcome to Connecsi"
+                "subject": "Welcome To Connecsi",
+                "message": "'"+email_content+"'"
             }
             user_id = 1
             type = 'brand'
