@@ -2759,6 +2759,27 @@ def twitter_login():
         return redirect(url_for("inf_editProfile"))
 
 
+@connecsiApp.route('/add_insta_channel',methods=['GET','POST'])
+@is_logged_in
+def add_insta_channel():
+    if request.method == 'POST':
+        payload = request.form.to_dict()
+        insta_username = request.form.get('insta_username')
+        email_id = request.form.get('email_id')
+        user_id=session['user_id']
+        print(insta_username)
+        print(email_id)
+        print(user_id)
+        add_insta_channel_url = base_url + 'Insta/addInstagramChannel/' + insta_username + '/' + email_id + '/' + user_id
+        print(add_insta_channel_url)
+        try:
+            requests.post(url=add_insta_channel_url)
+            return 'Successfully Added Instagram Channel'
+        except Exception as e:
+            print(e)
+            pass
+            return 'Server error Please try again later'
+
 
 @connecsiApp.route('/admin_inf')
 @is_logged_in

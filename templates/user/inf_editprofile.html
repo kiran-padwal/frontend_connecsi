@@ -58,25 +58,24 @@
                                 </span>
                                 &nbsp&nbsp&nbsp&nbsp
                                 {% endif %}
-                                {% if item['mapped_twitter_channel_id'] and item['confirmed']=='true' %}
-                                <a href="https://www.twitter.com/{{item['screen_name']}}" class="social-media_icon fa fa-twitter-square"
+
+                                {% if item['mapped_twitter_channel_id'] %}
+                                <a href="https://www.twitter.com/{{item['screen_name']}}" target="_blank" class="social-media_icon fa fa-twitter-square"
                                    title="twitter"></a>
                                 {% else %}
                                 <a href="#twitter" class="social-media_icon none-active fa fa-twitter-square"
                                    title="twitter"></a>
-
                                 {% endif %}
-                                {% if data['data']['insta_url'] %}
-                                <a href="#insta_url" class="social-media_icon fa fa-instagram" title="instagram"></a>
+
+                                {% if item['mapped_insta_channel_id'] %}
+                                <a href="https://www.instagram.com/{{item['insta_username']}}" target="_blank" class="social-media_icon fa fa-instagram" title="instagram"></a>
                                 {% else %}
-                                <span data-toggle="tooltip" title="Feature coming soon">
                                 <a href="#insta_url" class="social-media_icon fa fa-instagram none-active"
                                    title="instagram" ></a>
-                                </span>
                                 {% endif %}
-                                &nbsp&nbsp&nbsp&nbsp
-                                <a href="https://www.youtube.com/channel/{{item['channel_id']}}" class="social-media_icon fa fa-youtube" title="youtube"></a>
-                                {% if item['mapped_twitter_channel_id']  %}
+
+                                <a href="https://www.youtube.com/channel/{{item['channel_id']}}" target="_blank" class="social-media_icon fa fa-youtube" title="youtube"></a>
+                                {% if item['mapped_twitter_channel_id'] and item['mapped_insta_channel_id'] %}
                                 {% else %}
                                 <a onclick="return check_category_and_country()" class="fa fa-plus green">
                                         </a>
@@ -250,16 +249,58 @@
                 <b class="modal-title">Add Channel</b>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
+            <div class="modal-body">
+                <ul class="list-inline">
+                    {% if data['data'][0]['mapped_twitter_channel_id'] %}
+                    <li>
+                        <span data-toggle="tooltip" title="Instagram Channel Already Added">
+                            <a  class="list-inline-item social-media_icon none-active fa fa-twitter" href="#"></a>
+                        </span>
+                    </li>
+                    {% else %}
+                    <li><a class="list-inline-item social-media_icon fa fa-twitter" href="/twitter_login"></a></li>
+                    {% endif %}
+                    {% if data['data'][0]['mapped_insta_channel_id'] %}
+                    <li>
+                        <span data-toggle="tooltip" title="Instagram Channel Already Added">
+                            <a class="list-inline-item social-media_icon none-active fa fa-instagram" href="#"></a>
+                        </span>
+                    </li>
+                    {% else %}
+                    <li><a onclick="add_insta_channel_function()" class="list-inline-item social-media_icon fa fa-instagram" href="#"></a></li>
+                    {% endif %}
+                </ul>
 
-            <a class="social-media_icon fa fa-twitter" href="/twitter_login"></a>
+
+            </div>
 
 
         </div>
     </div>
 </div>
+
+
+<div class="modal fade" id="add_insta_modal_form" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <b class="modal-title">Add Instagram Username</b>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form name="add_insta_channel_form" id="add_insta_channel_form" method="post" action="/add_insta_channel">
+                    <input type="hidden" name="email_id" value="{{ data['data'][0]['business_email'] }}">
+                    <input type="text" name="insta_username" id="insta_username" class="form-control" placeholder="Instagram Username Here">
+                    <br>
+                    <button type="submit" class="btn btn-raised bg-color1 color-white ml-auto mb-0">Add</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     function check_category_and_country(){
-        alert('i m here');
+        <!--alert('i m here');-->
         {% for item in data['data'] %}
         var country = '{{ item['youtube_country'] }}';
         var category = '{{ item['youtube_video_cat'] }}';
@@ -269,10 +310,10 @@
             }
             else{
                 alert('Please Add Category And Country below');
-                if(category=='None' && category ==''){
+                if(category=='None' || category ==''){
                     $("#videoCategories").focus();
                 }
-                else if(country=='None' && country ==''){
+                else if(country=='None' || country ==''){
                     $("#country").focus();
                 }
                 return false;
@@ -280,6 +321,12 @@
 
         {% endfor %}
     }
+
+function add_insta_channel_function(){
+    $('#add_channel_modal').modal("hide");
+    $('#add_insta_modal_form').modal("show");
+}
+
 
 </script>
 {% endblock %}
