@@ -167,13 +167,17 @@
                                             <option  value="{{ item1['region_code'] }}" selected>
                                                 {{ item1['country_name'] }}
                                             </option>
+                                            {% endif %}
+                                            {% endfor %}
+                                            <option value=""></option>
+                                            {% for item1 in regionCodes['data'] %}
+                                            {% if item1['region_code'] == country %}
                                             {% else %}
                                             <option  value="{{ item1['region_code'] }}">
                                                 {{ item1['country_name'] }}
                                             </option>
                                             {% endif %}
                                             {% endfor %}
-
                                         </select>
                                          <!--<script>-->
                                                         <!--$( document ).ready(function() {-->
@@ -255,17 +259,22 @@
 </div>
 <script>
     function check_category_and_country(){
-        <!--alert('i m here');-->
+        alert('i m here');
         {% for item in data['data'] %}
         var country = '{{ item['youtube_country'] }}';
         var category = '{{ item['youtube_video_cat'] }}';
 
-            if(country!='None' && category!='None'){
+            if(country!='None' && category!='None' && country!='' && category!=''){
                $('#add_channel_modal').modal("show");
             }
             else{
                 alert('Please Add Category And Country below');
-                $("#videoCategories").focus();
+                if(category=='None' && category ==''){
+                    $("#videoCategories").focus();
+                }
+                else if(country=='None' && country ==''){
+                    $("#country").focus();
+                }
                 return false;
             }
 

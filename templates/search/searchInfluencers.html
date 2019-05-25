@@ -28,8 +28,8 @@
 
                                 <select class="form-control" name="channel">
                                     <option id="Youtube" value="Youtube" {{ 'selected' if 'Youtube' in form_filters['channel']|string else '' }} >Youtube</option>
-                                    <option id="Twitter"  disabled value="Twitter" {{ 'selected' if 'Twitter' in form_filters['channel']|string else '' }} >Twitter</option>
-                                    <option id="Instagram" disabled value="Instagram" {{ 'selected' if 'Instagram' in form_filters['channel']|string else '' }} >Instagram</option>
+                                    <option id="Twitter"  value="Twitter" {{ 'selected' if 'Twitter' in form_filters['channel']|string else '' }} >Twitter</option>
+                                    <option id="Instagram"  value="Instagram" {{ 'selected' if 'Instagram' in form_filters['channel']|string else '' }} >Instagram</option>
                                     <option value="Facebook" disabled>Facebook</option>
                                 </select>
                             </div>
@@ -180,7 +180,7 @@
                                             <i class="fa fa-twitter-square"></i>
                                         {% elif form_filters['channel']=='Instagram' %}
                                             <a href="https://www.instagram.com/{{ item['username'] }}" target="_blank">{{ item['username'] }}</a>
-                                            <i class="fa fa-instagram-square"></i>
+                                            <i class="fa fa-instagram"></i>
                                         {% endif %}
                                     </h5>
                                     <hr class="divide">
@@ -195,7 +195,7 @@
                                     <div class="v-block"></div>
                                     <div class="img-wrapper">
                                         {% if item['channel_img'] %}
-                                        <img src="{{ item['channel_img'] }}" class="img-responsive">
+                                        <img src="{{ item['channel_img'] }}" class="img-responsive" height="110px" width="110px">
                                         {% else %}
                                         <img src="../static/img/fixed_image.png" class="img-responsive">
                                         {% endif %}
@@ -290,7 +290,9 @@
                                                    data-target="#create_alert_modal" class="create-alert"
                                                    data-channel-id="{{ item['channel_id'] }}"
                                                    data-followers="{{ item['subscriberCount_gained'] }}"
+                                                   {% if item['total_100video_views'] %}
                                                    data-views="{{ (item['total_100video_views']/100)|int }}"
+                                                    {% endif %}
                                                    data-likes="{{ (item['total_100video_likes']/100)|int }}"
                                                    data-comments="{{ (item['total_100video_comments']/100)|int }}">
                                                 <svg data-toggle="tooltip" title="Add To Alert" width="24" height="26"
@@ -316,7 +318,23 @@
                                         <div class="rating">
 
                                             {% if item['total_videos'] %}
-                                                {% set total = (item['total_100video_likes'] + item['total_100video_comments'] + item['total_100video_shares'])%}
+                                                {% if item['total_100video_likes'] == 'None' %}
+                                                    {% set likes = 0|int %}
+                                                {% else %}
+                                                    {% set likes = item['total_100video_likes'] %}
+                                                {% endif %}
+
+                                                {% if item['total_100video_comments'] == 'None' %}
+                                                    {% set comments = 0|int %}
+                                                {% else %}
+                                                    {% set comments = item['total_100video_comments'] %}
+                                                {% endif %}
+                                                {% if item['total_100video_shares'] == 'None' %}
+                                                    {% set shares = 0|int %}
+                                                {% else %}
+                                                    {% set shares = item['total_100video_shares'] %}
+                                                {% endif %}
+                                                {% set total = (likes|int + comments|int + shares|int)%}
                                                     <!--{{ total }} <br>-->
                                                 {% set total = (total/item['total_videos'])|round|int %}
                                                 <!--{{ total }} <br>-->
@@ -341,6 +359,7 @@
                                 <div class="col-lg-5 col-nc-lg-12 offer-analysis vertically-centered">
                                     <div class="v-block"></div>
                                     <ul class="analyse-list">
+                                        <!-- total followers -->
                                         <li>
                                             <div class="analyse-result" data-integers="{{item['subscriberCount_gained']}}">
 
@@ -348,21 +367,101 @@
                                             </div>
                                             <div>Total Followers</div>
                                         </li>
+                                        <!-- total followers end -->
+                                        <!--views -->
+                                        {% if form_filters['channel'] == 'Youtube' %}
                                         <li>
-                                            <div class="analyse-result" data-integers="{{ (item['total_100video_views']/100)|int }}">
+                                            <div class="analyse-result"
+                                                 {% if item['total_100video_views'] %}
+                                                 data-integers="{{ (item['total_100video_views']/100)|int }}">
+                                                 {% else %}
+                                                 data-integers="0">
+                                                 {% endif %}
                                             </div>
                                             <div>Avg Views / video</div>
                                         </li>
+                                        {% endif %}
+                                        {% if form_filters['channel'] == 'Twitter' %}
+
+                                        {% endif %}
+                                        {% if form_filters['channel'] == 'Instagram' %}
+
+                                        {% endif %}
+
+                                        <!--views end-->
+                                        <!--likes-->
+                                        {% if form_filters['channel'] == 'Youtube' %}
                                         <li>
                                             <div class="analyse-result" data-integers="{{ (item['total_100video_likes']/100)|int }}">
                                             </div>
                                             <div>Avg Likes / video</div>
                                         </li>
+                                        {% endif %}
+                                        {% if form_filters['channel'] == 'Twitter' %}
+                                        <li>
+                                            <div class="analyse-result" data-integers="{{ (item['total_100video_likes']/100)|int }}">
+                                            </div>
+                                            <div>Avg Likes / Post</div>
+                                        </li>
+                                        {% endif %}
+                                        {% if form_filters['channel'] == 'Instagram' %}
+                                        <li>
+                                            <div class="analyse-result" data-integers="{{ (item['total_100video_likes']/100)|int }}">
+                                            </div>
+                                            <div>Avg Likes / Post</div>
+                                        </li>
+                                        {% endif %}
+                                        <!--likes end-->
+
+                                        <!--comments-->
+                                        {% if form_filters['channel'] == 'Youtube' %}
                                         <li>
                                             <div class="analyse-result" data-integers="{{ (item['total_100video_comments']/100)|int }}">
                                             </div>
                                             <div>Avg Comments / video</div>
                                         </li>
+                                        {% endif %}
+                                        {% if form_filters['channel'] == 'Twitter' %}
+
+                                        {% endif %}
+                                        {% if form_filters['channel'] == 'Instagram' %}
+                                        <li>
+                                            <div class="analyse-result" data-integers="{{ (item['total_100video_comments']/100)|int }}">
+                                            </div>
+                                            <div>Avg Comments / Post</div>
+                                        </li>
+                                        {% endif %}
+                                        <!--comments end-->
+                                        <!--shares-->
+
+                                        {% if form_filters['channel'] == 'Youtube' %}
+
+                                        {% endif %}
+                                        {% if form_filters['channel'] == 'Twitter' %}
+                                        <li>
+                                            {% if item['total_100video_shares'] %}
+                                            <div class="analyse-result" data-integers="{{ (item['total_100video_shares']/100)|int }}">
+                                            </div>
+                                            {% else %}
+                                            <div class="analyse-result" data-integers="0">
+                                            </div>
+                                            {% endif %}
+                                            <div>Avg Retwwets / Post</div>
+                                        </li>
+                                        {% endif %}
+                                        {% if form_filters['channel'] == 'Instagram' %}
+                                        <!--<li>-->
+                                            <!--{% if item['total_100video_shares'] %}-->
+                                            <!--<div class="analyse-result" data-integers="{{ (item['total_100video_shares']/100)|int }}">-->
+                                            <!--</div>-->
+                                            <!--{% else %}-->
+                                            <!--<div class="analyse-result" data-integers="0">-->
+                                            <!--</div>-->
+                                            <!--{% endif %}-->
+                                            <!--<div>Avg Shares / Post</div>-->
+                                        <!--</li>-->
+                                        {% endif %}
+                                        <!--shares end-->
                                     </ul>
                                 </div>
                             </div>
@@ -374,20 +473,56 @@
                                     <hr class="divide">
                                     <span>Other Channels:</span>
                                     <ul class="other-channels">
-                                        {% if item['facebook_url'] %}
-                                        <li>
-                                            <a href="{{ item['facebook_url'] }}" target="_blank">
-                                                <i class="fa fa-facebook-square"></i>
-                                            </a>
-                                        </li>
+                                        {% if form_filters['channel'] =='Youtube' %}
+                                            {% if item['twitter_url'] %}
+                                            <li><a href="{{ item['twitter_url'] }}" target="_blank"><i
+                                                    class="fa fa-twitter-square"></i></a>
+                                            </li>
+                                            {% endif %}
+                                            {% if item['insta_url'] %}
+                                            <li><a href="{{ item['insta_url'] }}" target="_blank"><i
+                                                    class="fa fa-instagram"></i></a>
+                                            </li>
+                                            {% endif %}
+                                            {% if item['facebook_url'] %}
+                                            <li><a href="{{ item['facebook_url'] }}" target="_blank">
+                                                    <i class="fa fa-facebook-square"></i></a>
+                                            </li>
+                                            {% endif %}
                                         {% endif %}
-                                        {% if item['insta_url'] %}
-                                        <li><a href="{{ item['insta_url'] }}" target="_blank"><i
-                                                class="fa fa-instagram"></i></a></li>
+                                        {% if form_filters['channel'] =='Twitter' %}
+                                            {% if item['youtube_url'] %}
+                                            <li><a href="{{ item['youtube_url'] }}" target="_blank"><i
+                                                    class="fa fa-youtube-square"></i></a>
+                                            </li>
+                                            {% endif %}
+                                            {% if item['insta_url'] %}
+                                            <li><a href="{{ item['insta_url'] }}" target="_blank"><i
+                                                    class="fa fa-instagram"></i></a>
+                                            </li>
+                                            {% endif %}
+                                            {% if item['facebook_url'] %}
+                                            <li><a href="{{ item['facebook_url'] }}" target="_blank">
+                                                    <i class="fa fa-facebook-square"></i></a>
+                                            </li>
+                                            {% endif %}
                                         {% endif %}
-                                        {% if item['twitter_url'] %}
-                                        <li><a href="{{ item['twitter_url'] }}" target="_blank"><i
-                                                class="fa fa-twitter-square"></i></a></li>
+                                        {% if form_filters['channel'] =='Instagram' %}
+                                            {% if item['youtube_url'] %}
+                                            <li><a href="{{ item['youtube_url'] }}" target="_blank"><i
+                                                    class="fa fa-youtube-square"></i></a>
+                                            </li>
+                                            {% endif %}
+                                            {% if item['twitter_url'] %}
+                                            <li><a href="{{ item['twitter_url'] }}" target="_blank"><i
+                                                    class="fa fa-twitter-square"></i></a>
+                                            </li>
+                                            {% endif %}
+                                            {% if item['facebook_url'] %}
+                                            <li><a href="{{ item['facebook_url'] }}" target="_blank">
+                                                    <i class="fa fa-facebook-square"></i></a>
+                                            </li>
+                                            {% endif %}
                                         {% endif %}
                                         <!--<li><a href="#"><i class="fa fa-youtube-square-square color2"></i></a></li>-->
                                     </ul>

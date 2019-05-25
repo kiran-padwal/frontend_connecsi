@@ -181,12 +181,12 @@ def saveBrand():
 #
 #
 #
-@connecsiApp.route('/welcomemail')
-def welcomemail(activation_link='hello'):
-    resp_template = render_template('welcomemail_template.html',activation_link=activation_link)
+# @connecsiApp.route('/welcomemail')
+def welcomemail(activation_link):
+    resp_template = render_template('brand_activation_link_template.html',activation_link=activation_link)
     # print(resp_template)
     return resp_template
-    # return render_template('welcomemail_template.html',activation_link=activation_link)
+    # return render_template('brand_activation_link_template.html',activation_link=activation_link)
 
 def get_serializer(secret_key=None):
     if secret_key is None:
@@ -509,22 +509,47 @@ def searchInfluencers():
                 item.update({'linechart_id':linechart_id})
                # print(item)
                 linechart_id+=1
-            try:
-                exportCsv(data=data)
-            except Exception as e:
-                print(e)
-                pass
-            for item in data['data']:
-                total_videos_url = base_url + 'Youtube/totalVideos/' + str(item['channel_id'])
-                try:
-                    response = requests.get(total_videos_url)
-                    total_videos = response.json()
-                    for item1 in total_videos['data']:
-                        item.update(item1)
-                    print(item)
-                except:
-                    pass
-
+            # try:
+            #     exportCsv(data=data)
+            # except Exception as e:
+            #     print(e)
+            #     pass
+            if form_filters['channel']=='Twitter':
+                for item in data['data']:
+                    item.update({'total_videos':100})
+                    # total_videos_url = base_url + 'Youtube/totalVideos/' + str(item['channel_id'])
+                    # try:
+                    #     response = requests.get(total_videos_url)
+                    #     total_videos = response.json()
+                    #     for item1 in total_videos['data']:
+                    #         item.update(item1)
+                        # print(item)
+                    # except:
+                    #     pass
+            if form_filters['channel'] == 'Youtube':
+                for item in data['data']:
+                    total_videos_url = base_url + 'Youtube/totalVideos/' + str(item['channel_id'])
+                    try:
+                        response = requests.get(total_videos_url)
+                        total_videos = response.json()
+                        for item1 in total_videos['data']:
+                            item.update(item1)
+                        print(item)
+                    except:
+                        pass
+            if form_filters['channel']=='Instagram':
+                for item in data['data']:
+                    item.update({'total_videos':100})
+                    # total_videos_url = base_url + 'Youtube/totalVideos/' + str(item['channel_id'])
+                    # try:
+                    #     response = requests.get(total_videos_url)
+                    #     total_videos = response.json()
+                    #     for item1 in total_videos['data']:
+                    #         item.update(item1)
+                        # print(item)
+                    # except:
+                    #     pass
+            # print(data)
             return render_template('search/searchInfluencers.html', regionCodes=regionCodes_json,
                                    lookup_string=lookup_string, form_filters=form_filters,data=data,view_campaign_data=view_campaign_data
                                    ,favInfList_data=favInfList_data,payload_form_filter=payload)
@@ -544,7 +569,7 @@ def searchInfluencers():
             "string_word": "",
             "country": "PL",
             "min_lower": 0,
-            "max_upper": 21200,
+            "max_upper": 10000,
             "sort_order": "High To Low",
             "offset": 0
         }
@@ -558,7 +583,7 @@ def searchInfluencers():
                 item.update({'linechart_id': linechart_id})
                 # print(item)
                 linechart_id += 1
-            form_filters = {'channel': 'Youtube', 'string_word': '', 'country': 'PL', 'min_lower': '0', 'max_upper': '21200', 'search_inf': '', 'sort_order': 'High To Low', 'country_name': 'Poland'}
+            form_filters = {'channel': 'Youtube', 'string_word': '', 'country': 'PL', 'min_lower': '0', 'max_upper': '10000', 'search_inf': '', 'sort_order': 'High To Low', 'country_name': 'Poland'}
         except:
             pass
 
@@ -567,6 +592,7 @@ def searchInfluencers():
         # except Exception as e:
         #     print(e)
         #     pass
+        print('I M HERE BEFORE GETTING TOTAL VIDEOS')
         for item in data['data']:
             total_videos_url = base_url + 'Youtube/totalVideos/' + str(item['channel_id'])
             try:
