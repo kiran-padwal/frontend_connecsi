@@ -1693,6 +1693,21 @@ def show_youtube_channels_without_email_id():
     return render_template('show_youtube_channels_without_email_id.html',data = data)
 
 
+@connecsiApp.route('/list_brands',methods = ['POST','GET'])
+@is_logged_in
+def list_brands():
+    url = base_url+'Brand/'
+    response = requests.get(url=url)
+    print(response.json())
+    return render_template('list_brands.html',data = response.json())
+
+@connecsiApp.route('/list_influencers',methods = ['POST','GET'])
+@is_logged_in
+def list_incluencers():
+    url = base_url+'Brand/influencerList'
+    response = requests.get(url=url)
+    print(response.json())
+    return render_template('list_influencers.html',data = response.json())
 
 
 @connecsiApp.route('/update_and_send_email_youtube/<channel_id>/<message_id>/<email_id>/<subject>/<message>',methods = ['POST','GET'])

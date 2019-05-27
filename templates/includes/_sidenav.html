@@ -95,6 +95,14 @@
                     </ul>
                 </li>
                 {% endif %}
+                {% if session['email_id'] == 'ceo@connecsi.com' %}
+                <li class="has-sub nav-item"><a href="#"><i class="fa fa-user"></i><span data-i18n="" class="menu-title">List of Users</span></a>
+                    <ul class="menu-content">
+                        <li><a href="/list_brands" class="menu-item">Brands</a></li>
+                        <li><a href="/list_influencers" class="menu-item">Influencers</a></li>
+                    </ul>
+                </li>
+                {% endif %}
             </ul>
         </div>
     </div>

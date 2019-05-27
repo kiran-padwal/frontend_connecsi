@@ -118,7 +118,7 @@
 
 <div class="row">
     <div class="col-sm-12">
-        <div class="content-header">Influencers on Youtube
+        <div class="content-header">Influencers on {{ form_filters['channel'] }}
             <div class="btn-wrapper">
                 <!-- Single Button Dropdown -->
                 <div class="btn-group mr-1 mb-1" style="max-width: 115px">
@@ -446,7 +446,7 @@
                                             <div class="analyse-result" data-integers="0">
                                             </div>
                                             {% endif %}
-                                            <div>Avg Retwwets / Post</div>
+                                            <div>Avg Retweets / Post</div>
                                         </li>
                                         {% endif %}
                                         {% if form_filters['channel'] == 'Instagram' %}
