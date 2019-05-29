@@ -206,7 +206,7 @@
                                            <div class="submenu">
                                                <div class="submenu__content">
                                                    <span data-toggle="modal" data-target="#sendMessage">
-                                                       <a  onclick="sendMessage('{{ youtube_inf_data['channel_id'] }}','{{ youtube_inf_data['business_email'] }}')" class="fa fa-envelope"  title="Message" style="position: relative; z-index: 1; font-size:14px; color:#9E57DD;"></a>
+                                                       <a  onclick="sendMessage('{{ youtube_inf_data['channel_id'] }}','{{ youtube_inf_data['business_email'] }}','{{ youtube_inf_data['title'] }}')" class="fa fa-envelope"  title="Message" style="position: relative; z-index: 1; font-size:14px; color:#9E57DD;"></a>
                                                    </span>
                                                    {% if youtube_inf_data['ref_link'] %}
                                                    <span data-toggle="modal" data-target="#addReport" id="reportIcon{{ youtube_inf_data['channel_id'] }}">
@@ -300,39 +300,43 @@
 
 {% block footer %}
 <!-- Send message Modal form-->
-<div class="modal fade" id="sendMessage" role="dialog"  data-backdrop="static">
-    <div class="modal-dialog">
+<!-- Send message Modal form-->
+<div class="modal fade" id="sendMessage" role="dialog" data-backdrop="true">
+    <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Send Message</h4>
+                <b class="modal-title">Send Message</b>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <form name="create_alert_form" id="send_message_form" action="/sendMessage" method="POST">
                 <div class="modal-body">
                     <input class="form-control" type="hidden" value="" name="channel_id" id="message_channel_id">
                     <div class="row">
                         <div class="col-12">
-                            <ul class="no-list-style p-0">
-                                <li class="mb-2">
-                                    <label class="mb-0" for="to_email_id">To</label>
-                                    {% for youtube_inf_data in view_campaign_details_data['data'][0]['youtube_inf_data'] %}
-
-                                    <input type="text" class="form-control" name="to_email_id" id="to_email_id" value="{{ youtube_inf_data['business_email'] }}" readonly>                                </li>
-                                    {% endfor %}
-                                <li class="mb-2">
-                                    <label class="mb-0" for="subject">Subject</label>
-                                    <input type="text" class="form-control" name="subject" id="subject" required>
-                                </li>
-                                <li class="mb-2">
-                                    <label class="mb-0" for="message">Message</label>
-                                    <textarea class="form-control" name="message" id="message"></textarea>
-                                </li>
-                            </ul>
+                            <div class="form-group">
+                                <label for="to_email_id">*To:</label>
+                                <input type="text" class="form-control" value="" id="title" readonly>
+                                <input type="hidden" class="form-control" name="to_email_id" id="to_email_id">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="to_subject">*Subject:</label>
+                                <input required type="text" class="form-control" id="to_subject" name="subject">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="to_message">*Message:</label>
+                                <textarea class="form-control" name="message" id="to_message"></textarea>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit"  class="btn bg-color1 text-white">Send</button>
-                    <button type="submit"  class="btn bg-color2 text-white" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-default bg-color1 color-white">Save</button>
                 </div>
             </form>
         </div>
@@ -422,7 +426,31 @@
 <script>
     $(document).ready(function () {
         getBrandReport('{{ view_campaign_details_data['data'][0]['campaign_id'] }}');
-    })
+
+    $("#send_message_form").submit(function (e) {
+        var form = $(this);
+        var url = form.attr('action');
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: form.serialize(), // serializes the form's elements.
+            success: function (data) {
+                alert(data); // show response from the python script.
+                $('#sendMessage').modal('toggle');
+            }
+        });
+        e.preventDefault(); // avoid to execute the actual submit of the form.
+    });
+
+    });
+
+    function sendMessage(channel_id,email_id,title){
+            <!--alert(email_id);-->
+            <!--alert(title);-->
+            $('#message_channel_id').val(channel_id);
+            $('#to_email_id').val(email_id);
+            $('#title').val(title);
+    }
 
     function social(item) {
         if(item === "facebook") {

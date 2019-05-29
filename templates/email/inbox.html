@@ -872,24 +872,24 @@ function getCampaignsAddedToMessage(){
                                 var status = 'Proposal Received';
                                 var accepted = 'Accept';
                                 var rejected = 'Reject';
-                                $('#campaignNameList').append('<tr><td><a href="#" class="btn-info btn-sm">'+val.campaign_name+'<a/></td><td>'+status+'</td></tr>');
-                                $('#tab-proposal .tab-list').append('<tr><td><a href="#" onclick="getProposal('+val.message_id+','+val.campaign_id+')" class="btn-info btn-sm">'+val.campaign_name+'<a/></td><td><a href="#" onclick="accept_decline('+val.message_id+','+val.campaign_id+',\'' + accepted + '\')" data-toggle = "tooltip" title="Accept" class="fa fa-thumbs-up green"></a></td><td><a href="#" onclick ="accept_decline('+val.message_id+','+val.campaign_id+',\'' + rejected + '\')" data-toggle = "tooltip" title="Decline" class="fa fa-thumbs-down red"></a></td></tr>');
+                                $('#campaignNameList').append('<tr><td><a href="#" class="">'+val.campaign_name+'<a/></td><td>'+status+'</td></tr>');
+                                $('#tab-proposal .tab-list').append('<tr><td><a href="#" onclick="getProposal('+val.message_id+','+val.campaign_id+')" class="">'+val.campaign_name+'<a/></td><td><a href="#" onclick="accept_decline('+val.message_id+','+val.campaign_id+',\'' + accepted + '\')" data-toggle = "tooltip" title="Accept" class="fa fa-thumbs-up green"></a></td><td><a href="#" onclick ="accept_decline('+val.message_id+','+val.campaign_id+',\'' + rejected + '\')" data-toggle = "tooltip" title="Decline" class="fa fa-thumbs-down red"></a></td></tr>');
                             }
                             else if(val.status == 'Current Partner'){
-                                $('#campaignNameList').append('<tr><td><a href="#" class="btn-info btn-sm">'+val.campaign_name+'<a/></td><td>'+val.status+'</td></tr>');
-                                $('#tab-proposal .tab-list').append('<tr><td><a href="#" onclick="getProposal('+val.message_id+','+val.campaign_id+')" class="btn-info btn-sm">'+val.campaign_name+'<a/></td></tr>');
+                                $('#campaignNameList').append('<tr><td><a href="#" class="">'+val.campaign_name+'<a/></td><td>'+val.status+'</td></tr>');
+                                $('#tab-proposal .tab-list').append('<tr><td><a href="#" onclick="getProposal('+val.message_id+','+val.campaign_id+')" class="">'+val.campaign_name+'<a/></td></tr>');
                             }
                             else{
-                                $('#campaignNameList').append('<tr><td><a href="#" class="btn-info btn-sm">'+val.campaign_name+'<a/></td><td>'+val.status+'</td></tr>');
+                                $('#campaignNameList').append('<tr><td><a href="#" class="">'+val.campaign_name+'<a/></td><td>'+val.status+'</td></tr>');
                             }
                         {% else %}
-                            $('#campaignNameList').append('<tr><td><a href="#" class="btn-info btn-sm">'+val.campaign_name+'<a/></td><td>'+val.status+'</td></tr>');
+                            $('#campaignNameList').append('<tr><td><a href="#" class="">'+val.campaign_name+'<a/></td><td>'+val.status+'</td></tr>');
                             if(val.status == 'Proposal Sent'){
-                                $('#tab-proposal .tab-list').append('<tr><td><a href="#" onclick="getProposal('+val.message_id+','+val.campaign_id+')" class="btn-info btn-sm">'+val.campaign_name+'<a/></td><td><a href="#" onclick="editProposal('+val.message_id+','+val.campaign_id+')" data-toggle="tooltip" title="Edit Proposal"><img src="/static/icons/edit.png" height="19px" width="17px"></a></td></tr>');
+                                $('#tab-proposal .tab-list').append('<tr><td><a href="#" onclick="getProposal('+val.message_id+','+val.campaign_id+')" class="">'+val.campaign_name+'<a/></td><td><a href="#" onclick="editProposal('+val.message_id+','+val.campaign_id+')" data-toggle="tooltip" title="Edit Proposal"><img src="/static/icons/edit.png" height="19px" width="17px"></a></td></tr>');
                             }
                             if(val.status == 'Current Partner'){
 
-                                $('#tab-proposal .tab-list').append('<tr><td><a href="#" onclick="getProposal('+val.message_id+','+val.campaign_id+')" class="btn-info btn-sm">'+val.campaign_name+'<a/></td><td><a href="#" onclick="editProposal('+val.message_id+','+val.campaign_id+')" data-toggle="tooltip" title="Edit Proposal"><img src="/static/icons/edit.png" height="19px" width="17px"></a></td></tr>');
+                                $('#tab-proposal .tab-list').append('<tr><td><a href="#" onclick="getProposal('+val.message_id+','+val.campaign_id+')" class="">'+val.campaign_name+'<a/></td><td><a href="#" onclick="editProposal('+val.message_id+','+val.campaign_id+')" data-toggle="tooltip" title="Edit Proposal"><img src="/static/icons/edit.png" height="19px" width="17px"></a></td></tr>');
                             }
                         {% endif %}
                         if(val.status!="Proposal Sent" && val.status!="Current Partner"){
