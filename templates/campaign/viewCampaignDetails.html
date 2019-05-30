@@ -206,7 +206,7 @@
                                            <div class="submenu">
                                                <div class="submenu__content">
                                                    <span data-toggle="modal" data-target="#sendMessage">
-                                                       <a  onclick="sendMessage('{{ youtube_inf_data['channel_id'] }}','{{ youtube_inf_data['business_email'] }}','{{ youtube_inf_data['title'] }}')" class="fa fa-envelope"  title="Message" style="position: relative; z-index: 1; font-size:14px; color:#9E57DD;"></a>
+                                                       <a  onclick="sendMessage('{{ youtube_inf_data['channel_id'] }}@{{youtube_inf_data['channel_name']}}','{{ youtube_inf_data['business_email'] }}','{{ youtube_inf_data['title'] }}')" class="fa fa-envelope"  title="Message" style="position: relative; z-index: 1; font-size:14px; color:#9E57DD;"></a>
                                                    </span>
                                                    {% if youtube_inf_data['ref_link'] %}
                                                    <span data-toggle="modal" data-target="#addReport" id="reportIcon{{ youtube_inf_data['channel_id'] }}">
@@ -445,6 +445,7 @@
     });
 
     function sendMessage(channel_id,email_id,title){
+            alert(channel_id);
             <!--alert(email_id);-->
             <!--alert(title);-->
             $('#message_channel_id').val(channel_id);

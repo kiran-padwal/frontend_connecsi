@@ -181,7 +181,7 @@ $(document).ready(function () {
                 jQuery.each(data.results, function(i, val) {
                     var message_files = val.message_files.split(",");
                     for(i=0;i<message_files.length;i++){
-                        $('#tab-files .tab-list').append('<li><a class="file" href="../static/message_files/'+message_files[i]+'" download><i class="fa fa-file"></i> ' + textShortcut(message_files[i], 16) + '</a> <div class="action-icons-container"><span><a href="#" class="danger"><i class="fa fa-remove"></i></a></span> <span><a href="../static/message_files/'+message_files[i]+'" download class="info"><i class="fa fa-download"></i></a></span></div></li>');
+                        $('#tab-files .tab-list').append('<li><a class="file" href="../static/message_files/'+message_files[i]+'"><i class="fa fa-file"></i> ' + textShortcut(message_files[i], 16) + '</a> <div class="action-icons-container"><span data-toggle="tooltip" title="Download"><a href="../static/message_files/'+message_files[i]+'" download class="info"><img height="19px" width = "17px" src="../static/icons/download_icon.png"></a></span></div></li>');
                     }
                 });
             }
@@ -197,7 +197,7 @@ $(document).ready(function () {
                 jQuery.each(data.results, function(i, val) {
                     var message_agreements = val.message_agreements.split(",");
                     for(i=0;i<message_agreements.length;i++){
-                        $('#tab-agreements .tab-list').append('<li><a class="file" href="../static/message_agreements/'+message_agreements[i]+'" download><i class="fa fa-file"></i> '+textShortcut(message_agreements[i], 16)+'</a> <span><a href="#" class="danger"><i class="fa fa-remove"></i></a></span></li>');
+                        $('#tab-agreements .tab-list').append('<li><a class="file" href="../static/message_agreements/'+message_agreements[i]+'" download><i class="fa fa-file"></i> '+textShortcut(message_agreements[i], 16)+'</a> <div class="action-icons-container"><span data-toggle="tooltip" title="Download"><a href="../static/message_agreements/'+message_agreements[i]+'" download class="info"><img height="19px" width = "17px" src="../static/icons/download_icon.png"></a></span></div></li>');
                     }
                 });
             }

@@ -571,14 +571,7 @@ def searchInfluencers():
 
     else:
         print('Not POST METHOD')
-        payload = {
-            "channel": "Youtube",
-            "category_id": "",
-            "string_word": "",
-            "country": "PL",
-            "min_lower": 0,
-            "max_upper": 10000,
-            "sort_order": "High To Low",
+        payload = {"channel": "Youtube","category_id": "","string_word": "","country": "PL","min_lower": 0,"max_upper": 10000,"sort_order": "High To Low",
             "offset": 0
         }
         try:
