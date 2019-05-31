@@ -1649,7 +1649,6 @@ def sendMessage():
        if payload['to_email_id'] == '':
           payload.update({'to_email_id':'kiran.padwal@connecsi.com'})
        print(payload)
-
        user_id= session['user_id']
        type = session['type']
        url = base_url + 'Messages/' + str(user_id) +'/' + type
@@ -1984,21 +1983,32 @@ def replyMessage():
 
 
 
-@connecsiApp.route('/addToFavInfList/<string:channel_id>',methods=['GET'])
+@connecsiApp.route('/addToFavInfList/<string:channel_id>/<string:channel_name>',methods=['GET'])
 @is_logged_in
-def addToFavInfList(channel_id):
+def addToFavInfList(channel_id,channel_name):
     try:
         print(channel_id)
+        print(channel_name)
         user_id = session['user_id']
-        url = base_url+'/Brand/addToFavList/'+channel_id+'/'+str(user_id)
+        url = base_url+'/Brand/addToFavList/'+channel_id+'/'+str(user_id)+'/'+channel_name
         response = requests.post(url=url)
         print(response)
-        flash("Added to Favorites List", 'success')
-        return searchInfluencers()
+        return channel_name+' Influencer Added To Your Favorite List'
+        # flash("Added to Favorites List", 'success')
+        # return searchInfluencers()
     except:
-        flash("Could not be added to Favorites List", 'danger')
-        return influencerFavoritesList()
+        return 'Server error'
+        # flash("Could not be added to Favorites List", 'danger')
+        # return influencerFavoritesList()
 
+@connecsiApp.route('/getFavInfList',methods=['GET'])
+@is_logged_in
+def getFavInfList():
+    user_id = session['user_id']
+    url = base_url + '/Brand/getInfluencerFavList/' + str(user_id)
+    response = requests.get(url=url)
+    response_json=response.json()
+    return jsonify(results=response_json['data'])
 
 
 @connecsiApp.route('/influencerFavoritesList')
@@ -2425,13 +2435,14 @@ def addYoutubeInfToCampaignList():
     if request.method == 'POST':
         campaign_ids = request.form.getlist('campaign_id')
         channel_id = request.form.get('channel_id')
+        channel_name=request.form.get('channel_name')
         for campaign_id in campaign_ids:
-            url = base_url+'Brand/addYotubeInfToCampaignList/'+ str(channel_id) + '/' + str(campaign_id)
+            url = base_url+'Brand/addInfToCampaignList/'+ str(channel_id) + '/' + str(campaign_id)+'/'+channel_name
             response = requests.post(url=url)
             response = response.json()
             # flash('Youtube Influencer Added to Campaign','success')
         # return viewCampaigns()
-        return 'Youtube Influencer Added to Campaign'
+        return channel_name+' Influencer Added to Campaign'
 
 @connecsiApp.route('/getChannelStatusForCampaign/<string:channel_id>',methods=['GET'])
 @is_logged_in

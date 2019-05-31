@@ -217,7 +217,7 @@
                                             </li>
                                             <li>
                                                 {% if form_filters['campaign_id'] %}
-                                                <a href="#" data-val="a2" data-channel-id="{{ item['channel_id'] }}"
+                                                <a href="#" onclick="campaignList('{{ item['channel_id'] }}','{{form_filters['channel']}}')" data-val="a2" data-channel-id="{{ item['channel_id'] }}" data-channel-name="{{form_filters['channel']}}"
                                                    class="add-to-campaign" data-toggle="modal" data-backdrop="true"
                                                    data-target="#campaignList">
                                                     <svg data-toggle="tooltip" title="Add To Campaign" width="24"
@@ -233,7 +233,7 @@
                                                     </svg>
                                                 </a>
                                                 {% else %}
-                                                <a href="#" onclick="campaignList('{{ item['channel_id'] }}')" data-val="a2" data-channel-id="{{ item['channel_id'] }}"
+                                                <a href="#" onclick="campaignList('{{ item['channel_id'] }}','{{form_filters['channel']}}')" data-val="a2" data-channel-id="{{ item['channel_id'] }}" data-channel-name="{{form_filters['channel']}}"
                                                    class="add-to-campaign" data-toggle="modal" data-backdrop="true"
                                                    data-target="#campaignList">
                                                     <svg data-toggle="tooltip" title="Add To Campaign" width="24"
@@ -253,7 +253,7 @@
                                             <li>
                                                 {% if item['channel_id'] in
                                                 favInfList_data['data']|map(attribute="channel_id") %}
-                                                <a href="#" class="delete-fav-inf"
+                                                <a id="favList{{item['channel_id']}}" href="#" class="delete-fav-inf" onclick="remove_from_fav_list('{{item['channel_id']}}','{{session['user_id']}}'); return false;"
                                                    data-channel-id="{{ item['channel_id'] }}"
                                                    data-user-id="{{ session['user_id'] }}">
                                                     <svg data-toggle="tooltip" title="Remove from Favorites" width="24"
@@ -270,7 +270,7 @@
 
                                                 </a>
                                                 {% else %}
-                                                <a href="/addToFavInfList/{{ item['channel_id'] }}">
+                                                <a id="favList{{item['channel_id']}}"  onclick="add_to_fav_inf_list('{{item['channel_id']}}','{{form_filters['channel']}}'); return false;" href="#">
                                                     <svg data-toggle="tooltip" title="Add To Favorites" width="24"
                                                          height="23" viewBox="0 0 24 23" fill="none"
                                                          xmlns="http://www.w3.org/2000/svg">
@@ -726,6 +726,7 @@
                   action="/addYoutubeInfToCampaignList" method="POST">
                 <div class="modal-body">
                     <input type="hidden" name="channel_id" id="youtube_channel_id">
+                    <input type="hidden" name="channel_name" id="campaign_list_channel_name">
                     <div id="channel_name"></div>
                     <div>channels</div>
                     <table class="table table-responsive-lg">
@@ -946,11 +947,13 @@ function getCampaign_ids(channel_id){
 
 
 
-    function campaignList(channel_id) {
+    function campaignList(channel_id,channel_name) {
     <!--alert('i m called');-->
+    <!--alert(channel_name);-->
     $( "input#campaign_id" ).prop('checked', false);
     $( "input#campaign_id" ).prop('disabled', false)
     $("#youtube_channel_id").val(channel_id);
+    $("#campaign_list_channel_name").val(channel_name);
     var campaign_ids = getCampaign_ids(channel_id);
     <!--alert(campaign_ids);-->
     {% for item in view_campaign_data['data'] %}
@@ -968,6 +971,81 @@ function getCampaign_ids(channel_id){
              }
         {% endfor %}
     {% endfor %}
+    }
+
+
+    function add_to_fav_inf_list(channel_id,channel_name){
+        $.ajax({
+            type: "GET",
+            url: '/addToFavInfList/'+channel_id+'/'+channel_name,
+            <!--data: form.serialize(), // serializes the form's elements.-->
+            success: function (data) {
+                alert(data);
+                getFavInfList();
+                $("#favList"+channel_id).attr("onclick","remove_from_fav_list('"+channel_id+"','"+{{session['user_id']}}+"'); return false;");
+                var svg = '<span data-toggle="tooltip" title="Remove from Favorites" ><svg  width="24"'+
+                                                         'height="23" viewBox="0 0 24 23" fill="none"'+
+                                                         'xmlns="http://www.w3.org/2000/svg">'+
+                                                        '<path d="M10.7193 0.807309L7.80399 6.72758L1.25581 7.66944C0.86711 7.72924 0.553156 7.90864 0.313954 8.20764C0.104651 8.50665 0 8.83555 0 9.19435C0.0299003 9.55316 0.179402 9.86711 0.448505 10.1362L5.20266 14.7558L4.0814 21.304C4.0216 21.6628 4.0814 21.9917 4.2608 22.2907C4.4701 22.6196 4.75415 22.8289 5.11296 22.9186C5.47176 23.0083 5.81562 22.9635 6.14452 22.7841L12.0199 19.7342L17.8954 22.7841C18.2243 22.9635 18.5681 23.0083 18.9269 22.9186C19.2857 22.8289 19.5548 22.6196 19.7342 22.2907C19.9435 21.9917 20.0183 21.6628 19.9585 21.304L18.8372 14.7558L23.5914 10.1362C23.8605 9.86711 23.995 9.55316 23.995 9.19435C24.0249 8.83555 23.9203 8.50665 23.6811 8.20764C23.4718 7.90864 23.1728 7.72924 22.7841 7.66944L16.2359 6.72758L13.3206 0.807309C13.1412 0.448505 12.8721 0.209302 12.5133 0.089701C12.1844 -0.0299003 11.8405 -0.0299003 11.4817 0.089701C11.1528 0.209302 10.8987 0.448505 10.7193 0.807309Z"'+
+                                                              'fill="#87CEEB"/>'+
+                                                        '<path fill-rule="evenodd" clip-rule="evenodd"'+
+                                                              'd="M19.1961 21.5282C20.7814 21.5282 22.0665 20.2431 22.0665 18.6578C22.0665 17.0725 20.7814 15.7874 19.1961 15.7874C17.6108 15.7874 16.3257 17.0725 16.3257 18.6578C16.3257 20.2431 17.6108 21.5282 19.1961 21.5282Z"'+
+                                                              'fill="white"/>'+
+                                                        '<path d="M19.196 14.1279C18.4448 14.1279 17.7496 14.3185 17.1105 14.6998C16.4713 15.0698 15.9612 15.5743 15.5799 16.2135C15.2099 16.8526 15.0249 17.5478 15.0249 18.299C15.0249 19.0503 15.2099 19.7454 15.5799 20.3846C15.9612 21.0237 16.4713 21.5282 17.1105 21.8983C17.7496 22.2795 18.4448 22.4701 19.196 22.4701C19.9472 22.4701 20.6424 22.2795 21.2815 21.8983C21.9207 21.5282 22.4252 21.0237 22.7953 20.3846C23.1765 19.7454 23.3671 19.0503 23.3671 18.299C23.3671 17.5478 23.1765 16.8526 22.7953 16.2135C22.4252 15.5743 21.9207 15.0698 21.2815 14.6998C20.6424 14.3185 19.9472 14.1279 19.196 14.1279ZM16.9759 18.9718C16.9198 18.9718 16.8694 18.9549 16.8245 18.9213C16.7909 18.8765 16.7741 18.826 16.7741 18.7699V17.8281C16.7741 17.772 16.7909 17.7272 16.8245 17.6935C16.8694 17.6487 16.9198 17.6263 16.9759 17.6263H21.4161C21.4722 17.6263 21.517 17.6487 21.5506 17.6935C21.5955 17.7272 21.6179 17.772 21.6179 17.8281V18.7699C21.6179 18.826 21.5955 18.8765 21.5506 18.9213C21.517 18.9549 21.4722 18.9718 21.4161 18.9718H16.9759Z"'+
+                                                              'fill="#D0021B"/>'+
+                                                    '</svg></span>';
+                 $("#favList"+channel_id).html(svg);
+            }
+        });
+    }
+    function getFavInfList(){
+        $.ajax({
+            type: "GET",
+            url: '/getFavInfList',
+            <!--data: form.serialize(), // serializes the form's elements.-->
+            success: function (data) {
+                <!--alert(data);-->
+                if (data.results.length != 0){
+                   jQuery.each(data.results, function(i, val) {
+                        <!--alert(val.channel_id);-->
+                        $('#alert'+val.channel_id).find('.tab-content-item-list').empty();
+                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Followers</br>'+val.alert_followers+'</li></hr>');
+                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Views</br>'+val.alert_views+'</li></hr>');
+                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Likes</br>'+val.alert_likes+'</li></hr>');
+                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Comments</br>'+val.alert_comments+'</li>');
+                    });
+                    }
+                 <!--$('#campaignList').modal('toggle');-->
+                 <!--updateChannelStatusForCampaign(channel_id);-->
+                 <!--$( 'div[id*=status]').empty();-->
+                 <!--window.location.reload();-->
+            }
+        });
+    }
+    function remove_from_fav_list(channel_id,user_id){
+        $.ajax({
+            type: "GET",
+            url: '/delFavInf/'+channel_id+'/'+user_id,
+            <!--data: form.serialize(), // serializes the form's elements.-->
+            success: function (data) {
+                alert(data);
+                $("#favList"+channel_id).attr("onclick","add_to_fav_inf_list('"+channel_id+"','{{form_filters['channel']}}'); return false;");
+                var svg = '<span data-toggle="tooltip" title="Add To Favorites" ><svg  width="24"'+
+                                                         'height="23" viewBox="0 0 24 23" fill="none"'+
+                                                         'xmlns="http://www.w3.org/2000/svg">'+
+                                                        '<path d="M22.7841 7.66944L16.2359 6.72758L13.3206 0.807309C13.1412 0.448505 12.8721 0.209302 12.5133 0.089701C12.1844 -0.0299003 11.8405 -0.0299003 11.4817 0.089701C11.1528 0.209302 10.8987 0.448505 10.7193 0.807309L7.80399 6.72758L1.25581 7.66944C0.86711 7.72924 0.553156 7.90864 0.313954 8.20764C0.104651 8.50665 0 8.83555 0 9.19435C0.0299003 9.55316 0.179402 9.86711 0.448505 10.1362L5.20266 14.7558L4.0814 21.304C4.0216 21.6628 4.0814 21.9917 4.2608 22.2907C4.4701 22.6196 4.75415 22.8289 5.11296 22.9186C5.47176 23.0083 5.81562 22.9635 6.14452 22.7841L12.0199 19.7342L17.8954 22.7841C18.2243 22.9635 18.5681 23.0083 18.9269 22.9186C19.2857 22.8289 19.5548 22.6196 19.7342 22.2907C19.9435 21.9917 20.0183 21.6628 19.9585 21.304L18.8372 14.7558L23.5914 10.1362C23.8605 9.86711 23.995 9.55316 23.995 9.19435C24.0249 8.83555 23.9203 8.50665 23.6811 8.20764C23.4718 7.90864 23.1728 7.72924 22.7841 7.66944ZM16.5498 13.9934L17.5814 20.2276L12.0199 17.2674L6.45847 20.2276L7.49003 13.9934L3.00498 9.59801L9.2392 8.701L12.0199 3.04983L14.8007 8.701L21.0349 9.59801L16.5498 13.9934Z"'+
+                                                              'fill="#87CEEB"/>'+
+                                                        '<path fill-rule="evenodd" clip-rule="evenodd"'+
+                                                              'd="M19.1961 21.5282C20.7814 21.5282 22.0665 20.2431 22.0665 18.6578C22.0665 17.0725 20.7814 15.7874 19.1961 15.7874C17.6108 15.7874 16.3257 17.0725 16.3257 18.6578C16.3257 20.2431 17.6108 21.5282 19.1961 21.5282Z"'+
+                                                              'fill="white"/>'+
+                                                        '<path d="M19.196 14.1279C18.4448 14.1279 17.7496 14.3185 17.1105 14.6998C16.4713 15.0698 15.9612 15.5743 15.5799 16.2135C15.2099 16.8526 15.0249 17.5478 15.0249 18.299C15.0249 19.0503 15.2099 19.7454 15.5799 20.3846C15.9612 21.0237 16.4713 21.5282 17.1105 21.8983C17.7496 22.2795 18.4448 22.4701 19.196 22.4701C19.9472 22.4701 20.6424 22.2795 21.2815 21.8983C21.9207 21.5282 22.4252 21.0237 22.7953 20.3846C23.1765 19.7454 23.3671 19.0503 23.3671 18.299C23.3671 17.5478 23.1765 16.8526 22.7953 16.2135C22.4252 15.5743 21.9207 15.0698 21.2815 14.6998C20.6424 14.3185 19.9472 14.1279 19.196 14.1279ZM21.6179 18.7699C21.6179 18.826 21.5955 18.8765 21.5506 18.9213C21.517 18.9549 21.4722 18.9718 21.4161 18.9718H19.8688V20.5191C19.8688 20.5752 19.8463 20.6256 19.8015 20.6705C19.7678 20.7041 19.723 20.7209 19.6669 20.7209H18.7251C18.669 20.7209 18.6185 20.7041 18.5737 20.6705C18.5401 20.6256 18.5232 20.5752 18.5232 20.5191V18.9718H16.9759C16.9198 18.9718 16.8694 18.9549 16.8245 18.9213C16.7909 18.8765 16.7741 18.826 16.7741 18.7699V17.8281C16.7741 17.772 16.7909 17.7272 16.8245 17.6935C16.8694 17.6487 16.9198 17.6263 16.9759 17.6263H18.5232V16.0789C18.5232 16.0228 18.5401 15.978 18.5737 15.9444C18.6185 15.8995 18.669 15.8771 18.7251 15.8771H19.6669C19.723 15.8771 19.7678 15.8995 19.8015 15.9444C19.8463 15.978 19.8688 16.0228 19.8688 16.0789V17.6263H21.4161C21.4722 17.6263 21.517 17.6487 21.5506 17.6935C21.5955 17.7272 21.6179 17.772 21.6179 17.8281V18.7699Z"'+
+                                                              'fill="#7ED321"/>'+
+                                                    '</svg>';
+                 $("#favList"+channel_id).html(svg);
+                 $('#alert'+channel_id).find('.tab-content-item-list').empty();
+                 $('#alert'+channel_id).find('.tab-content-item-list').append('<li>No Alerts Set</li></hr>');
+            }
+        });
     }
 </script>
 <script>
@@ -990,12 +1068,13 @@ function getCampaign_ids(channel_id){
         var form = $(this);
         var url = form.attr('action');
         var channel_id = $('#youtube_channel_id').val();
+        var channel_name = $('#campaign_list_channel_name').val();
         $.ajax({
             type: "POST",
             url: url,
             data: form.serialize(), // serializes the form's elements.
             success: function (data) {
-                alert('Influencer Added to Campaigns');
+                alert(data);
                  $('#campaignList').modal('toggle');
                  <!--updateChannelStatusForCampaign(channel_id);-->
                  $( 'div[id*=status]').empty();

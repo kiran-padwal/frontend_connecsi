@@ -1,5 +1,6 @@
 {% extends 'admin_layout.html' %}
 {{ super() }}
+{% set glob = {} %}
 {% block body %}
 
 <div class="row">
@@ -29,6 +30,7 @@
                             <h5 class="no-padding-bottom no-margin-bottom">{{ item['campaign_name'] }} <span class="campaign_status {{ item['campaign_status'] }}" data-toggle="tooltip" title="{{ item['campaign_status'] }}"></span></h5>
                             <hr class="divide">
                         </div>
+                        {% set _ = glob.update({'campaign_id':item['campaign_id']}) %}
                     </div>
                     <div class="row">
                         <div class="col-sm-6">
@@ -311,6 +313,7 @@
             <form name="create_alert_form" id="send_message_form" action="/sendMessage" method="POST">
                 <div class="modal-body">
                     <input class="form-control" type="hidden" value="" name="channel_id" id="message_channel_id">
+                    <input class="form-control" type="hidden" value="{{  glob.campaign_id }}" name="campaign_id" id="message_campaign_id">
                     <div class="row">
                         <div class="col-12">
                             <div class="form-group">

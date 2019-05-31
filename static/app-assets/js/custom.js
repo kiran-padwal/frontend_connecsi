@@ -81,11 +81,8 @@ $(document).ready(function () {
     }
 
     $('a').on('click', function(){
-        if($(this).attr('href').charAt(0)=="#" || $(this).hasAttr('download') || $(this).hasAttr('target')){
-
-        }
-        else{
-        $('body').addClass('loading');
+        if($(this).attr('href').charAt(0)!="#"){
+            $('body').addClass('loading');
         }
     });
 
@@ -684,22 +681,22 @@ $(document).ready(function () {
         $("#country").val(country[0]);
     });
 
-    $('.delete-fav-inf').on('click', function(e){
-    var channel_id = $(this).attr('data-channel-id');
-    var user_id = $(this).attr('data-user-id');
-
-
-
-        $.ajax({
-            type: "GET",
-            url: '/delFavInf/'+channel_id+'/'+user_id,
-            contentType: 'application/json;charset=UTF-8',
-            success: function(data)
-            {
-                location.reload();
-            }
-        });
-    });
+//    $('.delete-fav-inf').on('click', function(e){
+//    var channel_id = $(this).attr('data-channel-id');
+//    var user_id = $(this).attr('data-user-id');
+//
+//    alert('i m in delete fav inf');
+//
+//        $.ajax({
+//            type: "GET",
+//            url: '/delFavInf/'+channel_id+'/'+user_id,
+//            contentType: 'application/json;charset=UTF-8',
+//            success: function(data)
+//            {
+//                location.reload();
+//            }
+//        });
+//    });
 
 
     $('.create-alert').on('click', function(e){
