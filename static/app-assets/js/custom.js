@@ -700,12 +700,34 @@ $(document).ready(function () {
 
 
     $('.create-alert').on('click', function(e){
-        $("#channel_id").val($(this).attr('data-channel-id'));
+//        alert($(this).attr('data-channel-id'));
+        $("#create_alert_channel_id").val($(this).attr('data-channel-id'));
+        $("#create_alert_channel_name").val($(this).attr('data-channel-name'));
         $("#total_followers").val($(this).attr('data-followers'));
-        $("#total_views").val($(this).attr('data-views'));
-        $("#total_likes").val($(this).attr('data-likes'));
-        $("#total_comments").val($(this).attr('data-comments'));
+        $("#total_views").val(0);
+        $("#total_likes").val(0);
+        $("#total_comments").val(0);
     });
+
+    $("#create_alert_form").submit(function (e) {
+        var form = $(this);
+        var url = form.attr('action');
+        var channel_id = $('#create_alert_channel_id').val();
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: form.serialize(), // serializes the form's elements.
+            success: function (data) {
+                alert(data); // show response from the python script.
+                $('#create_alert_modal').modal('toggle');
+                getFavInfList();
+                <!--$( '#status'+channel_id).empty();-->
+//                $( 'div[id*=alert]').empty();
+            }
+        });
+        e.preventDefault(); // avoid to execute the actual submit of the form.
+    });
+
 
     $('.influencer-item').each(function () {
         if(hasAttr($(this), 'data-channel-id')) {

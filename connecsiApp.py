@@ -2062,20 +2062,16 @@ def createAlerts():
         print("i m in post")
         payload = request.form.to_dict()
         print(payload)
-        # exit()
         try:
             url = base_url + '/Brand/createInfluencerAlerts/'+str(user_id)
             response = requests.put(url=url,json=payload)
             # data = response.json()
-            # if 'createAlertsOnly' in request.form:
-            flash("Created Alerts for Favorite Influencer", 'success')
-            return influencerFavoritesList()
+            return 'Created Alerts for Favorite Influencer'
 
         except Exception as e:
             print('i m in exception')
             print(e)
-            flash("Error in Creating Alerts", 'danger')
-            return searchInfluencers()
+            return 'Server error'
 
 
 
