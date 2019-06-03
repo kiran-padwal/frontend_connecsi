@@ -2,33 +2,33 @@
 {{ super() }}
 {% block body %}
 {% set glob={} %}
-<!--<div class="row">-->
-    <!--<div class="col-sm-12">-->
-        <!--<div class="content-header">Favourites Infulencers list-->
-            <!--<div class="btn-wrapper">-->
-                <!--&lt;!&ndash; Single Button Dropdown &ndash;&gt;-->
-                <!--<div class="btn-group mr-1 mb-1" style="max-width: 115px">-->
-                    <!--<select class="bg-transparent" name="sort_order" placeholder="Sort">-->
-                        <!--<option value="High To Low" selected>High To Low</option>-->
-                        <!--<option value="Low To High">Low To High</option>-->
-                    <!--</select>-->
-                <!--</div>-->
-                <!--<div class="btn-group mr-1 mb-1">-->
-                    <!--<div class="input-group-btn">-->
-                        <!--{% if data['data'] %}-->
-                        <!--<a href="{{ url_for('static',filename='infList.csv')}}"-->
-                           <!--class="btn btn-primary bg-info" download>Export CSV</a>-->
-                        <!--{% else %}-->
-                        <!--&lt;!&ndash;<button type="button"  style="background-color: purple; margin-left: 2%; color:white; border-radius: 10px; font-size:15px;">Export CSV</button>&ndash;&gt;-->
-                        <!--{% endif %}-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
+<div class="row">
+    <div class="col-sm-12">
+        <div class="content-header">Favourites Infulencers list
+            <div class="btn-wrapper">
+                <!-- Single Button Dropdown -->
+                <div class="btn-group mr-1 mb-1" style="max-width: 115px">
+                    <select class="bg-transparent" name="sort_order" placeholder="Sort">
+                        <option value="High To Low" selected>High To Low</option>
+                        <option value="Low To High">Low To High</option>
+                    </select>
+                </div>
+                <div class="btn-group mr-1 mb-1">
+                    <div class="input-group-btn">
+                        {% if data['data'] %}
+                        <a href="{{ url_for('static',filename='infList.csv')}}"
+                           class="btn btn-primary bg-info" download>Export CSV</a>
+                        {% else %}
+                        <!--<button type="button"  style="background-color: purple; margin-left: 2%; color:white; border-radius: 10px; font-size:15px;">Export CSV</button>-->
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
 
-        <!--</div>-->
-        <!--<p class="content-sub-header"></p>-->
-    <!--</div>-->
-<!--</div>-->
+        </div>
+        <p class="content-sub-header"></p>
+    </div>
+</div>
 
 
 <!--<div class="row">-->
@@ -40,26 +40,6 @@
     <!--</div>-->
 <!--</div>-->
 
-<div class="row">
-    <div class="col-sm-12">
-        <div class="content-header">Favorites {{ channel_name }} influencers list
-            <div class="btn-wrapper">
-                <!-- Single Button Dropdown -->
-                <div class="btn-group mr-1 mb-1">
-                    <div class="input-group-btn">
-                        {% if data['data'] %}
-                        <a href="{{ url_for('static',filename='infList.csv') }}"
-                           class="btn btn-primary" download>Export CSV</a>
-                        {% else %}
-                        <!--<button type="button"  style="background-color: purple; margin-left: 2%; color:white; border-radius: 10px; font-size:15px;">Export CSV</button>-->
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
-        <p class="content-sub-header"></p>
-    </div>
-</div>
 
 <div class="row">
     {% for item in data['data'] %}
@@ -79,16 +59,8 @@
                             <div class="row">
                                 <div class="col-12">
                                     <h5 class="no-padding-bottom no-margin-bottom">
-                                        {% if channel_name =='youtube' %}
-                                            <a href="https://www.youtube.com/channel/{{ item['channel_id'] }}" target="_blank">{{ item['title'] }}</a>
+                                        <a href="https://www.youtube.com/channel/{{ item['channel_id'] }}" target="_blank">{{ item['title'] }}</a>
                                             <i class="fa fa-youtube"></i>
-                                        {% elif channel_name =='twitter' %}
-                                            <a href="https://www.twitter.com/{{ item['screen_name'] }}" target="_blank">{{ item['title'] }}</a>
-                                            <i class="fa fa-twitter-square"></i>
-                                        {% elif channel_name =='instagram' %}
-                                            <a href="https://www.instagram.com/{{ item['username'] }}" target="_blank">{{ item['username'] }}</a>
-                                            <i class="fa fa-instagram"></i>
-                                        {% endif %}
                                     </h5>
                                     <hr class="divide">
                                 </div>
@@ -102,15 +74,14 @@
                                     <div class="v-block"></div>
                                     <div class="img-wrapper">
                                         {% if item['channel_img'] %}
-                                        <img src="{{ item['channel_img'] }}" class="img-responsive" height="110px" width="110px">
+                                        <img src="{{ item['channel_img'] }}" class="img-responsive">
                                         {% else %}
                                         <img src="../static/img/fixed_image.png" class="img-responsive">
                                         {% endif %}
-
                                         <ul class="user-actions">
                                             <li>
                                                 <a href="#" class="send-message"
-                                                   data-channel-id="{{item['channel_id']}}@{{channel_name}}"
+                                                   data-channel-id="{{ item['channel_id'] }}"
                                                    data-business-email="{{ item['business_email'] }}"
                                                    data-title="{{ item['title'] }}"
                                                    data-backdrop="true" data-toggle="modal" data-target="#sendMessage">
@@ -123,7 +94,7 @@
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="#" onclick="campaignList('{{ item['channel_id'] }}','{{channel_name}}')" data-val="a2" data-channel-id="{{ item['channel_id'] }}" data-channel-name="{{channel_name}}"
+                                                <a href="#" onclick="campaignList('{{ item['channel_id'] }}')" data-val="a2" data-channel-id="{{ item['channel_id'] }}"
                                                    class="add-to-campaign" data-toggle="modal" data-backdrop="true"
                                                    data-target="#campaignList">
                                                     <svg data-toggle="tooltip" title="Add To Campaign" width="24"
@@ -140,7 +111,9 @@
                                                 </a>
                                             </li>
                                             <li>
-                                                <a id="favList{{item['channel_id']}}" href="#" class="delete-fav-inf" onclick="remove_from_fav_list('{{item['channel_id']}}','{{session['user_id']}}'); return false;"
+                                                {% if item['channel_id'] in
+                                                data['data']|map(attribute="channel_id") %}
+                                                <a href="#" class="delete-fav-inf"
                                                    data-channel-id="{{ item['channel_id'] }}"
                                                    data-user-id="{{ session['user_id'] }}">
                                                     <svg data-toggle="tooltip" title="Remove from Favorites" width="24"
@@ -154,22 +127,32 @@
                                                         <path d="M19.196 14.1279C18.4448 14.1279 17.7496 14.3185 17.1105 14.6998C16.4713 15.0698 15.9612 15.5743 15.5799 16.2135C15.2099 16.8526 15.0249 17.5478 15.0249 18.299C15.0249 19.0503 15.2099 19.7454 15.5799 20.3846C15.9612 21.0237 16.4713 21.5282 17.1105 21.8983C17.7496 22.2795 18.4448 22.4701 19.196 22.4701C19.9472 22.4701 20.6424 22.2795 21.2815 21.8983C21.9207 21.5282 22.4252 21.0237 22.7953 20.3846C23.1765 19.7454 23.3671 19.0503 23.3671 18.299C23.3671 17.5478 23.1765 16.8526 22.7953 16.2135C22.4252 15.5743 21.9207 15.0698 21.2815 14.6998C20.6424 14.3185 19.9472 14.1279 19.196 14.1279ZM16.9759 18.9718C16.9198 18.9718 16.8694 18.9549 16.8245 18.9213C16.7909 18.8765 16.7741 18.826 16.7741 18.7699V17.8281C16.7741 17.772 16.7909 17.7272 16.8245 17.6935C16.8694 17.6487 16.9198 17.6263 16.9759 17.6263H21.4161C21.4722 17.6263 21.517 17.6487 21.5506 17.6935C21.5955 17.7272 21.6179 17.772 21.6179 17.8281V18.7699C21.6179 18.826 21.5955 18.8765 21.5506 18.9213C21.517 18.9549 21.4722 18.9718 21.4161 18.9718H16.9759Z"
                                                               fill="#D0021B"/>
                                                     </svg>
+
                                                 </a>
+                                                {% else %}
+                                                <a href="/addToFavInfList/{{ item['channel_id'] }}">
+                                                    <svg data-toggle="tooltip" title="Add To Favorites" width="24"
+                                                         height="23" viewBox="0 0 24 23" fill="none"
+                                                         xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M22.7841 7.66944L16.2359 6.72758L13.3206 0.807309C13.1412 0.448505 12.8721 0.209302 12.5133 0.089701C12.1844 -0.0299003 11.8405 -0.0299003 11.4817 0.089701C11.1528 0.209302 10.8987 0.448505 10.7193 0.807309L7.80399 6.72758L1.25581 7.66944C0.86711 7.72924 0.553156 7.90864 0.313954 8.20764C0.104651 8.50665 0 8.83555 0 9.19435C0.0299003 9.55316 0.179402 9.86711 0.448505 10.1362L5.20266 14.7558L4.0814 21.304C4.0216 21.6628 4.0814 21.9917 4.2608 22.2907C4.4701 22.6196 4.75415 22.8289 5.11296 22.9186C5.47176 23.0083 5.81562 22.9635 6.14452 22.7841L12.0199 19.7342L17.8954 22.7841C18.2243 22.9635 18.5681 23.0083 18.9269 22.9186C19.2857 22.8289 19.5548 22.6196 19.7342 22.2907C19.9435 21.9917 20.0183 21.6628 19.9585 21.304L18.8372 14.7558L23.5914 10.1362C23.8605 9.86711 23.995 9.55316 23.995 9.19435C24.0249 8.83555 23.9203 8.50665 23.6811 8.20764C23.4718 7.90864 23.1728 7.72924 22.7841 7.66944ZM16.5498 13.9934L17.5814 20.2276L12.0199 17.2674L6.45847 20.2276L7.49003 13.9934L3.00498 9.59801L9.2392 8.701L12.0199 3.04983L14.8007 8.701L21.0349 9.59801L16.5498 13.9934Z"
+                                                              fill="#87CEEB"/>
+                                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                                              d="M19.1961 21.5282C20.7814 21.5282 22.0665 20.2431 22.0665 18.6578C22.0665 17.0725 20.7814 15.7874 19.1961 15.7874C17.6108 15.7874 16.3257 17.0725 16.3257 18.6578C16.3257 20.2431 17.6108 21.5282 19.1961 21.5282Z"
+                                                              fill="white"/>
+                                                        <path d="M19.196 14.1279C18.4448 14.1279 17.7496 14.3185 17.1105 14.6998C16.4713 15.0698 15.9612 15.5743 15.5799 16.2135C15.2099 16.8526 15.0249 17.5478 15.0249 18.299C15.0249 19.0503 15.2099 19.7454 15.5799 20.3846C15.9612 21.0237 16.4713 21.5282 17.1105 21.8983C17.7496 22.2795 18.4448 22.4701 19.196 22.4701C19.9472 22.4701 20.6424 22.2795 21.2815 21.8983C21.9207 21.5282 22.4252 21.0237 22.7953 20.3846C23.1765 19.7454 23.3671 19.0503 23.3671 18.299C23.3671 17.5478 23.1765 16.8526 22.7953 16.2135C22.4252 15.5743 21.9207 15.0698 21.2815 14.6998C20.6424 14.3185 19.9472 14.1279 19.196 14.1279ZM21.6179 18.7699C21.6179 18.826 21.5955 18.8765 21.5506 18.9213C21.517 18.9549 21.4722 18.9718 21.4161 18.9718H19.8688V20.5191C19.8688 20.5752 19.8463 20.6256 19.8015 20.6705C19.7678 20.7041 19.723 20.7209 19.6669 20.7209H18.7251C18.669 20.7209 18.6185 20.7041 18.5737 20.6705C18.5401 20.6256 18.5232 20.5752 18.5232 20.5191V18.9718H16.9759C16.9198 18.9718 16.8694 18.9549 16.8245 18.9213C16.7909 18.8765 16.7741 18.826 16.7741 18.7699V17.8281C16.7741 17.772 16.7909 17.7272 16.8245 17.6935C16.8694 17.6487 16.9198 17.6263 16.9759 17.6263H18.5232V16.0789C18.5232 16.0228 18.5401 15.978 18.5737 15.9444C18.6185 15.8995 18.669 15.8771 18.7251 15.8771H19.6669C19.723 15.8771 19.7678 15.8995 19.8015 15.9444C19.8463 15.978 19.8688 16.0228 19.8688 16.0789V17.6263H21.4161C21.4722 17.6263 21.517 17.6487 21.5506 17.6935C21.5955 17.7272 21.6179 17.772 21.6179 17.8281V18.7699Z"
+                                                              fill="#7ED321"/>
+                                                    </svg>
+                                                </a>
+                                                {% endif %}
+
                                             </li>
                                             <li><a href="#" data-toggle="modal" data-backdrop="true"
                                                    data-target="#create_alert_modal" class="create-alert"
                                                    data-channel-id="{{ item['channel_id'] }}"
-                                                   data-channel-name="{{channel_name}}"
                                                    data-followers="{{ item['subscriberCount_gained'] }}"
-                                                   {% if item['total_100video_views'] %}
                                                    data-views="{{ (item['total_100video_views']/100)|int }}"
-                                                    {% endif %}
-                                                    {% if item['total_100video_likes'] %}
                                                    data-likes="{{ (item['total_100video_likes']/100)|int }}"
-                                                    {% endif %}
-                                                    {% if item['total_100video_comments'] %}
-                                                   data-comments="{{ (item['total_100video_comments']/100)|int }}"
-                                                    {% endif %}>
+                                                   data-comments="{{ (item['total_100video_comments']/100)|int }}">
                                                 <svg data-toggle="tooltip" title="Add To Alert" width="24" height="26"
                                                      viewBox="0 0 24 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M11.2704 25.761C12.1426 25.761 12.8973 25.4423 13.5346 24.805C14.1719 24.2013 14.4906 23.4465 14.4906 22.5409H8.05031C8.05031 23.4465 8.36897 24.2013 9.00629 24.805C9.64361 25.4423 10.3983 25.761 11.2704 25.761ZM22.088 18.2138C22.0545 18.1803 22.0042 18.1132 21.9371 18.0126C21.1656 17.2075 20.5954 16.4193 20.2264 15.6478C19.6226 14.3061 19.3208 12.5786 19.3208 10.4654C19.3208 8.51992 18.717 6.826 17.5094 5.38365C16.3019 3.9413 14.7589 3.03564 12.8805 2.66667V1.61006C12.8805 1.174 12.7128 0.805031 12.3774 0.503145C12.0755 0.167715 11.7065 0 11.2704 0C10.8344 0 10.4486 0.167715 10.1132 0.503145C9.81132 0.805031 9.66038 1.174 9.66038 1.61006V2.66667C7.78197 3.03564 6.23899 3.9413 5.03145 5.38365C3.8239 6.826 3.22013 8.51992 3.22013 10.4654C3.22013 12.5786 2.91824 14.3061 2.31447 15.6478C1.94549 16.4193 1.37526 17.2075 0.603774 18.0126L0.45283 18.2138C0.150943 18.5493 0 18.935 0 19.3711C0 19.7736 0.150943 20.1426 0.45283 20.478C0.754717 20.7799 1.14046 20.9308 1.61006 20.9308H20.9308C21.4004 20.9308 21.7862 20.7799 22.088 20.478C22.3899 20.1426 22.5409 19.7736 22.5409 19.3711C22.5409 18.935 22.3899 18.5493 22.088 18.2138Z"
@@ -193,27 +176,10 @@
                                         <div class="rating">
 
                                             {% if item['total_videos'] %}
-                                                {% if item['total_100video_likes'] == 'None' %}
-                                                    {% set likes = 0|int %}
-                                                {% else %}
-                                                    {% set likes = item['total_100video_likes'] %}
-                                                {% endif %}
-
-                                                {% if item['total_100video_comments'] == 'None' %}
-                                                    {% set comments = 0|int %}
-                                                {% else %}
-                                                    {% set comments = item['total_100video_comments'] %}
-                                                {% endif %}
-                                                {% if item['total_100video_shares'] == 'None' %}
-                                                    {% set shares = 0|int %}
-                                                {% else %}
-                                                    {% set shares = item['total_100video_shares'] %}
-                                                {% endif %}
-                                                {% set total = (likes|int + comments|int + shares|int)%}
+                                                {% set total = (item['total_100video_likes'] + item['total_100video_comments'] + item['total_100video_shares'])%}
                                                     <!--{{ total }} <br>-->
                                                 {% set total = (total/item['total_videos'])|round|int %}
                                                 <!--{{ total }} <br>-->
-
                                                 {% set total = (total/item['subscriberCount_gained']) %}
                                                 {% set total = total|round(4, 'floor')*100 %}
                                                 {% set total = total|round(2, 'floor') %}
@@ -235,7 +201,6 @@
                                 <div class="col-lg-5 col-nc-lg-12 offer-analysis vertically-centered">
                                     <div class="v-block"></div>
                                     <ul class="analyse-list">
-                                        <!-- total followers -->
                                         <li>
                                             <div class="analyse-result" data-integers="{{item['subscriberCount_gained']}}">
 
@@ -243,91 +208,21 @@
                                             </div>
                                             <div>Total Followers</div>
                                         </li>
-                                        <!-- total followers end -->
-                                        <!--views -->
-                                        {% if channel_name == 'youtube' %}
                                         <li>
-                                            <div class="analyse-result"
-                                                 {% if item['total_100video_views'] %}
-                                                 data-integers="{{ (item['total_100video_views']/100)|int }}">
-                                                 {% else %}
-                                                 data-integers="0">
-                                                 {% endif %}
+                                            <div class="analyse-result" data-integers="{{ (item['total_100video_views']/100)|int }}">
                                             </div>
                                             <div>Avg Views / video</div>
                                         </li>
-                                        {% endif %}
-                                        {% if channel_name == 'twitter' %}
-
-                                        {% endif %}
-                                        {% if channel_name == 'instagram' %}
-
-                                        {% endif %}
-
-                                        <!--views end-->
-                                        <!--likes-->
-                                        {% if channel_name == 'youtube' %}
                                         <li>
                                             <div class="analyse-result" data-integers="{{ (item['total_100video_likes']/100)|int }}">
                                             </div>
                                             <div>Avg Likes / video</div>
                                         </li>
-                                        {% endif %}
-                                        {% if channel_name == 'twitter' %}
-                                        <li>
-                                            <div class="analyse-result" data-integers="{{ (item['total_100video_likes']/100)|int }}">
-                                            </div>
-                                            <div>Avg Likes / Post</div>
-                                        </li>
-                                        {% endif %}
-                                        {% if channel_name == 'instagram' %}
-                                        <li>
-                                            <div class="analyse-result" data-integers="{{ (item['total_100video_likes']/100)|int }}">
-                                            </div>
-                                            <div>Avg Likes / Post</div>
-                                        </li>
-                                        {% endif %}
-                                        <!--likes end-->
-
-                                        <!--comments-->
-                                        {% if channel_name == 'youtube' %}
                                         <li>
                                             <div class="analyse-result" data-integers="{{ (item['total_100video_comments']/100)|int }}">
                                             </div>
                                             <div>Avg Comments / video</div>
                                         </li>
-                                        {% endif %}
-                                        {% if channel_name == 'twitter' %}
-
-                                        {% endif %}
-                                        {% if channel_name == 'instagram' %}
-                                        <li>
-                                            <div class="analyse-result" data-integers="{{ (item['total_100video_comments']/100)|int }}">
-                                            </div>
-                                            <div>Avg Comments / Post</div>
-                                        </li>
-                                        {% endif %}
-                                        <!--comments end-->
-                                        <!--shares-->
-
-                                        {% if channel_name == 'youtube' %}
-
-                                        {% endif %}
-                                        {% if channel_name == 'twitter' %}
-                                        <li>
-                                            {% if item['total_100video_shares'] %}
-                                            <div class="analyse-result" data-integers="{{ (item['total_100video_shares']/100)|int }}">
-                                            </div>
-                                            {% else %}
-                                            <div class="analyse-result" data-integers="0">
-                                            </div>
-                                            {% endif %}
-                                            <div>Avg Retweets / Post</div>
-                                        </li>
-                                        {% endif %}
-                                        {% if channel_name == 'instagram' %}
-                                        {% endif %}
-                                        <!--shares end-->
                                     </ul>
                                 </div>
                             </div>
@@ -339,56 +234,20 @@
                                     <hr class="divide">
                                     <span>Other Channels:</span>
                                     <ul class="other-channels">
-                                        {% if channel_name =='youtube' %}
-                                            {% if item['twitter_url'] %}
-                                            <li><a href="{{ item['twitter_url'] }}" target="_blank"><i
-                                                    class="fa fa-twitter-square"></i></a>
-                                            </li>
-                                            {% endif %}
-                                            {% if item['insta_url'] %}
-                                            <li><a href="{{ item['insta_url'] }}" target="_blank"><i
-                                                    class="fa fa-instagram"></i></a>
-                                            </li>
-                                            {% endif %}
-                                            {% if item['facebook_url'] %}
-                                            <li><a href="{{ item['facebook_url'] }}" target="_blank">
-                                                    <i class="fa fa-facebook-square"></i></a>
-                                            </li>
-                                            {% endif %}
+                                        {% if item['facebook_url'] %}
+                                        <li>
+                                            <a href="{{ item['facebook_url'] }}" target="_blank">
+                                                <i class="fa fa-facebook-square"></i>
+                                            </a>
+                                        </li>
                                         {% endif %}
-                                        {% if channel_name =='twitter' %}
-                                            {% if item['youtube_url'] %}
-                                            <li><a href="{{ item['youtube_url'] }}" target="_blank"><i
-                                                    class="fa fa-youtube-square"></i></a>
-                                            </li>
-                                            {% endif %}
-                                            {% if item['insta_url'] %}
-                                            <li><a href="{{ item['insta_url'] }}" target="_blank"><i
-                                                    class="fa fa-instagram"></i></a>
-                                            </li>
-                                            {% endif %}
-                                            {% if item['facebook_url'] %}
-                                            <li><a href="{{ item['facebook_url'] }}" target="_blank">
-                                                    <i class="fa fa-facebook-square"></i></a>
-                                            </li>
-                                            {% endif %}
+                                        {% if item['insta_url'] %}
+                                        <li><a href="{{ item['insta_url'] }}" target="_blank"><i
+                                                class="fa fa-instagram"></i></a></li>
                                         {% endif %}
-                                        {% if channel_name =='instagram' %}
-                                            {% if item['youtube_url'] %}
-                                            <li><a href="{{ item['youtube_url'] }}" target="_blank"><i
-                                                    class="fa fa-youtube-square"></i></a>
-                                            </li>
-                                            {% endif %}
-                                            {% if item['twitter_url'] %}
-                                            <li><a href="{{ item['twitter_url'] }}" target="_blank"><i
-                                                    class="fa fa-twitter-square"></i></a>
-                                            </li>
-                                            {% endif %}
-                                            {% if item['facebook_url'] %}
-                                            <li><a href="{{ item['facebook_url'] }}" target="_blank">
-                                                    <i class="fa fa-facebook-square"></i></a>
-                                            </li>
-                                            {% endif %}
+                                        {% if item['twitter_url'] %}
+                                        <li><a href="{{ item['twitter_url'] }}" target="_blank"><i
+                                                class="fa fa-twitter-square"></i></a></li>
                                         {% endif %}
                                         <!--<li><a href="#"><i class="fa fa-youtube-square-square color2"></i></a></li>-->
                                     </ul>
@@ -432,11 +291,11 @@
                                             class="fa fa-bell"></i> Alert</a></li>
                                 </ul>
                                 <div class="tabs-content">
-                                    <div class="tabs-content-item " id="status{{ item['channel_id'] }}">
+                                    <div class="tabs-content-item active" id="status{{ item['channel_id'] }}">
                                         <div class="tab-content-item-list-container">
                                         </div>
                                     </div>
-                                    <div class="tabs-content-item active" id="alert{{ item['channel_id'] }}">
+                                    <div class="tabs-content-item" id="alert{{ item['channel_id'] }}">
                                         <div class="tab-content-item-list-container">
                                             <ul class="tab-content-item-list">
                                             {% if item['channel_id'] in
@@ -472,6 +331,7 @@
     {% endfor %}
 </div>
 
+
 {% endblock %}
 
 {% block footer %}
@@ -484,8 +344,7 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <form name="create_alert_form" id="create_alert_form" action="/createAlerts" method="POST">
-                <input  class="form-control" type="hidden" value="" name="channel_id" id="create_alert_channel_id">
-                <input  class="form-control" type="hidden" value="" name="channel_name" id="create_alert_channel_name">
+                <input  class="form-control" type="hidden" value="" name="channel_id" id="channel_id">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-12">
@@ -537,7 +396,6 @@
                   action="/addYoutubeInfToCampaignList" method="POST">
                 <div class="modal-body">
                     <input type="hidden" name="channel_id" id="youtube_channel_id">
-                    <input type="hidden" name="channel_name" id="campaign_list_channel_name">
                     <div id="channel_name"></div>
                     <div>channels</div>
                     <table class="table table-responsive-lg">
@@ -571,7 +429,8 @@
                                            for="campaignCheckbox{{ item['campaign_id'] }}"></label>
                                 </div>
                             </td>
-                            <td class="max-width-150"><a href="/viewCampaignDetails/{{ item['campaign_id'] }}">{{ item['campaign_name']}}</a></td>
+                            <td class="max-width-150"><a href="/viewCampaignDetails/{{ item['campaign_id'] }}">{{ item['campaign_name']
+                                }}</a></td>
                             <td>
                                     <span class="{{ item['campaign_status'] }}" data-toggle="tooltip"
                                           title="{{ item['campaign_status'] }}"></span>
@@ -592,10 +451,19 @@
                                 {% endif %}
                                 {% endfor %}
                             </td>
+                            <!--<td>-->
+                            <!--{% for region_name in item['region_name_list'] %}-->
+                            <!--{{ region_name }},-->
+                            <!--{% endfor %}-->
+                            <!--</td>-->
                             <td>{{ item['no_of_influencers'] }}
                                 <span class="float-right text muted">
+                                <!--<a onclick="searchInfluencers('{{ item['campaign_name'] }}','{{ item['campaign_id'] }}','{{ item['channels'] }}','{{ item['video_cat_name'] }}','{{ item['min_lower_followers'] }}','{{ item['max_upper_followers'] }}','{{ item['regions'] }}')" class="fa fa-user-plus black" data-toggle="modal" data-target="#create_alert_modal" data-tooltip="true" title="Add Influencer" style="font-size:20px;"></a>-->
+                                    <!--<button class="btn btn-sm btn-outline-secondary fa fa-user-plus"></button>-->
                         </span>
                             </td>
+                            <!--<td>{{ item['budget'] }} {{ item['currency'] }}</td>-->
+                            <!--<td>Coming Soon</td>-->
                         </tr>
                         {% endfor %}
                         </tbody>
@@ -662,51 +530,60 @@
 </div>
 
 <!-- added autocomplete -->
-<!--<script src="http://code.jquery.com/jquery-1.9.1.js"></script>-->
-<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.2.24/jquery.autocomplete.min.js"></script>-->
-<!--<script>-->
-    <!--$('#string_word').autocomplete({-->
-        <!--width: 348,-->
-        <!--delimiter: /(,|;)\s*/,-->
-        <!--lookup: '{{ lookup_string }}'.split(',')-->
-    <!--});-->
-<!--</script>-->
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.2.24/jquery.autocomplete.min.js"></script>
+<script>
+    $('#string_word').autocomplete({
+        width: 348,
+        delimiter: /(,|;)\s*/,
+        lookup: '{{ lookup_string }}'.split(',')
+    });
+</script>
 <!-- end of autocomplete -->
 <script>
 
+
+
+
+
+
+
 function updateChannelStatusForCampaignByCampaignId(campaign_id){
+    <!--alert(channel_id);-->
+    <!--alert(campaign_id);-->
     $.ajax({
                type: "GET",
                url: '/getChannelStatusForCampaignByCampaignId/'+campaign_id,
                contentType: 'application/json;charset=UTF-8',
                success: function(data)
                {
+
                    if (data.results.length != 0){
-                       jQuery.each(data.results, function(i, val) {
-                            <!--alert(val.channel_id);-->
-                            <!--alert(val.campaign_name);-->
-                            <!--alert(val.status);-->
-                                var color = '';
-                                if (val.status == 'Added'){
-                                    color = 'purple'
-                                }
-                                if (val.status == 'Contacted'){
-                                    color = 'orange'
-                                }
-                                if (val.status == 'Negotiations'){
-                                    color = 'orange'
-                                }
-                                if (val.status == 'Proposal Sent'){
-                                    color = 'light green'
-                                }
-                                if (val.status == 'Current Partner'){
-                                    color = 'dark green'
-                                }
-                                $('#status'+val.channel_id).append('<b style="font-weight:450; font-size:12px;">'+val.campaign_name+'<br/></b>');
-                                $('#status'+val.channel_id).append('<b style="font-weight:400; color:'+color+'; font-size:11px;">'+val.status+'</b>');
-                                $('#status'+val.channel_id).append('<hr style="height:0px; margin:auto;">');
-                        });
-                   }
+                   jQuery.each(data.results, function(i, val) {
+                        <!--alert(val.channel_id);-->
+                        <!--alert(val.campaign_name);-->
+                        <!--alert(val.status);-->
+                            var color = '';
+                            if (val.status == 'Added'){
+                                color = 'purple'
+                            }
+                            if (val.status == 'Contacted'){
+                                color = 'orange'
+                            }
+                            if (val.status == 'Negotiations'){
+                                color = 'orange'
+                            }
+                            if (val.status == 'Proposal Sent'){
+                                color = 'light green'
+                            }
+                            if (val.status == 'Current Partner'){
+                                color = 'dark green'
+                            }
+                            $('#status'+val.channel_id).append('<b style="font-weight:450; font-size:12px;">'+val.campaign_name+'<br/></b>');
+                            $('#status'+val.channel_id).append('<b style="font-weight:400; color:'+color+'; font-size:11px;">'+val.status+'</b>');
+                            $('#status'+val.channel_id).append('<hr style="height:0px; margin:auto;">');
+                    });
+                    }
                     else{
                         $('#status'+val.channel_id).append('<b>No Campaigns</b>');
                     }
@@ -717,6 +594,7 @@ function updateChannelStatusForCampaignByCampaignId(campaign_id){
 
 
 function getCampaign_ids(channel_id){
+
   $.ajax({
                type: "GET",
                url: '/getChannelStatusForCampaign/'+channel_id,
@@ -728,8 +606,10 @@ function getCampaign_ids(channel_id){
                    jQuery.each(data.results, function(i, val) {
                         <!--alert(val.campaign_id);-->
                         $('.campaign_id'+val.campaign_id).attr('disabled', true);
+
                     });
                     }
+
                }
   });
 
@@ -737,13 +617,11 @@ function getCampaign_ids(channel_id){
 
 
 
-    function campaignList(channel_id,channel_name) {
+    function campaignList(channel_id) {
     <!--alert('i m called');-->
-    <!--alert(channel_name);-->
     $( "input#campaign_id" ).prop('checked', false);
     $( "input#campaign_id" ).prop('disabled', false)
     $("#youtube_channel_id").val(channel_id);
-    $("#campaign_list_channel_name").val(channel_name);
     var campaign_ids = getCampaign_ids(channel_id);
     <!--alert(campaign_ids);-->
     {% for item in view_campaign_data['data'] %}
@@ -761,82 +639,6 @@ function getCampaign_ids(channel_id){
              }
         {% endfor %}
     {% endfor %}
-    }
-
-
-    function add_to_fav_inf_list(channel_id,channel_name){
-        $.ajax({
-            type: "GET",
-            url: '/addToFavInfList/'+channel_id+'/'+channel_name,
-            <!--data: form.serialize(), // serializes the form's elements.-->
-            success: function (data) {
-                alert(data);
-                getFavInfList();
-            }
-        });
-    }
-    function getFavInfList(){
-        $.ajax({
-            type: "GET",
-            url: '/getFavInfList',
-            <!--data: form.serialize(), // serializes the form's elements.-->
-            success: function (data) {
-                <!--alert(data);-->
-                if (data.results.length != 0){
-                   jQuery.each(data.results, function(i, val) {
-                        <!--alert(val.channel_id);-->
-                        $('#alert'+val.channel_id).find('.tab-content-item-list').empty();
-                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Followers</br>'+val.alert_followers+'</li></hr>');
-                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Views</br>'+val.alert_views+'</li></hr>');
-                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Likes</br>'+val.alert_likes+'</li></hr>');
-                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Comments</br>'+val.alert_comments+'</li>');
-                        $("#favList"+val.channel_id).attr("onclick","remove_from_fav_list('"+val.channel_id+"','"+{{session['user_id']}}+"'); return false;");
-                            var svg = '<span data-toggle="tooltip" title="Remove from Favorites" ><svg  width="24"'+
-                                                         'height="23" viewBox="0 0 24 23" fill="none"'+
-                                                         'xmlns="http://www.w3.org/2000/svg">'+
-                                                        '<path d="M10.7193 0.807309L7.80399 6.72758L1.25581 7.66944C0.86711 7.72924 0.553156 7.90864 0.313954 8.20764C0.104651 8.50665 0 8.83555 0 9.19435C0.0299003 9.55316 0.179402 9.86711 0.448505 10.1362L5.20266 14.7558L4.0814 21.304C4.0216 21.6628 4.0814 21.9917 4.2608 22.2907C4.4701 22.6196 4.75415 22.8289 5.11296 22.9186C5.47176 23.0083 5.81562 22.9635 6.14452 22.7841L12.0199 19.7342L17.8954 22.7841C18.2243 22.9635 18.5681 23.0083 18.9269 22.9186C19.2857 22.8289 19.5548 22.6196 19.7342 22.2907C19.9435 21.9917 20.0183 21.6628 19.9585 21.304L18.8372 14.7558L23.5914 10.1362C23.8605 9.86711 23.995 9.55316 23.995 9.19435C24.0249 8.83555 23.9203 8.50665 23.6811 8.20764C23.4718 7.90864 23.1728 7.72924 22.7841 7.66944L16.2359 6.72758L13.3206 0.807309C13.1412 0.448505 12.8721 0.209302 12.5133 0.089701C12.1844 -0.0299003 11.8405 -0.0299003 11.4817 0.089701C11.1528 0.209302 10.8987 0.448505 10.7193 0.807309Z"'+
-                                                              'fill="#87CEEB"/>'+
-                                                        '<path fill-rule="evenodd" clip-rule="evenodd"'+
-                                                              'd="M19.1961 21.5282C20.7814 21.5282 22.0665 20.2431 22.0665 18.6578C22.0665 17.0725 20.7814 15.7874 19.1961 15.7874C17.6108 15.7874 16.3257 17.0725 16.3257 18.6578C16.3257 20.2431 17.6108 21.5282 19.1961 21.5282Z"'+
-                                                              'fill="white"/>'+
-                                                        '<path d="M19.196 14.1279C18.4448 14.1279 17.7496 14.3185 17.1105 14.6998C16.4713 15.0698 15.9612 15.5743 15.5799 16.2135C15.2099 16.8526 15.0249 17.5478 15.0249 18.299C15.0249 19.0503 15.2099 19.7454 15.5799 20.3846C15.9612 21.0237 16.4713 21.5282 17.1105 21.8983C17.7496 22.2795 18.4448 22.4701 19.196 22.4701C19.9472 22.4701 20.6424 22.2795 21.2815 21.8983C21.9207 21.5282 22.4252 21.0237 22.7953 20.3846C23.1765 19.7454 23.3671 19.0503 23.3671 18.299C23.3671 17.5478 23.1765 16.8526 22.7953 16.2135C22.4252 15.5743 21.9207 15.0698 21.2815 14.6998C20.6424 14.3185 19.9472 14.1279 19.196 14.1279ZM16.9759 18.9718C16.9198 18.9718 16.8694 18.9549 16.8245 18.9213C16.7909 18.8765 16.7741 18.826 16.7741 18.7699V17.8281C16.7741 17.772 16.7909 17.7272 16.8245 17.6935C16.8694 17.6487 16.9198 17.6263 16.9759 17.6263H21.4161C21.4722 17.6263 21.517 17.6487 21.5506 17.6935C21.5955 17.7272 21.6179 17.772 21.6179 17.8281V18.7699C21.6179 18.826 21.5955 18.8765 21.5506 18.9213C21.517 18.9549 21.4722 18.9718 21.4161 18.9718H16.9759Z"'+
-                                                              'fill="#D0021B"/>'+
-                                                    '</svg></span>';
-                        $("#favList"+val.channel_id).html(svg);
-                    });
-                    }
-                 <!--$('#campaignList').modal('toggle');-->
-                 <!--updateChannelStatusForCampaign(channel_id);-->
-                 <!--$( 'div[id*=status]').empty();-->
-                 <!--window.location.reload();-->
-            }
-        });
-    }
-    function remove_from_fav_list(channel_id,user_id){
-        $.ajax({
-            type: "GET",
-            url: '/delFavInf/'+channel_id+'/'+user_id,
-            <!--data: form.serialize(), // serializes the form's elements.-->
-            success: function (data) {
-                alert(data);
-                <!--$("#favList"+channel_id).attr("onclick","add_to_fav_inf_list('"+channel_id+"','{{channel_name}}'); return false;");-->
-                <!--var svg = '<span data-toggle="tooltip" title="Add To Favorites" ><svg  width="24"'+-->
-                                                         <!--'height="23" viewBox="0 0 24 23" fill="none"'+-->
-                                                         <!--'xmlns="http://www.w3.org/2000/svg">'+-->
-                                                        <!--'<path d="M22.7841 7.66944L16.2359 6.72758L13.3206 0.807309C13.1412 0.448505 12.8721 0.209302 12.5133 0.089701C12.1844 -0.0299003 11.8405 -0.0299003 11.4817 0.089701C11.1528 0.209302 10.8987 0.448505 10.7193 0.807309L7.80399 6.72758L1.25581 7.66944C0.86711 7.72924 0.553156 7.90864 0.313954 8.20764C0.104651 8.50665 0 8.83555 0 9.19435C0.0299003 9.55316 0.179402 9.86711 0.448505 10.1362L5.20266 14.7558L4.0814 21.304C4.0216 21.6628 4.0814 21.9917 4.2608 22.2907C4.4701 22.6196 4.75415 22.8289 5.11296 22.9186C5.47176 23.0083 5.81562 22.9635 6.14452 22.7841L12.0199 19.7342L17.8954 22.7841C18.2243 22.9635 18.5681 23.0083 18.9269 22.9186C19.2857 22.8289 19.5548 22.6196 19.7342 22.2907C19.9435 21.9917 20.0183 21.6628 19.9585 21.304L18.8372 14.7558L23.5914 10.1362C23.8605 9.86711 23.995 9.55316 23.995 9.19435C24.0249 8.83555 23.9203 8.50665 23.6811 8.20764C23.4718 7.90864 23.1728 7.72924 22.7841 7.66944ZM16.5498 13.9934L17.5814 20.2276L12.0199 17.2674L6.45847 20.2276L7.49003 13.9934L3.00498 9.59801L9.2392 8.701L12.0199 3.04983L14.8007 8.701L21.0349 9.59801L16.5498 13.9934Z"'+-->
-                                                              <!--'fill="#87CEEB"/>'+-->
-                                                        <!--'<path fill-rule="evenodd" clip-rule="evenodd"'+-->
-                                                              <!--'d="M19.1961 21.5282C20.7814 21.5282 22.0665 20.2431 22.0665 18.6578C22.0665 17.0725 20.7814 15.7874 19.1961 15.7874C17.6108 15.7874 16.3257 17.0725 16.3257 18.6578C16.3257 20.2431 17.6108 21.5282 19.1961 21.5282Z"'+-->
-                                                              <!--'fill="white"/>'+-->
-                                                        <!--'<path d="M19.196 14.1279C18.4448 14.1279 17.7496 14.3185 17.1105 14.6998C16.4713 15.0698 15.9612 15.5743 15.5799 16.2135C15.2099 16.8526 15.0249 17.5478 15.0249 18.299C15.0249 19.0503 15.2099 19.7454 15.5799 20.3846C15.9612 21.0237 16.4713 21.5282 17.1105 21.8983C17.7496 22.2795 18.4448 22.4701 19.196 22.4701C19.9472 22.4701 20.6424 22.2795 21.2815 21.8983C21.9207 21.5282 22.4252 21.0237 22.7953 20.3846C23.1765 19.7454 23.3671 19.0503 23.3671 18.299C23.3671 17.5478 23.1765 16.8526 22.7953 16.2135C22.4252 15.5743 21.9207 15.0698 21.2815 14.6998C20.6424 14.3185 19.9472 14.1279 19.196 14.1279ZM21.6179 18.7699C21.6179 18.826 21.5955 18.8765 21.5506 18.9213C21.517 18.9549 21.4722 18.9718 21.4161 18.9718H19.8688V20.5191C19.8688 20.5752 19.8463 20.6256 19.8015 20.6705C19.7678 20.7041 19.723 20.7209 19.6669 20.7209H18.7251C18.669 20.7209 18.6185 20.7041 18.5737 20.6705C18.5401 20.6256 18.5232 20.5752 18.5232 20.5191V18.9718H16.9759C16.9198 18.9718 16.8694 18.9549 16.8245 18.9213C16.7909 18.8765 16.7741 18.826 16.7741 18.7699V17.8281C16.7741 17.772 16.7909 17.7272 16.8245 17.6935C16.8694 17.6487 16.9198 17.6263 16.9759 17.6263H18.5232V16.0789C18.5232 16.0228 18.5401 15.978 18.5737 15.9444C18.6185 15.8995 18.669 15.8771 18.7251 15.8771H19.6669C19.723 15.8771 19.7678 15.8995 19.8015 15.9444C19.8463 15.978 19.8688 16.0228 19.8688 16.0789V17.6263H21.4161C21.4722 17.6263 21.517 17.6487 21.5506 17.6935C21.5955 17.7272 21.6179 17.772 21.6179 17.8281V18.7699Z"'+-->
-                                                              <!--'fill="#7ED321"/>'+-->
-                                                    <!--'</svg>';-->
-                 <!--$("#favList"+channel_id).html(svg);-->
-                 <!--$('#alert'+channel_id).find('.tab-content-item-list').empty();-->
-                 <!--$('#alert'+channel_id).find('.tab-content-item-list').append('<li>No Alerts Set</li></hr>');-->
-                 window.location.reload();
-            }
-        });
     }
 </script>
 <script>
@@ -859,13 +661,12 @@ function getCampaign_ids(channel_id){
         var form = $(this);
         var url = form.attr('action');
         var channel_id = $('#youtube_channel_id').val();
-        var channel_name = $('#campaign_list_channel_name').val();
         $.ajax({
             type: "POST",
             url: url,
             data: form.serialize(), // serializes the form's elements.
             success: function (data) {
-                alert(data);
+                alert('Influencer Added to Campaigns');
                  $('#campaignList').modal('toggle');
                  <!--updateChannelStatusForCampaign(channel_id);-->
                  $( 'div[id*=status]').empty();

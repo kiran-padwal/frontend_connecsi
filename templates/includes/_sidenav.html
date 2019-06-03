@@ -41,9 +41,13 @@
                         </li>
                     </ul>
                 </li>
-                <li class="has-sub nav-item"><a href="#"><i class="fa fa-handshake-o"></i><span data-i18n="" class="menu-title">Partnerships</span></a>
+                <li class="has-sub nav-item"><a href="#"><i class="fa fa-star-o"></i><span data-i18n="" class="menu-title">Favorites</span></a>
                     <ul class="menu-content">
-                        <li ><a href="/influencerFavoritesList" class="menu-item">Favorites</a>
+                        <li ><a href="/influencerFavoritesList/youtube" class="menu-item">Youtube</a>
+                        </li>
+                        <li ><a href="/influencerFavoritesList/twitter" class="menu-item">Twitter</a>
+                        </li>
+                        <li ><a href="/influencerFavoritesList/instagram" class="menu-item">Instagram</a>
                         </li>
                         <!--<li ><a href="#" class="menu-item">Watchlist</a>-->
                         <!--</li>-->
@@ -88,7 +92,7 @@
                         </li>
                     </ul>
                 </li>
-                {% if session['email_id'] == 'k.padwal@student.uw.edu.pl' %}
+                {% if session['email_id'] == 'k.padwal@student.uw.edu.pl' or session['email_id'] == 'ceo@connecsi.com'  %}
                 <li class="has-sub nav-item"><a href="#"><i class="fa fa-user"></i><span data-i18n="" class="menu-title">Update Email</span></a>
                     <ul class="menu-content">
                         <li><a href="/show_youtube_channels_without_email_id" class="menu-item">youtube</a></li>

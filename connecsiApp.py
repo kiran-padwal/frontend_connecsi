@@ -571,7 +571,7 @@ def searchInfluencers():
 
     else:
         print('Not POST METHOD')
-        payload = {"channel": "Youtube","category_id": "","string_word": "","country": "PL","min_lower": 0,"max_upper": 10000,"sort_order": "High To Low",
+        payload = {"channel": "Youtube","category_id": "","string_word": "","country": "US","min_lower": 0,"max_upper": 100000000,"sort_order": "High To Low",
             "offset": 0
         }
         try:
@@ -584,7 +584,7 @@ def searchInfluencers():
                 item.update({'linechart_id': linechart_id})
                 # print(item)
                 linechart_id += 1
-            form_filters = {'channel': 'Youtube', 'string_word': '', 'country': 'PL', 'min_lower': '0', 'max_upper': '10000', 'search_inf': '', 'sort_order': 'High To Low', 'country_name': 'Poland'}
+            form_filters = {'channel': 'Youtube', 'string_word': '', 'country': 'US', 'min_lower': '0', 'max_upper': '100000000', 'search_inf': '', 'sort_order': 'High To Low', 'country_name': 'Poland'}
         except:
             pass
 
@@ -2008,20 +2008,26 @@ def getFavInfList():
     url = base_url + '/Brand/getInfluencerFavList/' + str(user_id)
     response = requests.get(url=url)
     response_json=response.json()
+    print(response_json)
     return jsonify(results=response_json['data'])
 
 
-@connecsiApp.route('/influencerFavoritesList')
+@connecsiApp.route('/influencerFavoritesList/<string:channel_name>',methods=['GET','POST'])
 @is_logged_in
-def influencerFavoritesList():
+def influencerFavoritesList(channel_name):
+    data=''
+    view_campaign_data=''
     try:
         user_id = session['user_id']
-        url = base_url+'/Brand/getInfluencerFavList/'+str(user_id)
+        url = base_url+'/Brand/getInfluencerFavList_with_details/'+str(user_id)+'/'+channel_name
         response = requests.get(url=url)
         data = response.json()
+        print(data)
+        print(len(data))
         linechart_id = 1
         for item in data['data']:
             item.update({'linechart_id': linechart_id})
+            item.update({'total_rows': len(data['data'])})
             linechart_id += 1
         from templates.campaign import campaign
         campaignObj = campaign.Campaign(user_id=user_id)
@@ -2030,28 +2036,32 @@ def influencerFavoritesList():
             if item['deleted'] == 'true':
                 view_campaign_data['data'].remove(item)
         print('i m n search')
-
-        # url = base_url + '/Brand/getInfluencerFavList/' + str(user_id)
-        # response = requests.get(url=url)
-        # favInfList_data = response.json()
         print('data=',data)
         # print('fav list=',favInfList_data)
-        exportCsv(data=data)
-        for item in data['data']:
-            total_videos_url = base_url + 'Youtube/totalVideos/' + str(item['channel_id'])
-            try:
-                response = requests.get(total_videos_url)
-                total_videos = response.json()
-                for item1 in total_videos['data']:
-                    item.update(item1)
-                print(item)
-            except:
-                pass
+        # exportCsv(data=data)
+        if channel_name == 'youtube':
+            for item in data['data']:
+                total_videos_url = base_url + 'Youtube/totalVideos/' + str(item['channel_id'])
+                try:
+                    response = requests.get(total_videos_url)
+                    total_videos = response.json()
+                    for item1 in total_videos['data']:
+                        item.update(item1)
+                    print(item)
+                except:
+                    pass
+        if channel_name == 'twitter':
+            for item in data['data']:
+                item.update({'total_videos': 100})
+        if channel_name == 'instagram':
+            for item in data['data']:
+                item.update({'total_videos': 100})
 
-        return render_template('partnerships/influencerFavoritesList.html',data=data,view_campaign_data=view_campaign_data)
-    except:
+        return render_template('partnerships/influencerFavoritesList.html',data=data,view_campaign_data=view_campaign_data,channel_name=channel_name)
+    except Exception as e:
+        print(e)
         pass
-        return render_template('partnerships/influencerFavoritesList.html')
+        return render_template('partnerships/influencerFavoritesList.html',data=data,view_campaign_data=view_campaign_data,channel_name=channel_name)
 
 
 @connecsiApp.route('/createAlerts', methods=['POST','GET'])
