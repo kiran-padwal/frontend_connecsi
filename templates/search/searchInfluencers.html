@@ -337,7 +337,7 @@
                                                 {% endif %}
                                                 {% set total = (likes|int + comments|int + shares|int)%}
                                                     <!--{{ total }} <br>-->
-                                                {% set total = (total/item['total_videos'])|round|int %}
+                                                {# set total = (total/item['total_videos'])|round|int #}
                                                 <!--{{ total }} <br>-->
                                                 {% set total = (total/item['subscriberCount_gained']) %}
                                                 {% set total = total|round(4, 'floor')*100 %}
