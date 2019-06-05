@@ -38,21 +38,21 @@
                             <div class="form-group">
                                 <label>Category</label>
                                 <!--<input class="form-control" id="string_word" name="string_word" type="text"-->
-                                       <!--placeholder="Enter Keywords" {% if form_filters['string_word'] %} value="{{ form_filters['string_word'] }}" {% endif %} />-->
+                                <!--placeholder="Enter Keywords" {% if form_filters['string_word'] %} value="{{ form_filters['string_word'] }}" {% endif %} />-->
                                 <select class="form-control" name="string_word" data-live-search="true" data-live-search-style="begins">
                                     <!--<select class="form-control" name="country">-->
                                     {% set lookup = lookup_string.split(',') %}
                                     {% for item in lookup %}
-                                        {% if item|string == form_filters['string_word']|string %}
-                                            <option  value="{{ item }}" selected>{{ item }}</option>
-                                        {% endif %}
+                                    {% if item|string == form_filters['string_word']|string %}
+                                    <option  value="{{ item }}" selected>{{ item }}</option>
+                                    {% endif %}
                                     {% endfor %}
 
                                     {% for item in lookup %}
-                                        {% if item|string == form_filters['string_word']|string %}
-                                        {% else %}
-                                            <option  value="{{ item }}" >{{ item }}</option>
-                                        {% endif %}
+                                    {% if item|string == form_filters['string_word']|string %}
+                                    {% else %}
+                                    <option  value="{{ item }}" >{{ item }}</option>
+                                    {% endif %}
                                     {% endfor %}
                                 </select>
                             </div>
@@ -63,20 +63,19 @@
                                 <select class="form-control" name="country" data-live-search="true" data-live-search-style="begins">
                                     <!--<select class="form-control" name="country">-->
                                     {% for item in regionCodes['data'] %}
-                                        {% if item['region_code']|string == form_filters['country']|string %}
-                                            <option  value="{{ item['region_code'] }}" selected>{{ item['country_name'] }}</option>
-                                        {% endif %}
+                                    {% if item['region_code']|string == form_filters['country']|string %}
+                                    <option  value="{{ item['region_code'] }}" selected>{{ item['country_name'] }}</option>
+                                    {% endif %}
                                     {% endfor %}
 
                                     {% for item in regionCodes['data'] %}
-                                        {% if item['region_code']|string == form_filters['country']|string %}
-                                        {% else %}
-                                            <option  value="{{ item['region_code'] }}" >{{ item['country_name'] }}</option>
-                                        {% endif %}
+                                    {% if item['region_code']|string == form_filters['country']|string %}
+                                    {% else %}
+                                    <option  value="{{ item['region_code'] }}" >{{ item['country_name'] }}</option>
+                                    {% endif %}
                                     {% endfor %}
                                 </select>
                             </div>
-
                         </div>
                         <div class="col-sm-5">
                             <div class="form-group">
@@ -99,6 +98,7 @@
                             </div>
                         </div>
                     </div>
+                    <input type="hidden" name="sort_order" id="sort_order" value="{{form_filters['sort_order']}}">
                     <div class="form-actions no-padding-bottom">
                         <div class="text-right">
                             <button type="submit"
@@ -106,10 +106,10 @@
                                     class="btn btn-raised btn-primary bg-color1 no-margin-bottom mr-1">Submit <i
                                     class="fa fa-search"></i></button>
                             <!--<a href="#" class="btn btn-raised btn-warning reset-button color-white no-margin-bottom">-->
-                                <!--Reset <i class="fa fa-close"></i></a>-->
+                            <!--Reset <i class="fa fa-close"></i></a>-->
                         </div>
                     </div>
-
+                </form>
             </div>
         </div>
     </div>
@@ -122,7 +122,7 @@
             <div class="btn-wrapper">
                 <!-- Single Button Dropdown -->
                 <div class="btn-group mr-1 mb-1" style="max-width: 115px">
-                    <select class="bg-transparent" name="sort_order" id="sort" style="font-size:12px;">
+                    <select class="bg-transparent"  id="sort" style="font-size:12px;">
                         {% if form_filters['sort_order'] %}
                         <option value="{{ form_filters['sort_order'] }}">{{ form_filters['sort_order'] }}
                         </option>
@@ -148,7 +148,6 @@
                     </div>
                 </div>
             </div>
-        </form>
         </div>
         <p class="content-sub-header"></p>
     </div>
@@ -1048,8 +1047,10 @@ function getCampaign_ids(channel_id){
   $(document).ready(function () {
 
       $('#sort').on('change', function() {
-            <!--alert('i m on change');-->
-            $('#btn-search-inf').click();
+            var order = $(this).val();
+            <!--alert(order);-->
+            $('#sort_order').val(order);
+            $('#form_search').submit();
       });
 
       {% for item1 in view_campaign_data['data'] %}

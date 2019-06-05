@@ -466,6 +466,8 @@ def searchInfluencers():
         print('i m inside POST METHOD')
         string_word = request.form.get('string_word')
         category = string_word.replace('and','&')
+        sort_order = request.form.get('sort_order')
+        print(sort_order)
         print(category)
         category_id=''
         for cat in videoCat_json['data']:

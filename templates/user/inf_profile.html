@@ -45,28 +45,28 @@
                         <div class="col-xl-6 mt-2">
                             <h6 class="social-media_title">Social media accounts</h6>
                             <div class="social-media">
-                                {% if data['data']['facebook_url'] %}
+                                {% if item['facebook_url'] %}
                                 <a href="#facebook_url" class="social-media_icon fa fa-facebook-square"
                                    title="facebook"></a>
                                 {% else %}
                                 <a href="#facebook_url" class="social-media_icon none-active fa fa-facebook-square"
                                    title="facebook"></a>
                                 {% endif %}
-                                {% if data['data']['twitter_url'] %}
-                                <a href="#twitter_url" class="social-media_icon fa fa-twitter-square"
+                                {% if item['twitter_url'] %}
+                                <a href="{{item['twitter_url']}}" class="social-media_icon fa fa-twitter-square"
                                    title="twitter"></a>
                                 {% else %}
                                 <a href="#twitter_url" class="social-media_icon none-active fa fa-twitter-square"
                                    title="twitter"></a>
                                 {% endif %}
-                                {% if data['data']['insta_url'] %}
-                                <a href="#insta_url" class="social-media_icon fa fa-instagram" title="instagram"></a>
+                                {% if item['insta_url'] %}
+                                <a href="{{item['insta_url']}}" class="social-media_icon fa fa-instagram" title="instagram"></a>
                                 {% else %}
                                 <a href="#insta_url" class="social-media_icon none-active fa fa-instagram "
                                    title="instagram"></a>
                                 {% endif %}
-                                {% if data['data']['youtube_url'] %}
-                                <a href="#youtube_url" class="social-media_icon fa fa-youtube"
+                                {% if item['channel_id'] %}
+                                <a href="https://www.youtube.com/channel/{{item['channel_id']}}" class="social-media_icon fa fa-youtube"
                                    title="youtube"></a>
                                 {% else %}
                                 <a href="#youtube_url" class="social-media_icon none-active fa fa-youtube"

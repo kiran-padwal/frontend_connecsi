@@ -1675,7 +1675,7 @@ $("#add_insta_channel_form").submit(function(e) {
             {
                 alert(data); // show response from the python script.
                 $('#add_insta_modal_form').modal('toggle');
-//                location.reload();
+                location.reload();
             }
         });
         e.preventDefault(); // avoid to execute the actual submit of the form.
