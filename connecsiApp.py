@@ -2710,18 +2710,21 @@ def google_login():
     url = base_url+'Influencer/saveInfluencer'
     print(url)
 
-    youtube_url = base_url+'Youtube/addYoutubeChannel/'+channel_id+'/'+resp_json['email']
-    try:
-        requests.post(url=youtube_url)
-    except Exception as e :
-        print(e)
-        pass
+
 
     try:
         response = requests.post(url,json=payload)
         print(response.json())
         response_json = response.json()
         if response_json['response'] == 1:
+
+            youtube_url = base_url + 'Youtube/addYoutubeChannel/' + channel_id + '/' + resp_json['email']
+            try:
+                requests.post(url=youtube_url)
+            except Exception as e:
+                print(e)
+                pass
+
             email_content = welcomemail_inf()
             payload1 = {
                 "from_email_id": "business@connecsi.com",
