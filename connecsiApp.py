@@ -437,7 +437,7 @@ def searchInfluencers():
     lookup_string = ''
     for cat in videoCat_json['data']:
         lookup_string += ''.join(',' + cat['video_cat_name'])
-    lookup_string = lookup_string.replace('&', 'and')
+    # lookup_string = lookup_string.replace('&', 'and')
 
     print('before getting campaigns')
     from templates.campaign import campaign
@@ -510,7 +510,9 @@ def searchInfluencers():
             channel = request.form.get('channel')
             url = base_url+'Youtube/searchChannels/'+channel
             print(url)
-
+            del payload['channel']
+            del payload['string_word']
+            print(payload)
             response = requests.post(url, json=payload)
             print(response.json())
             data = response.json()
@@ -573,7 +575,7 @@ def searchInfluencers():
 
     else:
         print('Not POST METHOD')
-        payload = {"channel": "Youtube","category_id": "","string_word": "","country": "US","min_lower": 0,"max_upper": 100000000,"sort_order": "High To Low",
+        payload = {"category_id": "","country": "US","min_lower": 0,"max_upper": 100000000,"sort_order": "High To Low",
             "offset": 0
         }
         try:
@@ -586,7 +588,7 @@ def searchInfluencers():
                 item.update({'linechart_id': linechart_id})
                 # print(item)
                 linechart_id += 1
-            form_filters = {'channel': 'Youtube', 'string_word': '', 'country': 'US', 'min_lower': '0', 'max_upper': '100000000', 'search_inf': '', 'sort_order': 'High To Low', 'country_name': 'Poland'}
+            form_filters = {'channel': 'Youtube', 'string_word': '', 'country': 'US', 'min_lower': '0', 'max_upper': '100000000', 'sort_order': 'High To Low', 'country_name': 'Poland'}
         except:
             pass
 

@@ -115,14 +115,15 @@
                                     <label for="campaign_name">Campaign Name</label>
                                     <input  class="form-control"  readonly="readonly" type="text" value=""  id="campaign_name">
                                 </div>
-                                <input  class="form-control" type="hidden" value=""  id="campaign_id" name="campaign_id">
+                                <!--<input  class="form-control" type="hidden" value=""  id="campaign_id" name="campaign_id">-->
+                                <input  class="form-control" type="hidden" value=""   name="sort_order">
                                 <div class="form-group">
                                     <label for="channel">Channel</label>
                                     <select class="form-control" name="channel" style="height:35px; width:120px;">
                                         <option value="Youtube">Youtube</option>
                                         <option value="Twitter">Twitter</option>
                                         <!--<option value="Facebook">Facebook</option>-->
-                                        <!--<option value="Instagram">Instagram</option>-->
+                                        <option value="Instagram">Instagram</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -148,7 +149,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button name="search_inf" type="submit" class="btn btn-default bg-color1 color-white">Search</button>
+                    <button  type="submit" class="btn btn-default bg-color1 color-white">Search</button>
                 </div>
             </form>
         </div>

@@ -43,16 +43,17 @@
                                     <!--<select class="form-control" name="country">-->
                                     {% set lookup = lookup_string.split(',') %}
                                     {% for item in lookup %}
-                                    {% if item|string == form_filters['string_word']|string %}
-                                    <option  value="{{ item }}" selected>{{ item }}</option>
-                                    {% endif %}
+                                        {% if item|string == form_filters['string_word']|string %}
+                                            <option  value="{{ item }}" selected>{{ item }}</option>
+                                        {% endif %}
                                     {% endfor %}
 
                                     {% for item in lookup %}
-                                    {% if item|string == form_filters['string_word']|string %}
-                                    {% else %}
-                                    <option  value="{{ item }}" >{{ item }}</option>
-                                    {% endif %}
+                                        {% if item|string == form_filters['string_word']|string %}
+
+                                        {% else %}
+                                            <option  value="{{ item }}" >{{ item }}</option>
+                                        {% endif %}
                                     {% endfor %}
                                 </select>
                             </div>
@@ -868,7 +869,7 @@
     <!--$('#string_word').autocomplete({-->
         <!--width: 348,-->
         <!--delimiter: /(,|;)\s*/,-->
-        <!--lookup: '{{ lookup_string }}'.split(',')-->
+        <!--lookup: ''-->
     <!--});-->
 <!--</script>-->
 <!-- end of autocomplete -->
