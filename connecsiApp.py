@@ -1362,6 +1362,9 @@ def inbox(message_id):
         from templates.campaign.campaign import Campaign
         campaignObj = Campaign(user_id=user_id)
         view_campaign_data = campaignObj.get_all_campaigns()
+        for item in view_campaign_data['data']:
+            if item['deleted'] == 'true':
+                view_campaign_data['data'].remove(item)
 
         print('final conv = ',full_conv)
         for item in full_conv['data']:
@@ -1401,14 +1404,16 @@ def addCampaignsToMessage():
         print('campaign_ids = ',campaign_ids)
         print('channel_id = ',channel_id)
         # exit()
-        for campaign_id in campaign_ids:
-            url = base_url + 'Messages/addCampaignIdToMessageId/' + message_id + '/' + campaign_id+'/'+str(channel_id)
-            print(url)
-            response = requests.post(url=url)
-            response_json = response.json()
-            print(response_json)
-        # flash('campaigns added to Conversation')
-        return 'Campaigns Added To Conversation'
+        if campaign_ids:
+            for campaign_id in campaign_ids:
+                url = base_url + 'Messages/addCampaignIdToMessageId/' + message_id + '/' + campaign_id+'/'+str(channel_id)
+                print(url)
+                response = requests.post(url=url)
+                response_json = response.json()
+                print(response_json)
+            # flash('campaigns added to Conversation')
+            return 'Campaigns Added To Conversation'
+        else: return 'Your Campaign List is Empty'
 
 @connecsiApp.route('/getCampaignsAddedToMessage/<string:message_id>',methods=['GET','POST'])
 @is_logged_in
@@ -1958,7 +1963,8 @@ def replyMessage():
     if request.method == 'POST':
         payload = request.form.to_dict()
         print('payload',payload)
-
+        del payload['reply_message_first_name']
+        print(payload)
         message_id = request.form.get('message_id')
         print('message id = ',message_id)
         payload.update({'conv_from_email_id': session['email_id']})
@@ -2446,13 +2452,15 @@ def addYoutubeInfToCampaignList():
         campaign_ids = request.form.getlist('campaign_id')
         channel_id = request.form.get('channel_id')
         channel_name=request.form.get('channel_name')
-        for campaign_id in campaign_ids:
-            url = base_url+'Brand/addInfToCampaignList/'+ str(channel_id) + '/' + str(campaign_id)+'/'+channel_name
-            response = requests.post(url=url)
-            response = response.json()
-            # flash('Youtube Influencer Added to Campaign','success')
-        # return viewCampaigns()
-        return channel_name+' Influencer Added to Campaign'
+        if campaign_ids:
+            for campaign_id in campaign_ids:
+                url = base_url+'Brand/addInfToCampaignList/'+ str(channel_id) + '/' + str(campaign_id)+'/'+channel_name
+                response = requests.post(url=url)
+                response = response.json()
+                # flash('Youtube Influencer Added to Campaign','success')
+            # return viewCampaigns()
+            return channel_name+' Influencer Added to Campaign'
+        else: return  'Your Campaign List is Empty'
 
 @connecsiApp.route('/getChannelStatusForCampaign/<string:channel_id>',methods=['GET'])
 @is_logged_in
@@ -2639,10 +2647,12 @@ def reports():
 @is_logged_in
 def getMappedChannels(channel_id):
     print(channel_id)
-    url = base_url + 'Influencer/' + str(channel_id)
-    print(url)
+    # url = base_url + 'Influencer/' + str(channel_id)
+
+    # print(url)
     try:
-        mappedChannel_ids = requests.get(url=url)
+        # mappedChannel_ids = requests.get(url=url)
+        mappedChannel_ids = requests.get(url=base_url + 'Influencer/getDetailsByUserId/' + str(channel_id))
         response_json = mappedChannel_ids.json()
         print(response_json)
         return jsonify(results=response_json['data'])

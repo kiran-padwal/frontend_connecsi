@@ -243,8 +243,10 @@ $(document).ready(function () {
 
 
 
-    function replyMessage(from_email_id,subject) {
+    function replyMessage(from_email_id,subject,first_name) {
         <!--alert(channel_id);-->
+//        alert('i m here');
+        $("#reply_message_first_name").val(first_name);
         $("#to_email_id").val(from_email_id);
         $("#subject").val(subject);
     }
@@ -420,7 +422,7 @@ $(document).ready(function () {
     $('.reply-message').on('click', function(e){
         e.preventDefault();
         e.stopPropagation();
-        replyMessage($(this).attr('data-from-email-id'),$(this).attr('data-subject'));
+        replyMessage($(this).attr('data-from-email-id'),$(this).attr('data-subject'),$(this).attr('data-first_name'));
         $($(this).attr('data-modal-target')).modal('toggle');
     });
 
@@ -601,6 +603,7 @@ $(document).ready(function () {
 
 
     $("#proposal_campaign_name").on("change",function(){
+//        alert('first here');
         getAllMappedChannel_ids($(this).attr('data-channel-id'));
         $("#proposal_description").empty();
         $("#proposal_from_date").empty();

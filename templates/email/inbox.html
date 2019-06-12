@@ -120,11 +120,11 @@
                                                                 <div class="media-body">
                                                                     <h6 class="list-group-item-heading text-bold-500">{{ item['first_name'] }}</h6>
                                                                     <p class="list-group-item-text text-bold-300">
-                                                                        {{ item['subject']|striptags|truncate(35, False, '...', 0) }}
+                                                                        <!--{{ item['subject']|striptags|truncate(35, False, '...', 0) }}-->
                                                                         <span class="float-right">
                                                 {% if item['to_email_id'] == session['email_id'] %}
-                                                <button class="reply-message transparent-btn color2" data-modal-target="#replyMessage" data-from-email-id="{{ item['from_email_id'] }}" data-subject="{{ item['subject'] }}">
-                                                    <i class="fa fa-reply mr-1"></i>
+                                                <button class="reply-message transparent-btn color2" data-modal-target="#replyMessage" data-from-email-id="{{ item['from_email_id'] }}" data-subject="{{ item['subject'] }}" data-first_name="{{ item['first_name'] }}">
+                                                    <i class="fa fa-reply mr-1" style="font-size:13pt;"></i>
                                                 </button>
                                                 {% endif %}
                                                 {% if  glob.from_email_id != 'business@connecsi.com'  %}
@@ -162,7 +162,7 @@
                                     <!--{{glob.from_email_id}}-->
 
                                             {% if session['type']=='brand' %}
-                                                <a href="#" data-toggle="modal" data-target="#campaignList" data-backdrop="true" class="color1 float-right add-campaign" data-channel-id="{{ glob.channel_id }}" data-message-id="{{ glob.message_id }}"><i class="fa fa-plus-circle"></i></a>
+                                                <a href="#" data-toggle="modal" data-target="#campaignList" data-backdrop="true" class="color1 float-right add-campaign" data-channel-id="{{ glob.channel_id }}" data-message-id="{{ glob.message_id }}"><i class="fa fa-plus-circle" style="font-size:13pt;"></i></a>
                                             {% endif %}
 
                                     {% endif %}
@@ -339,19 +339,20 @@
                     <div class="modal-body">
                         <input type="hidden" value="{{ glob.channel_id }}" name="channel_id" id="reply_channel_id">
                         <input type="hidden" value="{{ glob.message_id }}" name="message_id" id="reply_message_id">
+                        <input type="hidden" value="" name="to_email_id" id="to_email_id">
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group">
-                                    <label for="to_email_id">*To:</label>
-                                    <input type="text" class="form-control" name="to_email_id" id="to_email_id" readonly>
+                                    <label for="reply_message_first_name">*To:</label>
+                                    <input type="text" class="form-control" name="reply_message_first_name" id="reply_message_first_name" readonly>
                                 </div>
                             </div>
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label for="to_subject">*Subject:</label>
-                                    <input required type="text" class="form-control" id="to_subject" name="subject">
-                                </div>
-                            </div>
+                            <!--<div class="col-12">-->
+                                <!--<div class="form-group">-->
+                                    <!--<label for="to_subject">*Subject:</label>-->
+                                    <!--<input required type="text" class="form-control" id="to_subject" name="subject">-->
+                                <!--</div>-->
+                            <!--</div>-->
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="to_message">*Message:</label>
@@ -361,7 +362,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit"  class="btn btn-primary bg-color1">Save</button>
+                        <button type="submit"  class="btn btn-primary bg-color1">Reply</button>
                     </div>
                 </form>
             </div>
@@ -392,7 +393,8 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="proposal_description">Description:</label>
-                                    <input class="form-control" type="text"  name="proposal_description" id="proposal_description" required>
+                                    <textarea class="form-control"  name="proposal_description" id="proposal_description" required>
+                                    </textarea>
                                 </div>
                             </div>
                             <div class="col-6">
@@ -537,7 +539,8 @@
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <label for="edit_proposal_description">Description:</label>
-                                    <input class="form-control" type="text" id="edit_proposal_description" name="edit_proposal_description" required>
+                                    <textarea class="form-control"  id="edit_proposal_description" name="edit_proposal_description" required>
+                                    </textarea>
                                 </div>
                             </div>
 
@@ -795,16 +798,22 @@ function getAllMappedChannel_ids(channel_id){
                    $( '#proposal_channels').empty();
                    if (data.results.length != 0){
                    jQuery.each(data.results, function(i, val) {
-                        <!--alert(val.youtube_channel_id);-->
-                        <!--alert(val.twitter_channel_id);-->
-                            if(val.youtube_channel_id){
+                        <!--alert(val.mapped_youtube_channel_id);-->
+                        <!--alert(val.mapped_twitter_channel_id);-->
+                        <!--alert(val.mapped_insta_channel_id);-->
+                            if(val.mapped_youtube_channel_id){
 
-                                $("#proposal_channels").append('<input class="custom-control-inline proposal_channels_checkbox" checked multiple type ="checkbox" name="proposal_channels" value="youtube@'+val.youtube_channel_id+'"><span data-toggle="tooltip" title="'+val.youtube_first_name+'"><a target="_blank" href="https://www.youtube.com/channel/'+val.youtube_channel_id+'" class="fa fa-youtube red"></a></span>&nbsp&nbsp&nbsp');
+                                $("#proposal_channels").append('<input class="custom-control-inline proposal_channels_checkbox" checked multiple type ="checkbox" name="proposal_channels" value="youtube@'+val.mapped_youtube_channel_id+'"><span data-toggle="tooltip" title="'+val.channel_id+'"><a target="_blank" href="https://www.youtube.com/channel/'+val.mapped_youtube_channel_id+'" class="fa fa-youtube red"></a></span>&nbsp&nbsp&nbsp');
 
                             }
-                            if(val.twitter_channel_id){
+                            if(val.mapped_twitter_channel_id){
 
-                                $("#proposal_channels").append('<input class="custom-control-inline proposal_channels_checkbox" checked multiple type ="checkbox" name="proposal_channels" value="twitter@'+val.twitter_channel_id+'"><span data-toggle="tooltip" title="'+val.twitter_first_name+'"><a href="#" class="fa fa-twitter"></span></a>');
+                                $("#proposal_channels").append('<input class="custom-control-inline proposal_channels_checkbox" checked multiple type ="checkbox" name="proposal_channels" value="twitter@'+val.mapped_twitter_channel_id+'"><span data-toggle="tooltip" title="'+val.twitter_url+'"><a target="_blank" href="'+val.twitter_url+'" class="fa fa-twitter"></span></a>');
+
+                            }
+                            if(val.mapped_twitter_channel_id){
+
+                                $("#proposal_channels").append('<input class="custom-control-inline proposal_channels_checkbox" checked multiple type ="checkbox" name="proposal_channels" value="instagram@'+val.mapped_twitter_channel_id+'"><span data-toggle="tooltip" title="'+val.insta_url+'"><a target="_blank" href="'+val.insta_url+'" class="fa fa-instagram"></span></a>');
 
                             }
 
@@ -828,11 +837,14 @@ function getAllMappedChannel_ids1(channel_id){
 
                    if (data.results.length != 0){
                    jQuery.each(data.results, function(i, val) {
-                            if(val.youtube_channel_id){
-                                $("#edit_proposal_channels").append('<input class="edit_proposal_channels_checkbox"  multiple type ="checkbox" name="edit_proposal_channels" value="youtube@'+val.youtube_channel_id+'" id="youtube@'+val.youtube_channel_id+'"><span data-toggle="tooltip" title="'+val.youtube_first_name+'"><a target="_blank" href="https://www.youtube.com/channel/'+val.youtube_channel_id+'" class="fa fa-youtube red"></a></span>');
+                            if(val.mapped_youtube_channel_id){
+                                $("#edit_proposal_channels").append('<input class="edit_proposal_channels_checkbox"  multiple type ="checkbox" name="edit_proposal_channels" value="youtube@'+val.mapped_youtube_channel_id+'" id="youtube@'+val.mapped_youtube_channel_id+'"><span data-toggle="tooltip" title="'+val.channel_id+'"><a target="_blank" href="https://www.youtube.com/channel/'+val.mapped_youtube_channel_id+'" class="fa fa-youtube red"></a></span>');
                             }
-                            if(val.twitter_channel_id){
-                                $("#edit_proposal_channels").append('<input class="edit_proposal_channels_checkbox"  multiple type ="checkbox" name="edit_proposal_channels" value="twitter@'+val.twitter_channel_id+'" id="twitter@'+val.twitter_channel_id+'"><span data-toggle="tooltip" title="'+val.twitter_first_name+'"><a href="#" class="fa fa-twitter"></span></a>');
+                            if(val.mapped_twitter_channel_id){
+                                $("#edit_proposal_channels").append('<input class="edit_proposal_channels_checkbox"  multiple type ="checkbox" name="edit_proposal_channels" value="twitter@'+val.mapped_twitter_channel_id+'" id="twitter@'+val.mapped_twitter_channel_id+'"><span data-toggle="tooltip" title="'+val.twitter_url+'"><a target="_blank" href="'+val.twitter_url+'" class="fa fa-twitter"></span></a>');
+                            }
+                            if(val.mapped_insta_channel_id){
+                                $("#edit_proposal_channels").append('<input class="edit_proposal_channels_checkbox"  multiple type ="checkbox" name="edit_proposal_channels" value="instagram@'+val.mapped_insta_channel_id+'" id="instagram@'+val.mapped_twitter_channel_id+'"><span data-toggle="tooltip" title="'+val.insta_url+'"><a target="_blank" href="'+val.insta_url+'" class="fa fa-instagram"></span></a>');
                             }
                     });
                     }
@@ -872,24 +884,24 @@ function getCampaignsAddedToMessage(){
                                 var status = 'Proposal Received';
                                 var accepted = 'Accept';
                                 var rejected = 'Reject';
-                                $('#campaignNameList').append('<tr><td><a href="#" class="">'+val.campaign_name+'<a/></td><td>'+status+'</td></tr>');
-                                $('#tab-proposal .tab-list').append('<tr><td><a href="#" onclick="getProposal('+val.message_id+','+val.campaign_id+')" class="">'+val.campaign_name+'<a/></td><td><a href="#" onclick="accept_decline('+val.message_id+','+val.campaign_id+',\'' + accepted + '\')" data-toggle = "tooltip" title="Accept" class="fa fa-thumbs-up green"></a></td><td><a href="#" onclick ="accept_decline('+val.message_id+','+val.campaign_id+',\'' + rejected + '\')" data-toggle = "tooltip" title="Decline" class="fa fa-thumbs-down red"></a></td></tr>');
+                                $('#campaignNameList').append('<tr><td><a href="#" class="">'+val.campaign_name+'<a/></td><td>&nbsp &nbsp'+status+'</td></tr>');
+                                $('#tab-proposal .tab-list').append('<tr><td><a href="#" onclick="getProposal('+val.message_id+','+val.campaign_id+')" class="">'+val.campaign_name+'<a/></td><td>&nbsp &nbsp<a href="#" onclick="accept_decline('+val.message_id+','+val.campaign_id+',\'' + accepted + '\')" data-toggle = "tooltip" title="Accept" class="fa fa-thumbs-up green" style="font-size:15pt;"></a></td><td>&nbsp<a href="#" onclick ="accept_decline('+val.message_id+','+val.campaign_id+',\'' + rejected + '\')" data-toggle = "tooltip" title="Decline" class="fa fa-thumbs-down red" style="font-size:15pt;"></a></td></tr>');
                             }
                             else if(val.status == 'Current Partner'){
-                                $('#campaignNameList').append('<tr><td><a href="#" class="">'+val.campaign_name+'<a/></td><td>'+val.status+'</td></tr>');
+                                $('#campaignNameList').append('<tr><td><a href="#" class="">'+val.campaign_name+'<a/></td><td>&nbsp &nbsp'+val.status+'</td></tr>');
                                 $('#tab-proposal .tab-list').append('<tr><td><a href="#" onclick="getProposal('+val.message_id+','+val.campaign_id+')" class="">'+val.campaign_name+'<a/></td></tr>');
                             }
                             else{
-                                $('#campaignNameList').append('<tr><td><a href="#" class="">'+val.campaign_name+'<a/></td><td>'+val.status+'</td></tr>');
+                                $('#campaignNameList').append('<tr><td><a href="#" class="">'+val.campaign_name+'<a/></td><td>&nbsp &nbsp'+val.status+'</td></tr>');
                             }
                         {% else %}
-                            $('#campaignNameList').append('<tr><td><a href="#" class="">'+val.campaign_name+'<a/></td><td>'+val.status+'</td></tr>');
+                            $('#campaignNameList').append('<tr><td><a href="#" class="">'+val.campaign_name+'<a/></td><td>&nbsp &nbsp'+val.status+'</td></tr>');
                             if(val.status == 'Proposal Sent'){
-                                $('#tab-proposal .tab-list').append('<tr><td><a href="#" onclick="getProposal('+val.message_id+','+val.campaign_id+')" class="">'+val.campaign_name+'<a/></td><td><a href="#" onclick="editProposal('+val.message_id+','+val.campaign_id+')" data-toggle="tooltip" title="Edit Proposal"><img src="/static/icons/edit.png" height="19px" width="17px"></a></td></tr>');
+                                $('#tab-proposal .tab-list').append('<tr><td><a href="#" onclick="getProposal('+val.message_id+','+val.campaign_id+')" class="">'+val.campaign_name+'<a/></td><td>&nbsp &nbsp<a href="#" onclick="editProposal('+val.message_id+','+val.campaign_id+')" data-toggle="tooltip" title="Edit Proposal"><img src="/static/icons/edit.png" height="19px" width="17px"></a></td></tr>');
                             }
                             if(val.status == 'Current Partner'){
 
-                                $('#tab-proposal .tab-list').append('<tr><td><a href="#" onclick="getProposal('+val.message_id+','+val.campaign_id+')" class="">'+val.campaign_name+'<a/></td><td><a href="#" onclick="editProposal('+val.message_id+','+val.campaign_id+')" data-toggle="tooltip" title="Edit Proposal"><img src="/static/icons/edit.png" height="19px" width="17px"></a></td></tr>');
+                                $('#tab-proposal .tab-list').append('<tr><td><a href="#" onclick="getProposal('+val.message_id+','+val.campaign_id+')" class="">'+val.campaign_name+'<a/></td><td>&nbsp &nbsp<a href="#" onclick="editProposal('+val.message_id+','+val.campaign_id+')" data-toggle="tooltip" title="Edit Proposal"><img src="/static/icons/edit.png" height="19px" width="17px"></a></td></tr>');
                             }
                         {% endif %}
                         if(val.status!="Proposal Sent" && val.status!="Current Partner"){

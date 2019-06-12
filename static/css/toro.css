@@ -526,7 +526,7 @@ html:not([dir=rtl]) .noUi-horizontal .noUi-handle {
 }
 
 .img-icon {
-  max-height: 24px;
+  max-height: 18px;
   width: auto;
   display: inline-block;
   position: relative;
