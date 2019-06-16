@@ -194,11 +194,8 @@
                                 <div class="col-lg-4 col-nc-lg-6 col-6 txt-center">
                                     <div class="v-block"></div>
                                     <div class="img-wrapper">
-                                        {% if item['channel_img'] %}
-                                        <img src="{{ item['channel_img'] }}" class="img-responsive" height="110px" width="110px">
-                                        {% else %}
-                                        <img src="../static/img/fixed_image.png" class="img-responsive">
-                                        {% endif %}
+
+                                        <img id="channel_img-{{item['channel_id']}}" src="" class="img-responsive" height="110px" width="110px">
 
                                         <ul class="user-actions">
                                             <li>
@@ -841,7 +838,7 @@
                                  <select name="campaign_id" id="message_campaign_id">
                                       <option value=""></option>
                                       {% for item in view_campaign_data['data'] %}
-                                      <option value="{{item['campaign_id']}}">{{item['campaign_name']}}</option>
+                                      <option id="message_campaign_id{{item['campaign_id']}}" value="{{item['campaign_id']}}">{{item['campaign_name']}}</option>
                                       {% endfor %}
                                  </select>
                             </div>
@@ -1122,6 +1119,27 @@ function getCampaign_ids(channel_id){
     $(document).ready(function () {
        var subscriberCount_gained = abbrNum(1234,2);
         <!--alert(subscriberCount_gained);-->
+        <!--alert('document ready');-->
+
+        function imageExists(image_url){
+            var http = new XMLHttpRequest();
+            http.open('HEAD', image_url, false);
+            http.send();
+            return http.status != 404;
+        }
+        function image_status(image_url,channel_id){
+            var status = imageExists(image_url);
+            if(status === true){
+                $("#channel_img-"+channel_id).attr("src",image_url);
+            }
+            else{
+                $("#channel_img-"+channel_id).attr("src","../static/img/fixed_image.png");
+            }
+        }
+        {% for item in data['data'] %}
+            image_status('{{item['channel_img']}}','{{item['channel_id']}}');
+        {% endfor %}
+
     });
 </script>
 

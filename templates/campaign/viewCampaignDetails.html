@@ -5,7 +5,7 @@
 
 <div class="row">
     <div class="col-sm-12">
-        <div class="content-header">Campaign dashboard
+        <div class="content-header">Campaign Details
             <div class="btn-wrapper">
                 <!-- Single Button Dropdown -->
                 <div class="btn-group mr-1 mb-1">
@@ -257,7 +257,7 @@
                                     <td class="align-middle" id="new_users_total{{ youtube_inf_data['channel_id'] }}"></td>
                                     <td class="align-middle"></td>
                                     <td class="align-middle"></td>
-                                    <td class="align-middle"></td>
+                                    <td class="align-middle" style="color:purple;">Coming soon</td>
                                 </tr>
                                 {% if youtube_inf_data['proposal_channels'] %}
                                 {% set channels = youtube_inf_data['proposal_channels'].split(',') %}
@@ -349,7 +349,7 @@
 
 <!-- add report Modal form-->
 <div class="modal fade" id="addReport" role="dialog"  data-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Add Report</h4>
@@ -375,7 +375,7 @@
 
 <!-- edit report Modal form-->
 <div class="modal fade" id="edit_brand_Report_modal" role="dialog"  data-backdrop="static" style="top: 0 !important;">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Edit Report</h4>
@@ -485,8 +485,8 @@
                 '<div class="col-12 mb-1 d-inline-flex align-items-center">'+
                 '<input type="hidden" name="channel_id" value="'+channel+'">'+
                 '<i class="fa '+social(channel_final[0])+'"></i><span class="text-capitalize ml-1">'+channel_final[0]+'</span></div>'+
-                '<div class="col-md-5 col-12 mb-1"><input class="form-control" type="number" name="revenue" placeholder="Revenue Generated"></div>'+
                 '<div class="col-md-5 col-12 mb-1"><input class="form-control" type="number" name="new_users" placeholder="New Users"></div>'+
+                '<div class="col-md-5 col-12 mb-1"><input class="form-control" type="number" name="revenue" placeholder="Revenue Generated"></div>'+
                 '<div class="col-md-2 col-12 mb-2"><select class="form-control" name="currency">'+
                 '<option value="USD">USD</option>'+
                 '<option value="EUR">EUR</option>'+
@@ -520,8 +520,8 @@
                             '<div class="col-12 mb-1">'+
                             '<input type="hidden" name="channel_id" value="'+val.channel_id+'">'+
                             '<i class="fa '+social(val.channel)+'"></i><span class="ml-1 d-inline-flex align-items-center text-capitalize">' + val.channel +'</span></div>'+
-                            '<div class="col-md-5 col-12 mb-1"><input class="form-control" type="number" name="revenue" placeholder="Revenue Generated" value="'+val.revenue_generated+'"></div>'+
                             '<div class="col-md-5 col-12 mb-1"><input class="form-control" type="number" name="new_users" placeholder="New Users" value="'+val.new_users+'"></div>'+
+                            '<div class="col-md-5 col-12 mb-1"><input class="form-control" type="number" name="revenue" placeholder="Revenue Generated" value="'+val.revenue_generated+'"></div>'+
                             '<div class="col-md-2 col-12 mb-1"><select class="form-control" name="currency">'+
                             '<option value="'+val.currency+'">'+val.currency+'</option>'+
                             '<option value="USD">USD</option>'+

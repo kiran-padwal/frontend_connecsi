@@ -35,7 +35,7 @@ campaign_files = UploadSet('campaignfiles')
 brands_classified_files = UploadSet('brandsclassifiedfiles', IMAGES)
 offer_files = UploadSet('offerfiles', IMAGES)
 message_files = UploadSet('messagefiles', IMAGES)
-message_agreements = UploadSet('messageagreements')
+message_agreements = UploadSet('messageagreements',('pdf', 'docx'))
 
 # ROOT_DIR = os.path.dirname(os.path.abspath(__file__)) # This is your Project Root
 # print(ROOT_DIR+'\\static\\img')
@@ -1427,6 +1427,18 @@ def getCampaignsAddedToMessage(message_id):
         print(item)
     return jsonify(results=response_json['data'])
 
+@connecsiApp.route('/getCampaignsAddedToMessageByChannelId/<string:channel_id>',methods=['GET','POST'])
+@is_logged_in
+def getCampaignsAddedToMessageByChannelId(channel_id):
+    url = base_url + 'Messages/getCampaignsAddedToMessageByChannelId/'+channel_id
+    print(url)
+    response = requests.get(url=url)
+    response_json = response.json()
+    for item in response_json['data']:
+        print(item)
+    return jsonify(results=response_json['data'])
+
+
 
 @connecsiApp.route('/deleted',methods = ['GET'])
 @is_logged_in
@@ -1895,9 +1907,13 @@ def uploadMessageAgreements():
         # exit()
 
         filenames = []
-        for file in files:
-            filename = message_agreements.save(file)
-            filenames.append(filename)
+        try:
+            for file in files:
+                filename = message_agreements.save(file)
+                filenames.append(filename)
+        except Exception as e:
+            print(e)
+            return 'Only PDF and Docx Files are allowed as Agreements'
         filenames_string = ','.join(filenames)
         payload.update({'message_agreements': filenames_string})
         print(payload)
@@ -2894,10 +2910,12 @@ def updateProfile_inf():
             for item in youtube_video_categories:
                 print(item)
                 res = requests.get(url=base_url+'Influencer/addCategoriesToChannel/'+str(user_id)+'/'+str(item))
-                for item_twitter_id in res_mapped_channels_json['data']:
-                    print(item_twitter_id['twitter_channel_id'])
-                    if item_twitter_id['twitter_channel_id']:
-                       res = requests.get(url=base_url + 'Influencer/addCategoriesToTwitterChannel/' + str(item_twitter_id['twitter_channel_id']) + '/' + str(item))
+                for channel_id in res_mapped_channels_json['data']:
+                    print(channel_id['twitter_channel_id'])
+                    if channel_id['twitter_channel_id']:
+                       res = requests.get(url=base_url + 'Influencer/addCategoriesToTwitterChannel/' + str(channel_id['twitter_channel_id']) + '/' + str(item))
+                    if channel_id['insta_channel_id']:
+                       res = requests.get(url=base_url + 'Influencer/addCategoriesToInstaChannel/' + str(channel_id['insta_channel_id']) + '/' + str(item))
                 print(res.json())
             return redirect(url_for("inf_editProfile"))
         except:

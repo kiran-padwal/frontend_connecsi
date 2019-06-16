@@ -749,9 +749,34 @@ $(document).ready(function () {
     });
 
     $('.send-message').on('click', function (e) {
+//        alert('i m here');
         $("#message_channel_id").val($(this).attr('data-channel-id'));
         $("#to_email_id").val($(this).attr('data-business-email'));
         $("#title").val($(this).attr('data-title'));
+//        $( "input.campaign_ids" ).prop('checked', false);
+//        $( "input.campaign_ids" ).prop('disabled', false);
+//        $("#campaign_channel_id").val($channel_id);
+        var $channel_id = $(this).attr('data-channel-id');
+//        alert($channel_id);
+        var $channel_id = $channel_id.split('@');
+        var $channel_id = $channel_id[0];
+//        alert($channel_id);
+        $('#message_campaign_id option').prop('disabled', false);
+        $.ajax({
+            type: "GET",
+            url: '/getCampaignsAddedToMessageByChannelId/' + $channel_id,
+            contentType: 'application/json;charset=UTF-8',
+            success: function (data) {
+                if (data.results.length != 0) {
+                    jQuery.each(data.results, function (i, val) {
+//                        if($('#campaign_id'+val.campaign_id).length){
+//                            alert(val.campaign_id);
+                            $('#message_campaign_id'+val.campaign_id).attr('disabled', true);
+//                        }
+                    });
+                }
+            }
+        });
     });
 
 
@@ -1557,7 +1582,7 @@ $(document).ready(function () {
 
         $.ajax({
             type: "GET",
-            url: '/getCampaignsAddedToMessage/' + $message_id,
+            url: '/getCampaignsAddedToMessageByChannelId/' + $channel_id,
             contentType: 'application/json;charset=UTF-8',
             success: function (data) {
                 if (data.results.length != 0) {
