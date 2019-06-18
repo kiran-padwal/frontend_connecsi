@@ -1226,7 +1226,14 @@ def inbox(message_id):
                message_id_list.append(item['message_id'])
         # print(mylist)
         for item in conv_data['data']:
-            if item['to_email_id'] == email_id and item['message_id'] not in message_id_list:
+            # if item['to_email_id'] == email_id and item['message_id'] not in message_id_list:
+            if item['to_email_id'] == email_id :
+               # message_id1 = item['message_id']
+               # print(message_id1)
+               # for message in data['data']:
+               #     if message_id1 == message['message_id']:
+               #        read = message['read']
+               #        item.update({'read': read})
                inboxList.append(item)
         print('inboxList  =',inboxList)
         inboxSorted = sorted(inboxList, key=lambda k: k['message_id'])
@@ -1376,8 +1383,14 @@ def inbox(message_id):
             print('message inbox = ',item)
 
         inbox['data'].sort(key=lambda x: datetime.datetime.strptime(x['date'], '%A, %d. %B %Y %I:%M%p'),reverse=True)
+        message_id_list1 = []
         for item in inbox['data']:
-            print('after sorting inbox = ',item)
+            if item['message_id'] not in message_id_list1:
+                message_id_list1.append(item['message_id'])
+            else:
+                inbox['data'].remove(item)
+                print('after sorting inbox = ',item)
+        print(message_id_list1)
         ############## sort end ####################################
         return render_template('email/inbox.html', inbox = inbox, full_conv = full_conv, conv_title=conv_title,view_campaign_data=view_campaign_data)
     except Exception as e:
@@ -1391,6 +1404,41 @@ def inbox(message_id):
     print('final conv default = ', full_conv)
 
     return render_template('email/inbox.html',inbox=inbox, full_conv = full_conv,conv_title=conv_title,view_campaign_data=view_campaign_data)
+
+
+@connecsiApp.route('/update_message_as_read/<string:message_id>',methods=['GET'])
+@is_logged_in
+def update_message_as_read(message_id):
+    url = base_url+'Messages/update_message_as_read/'+str(message_id)
+    try:
+        requests.get(url=url)
+        return 'read message'
+    except Exception as e:
+        print(e)
+        return 'error while opening message'
+
+@connecsiApp.route('/update_conversation_as_read/<string:conv_id>',methods=['GET'])
+@is_logged_in
+def update_conversation_as_read(conv_id):
+    url = base_url+'Messages/update_conversation_as_read/'+str(conv_id)
+    try:
+        requests.get(url=url)
+        return 'read'
+    except Exception as e:
+        print(e)
+        return 'error while opening message'
+
+@connecsiApp.route('/get_all_unread_messages',methods=['GET'])
+@is_logged_in
+def get_all_unread_messages():
+    to_email_id = session['email_id']
+    url = base_url+'Messages/getAllUnreadMessages/'+str(to_email_id)
+    try:
+        response = requests.get(url=url)
+        return jsonify(results=response.json())
+    except Exception as e:
+        print(e)
+        return 'error while getting unread messages'
 
 
 @connecsiApp.route('/addCampaignsToMessage',methods=['POST','GET'])

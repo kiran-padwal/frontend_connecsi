@@ -1709,6 +1709,9 @@ $("#add_insta_channel_form").submit(function(e) {
         e.preventDefault(); // avoid to execute the actual submit of the form.
     });
 
+getAllUnreadMessagesCount();
+
+
 });
 function goBack() {
         window.history.back();
@@ -1748,4 +1751,24 @@ function abbrNum(number, decPlaces) {
     }
 
     return number;
+}
+
+
+
+function getAllUnreadMessagesCount(){
+         $.ajax({
+               type: "GET",
+               url: '/get_all_unread_messages',
+               success: function(data)
+               {
+//                   alert(data); // show response from the python script.
+//                   $('#myinbox').append('<span class="badge badge-pill badge-danger">{{glob.total_unread_messages}}</span>');
+                   jQuery.each(data.results, function (i, val) {
+//                        alert(i);
+                        $('#myinbox').append('<span class="badge badge-pill badge-danger">'+val+'</span>');
+                        $('#myinbox_left_side_nav').append('<span class="badge badge-pill badge-danger">'+val+'</span>');
+                    });
+               }
+         });
+
 }

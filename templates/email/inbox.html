@@ -8,6 +8,7 @@
 {% block body %}
 
 {% set _ = glob.update({'channel_id' : 'None'}) %}
+{% set _ = glob.update({'total_unread_messages' : 0}) %}
 {% for item in full_conv['data'] %}
     {% if item['channel_id'] %}
         {% set _ = glob.update({'channel_id' : item['channel_id'] }) %}
@@ -64,7 +65,16 @@
                                                     <div class="list-group">
                                                         <div class="users-list-padding">
                                                             {% for item in inbox['data'] %}
-                                                            <a id="message{{ item['message_id'] }}" href="/inbox/{{ item['message_id'] }}" class="list-group-item list-group-item-url list-group-item-action no-border">
+                                                            <a
+                                                                    {% if item['conv_id'] %}
+                                                                        onclick="update_conversation_as_read('{{item['conv_id']}}')"
+                                                                    {% else %}
+                                                                        onclick="update_message_as_read('{{item['message_id']}}')"
+                                                                    {% endif %}
+                                                                    href="/inbox/{{ item['message_id'] }}"
+                                                                    id="message{{ item['message_id'] }}"
+                                                                    class="list-group-item list-group-item-url list-group-item-action no-border"
+                                                            >
                                     <span class="media">
                                         <span class="avatar avatar-md mr-2">
                                             {% if item['img'] %}
@@ -74,11 +84,12 @@
                                             {% endif %}
                                         </span>
                                         <div class="media-body">
-                                            <h6 class="list-group-item-heading text-bold-500">{{ item['first_name'] }}
-                                                {% if item['read'] == 'false' %}
-                                                <span class="badge badge-primary">Unread</span>
+                                            {% if item['read'] == 'false' %}
+                                            <h6 class="list-group-item-heading text-bold-500" style="color:black;">{{ item['first_name'] }}
+                                                <!--<span class="badge badge-primary">Unread</span>-->
+                                                {% set _ = glob.update({'total_unread_messages' : glob.total_unread_messages + 1 }) %}
                                                 {% else %}
-
+                                            <h6 class="list-group-item-heading">{{ item['first_name'] }}
                                                 {% endif %}
                                             </h6>
                                             <span class="font-small-2 primary text-bold-300">{{ item['date'] }}</span>
@@ -639,6 +650,38 @@
 
 
 <script>
+function update_message_as_read(message_id){
+        <!--alert(message_id);-->
+         $.ajax({
+               type: "GET",
+               url: '/update_message_as_read/'+message_id,
+               success: function(data)
+               {
+                   alert(data); // show response from the python script.
+                   <!--window.location.reload();-->
+                   <!--location.href = "http://www.example.com/ThankYou.html"-->
+
+               }
+         });
+
+}
+function update_conversation_as_read(conv_id){
+        <!--alert(message_id);-->
+         $.ajax({
+               type: "GET",
+               url: '/update_conversation_as_read/'+conv_id,
+               success: function(data)
+               {
+                   alert(data); // show response from the python script.
+                   <!--window.location.reload();-->
+                   <!--location.href = "http://www.example.com/ThankYou.html"-->
+
+               }
+         });
+
+}
+
+
 function accept_decline(message_id,campaign_id,status){
             if(confirm("Are you sure you want to "+status+" this Proposal?")){
                 $.ajax({
@@ -974,7 +1017,12 @@ function getProposal(message_id,campaign_id){
         });
     }
 
+    $(document).ready(function(){
 
+            <!--alert('{{glob.total_unread_messages}}');-->
+            <!--$('#myinbox').append('<span class="badge badge-pill badge-danger">{{glob.total_unread_messages}}</span>')-->
+
+    });
 </script>
 
 
