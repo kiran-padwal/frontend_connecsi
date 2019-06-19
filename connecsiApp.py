@@ -510,8 +510,8 @@ def searchInfluencers():
             channel = request.form.get('channel')
             url = base_url+'Youtube/searchChannels/'+channel
             print(url)
-            del payload['channel']
-            del payload['string_word']
+            # del payload['channel']
+            # del payload['string_word']
             print(payload)
             response = requests.post(url, json=payload)
             print(response.json())

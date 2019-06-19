@@ -588,7 +588,7 @@
 
                             $('#'+val.channel_name).prepend(
                                 '<div class="row '+ val.channel_name +'">'+
-                                '<div class="col-sm-1"><a href="'+val.link_posted+'" target="_blank"><i class="fa fa-link"></i></a></div>'+
+                                '<div class="col-sm-1"><a href="'+val.link_posted+'" target="_blank"><i class="fa fa-link" style="font-size:10pt;"></i></a></div>'+
                                 '<div class="col-sm-3">'+val.date_posted+'</div>'+
                                 '<div class="col-sm-2">'+val.content_type+'</div>'+
                                 '<div class="col-sm-1">'+val.post_clicks+'</div>'+
@@ -879,7 +879,7 @@
 
     function editInfReport(inf_campaign_report_id) {
 
-        alert(inf_campaign_report_id);
+        <!--alert(inf_campaign_report_id);-->
 
         $.ajax({
             type: "GET",
@@ -943,7 +943,7 @@
                         <!--alert(val.channel_name);-->
                         $('#'+val.channel_name).prepend(
                             '<div class="row '+ val.channel_name +'">'+
-                            '<div class="col-sm-1"><a href="'+val.link_posted+'" target="_blank"><i class="fa fa-link"></i></a></div>'+
+                            '<div class="col-sm-1"><a href="'+val.link_posted+'" target="_blank"><i class="fa fa-link" style="font-size:10pt;"></i></a></div>'+
                             '<div class="col-sm-3">'+val.date_posted+'</div>'+
                             '<div class="col-sm-2">'+val.content_type+'</div>'+
                             '<div class="col-sm-1">'+val.post_clicks+'</div>'+
