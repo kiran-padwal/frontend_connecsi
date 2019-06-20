@@ -429,7 +429,21 @@ $(document).ready(function () {
     $('.delete-message').on('click', function(e){
         e.preventDefault();
         e.stopPropagation();
-        window.location.href = $(this).attr('data-location');
+        var action_url = $(this).attr('data-location');
+//        alert(action_url);
+        $.ajax({
+            type: "GET",
+            url: action_url,
+//            data: new FormData(form[0]),
+//            cache: false,
+//            contentType: false,
+//            processData: false,
+            success: function(data)
+            {
+                alert(data);
+                window.location.reload();
+            }
+        });
     });
 
     $('.reply-message-sent').on('click', function(e){

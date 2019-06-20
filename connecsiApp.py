@@ -1495,8 +1495,10 @@ def deleted():
     user_id = session['user_id']
     type = session['type']
     email_id = session['email_id']
-    url = base_url + 'Messages/' + str(user_id) + '/'+ type
-    conv_url = base_url + 'Messages/conversations/all/'+type
+    # url = base_url + 'Messages/' + str(user_id) + '/'+ type
+    # conv_url = base_url + 'Messages/conversations/all/'+type
+    url = base_url + 'Messages/' + str(user_id) + '/' + type
+    conv_url = base_url + 'Messages/conversations/' + str(email_id)
     print(conv_url)
     # conv_url = base_url + 'Messages/conversations/' + str(email_id)
     try:
@@ -1512,60 +1514,72 @@ def deleted():
         for item in messages['data']:
             if item['deleted'] == 'true':
                deleted_list.append(item)
-        # print(mylist)
+        print(deleted_list)
         for item in conv_data['data']:
             if item['deleted'] == 'true':
                deleted_list.append(item)
         deleted_dict = {}
         deleted_dict.update({'data':deleted_list})
-        print('deleted dict = ',deleted_dict)
-        # exit()
+        print('deleted dict 123 = ',deleted_dict)
 
         # ########################### get conversations
         collapse_id = 1
         for item in deleted_dict['data']:
             full_conv_user_id = item['user_id']
-            # print(full_conv_user_id)
+            print(full_conv_user_id)
             full_conv_user_type = item['user_type']
+            print(full_conv_user_type)
             first_name = ''
             if full_conv_user_type == 'brand':
                 brand_details_url = base_url+'/Brand/'+str(full_conv_user_id)
                 brand_details_resposne = requests.get(url=brand_details_url)
                 brand_details_json = brand_details_resposne.json()
-                # print(brand_details_json)
+                print(brand_details_json)
                 first_name = brand_details_json['data']['first_name']
             elif full_conv_user_type == 'influencer':
-                influencer_details_url = base_url + '/Influencer/' + str(full_conv_user_id)
+                full_conv_email_id = item['from_email_id']
+                influencer_details_url = base_url + '/Influencer/GetDetailsByEmailId/' + str(full_conv_email_id)
                 influencer_details_resposne = requests.get(url=influencer_details_url)
                 influencer_details_json = influencer_details_resposne.json()
-                # print(influencer_details_json)
+                print('INF DETAILS=======', influencer_details_json)
+                inf_channel_id = influencer_details_json['data']['channel_id']
+                print('INF CHANNEL ID ======', inf_channel_id)
+                item.update({'channel_id': inf_channel_id})
                 first_name = influencer_details_json['data']['first_name']
+                if first_name == '':
+                    first_name = full_conv_email_id
             item.update({'first_name': first_name})
-            item.update({'collapse_id':collapse_id})
+            item.update({'collapse_id': collapse_id})
             # print(item)
             collapse_id+=1
 
 ################ remove deleted message from inbox and conv ##################
+        print('hello')
         removed_deleted_messages_from_conv = []
         for item in deleted_dict['data']:
             try:
                 deleted_from_user_id_string = item['deleted_from_user_id']
-                deleted_from_user_id_list = deleted_from_user_id_string.split(',')
-                print('deleted user list', deleted_from_user_id_list)
-                if str(user_id) in deleted_from_user_id_list:
-                    removed_deleted_messages_from_conv.append(item)
+                print(deleted_from_user_id_string)
+                try:
+                    deleted_from_user_id_list = deleted_from_user_id_string.split(',')
+                    print('deleted user list', deleted_from_user_id_list)
+                    if str(user_id) in deleted_from_user_id_list:
+                        removed_deleted_messages_from_conv.append(item)
+                except Exception as e:
+                    print(e)
             except Exception as e:
+                print('i m in exception')
                 removed_deleted_messages_from_conv.append(item)
-                pass
+                # pass
                 print(e)
         deleted_dict.update({'data':removed_deleted_messages_from_conv})
         print('deleted messages',deleted_dict)
 ############################################################
         # ####################################
         return render_template('email/deleted.html', deleted_dict = deleted_dict)
-    except:
-        pass
-    return render_template('email/deleted.html',deleted_dict = deleted_dict)
+    except Exception as e:
+        print(e)
+        return render_template('email/deleted.html',deleted_dict = deleted_dict)
 
 
 
@@ -1646,25 +1660,29 @@ def sent():
 @connecsiApp.route('/delete/<string:message_id>/<string:conv_id>/<string:user_id>', methods = ['GET'])
 @is_logged_in
 def delete(message_id,conv_id,user_id):
-    # print(message_id,conv_id)
+    print(message_id,conv_id)
     conv_id = int(conv_id)
-    # print(type(conv_id))
+    print(type(conv_id))
     print(user_id)
-    if conv_id != 0:
-        url_delete_msg_from_conv = base_url+'Messages/conversations/delete/'+str(message_id)+'/'+str(conv_id)+'/'+str(user_id)
-        print(url_delete_msg_from_conv)
-        response = requests.put(url=url_delete_msg_from_conv)
-        print(response.json())
-        flash('message moved to deleted', 'warning')
-        return redirect(url_for('admin'))
-    else:
-        url_delete_msg_from_messages = base_url+'Messages/delete/'+str(message_id)+'/'+str(user_id)
-        print(url_delete_msg_from_messages)
-        response = requests.put(url=url_delete_msg_from_messages)
-        print(response.json())
-        flash('message moved to deleted', 'warning')
-        return redirect(url_for('admin'))
-
+    try:
+        if conv_id != 0:
+            url_delete_msg_from_conv = base_url+'Messages/conversations/delete/'+str(message_id)+'/'+str(conv_id)+'/'+str(user_id)
+            print(url_delete_msg_from_conv)
+            response = requests.put(url=url_delete_msg_from_conv)
+            print(response.json())
+            flash('message moved to deleted', 'warning')
+            return 'message from conversation deleted'
+        else:
+            url_delete_msg_from_messages = base_url+'Messages/delete/'+str(message_id)+'/'+str(user_id)
+            print(url_delete_msg_from_messages)
+            response = requests.put(url=url_delete_msg_from_messages)
+            print(response.json())
+            # flash('message moved to deleted', 'warning')
+            return 'message deleted'
+    except Exception as e:
+        print(e)
+        pass
+        return 'unable to delete message'
 
 @connecsiApp.route('/compose')
 @is_logged_in
