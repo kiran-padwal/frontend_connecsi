@@ -1301,7 +1301,7 @@ $(document).ready(function () {
                             '<div class="offers_item__footer">' +
                             '<div class="row d-flex align-items-center mt-2">' +
                             ' <div class="col-md-6 d-flex flex-row align-items-center">' +
-                            '<img src="/static/img/fixed_image.png" class="rounded offers_item__profile-thumb d-block" alt="Card image">' +
+                            '<img src="/static/img/'+value.profile_pic+'" class="rounded offers_item__profile-thumb d-block" alt="Card image">' +
                             '<span>'+value.first_name + ' ' + value.last_name +'</span>'+
                             '</div>' +
                             ' <div class="col-md-6 text-right">' +

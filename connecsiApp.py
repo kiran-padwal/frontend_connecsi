@@ -1512,10 +1512,12 @@ def deleted():
         ###################### get inbox
         deleted_list=[]
         for item in messages['data']:
+            print('mess =',item)
             if item['deleted'] == 'true':
                deleted_list.append(item)
         print(deleted_list)
         for item in conv_data['data']:
+            print('conv=',item)
             if item['deleted'] == 'true':
                deleted_list.append(item)
         deleted_dict = {}
