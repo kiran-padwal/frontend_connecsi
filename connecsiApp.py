@@ -1496,9 +1496,9 @@ def deleted():
     type = session['type']
     email_id = session['email_id']
     # url = base_url + 'Messages/' + str(user_id) + '/'+ type
-    # conv_url = base_url + 'Messages/conversations/all/'+type
+    conv_url = base_url + 'Messages/conversations/all/'+type
     url = base_url + 'Messages/' + str(user_id) + '/' + type
-    conv_url = base_url + 'Messages/conversations/' + str(email_id)
+    # conv_url = base_url + 'Messages/conversations/' + str(email_id)
     print(conv_url)
     # conv_url = base_url + 'Messages/conversations/' + str(email_id)
     try:
