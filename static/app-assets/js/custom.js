@@ -1201,6 +1201,7 @@ $(document).ready(function () {
                 jQuery.each(data.results, function(index, value) {
                     var file = value.files.split(",");
                     var channel = value.channels.split(",");
+                    var fix_img = 'fixed_image.png';
                         $('#classifiedData').append('<div class="col-sm-6">' +
                             '<div class="card offers_item">' +
                             '<div class="card-header">' +
@@ -1301,7 +1302,7 @@ $(document).ready(function () {
                             '<div class="offers_item__footer">' +
                             '<div class="row d-flex align-items-center mt-2">' +
                             ' <div class="col-md-6 d-flex flex-row align-items-center">' +
-                            '<img src="/static/img/'+value.profile_pic+'" class="rounded offers_item__profile-thumb d-block" alt="Card image">' +
+                            (value.profile_pic != "" ? '<img src="/static/img/'+value.profile_pic+'" class="rounded offers_item__profile-thumb d-block" alt="Card image">' : '<img src="/static/img/'+fix_img+'" class="rounded offers_item__profile-thumb d-block" alt="Card image">') +
                             '<span>'+value.first_name + ' ' + value.last_name +'</span>'+
                             '</div>' +
                             ' <div class="col-md-6 text-right">' +
