@@ -31,29 +31,29 @@
                         </div>
                     </div>
 
-                        <div class="email-application sent" id="email-application" data-email="false">
-                                <div class="email-app-content w-100">
-                                    <div class="email-app-content-area w-100">
-                                        <div class="email-app-mail-content-sent">
-                                            <div class="email-app-mail-content-detail">
-                                                <div class="email-app-title card-block">
-                                                    <h3 class="list-group-item-heading">{{ conv_title }}</h3>
-                                                    <p class="list-group-item-text">
-                                                    </p>
-                                                </div>
-                                                <div class="media-list">
-                                                    {% if sent['data'] %}
-                                                    {{ 'Outbox' }}
-                                                    {% else %}
-                                                    {{ 'Nothing To Show...' }}
-                                                    {% endif %}
-                                                    {% for item in sent['data'] %}
-                                                    <div id="headingCollapse{{ item['collapse_id'] }}" class="card-header p-0">
-                                                        <a data-toggle="collapse" href="#collapse{{ item['collapse_id'] }}" aria-expanded="false"
-                                                           aria-controls="collapse{{ item['collapse_id'] }}"
-                                                           class="email-app-sender list-group-item list-group-item-action no-border collapsed">
+                    <div class="email-application sent" id="email-application" data-email="false">
+                        <div class="email-app-content w-100">
+                            <div class="email-app-content-area w-100">
+                                <div class="email-app-mail-content-sent">
+                                    <div class="email-app-mail-content-detail">
+                                        <div class="email-app-title card-block">
+                                            <h3 class="list-group-item-heading">{{ conv_title }}</h3>
+                                            <p class="list-group-item-text">
+                                            </p>
+                                        </div>
+                                        <div class="media-list">
+                                            {% if sent['data'] %}
+                                            {{ 'Outbox' }}
+                                            {% else %}
+                                            {{ 'Nothing To Show...' }}
+                                            {% endif %}
+                                            {% for item in sent['data'] %}
+                                            <div id="headingCollapse{{ item['collapse_id'] }}" class="card-header p-0">
+                                                <a data-toggle="collapse" href="#collapse{{ item['collapse_id'] }}" aria-expanded="false"
+                                                   aria-controls="collapse{{ item['collapse_id'] }}"
+                                                   class="email-app-sender list-group-item list-group-item-action no-border collapsed">
 
-                                                            <div class="media">
+                                                    <div class="media">
                                     <span class="avatar avatar-md mr-2">
                                             {% if item['img'] %}
                                             <img class="media-object rounded-circle" src="static/app-assets/img/portrait/small/avatar-s-7.png" alt="Generic placeholder image">
@@ -61,10 +61,10 @@
                                             <span class="media-object rounded-circle text-circle d-flex mr-2 justify-content-center align-items-center bg-purple">{{ item['from_email_id'][0] }}</span>
                                             {% endif %}
                                     </span>
-                                                                <div class="media-body">
-                                                                    <h6 class="list-group-item-heading text-bold-500">{{ item['first_name'] }}</h6>
-                                                                    <p class="list-group-item-text text-bold-300">{{ item['subject'] }}
-                                                                        <span class="float-right">
+                                                        <div class="media-body">
+                                                            <h6 class="list-group-item-heading text-bold-500">{{ item['first_name'] }}</h6>
+                                                            <p class="list-group-item-text text-bold-300">{{ item['subject'] }}
+                                                                <span class="float-right">
                                                 {% if item['to_email_id'] == session['email_id'] %}
                                                 <button class="reply-message-sent transparent-btn color2" data-location="/reply/{{ item['message_id'] }}/{{ item['from_email_id'] }}/{{ item['subject'] }}" data-from-email-id="{{ item['from_email_id'] }}" data-subject="{{ item['subject'] }}"><i class="fa fa-reply mr-1"></i></button>
                                                 {% endif %}
@@ -72,24 +72,22 @@
                                                     <img src="/static/icons/delete.png" class="img-icon" alt="">
                                                 </button>
                                             </span>
-                                                                    </p>
-                                                                    <span class="float-left text muted text-bold-300">{{ item['date'] }}</span>
-                                                                </div>
-                                                            </div>
-
-                                                        </a>
-                                                    </div>
-                                                    <div id="collapse{{ item['collapse_id'] }}" role="tabpanel" aria-labelledby="headingCollapse{{ item['collapse_id'] }}"
-                                                         class="card-collapse collapse" aria-expanded="false">
-                                                        <div class="card-body">
-                                                            <div class="card-block text-bold-300">
-                                                                {{ item['message']|safe }}
-                                                            </div>
+                                                            </p>
+                                                            <span class="float-left text muted text-bold-300">{{ item['date'] }}</span>
                                                         </div>
                                                     </div>
-                                                    {% endfor %}
+
+                                                </a>
+                                            </div>
+                                            <div id="collapse{{ item['collapse_id'] }}" role="tabpanel" aria-labelledby="headingCollapse{{ item['collapse_id'] }}"
+                                                 class="card-collapse collapse" aria-expanded="false">
+                                                <div class="card-body">
+                                                    <div class="card-block text-bold-300">
+                                                        {{ item['message']|safe }}
+                                                    </div>
                                                 </div>
                                             </div>
+                                            {% endfor %}
                                         </div>
                                     </div>
                                 </div>
@@ -100,6 +98,12 @@
             </div>
         </div>
     </div>
+</div>
 
+<script>
+    $(document).ready(function(){
+        getAllUnreadMessagesCount();
+    });
+</script>
 {% endblock %}
 
