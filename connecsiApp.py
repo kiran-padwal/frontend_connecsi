@@ -3296,6 +3296,16 @@ def getOffers():
         response = requests.post(url=url,json=payload)
         print(response.json())
         response_json = response.json()
+        for item in response_json['data']:
+            channel_id = item['channel_id']
+            user_inf_data = requests.get(url=base_url + 'Influencer/getDetailsByUserId/' + str(channel_id))
+            user_inf_data_json = user_inf_data.json()
+            print(user_inf_data_json)
+            channel_img=''
+            for item1 in user_inf_data_json['data']:
+                channel_img = item1['channel_img']
+            item.update({'channel_img':channel_img})
+            print(item)
         return jsonify(results=response_json['data'])
         # return 'ajax working'
 
