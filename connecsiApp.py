@@ -1593,15 +1593,18 @@ def sent():
     user_id = session['user_id']
     type = session['type']
     email_id = session['email_id']
-    url = base_url + 'Messages/' + str(user_id) + '/' + type
+    # url = base_url + 'Messages/' + str(user_id) + '/' + type
+    url = base_url + 'Messages/getSentMessages/' + str(email_id)
     conv_url = base_url + 'Messages/conversations/sent/' + str(email_id)
     try:
         response = requests.get(url=url)
         data = response.json()
-        # print('messages = ', data)
+        for mess in data['data']:
+            print('mess = ', mess)
         conv_resposne = requests.get(url=conv_url)
         conv_data = conv_resposne.json()
-        # print('conv = ', conv_data)
+        for conv in conv_data['data']:
+            print('conv = ', conv)
         ###################### get sent
         sentList = []
         for item in data['data']:
@@ -1614,7 +1617,7 @@ def sent():
 
         sent = {}
         sent.update({'data': sentList})
-        # print('sent = ', sent)
+        print('sent = ', sent)
 
         collapse_id = 1
         for item in sent['data']:
@@ -1629,7 +1632,8 @@ def sent():
                 # print(brand_details_json)
                 first_name = brand_details_json['data']['first_name']
             elif sent_user_type == 'influencer':
-                influencer_details_url = base_url + '/Influencer/' + str(sent_user_id)
+                full_conv_email_id = item['from_email_id']
+                influencer_details_url = base_url + '/Influencer/GetDetailsByEmailId/' + str(full_conv_email_id)
                 influencer_details_resposne = requests.get(url=influencer_details_url)
                 influencer_details_json = influencer_details_resposne.json()
                 # print(influencer_details_json)
@@ -1652,9 +1656,9 @@ def sent():
         print('removed deleted', sent)
 
         return render_template('email/sent.html', sent=sent)
-    except:
-        pass
-    return render_template('email/sent.html', sent=sent)
+    except Exception as e:
+        print(e)
+        return render_template('email/sent.html', sent=sent)
 
 
 

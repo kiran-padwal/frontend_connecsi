@@ -66,7 +66,13 @@
                                             {% endif %}
                                     </span>
                                                         <div class="media-body">
-                                                            <h6 class="list-group-item-heading text-bold-500">{{ item['first_name'] }}</h6>
+                                                            <h6 class="list-group-item-heading text-bold-500">
+                                                            {% if item['to_email_id'] == session['email_id'] %}
+                                                                            {{ item['first_name'] }}
+                                                                        {% else %}
+                                                                            You
+                                                                        {% endif %}    
+                                                            </h6>
                                                             <p class="list-group-item-text text-bold-300">{{ item['subject'] }}
                                                                 <span class="float-right"></span>
                                                             </p>
