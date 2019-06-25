@@ -249,7 +249,7 @@
                                         {% endfor %}
                                         {% endif %}
                                     </td>
-                                    <td class="align-middle" ></td>
+                                    <td class="align-middle" >{{youtube_inf_data['proposal_price']}}</td>
                                     <td class="align-middle" id="revenue_total{{ youtube_inf_data['channel_id'] }}"></td>
                                     <td class="align-middle"></td>
                                     <td class="align-middle"></td>
@@ -266,9 +266,6 @@
 
                                 <tr class="{{ youtube_inf_data['channel_id'] }}" style="display: none">
                                     <td class="align-middle">
-                                        <!--<a href="#" data-toggle="tooltip" title="Add Report"><img src="/static/icons/writing.png" height="14px" width="13px"></a>-->
-                                        <!--<a href="#" data-toggle="tooltip" title="Edit Report"><img src="/static/icons/edit.png" height="14px" width="13px"></a>-->
-                                        <!--<a id="delReport{{ channel_final[1] }}" data-toggle="tooltip" title=" Delete Report"><img src="/static/icons/delete.png" height="14px" width="13px"></a>-->
                                     </td>
                                     <td class="align-middle"></td>
                                     <td class="align-middle" id="channel">{{ channel_final[0] }}</td>
@@ -280,7 +277,7 @@
                                     <td class="align-middle" id="new_users{{ channel_final[1] }}"></td>
                                     <td class="align-middle"></td>
                                     <td class="align-middle"></td>
-                                    <td class="align-middle"></td>
+                                    <td class="align-middle" style="color:purple;">Coming soon</td>
                                 </tr>
 
                                 {% endfor %}

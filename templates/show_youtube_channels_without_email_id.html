@@ -23,6 +23,7 @@
                 <tr>
                     <th scope="col"><b style="font-weight: 500; font-size:16px;">From</b></th>
                     <th scope="col"><b style="font-weight: 500; font-size:16px;">To</b></th>
+                    <th scope="col"><b style="font-weight: 500; font-size:16px;">Title</b></th>
                     <th scope="col"><b style="font-weight: 500; font-size:16px;">Channel URL</b></th>
                     <th scope="col"><b style="font-weight: 500; font-size:16px;">Date</b></th>
                     <th scope="col"><b style="font-weight: 500; font-size:16px;">Action</b></th>
@@ -33,6 +34,7 @@
                 <tr>
                     <td>{{ item['from_email_id'] }}</td>
                     <td><input type="email" id="{{item['channel_id']}}" name="to_email_id" value="" placeholder="Email ID"></td>
+                    <td>{{item['title']}}</td>
                     <td><a href="https://www.youtube.com/channel/{{ item['channel_id'] }}/about" target="_blank">Url</a></td>
                     <td>{{ item['date'] }}</td>
                     <td><a href="#"

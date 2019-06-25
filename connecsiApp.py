@@ -951,6 +951,24 @@ def viewCampaignDetails(campaign_id):
         elif item['campaign_status'] == 'New':
             resposnse = requests.put(url=base_url + 'Campaign/update_campaign_status/' + str(campaign_id) + '/' + str(campaign_status))
 
+
+    for item in view_campaign_details_data['data'][0]['youtube_inf_data']:
+        print(item)
+        proposal_id = item['proposal_id']
+        proposal_channels = item['proposal_channels']
+        if proposal_channels:
+            channel_id_list = proposal_channels.split(',')
+            icr = []
+            for channel in channel_id_list:
+                channel_id_final = channel.split('@')
+                print(channel_id_final)
+                url_inf_report = base_url + 'Campaign/InfluencerCampaignReport/' + str(campaign_id) + '/' + str(proposal_id) + '/' + str(channel_id_final[1])
+                inf_campaign_report_res = requests.get(url=url_inf_report)
+                inf_campaign_report = inf_campaign_report_res.json()
+                icr.append(inf_campaign_report)
+                item.update({'icr_data_list':icr})
+            print(item)
+
     return render_template('campaign/viewCampaignDetails.html',view_campaign_details_data=view_campaign_details_data,channel_status_campaign_data=channel_status_campaign_data)
 
 
@@ -981,7 +999,7 @@ def viewInfCampaignDetails(proposal_id):
             response_infcr = requests.get(url=infcr_url)
             infcr.append(response_infcr.json())
             # print('bcr data', brand_campaign_report)
-    print(bcr_list)
+    print('bcr list = ',bcr_list)
     print('infcr = ',infcr)
     # for item in infcr:
     #     # print(item['data'])
@@ -1624,21 +1642,36 @@ def sent():
             sent_user_id = item['user_id']
             # print(sent_user_id)
             sent_user_type = item['user_type']
-            first_name = ''
+            senders_first_name = ''
+            reciepents_first_name=''
             if sent_user_type == 'brand':
                 brand_details_url = base_url + '/Brand/' + str(sent_user_id)
                 brand_details_resposne = requests.get(url=brand_details_url)
                 brand_details_json = brand_details_resposne.json()
                 # print(brand_details_json)
-                first_name = brand_details_json['data']['first_name']
+                senders_first_name = brand_details_json['data']['first_name']
+                full_conv_to_email_id = item['to_email_id']
+                influencer_details_url = base_url + '/Influencer/GetDetailsByEmailId/' + str(full_conv_to_email_id)
+                influencer_details_resposne = requests.get(url=influencer_details_url)
+                influencer_details_json = influencer_details_resposne.json()
+                # print(influencer_details_json)
+                reciepents_first_name = influencer_details_json['data']['first_name']
             elif sent_user_type == 'influencer':
                 full_conv_email_id = item['from_email_id']
                 influencer_details_url = base_url + '/Influencer/GetDetailsByEmailId/' + str(full_conv_email_id)
                 influencer_details_resposne = requests.get(url=influencer_details_url)
                 influencer_details_json = influencer_details_resposne.json()
                 # print(influencer_details_json)
-                first_name = influencer_details_json['data']['first_name']
-            item.update({'first_name': first_name})
+                senders_first_name = influencer_details_json['data']['first_name']
+
+                full_conv_to_email_id = item['to_email_id']
+                brand_details_url = base_url + '/Brand/getDetailsByEmailId/' + str(full_conv_to_email_id)
+                brand_details_resposne = requests.get(url=brand_details_url)
+                brand_details_json = brand_details_resposne.json()
+                # print(brand_details_json)
+                reciepents_first_name = brand_details_json['data']['first_name']
+            item.update({'senders_first_name': senders_first_name})
+            item.update({'reciepents_first_name': reciepents_first_name})
             item.update({'collapse_id': collapse_id})
             # print(item)
             collapse_id += 1
@@ -1764,6 +1797,7 @@ def show_youtube_channels_without_email_id():
     url = base_url+'Messages/getMessagesByToEmailId/'+to_email_id
     response = requests.get(url=url)
     print(response.json())
+
     data = []
     response_json = response.json()
     for item in response_json['data']:
@@ -1774,7 +1808,15 @@ def show_youtube_channels_without_email_id():
         if channel_name == 'Youtube':
            item['channel_id']=channel_name_list[0]
            data.append(item)
-
+           channel_details_url = base_url+'Youtube/getChannelDetailsByChannelId/'+item['channel_id']
+           print(channel_details_url)
+           response_channel_details = requests.get(url=channel_details_url)
+           resposne_channel_details_json = response_channel_details.json()
+           print(resposne_channel_details_json)
+           for channel_details in resposne_channel_details_json['data']:
+               title = channel_details['title']
+               item.update({'title':title})
+           print(item)
     return render_template('show_youtube_channels_without_email_id.html',data = data)
 
 
