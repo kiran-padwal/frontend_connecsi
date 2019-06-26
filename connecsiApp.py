@@ -1276,12 +1276,14 @@ def inbox(message_id):
             inbox_user_type = item['user_type']
             print('inbox user type',inbox_user_type)
             first_name = ''
+            profile_pic = ''
             if inbox_user_type == 'brand':
                 brand_details_url = base_url+'/Brand/'+str(inbox_user_id)
                 brand_details_resposne = requests.get(url=brand_details_url)
                 brand_details_json = brand_details_resposne.json()
                 print('brand details = ',brand_details_json)
                 first_name = brand_details_json['data']['first_name']
+                profile_pic = brand_details_json['data']['profile_pic']
                 print(first_name)
             elif inbox_user_type == 'influencer':
                 inbox_email_id = item['from_email_id']
@@ -1295,6 +1297,7 @@ def inbox(message_id):
                 if first_name =='':
                     first_name=inbox_email_id
             item.update({'first_name': first_name})
+            item.update({'profile_pic': profile_pic})
             # print(item)
 
         # #######################################
