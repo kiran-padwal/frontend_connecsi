@@ -77,8 +77,15 @@
                                                             >
                                     <span class="media">
                                         <span class="avatar avatar-md mr-2">
-                                            {% if item['img'] %}
-                                            <img class="media-object rounded-circle" src="static/app-assets/img/portrait/small/avatar-s-7.png" alt="Generic placeholder image">
+
+                                            <!--<img class="media-object rounded-circle" src="static/app-assets/img/portrait/small/avatar-s-7.png" alt="Generic placeholder image">-->
+                                            {% if item['profile_pic'] %}
+                                            {% if item['user_type'] == 'brand' %}
+                                            <img class="media-object rounded-circle" src="../static/img/{{item['profile_pic']}}">
+                                            {% endif %}
+                                            {% if item['user_type'] == 'influencer' %}
+                                            <img class="media-object rounded-circle" src="{{item['profile_pic']}}">
+                                            {% endif %}
                                             {% else %}
                                             <span class="media-object rounded-circle text-circle d-flex mr-2 justify-content-center align-items-center bg-blue">{{ item['from_email_id'][0] }}</span>
                                             {% endif %}
@@ -129,7 +136,12 @@
                                                             <div class="media">
                                     <span class="avatar avatar-md mr-2">
                                             {% if item['profile_pic'] %}
+                                            {% if item['user_type'] == 'brand' %}
                                             <img class="media-object rounded-circle" src="../static/img/{{item['profile_pic']}}">
+                                            {% endif %}
+                                            {% if item['user_type'] == 'influencer' %}
+                                            <img class="media-object rounded-circle" src="{{item['profile_pic']}}">
+                                            {% endif %}
                                             {% else %}
                                             <span class="media-object rounded-circle text-circle d-flex mr-2 justify-content-center align-items-center bg-purple">{{ item['from_email_id'][0] }}</span>
                                             {% endif %}

@@ -1294,6 +1294,7 @@ def inbox(message_id):
                 influencer_details_json = influencer_details_resposne.json()
                 print(influencer_details_json)
                 first_name = influencer_details_json['data']['first_name']
+                profile_pic = influencer_details_json['data']['channel_img']
                 if first_name =='':
                     first_name=inbox_email_id
             item.update({'first_name': first_name})
@@ -1357,6 +1358,7 @@ def inbox(message_id):
                 print('INF CHANNEL ID ======',inf_channel_id)
                 item.update({'channel_id':inf_channel_id})
                 first_name = influencer_details_json['data']['first_name']
+                profile_pic = influencer_details_json['data']['channel_img']
                 if first_name =='':
                     first_name=full_conv_email_id
             item.update({'first_name': first_name})
