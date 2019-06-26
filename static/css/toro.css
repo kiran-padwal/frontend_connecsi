@@ -600,10 +600,9 @@ body .custom-checkbox.custom-control.custom-control-inline-block {
   padding-bottom: 0.5rem;
 }
 body .custom-checkbox.custom-control .custom-control-label.campaignCheckbox::before, body .custom-checkbox.custom-control .custom-control-label.campaignCheckbox::after {
-  top: -0.25rem;
   width: 2rem;
   height: 2rem;
-  left: -2.25rem;
+  left: -1.15rem;
 }
 body .filter-toggle .fa {
   color: #000;

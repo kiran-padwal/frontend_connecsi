@@ -196,6 +196,13 @@ def welcomemail_inf():
     return resp_template
     # return render_template('brand_activation_link_template.html',activation_link=activation_link)
 
+
+def email_temp_from_brands_to_inf(message_id):
+    resp_template = render_template('message_template_from_brands_to_inf.html',message_id=message_id)
+    # print(resp_template)
+    return resp_template
+
+
 def get_serializer(secret_key=None):
     if secret_key is None:
         secret_key = connecsiApp.secret_key
@@ -1139,8 +1146,9 @@ def saveCampaign():
         # exit()
         filenames=[]
         for file in files:
-            filename = campaign_files.save(file)
-            filenames.append(filename)
+            if (file.filename):
+                filename = campaign_files.save(file)
+                filenames.append(filename)
         filenames_string = ','.join(filenames)
         payload.update({'files': filenames_string})
         print(payload)
@@ -1150,7 +1158,8 @@ def saveCampaign():
             print('payload inside if =',payload)
             for file in files:
                 # brands_classified_files.save(file)
-                campaign_files.save(file)
+                if(file.filename):
+                    campaign_files.save(file)
             user_id = session['user_id']
             classified_url = base_url + 'Classified/' + str(user_id)
             print(classified_url)
@@ -1687,6 +1696,8 @@ def sent():
                 pass
         sent.update({'data': removed_deleted_messages_from_sent})
         print('removed deleted', sent)
+        sent['data'].sort(key=lambda x: datetime.datetime.strptime(x['date'], '%A, %d. %B %Y %I:%M%p'), reverse=True)
+
 
         return render_template('email/sent.html', sent=sent)
     except Exception as e:

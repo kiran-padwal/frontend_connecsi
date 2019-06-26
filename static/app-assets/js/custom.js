@@ -248,7 +248,7 @@ $(document).ready(function () {
 //        alert('i m here');
         $("#reply_message_first_name").val(first_name);
         $("#to_email_id").val(from_email_id);
-        $("#subject").val(subject);
+        $("#to_subject").val(subject);
     }
 
 //    function getAllMappedChannel_ids(channel_id){
@@ -785,7 +785,10 @@ $(document).ready(function () {
                     jQuery.each(data.results, function (i, val) {
 //                        if($('#campaign_id'+val.campaign_id).length){
 //                            alert(val.campaign_id);
-                            $('#message_campaign_id'+val.campaign_id).attr('disabled', true);
+//                            alert(val.status);
+                            if(val.status != 'Added'){
+                                $('#message_campaign_id'+val.campaign_id).attr('disabled', true);
+                            }
 //                        }
                     });
                 }
