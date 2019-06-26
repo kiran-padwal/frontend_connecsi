@@ -1662,6 +1662,7 @@ def sent():
             sent_user_type = item['user_type']
             senders_first_name = ''
             reciepents_first_name=''
+            reciepents_profile_pic = ''
             if sent_user_type == 'brand':
                 brand_details_url = base_url + '/Brand/' + str(sent_user_id)
                 brand_details_resposne = requests.get(url=brand_details_url)
@@ -1674,6 +1675,7 @@ def sent():
                 influencer_details_json = influencer_details_resposne.json()
                 # print(influencer_details_json)
                 reciepents_first_name = influencer_details_json['data']['first_name']
+                reciepents_profile_pic = influencer_details_json['data']['channel_img']
             elif sent_user_type == 'influencer':
                 full_conv_email_id = item['from_email_id']
                 influencer_details_url = base_url + '/Influencer/GetDetailsByEmailId/' + str(full_conv_email_id)
@@ -1688,8 +1690,10 @@ def sent():
                 brand_details_json = brand_details_resposne.json()
                 # print(brand_details_json)
                 reciepents_first_name = brand_details_json['data']['first_name']
+                reciepents_profile_pic = brand_details_json['data']['profile_pic']
             item.update({'senders_first_name': senders_first_name})
             item.update({'reciepents_first_name': reciepents_first_name})
+            item.update({'profile_pic': reciepents_profile_pic})
             item.update({'collapse_id': collapse_id})
             # print(item)
             collapse_id += 1
