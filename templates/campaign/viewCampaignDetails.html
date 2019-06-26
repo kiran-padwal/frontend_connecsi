@@ -271,9 +271,15 @@
                                     <td class="align-middle" id="channel">{{ channel_final[0] }}</td>
                                     <td class="align-middle"></td>
                                     <td class="align-middle" id="revenue{{ channel_final[1] }}"></td>
-                                    <td class="align-middle"></td>
-                                    <td class="align-middle"></td>
-                                    <td class="align-middle"></td>
+                                    <td class="align-middle">post</td>
+                                    <td class="align-middle">
+
+                                        {% for data_list in youtube_inf_data['icr_data_list'] %}
+                                                {{ data_list | sum(attribute='post_views') }}
+                                        {% endfor %}
+
+                                    </td>
+                                    <td class="align-middle">{{youtube_inf_data['post_clicks']}}</td>
                                     <td class="align-middle" id="new_users{{ channel_final[1] }}"></td>
                                     <td class="align-middle"></td>
                                     <td class="align-middle"></td>

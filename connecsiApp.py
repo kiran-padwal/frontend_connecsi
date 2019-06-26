@@ -972,10 +972,11 @@ def viewCampaignDetails(campaign_id):
                 url_inf_report = base_url + 'Campaign/InfluencerCampaignReport/' + str(campaign_id) + '/' + str(proposal_id) + '/' + str(channel_id_final[1])
                 inf_campaign_report_res = requests.get(url=url_inf_report)
                 inf_campaign_report = inf_campaign_report_res.json()
-                icr.append(inf_campaign_report)
+                icr.append(inf_campaign_report['data'])
                 item.update({'icr_data_list':icr})
             print(item)
-
+            for item1 in item['icr_data_list']:
+                print(item1)
     return render_template('campaign/viewCampaignDetails.html',view_campaign_details_data=view_campaign_details_data,channel_status_campaign_data=channel_status_campaign_data)
 
 
@@ -1279,7 +1280,7 @@ def inbox(message_id):
                 brand_details_url = base_url+'/Brand/'+str(inbox_user_id)
                 brand_details_resposne = requests.get(url=brand_details_url)
                 brand_details_json = brand_details_resposne.json()
-                # print(brand_details_json)
+                print('brand details = ',brand_details_json)
                 first_name = brand_details_json['data']['first_name']
                 print(first_name)
             elif inbox_user_type == 'influencer':
@@ -1335,12 +1336,14 @@ def inbox(message_id):
             # print(full_conv_user_id)
             full_conv_user_type = item['user_type']
             first_name = ''
+            profile_pic = ''
             if full_conv_user_type == 'brand':
                 brand_details_url = base_url+'/Brand/'+str(full_conv_user_id)
                 brand_details_resposne = requests.get(url=brand_details_url)
                 brand_details_json = brand_details_resposne.json()
-                # print(brand_details_json)
+                print('brand details for conv =',brand_details_json)
                 first_name = brand_details_json['data']['first_name']
+                profile_pic = brand_details_json['data']['profile_pic']
             elif full_conv_user_type == 'influencer':
                 full_conv_email_id = item['from_email_id']
                 influencer_details_url = base_url + '/Influencer/GetDetailsByEmailId/' + str(full_conv_email_id)
@@ -1355,6 +1358,7 @@ def inbox(message_id):
                     first_name=full_conv_email_id
             item.update({'first_name': first_name})
             item.update({'collapse_id':collapse_id})
+            item.update({'profile_pic': profile_pic})
             # print(item)
             collapse_id+=1
 ################ remove deleted message from inbox and conv ##################
