@@ -1568,12 +1568,14 @@ def deleted():
             full_conv_user_type = item['user_type']
             print(full_conv_user_type)
             first_name = ''
+            profile_pic = ''
             if full_conv_user_type == 'brand':
                 brand_details_url = base_url+'/Brand/'+str(full_conv_user_id)
                 brand_details_resposne = requests.get(url=brand_details_url)
                 brand_details_json = brand_details_resposne.json()
                 print(brand_details_json)
                 first_name = brand_details_json['data']['first_name']
+                profile_pic = brand_details_json['data']['profile_pic']
             elif full_conv_user_type == 'influencer':
                 full_conv_email_id = item['from_email_id']
                 influencer_details_url = base_url + '/Influencer/GetDetailsByEmailId/' + str(full_conv_email_id)
@@ -1584,10 +1586,12 @@ def deleted():
                 print('INF CHANNEL ID ======', inf_channel_id)
                 item.update({'channel_id': inf_channel_id})
                 first_name = influencer_details_json['data']['first_name']
+                profile_pic = influencer_details_json['data']['channel_img']
                 if first_name == '':
                     first_name = full_conv_email_id
             item.update({'first_name': first_name})
             item.update({'collapse_id': collapse_id})
+            item.update({'profile_pic': profile_pic})
             # print(item)
             collapse_id+=1
 
