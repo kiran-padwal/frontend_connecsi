@@ -1135,10 +1135,12 @@ function getCampaign_ids(channel_id){
         function image_status(image_url,channel_id){
             var status = imageExists(image_url);
             if(status === true){
-                $("#channel_img-"+channel_id).attr("src",image_url);
+                alert('true');
+                $('#channel_img-'+channel_id).attr("src",image_url);
             }
             else{
-                $("#channel_img-"+channel_id).attr("src","../static/img/fixed_image.png");
+                alert('false');
+                $('#channel_img-'+channel_id).attr("src","../static/img/fixed_image.png");
             }
         }
         {% for item in data['data'] %}
