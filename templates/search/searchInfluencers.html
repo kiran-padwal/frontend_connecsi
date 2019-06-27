@@ -214,7 +214,7 @@
                                             </li>
                                             <li>
                                                 {% if form_filters['campaign_id'] %}
-                                                <a href="#" onclick="campaignList('{{ item['channel_id'] }}','{{form_filters['channel']}}')" data-val="a2" data-channel-id="{{ item['channel_id'] }}" data-channel-name="{{form_filters['channel']}}"
+                                                <a href="#" onclick="campaignList('{{ item['title'] }}','{{ item['channel_id'] }}','{{form_filters['channel']}}')" data-val="a2" data-channel-id="{{ item['channel_id'] }}" data-channel-name="{{form_filters['channel']}}"
                                                    class="add-to-campaign" data-toggle="modal" data-backdrop="true"
                                                    data-target="#campaignList">
                                                     <svg data-toggle="tooltip" title="Add To Campaign" width="24"
@@ -230,7 +230,7 @@
                                                     </svg>
                                                 </a>
                                                 {% else %}
-                                                <a href="#" onclick="campaignList('{{ item['channel_id'] }}','{{form_filters['channel']}}')" data-val="a2" data-channel-id="{{ item['channel_id'] }}" data-channel-name="{{form_filters['channel']}}"
+                                                <a href="#" onclick="campaignList('{{ item['title'] }}','{{ item['channel_id'] }}','{{form_filters['channel']}}')" data-val="a2" data-channel-id="{{ item['channel_id'] }}" data-channel-name="{{form_filters['channel']}}"
                                                    class="add-to-campaign" data-toggle="modal" data-backdrop="true"
                                                    data-target="#campaignList">
                                                     <svg data-toggle="tooltip" title="Add To Campaign" width="24"
@@ -717,8 +717,8 @@
 <div class="modal fade" id="campaignList" role="dialog" data-backdrop="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <b class="modal-title">Campaign List</b>
+            <div class="modal-header color-header">
+                <b class="modal-title" style="font-weight:600;">Campaign List</b>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <form name="add_youtube_inf_to_campaign_list_form" id="add_influencer_to_campaign"
@@ -750,7 +750,7 @@
                         {% endfor %}
                         <tr data-campaign-id="{{ channels_ids|join(',') }}">
                             <td>
-                                <div class="custom-control custom-checkbox custom-control-inline text-left">
+                                <div class="custom-control custom-checkbox custom-control-inline">
                                     <input type="checkbox" id="campaignCheckbox{{ item['campaign_id'] }}"
                                            class="filled-in custom-control-input custom-control-input campaign_id campaign_id{{ item['campaign_id'] }}"
                                            data-campaign-channel-id="{{ channels_ids|join(',') }}" type="checkbox"
@@ -940,9 +940,13 @@ function getCampaign_ids(channel_id){
 
 
 
-    function campaignList(channel_id,channel_name) {
+    function campaignList(title,channel_id,channel_name) {
     <!--alert('i m called');-->
     <!--alert(channel_name);-->
+    $("#channel_name")[0].nextElementSibling.innerHTML=title;
+    $("#channel_name")[0].nextElementSibling.style.color="#008487";
+    $("#channel_name")[0].nextElementSibling.style.fontSize="0.875rem";
+    $("#channel_name")[0].nextElementSibling.style.fontWeight="500";
     $( "input#campaign_id" ).prop('checked', false);
     $( "input#campaign_id" ).prop('disabled', false)
     $("#youtube_channel_id").val(channel_id);
@@ -957,6 +961,7 @@ function getCampaign_ids(channel_id){
             if (channel_id == campaign_channel_id){
                 <!--alert("equal");-->
                 $('.campaign_id'+campaign_id).attr('disabled', true);
+                $('.campaign_id'+campaign_id)[0].parentElement.parentElement.parentElement.style.backgroundColor="rgba(242,242,242,0.8)";
              }
              else{
                  <!--alert("not equal");-->
