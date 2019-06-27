@@ -197,7 +197,7 @@
                                     <!--{{glob.from_email_id}}-->
 
                                             {% if session['type']=='brand' %}
-                                                <a href="#" data-toggle="modal" data-target="#campaignList" data-backdrop="true" class="color1 float-right add-campaign" data-channel-id="{{ glob.channel_id }}" data-message-id="{{ glob.message_id }}"><i class="fa fa-plus-circle" style="font-size:13pt;"></i></a>
+                                                <a href="#" data-toggle="modal" data-target="#campaignList" data-backdrop="true" class="color1 float-right add-campaign" data-channel-id="{{ glob.channel_id }}" data-message-id="{{ glob.message_id }}"><i id="plus_circle" class="fa fa-plus-circle" style="font-size:13pt;"></i></a>
                                             {% endif %}
 
                                     {% endif %}
@@ -374,6 +374,7 @@
                     <div class="modal-body">
                         <input type="hidden" value="{{ glob.channel_id }}" name="channel_id" id="reply_channel_id">
                         <input type="hidden" value="{{ glob.message_id }}" name="message_id" id="reply_message_id">
+                        <input type="hidden" value="" name="campaign_id" id="reply_campaign_id">
                         <input type="hidden" value="" name="to_email_id" id="to_email_id">
                         <input type="hidden" class="form-control" id="to_subject" name="subject">
                         <div class="row">
@@ -931,7 +932,6 @@ function getAllMappedChannel_ids1(channel_id){
 
 function getCampaignsAddedToMessage(){
         var message_id = $("#message_id").val();
-        <!--alert('i m here');-->
         $.ajax({
                type: "GET",
                url: '/getCampaignsAddedToMessage/'+message_id,
@@ -951,6 +951,8 @@ function getCampaignsAddedToMessage(){
                    jQuery.each(data.results, function(i, val) {
                         <!--{# if  glob.from_email_id != session['email_id']  #}-->
                         {% if  session['type'] != 'brand'  %}
+                            <!--alert(val.campaign_id);-->
+                            $('#reply_campaign_id').val(val.campaign_id);
                             if(val.status == 'Proposal Sent'){
                                 var status = 'Proposal Received';
                                 var accepted = 'Accept';
@@ -966,6 +968,11 @@ function getCampaignsAddedToMessage(){
                                 $('#campaignNameList').append('<tr><td><a href="#" class="">'+val.campaign_name+'<a/></td><td>&nbsp &nbsp'+val.status+'</td></tr>');
                             }
                         {% else %}
+                            if(val.campaign_id){
+                                <!--alert(val.campaign_id);-->
+                                $('#plus_circle').removeClass('fa fa-plus-circle');
+                                $('#reply_campaign_id').val(val.campaign_id);
+                            }
                             $('#campaignNameList').append('<tr><td><a href="#" class="">'+val.campaign_name+'<a/></td><td>&nbsp &nbsp'+val.status+'</td></tr>');
                             if(val.status == 'Proposal Sent'){
                                 $('#tab-proposal .tab-list').append('<tr><td><a href="#" onclick="getProposal('+val.message_id+','+val.campaign_id+')" class="">'+val.campaign_name+'<a/></td><td>&nbsp &nbsp<a href="#" onclick="editProposal('+val.message_id+','+val.campaign_id+')" data-toggle="tooltip" title="Edit Proposal"><img src="/static/icons/edit.png" height="19px" width="17px"></a></td></tr>');

@@ -1593,6 +1593,7 @@ $(document).ready(function () {
 //    }
 
     $('.add-campaign').on('click', function(e) {
+//        alert('imhere');
         var $channel_id = $(this).attr('data-channel-id');
         var $message_id = $(this).attr('data-message-id');
         $( "input.campaign_ids" ).prop('checked', false);
@@ -1607,7 +1608,9 @@ $(document).ready(function () {
                 if (data.results.length != 0) {
                     jQuery.each(data.results, function (i, val) {
                         if($('#campaign_id'+val.campaign_id).length){
+                            if(val.status != 'Added'){
                             $('#campaign_id'+val.campaign_id).attr('disabled', true);
+                            }
                         }
                     });
                 }
