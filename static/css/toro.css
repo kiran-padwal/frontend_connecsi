@@ -816,6 +816,7 @@ body .offer-user ul.user-actions, body .campaign-item ul.user-actions {
   position: absolute;
   top: 0;
   left: 0;
+  height: 100%;
   width: 30px;
 }
 body .offer-user ul.user-actions li, body .campaign-item ul.user-actions li {
