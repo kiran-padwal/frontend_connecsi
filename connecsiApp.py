@@ -3048,21 +3048,25 @@ def updateProfile_inf():
             result_json = response.json()
             res_mapped_channels = requests.get(url=base_url + 'Influencer/getMappedChannels/' + str(user_id))
             res_mapped_channels_json = res_mapped_channels.json()
-
+            print(res_mapped_channels_json)
             for item in youtube_video_categories:
                 print(item)
                 res = requests.get(url=base_url+'Influencer/addCategoriesToChannel/'+str(user_id)+'/'+str(item))
                 for channel_id in res_mapped_channels_json['data']:
                     print(channel_id['twitter_channel_id'])
                     if channel_id['twitter_channel_id']:
+                       print('inside twitter channel id')
                        res = requests.get(url=base_url + 'Influencer/addCategoriesToTwitterChannel/' + str(channel_id['twitter_channel_id']) + '/' + str(item))
                     if channel_id['insta_channel_id']:
+                       print('inside insta channel id')
                        res = requests.get(url=base_url + 'Influencer/addCategoriesToInstaChannel/' + str(channel_id['insta_channel_id']) + '/' + str(item))
                 print(res.json())
             return redirect(url_for("inf_editProfile"))
-        except:
+        except Exception as e:
+            print(e)
             pass
-            return redirect(url_for("inf_editProfile"))
+            return ''
+            # return redirect(url_for("inf_editProfile"))
 
 @connecsiApp.route('/addOffer')
 @is_logged_in
