@@ -1133,13 +1133,21 @@ function getCampaign_ids(channel_id){
             return http.status != 404;
         }
         function image_status(image_url,channel_id){
-            var status = imageExists(image_url);
-            if(status === true){
-                <!--alert('true');-->
-                $('#channel_img-'+channel_id).attr("src",image_url);
+            var img='https';
+
+            if(image_url.charAt(4)!='s'){
+                img=img+image_url.substring(4,image_url.length);
             }
             else{
-                <!--alert('false');-->
+                img=image_url;
+            }
+            var status = imageExists(img);
+            if(status === true){
+<!--                alert('true');-->
+                $('#channel_img-'+channel_id).attr("src",img);
+            }
+            else{
+<!--                alert('false');-->
                 $('#channel_img-'+channel_id).attr("src","../static/img/fixed_image.png");
             }
         }
