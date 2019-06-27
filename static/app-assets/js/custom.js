@@ -1593,7 +1593,7 @@ $(document).ready(function () {
 //    }
 
     $('.add-campaign').on('click', function(e) {
-//        alert('imhere');
+        alert('imhere');
         var $channel_id = $(this).attr('data-channel-id');
         var $message_id = $(this).attr('data-message-id');
         $( "input.campaign_ids" ).prop('checked', false);
