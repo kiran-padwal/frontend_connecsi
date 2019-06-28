@@ -2879,9 +2879,6 @@ def google_login():
     payload.update({'channel_id':channel_id,'business_email':resp_json['email']})
     url = base_url+'Influencer/saveInfluencer'
     print(url)
-
-
-
     try:
         response = requests.post(url,json=payload)
         print(response.json())
@@ -2913,6 +2910,10 @@ def google_login():
             except:
                 pass
 
+        ##### code for OAUTH channel updates ############
+        else:
+            print('indluencer already present in youtube channel details get OAUTH to update the details')
+        #################################################
     except Exception as e:
         print(e)
         pass
