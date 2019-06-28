@@ -767,7 +767,7 @@ function editProposal(message_id,campaign_id){
                             for(i=0;i<channels.length;i++){
                                 $(".edit_proposal_channels_checkbox[name='edit_proposal_channels']").each(function(){
                                     var proposal_channel_id = $(this).attr('id');
-                                    alert(proposal_channel_id);
+                                    <!--alert(proposal_channel_id);-->
                                     if(channels[i]==proposal_channel_id){
                                         $(this).attr('checked',true);
                                     }
