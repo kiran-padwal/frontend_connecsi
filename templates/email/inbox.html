@@ -767,6 +767,7 @@ function editProposal(message_id,campaign_id){
                             for(i=0;i<channels.length;i++){
                                 $(".edit_proposal_channels_checkbox[name='edit_proposal_channels']").each(function(){
                                     var proposal_channel_id = $(this).attr('id');
+                                    alert(proposal_channel_id);
                                     if(channels[i]==proposal_channel_id){
                                         $(this).attr('checked',true);
                                     }
@@ -915,7 +916,7 @@ function getAllMappedChannel_ids1(channel_id){
                                 $("#edit_proposal_channels").append('<input class="edit_proposal_channels_checkbox"  multiple type ="checkbox" name="edit_proposal_channels" value="twitter@'+val.mapped_twitter_channel_id+'" id="twitter@'+val.mapped_twitter_channel_id+'"><span data-toggle="tooltip" title="'+val.twitter_url+'"><a target="_blank" href="'+val.twitter_url+'" class="fa fa-twitter"></span></a>');
                             }
                             if(val.mapped_insta_channel_id){
-                                $("#edit_proposal_channels").append('<input class="edit_proposal_channels_checkbox"  multiple type ="checkbox" name="edit_proposal_channels" value="instagram@'+val.mapped_insta_channel_id+'" id="instagram@'+val.mapped_twitter_channel_id+'"><span data-toggle="tooltip" title="'+val.insta_url+'"><a target="_blank" href="'+val.insta_url+'" class="fa fa-instagram"></span></a>');
+                                $("#edit_proposal_channels").append('<input class="edit_proposal_channels_checkbox"  multiple type ="checkbox" name="edit_proposal_channels" value="instagram@'+val.mapped_insta_channel_id+'" id="instagram@'+val.mapped_insta_channel_id+'"><span data-toggle="tooltip" title="'+val.insta_url+'"><a target="_blank" href="'+val.insta_url+'" class="fa fa-instagram"></span></a>');
                             }
                     });
                     }
