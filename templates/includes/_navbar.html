@@ -56,7 +56,11 @@
                         <p class="d-none">User Settings</p></a>
                         <div ngbdropdownmenu="" aria-labelledby="dropdownBasic3" class="dropdown-menu text-left dropdown-menu-right">
                             <!--<a href="javascript:;" class="dropdown-item py-1"><i class="ft-settings mr-2"></i><span>Settings</span></a>-->
+                            {% if session['type'] == 'brand' %}
                             <a href="/editProfile" class="dropdown-item py-1"><i class="ft-edit mr-2"></i><span>Edit Profile</span></a>
+                            {% elif session['type'] == 'influencer' %}
+                            <a href="/inf_editProfile" class="dropdown-item py-1"><i class="ft-edit mr-2"></i><span>Edit Profile</span></a>
+                            {% endif %}
                             <a href="/inbox/0" class="dropdown-item py-1" id="myinbox">
                                 <i class="ft-mail mr-2"></i>
                                 <span>My Inbox</span>
