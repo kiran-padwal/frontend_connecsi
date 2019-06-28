@@ -173,121 +173,119 @@
 </div>
 
 <div class="row">
-    <div class="col-12">
+    <div class="col-sm-12">
         <div class="card">
             <div class="card-body">
                 <div class="card-block campaign-item padding-top-normal">
-                    <div class="row">
-                        <div class="col-12">
-                            <table id="influencers-table" class="text-center table table-bordered table-responsive-xl table-striped table-hover mystyle" style="background-color: white;">
-                                <tr class="mystyle">
-                                    <th>Influencers</th>
-                                    <th>Status</th>
-                                    <th>Channels</th>
-                                    <th>Cost</th>
-                                    <th>Revenue</th>
-                                    <th>Posts</th>
-                                    <th>Views</th>
-                                    <th>Clicks</th>
-                                    <th>New Users</th>
-                                    <th>Engagement %</th>
-                                    <th>CPA</th>
-                                    <th>ROI</th>
-                                </tr>
+                    <div style="background-color: white;">
+                        <table id="influencers-table" class="text-center table table-bordered table-responsive-xl table-striped table-hover mystyle" style="background-color: white;">
+                            <tr class="mystyle">
+                                <th>Influencers</th>
+                                <th>Status</th>
+                                <th>Channels</th>
+                                <th>Cost</th>
+                                <th>Revenue</th>
+                                <th>Posts</th>
+                                <th>Views</th>
+                                <th>Clicks</th>
+                                <th>New Users</th>
+                                <th>Engagement %</th>
+                                <th>CPA</th>
+                                <th>ROI</th>
+                            </tr>
 
-                                {% for youtube_inf_data in view_campaign_details_data['data'][0]['youtube_inf_data'] %}
-                                <tr>
-                                    <td class="align-middle">
-                                       <div class="menu d-flex flex-column align-items-center">
-                                           {% if youtube_inf_data['channel_img'] %}
-                                           <img src="{{ youtube_inf_data['channel_img'] }}" class="showSubmenu rounded-circle width-50">
-                                           {% else %}
-                                           <img src="/static/img/fixed_image.png" class="showSubmenu rounded-circle width-50">
-                                           {% endif %}
-                                           <span class="my-1 influencerMenu" data-inf="{{ youtube_inf_data['channel_id'] }}">{{ youtube_inf_data['title'] }} <i class="fas fa-caret-square-down"></i></span>
-                                           <div class="submenu">
-                                               <div class="submenu__content">
+                            {% for youtube_inf_data in view_campaign_details_data['data'][0]['youtube_inf_data'] %}
+                            <tr>
+                                <td class="align-middle">
+                                    <div class="menu d-flex flex-column align-items-center">
+                                        {% if youtube_inf_data['channel_img'] %}
+                                        <img src="{{ youtube_inf_data['channel_img'] }}" class="showSubmenu rounded-circle width-50">
+                                        {% else %}
+                                        <img src="/static/img/fixed_image.png" class="showSubmenu rounded-circle width-50">
+                                        {% endif %}
+                                        <span class="my-1 influencerMenu" data-inf="{{ youtube_inf_data['channel_id'] }}">{{ youtube_inf_data['title'] }} <i class="fas fa-caret-square-down"></i></span>
+                                        <div class="submenu">
+                                            <div class="submenu__content">
                                                    <span data-toggle="modal" data-target="#sendMessage">
                                                        <a  onclick="sendMessage('{{ youtube_inf_data['channel_id'] }}@{{youtube_inf_data['channel_name']}}','{{ youtube_inf_data['business_email'] }}','{{ youtube_inf_data['title'] }}')" class="fa fa-envelope"  title="Message" style="position: relative; z-index: 1; font-size:14px; color:#9E57DD;"></a>
                                                    </span>
-                                                   {% if youtube_inf_data['ref_link'] %}
-                                                   <span data-toggle="modal" data-target="#addReport" id="reportIcon{{ youtube_inf_data['channel_id'] }}">
+                                                {% if youtube_inf_data['ref_link'] %}
+                                                <span data-toggle="modal" data-target="#addReport" id="reportIcon{{ youtube_inf_data['channel_id'] }}">
                                                        <a onclick="addReport('{{ view_campaign_details_data['data'][0]['campaign_id'] }}','{{ youtube_inf_data['proposal_channels'] }}')" title="Add Report" ><img src="/static/icons/writing.png" height="14px" width="13px"></a>
                                                    </span>
-                                                   <span style="display: none" data-toggle="modal" data-target="#edit_del_report_screen" id="editReportIcon{{ youtube_inf_data['channel_id'] }}">
+                                                <span style="display: none" data-toggle="modal" data-target="#edit_del_report_screen" id="editReportIcon{{ youtube_inf_data['channel_id'] }}">
                                                        <a onclick="edit_del_Report('{{ view_campaign_details_data['data'][0]['campaign_id'] }}','{{ youtube_inf_data['proposal_channels'] }}')" title="Edit/Delete Report" ><img src="/static/icons/writing.png" height="14px" width="13px"></a>
                                                    </span>
-                                                   <a  href="{{ youtube_inf_data['ref_link'] }}" class="fa fa-link "  title="Reference Link" style="position: relative; z-index: 1; font-size:14px; color:#9E57DD;"></a>
-                                                   {% endif %}
-                                                   <a title="Payment Feature Coming Soon" href="#"><img src="/static/icons/payment-method.png" height="14px" width="13px"></a>
-                                               </div>
-                                           </div>
-                                       </div>
-                                    </td>
+                                                <a  href="{{ youtube_inf_data['ref_link'] }}" class="fa fa-link "  title="Reference Link" style="position: relative; z-index: 1; font-size:14px; color:#9E57DD;"></a>
+                                                {% endif %}
+                                                <a title="Payment Feature Coming Soon" href="#"><img src="/static/icons/payment-method.png" height="14px" width="13px"></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
 
-                                    <td class="align-middle">
-                                        {% for status in channel_status_campaign_data['data'] %}
-                                        {% if youtube_inf_data['channel_id']==status['channel_id']  %}
-                                        {{ status['status'] }}
-                                        {% endif %}
-                                        {% endfor %}
-                                    </td>
-                                    <td class="align-middle">
-                                        {% if youtube_inf_data['proposal_channels'] %}
-                                        {% set channels = youtube_inf_data['proposal_channels'].split(',') %}
-                                        {% for channel in channels %}
-                                        {% set channel_final = channel.split('@') %}
-                                        {% if channel_final[0] == 'youtube' %}
-                                        <a href="#" class="fa fa-youtube-square"></a>
-                                        {% elif channel_final[0] == 'facebook' %}
-                                        <a href="#" class="fa fa-facebook-square"></a>
-                                        {% elif channel_final[0] == 'twitter' %}
-                                        <a href="#" class="fa fa-twitter-square"></a>
-                                        {% elif channel_final[0] == 'instagram' %}
-                                        <a href="#" class="fa fa-instagram"></a>
-                                        {% endif %}
-                                        {% endfor %}
-                                        {% endif %}
-                                    </td>
-                                    <td class="align-middle" >{{youtube_inf_data['proposal_price']}}</td>
-                                    <td class="align-middle" id="revenue_total{{ youtube_inf_data['channel_id'] }}"></td>
-                                    <td class="align-middle"></td>
-                                    <td class="align-middle"></td>
-                                    <td class="align-middle"></td>
-                                    <td class="align-middle" id="new_users_total{{ youtube_inf_data['channel_id'] }}"></td>
-                                    <td class="align-middle"></td>
-                                    <td class="align-middle"></td>
-                                    <td class="align-middle" style="color:purple;">Coming soon</td>
-                                </tr>
-                                {% if youtube_inf_data['proposal_channels'] %}
-                                {% set channels = youtube_inf_data['proposal_channels'].split(',') %}
-                                {% for channel in channels %}
-                                {% set channel_final = channel.split('@') %}
+                                <td class="align-middle">
+                                    {% for status in channel_status_campaign_data['data'] %}
+                                    {% if youtube_inf_data['channel_id']==status['channel_id']  %}
+                                    {{ status['status'] }}
+                                    {% endif %}
+                                    {% endfor %}
+                                </td>
+                                <td class="align-middle">
+                                    {% if youtube_inf_data['proposal_channels'] %}
+                                    {% set channels = youtube_inf_data['proposal_channels'].split(',') %}
+                                    {% for channel in channels %}
+                                    {% set channel_final = channel.split('@') %}
+                                    {% if channel_final[0] == 'youtube' %}
+                                    <a href="#" class="fa fa-youtube-square"></a>
+                                    {% elif channel_final[0] == 'facebook' %}
+                                    <a href="#" class="fa fa-facebook-square"></a>
+                                    {% elif channel_final[0] == 'twitter' %}
+                                    <a href="#" class="fa fa-twitter-square"></a>
+                                    {% elif channel_final[0] == 'instagram' %}
+                                    <a href="#" class="fa fa-instagram"></a>
+                                    {% endif %}
+                                    {% endfor %}
+                                    {% endif %}
+                                </td>
+                                <td class="align-middle" >{{youtube_inf_data['proposal_price']}}</td>
+                                <td class="align-middle" id="revenue_total{{ youtube_inf_data['channel_id'] }}"></td>
+                                <td class="align-middle"></td>
+                                <td class="align-middle"></td>
+                                <td class="align-middle"></td>
+                                <td class="align-middle" id="new_users_total{{ youtube_inf_data['channel_id'] }}"></td>
+                                <td class="align-middle"></td>
+                                <td class="align-middle"></td>
+                                <td class="align-middle" style="color:purple;">Coming soon</td>
+                            </tr>
+                            {% if youtube_inf_data['proposal_channels'] %}
+                            {% set channels = youtube_inf_data['proposal_channels'].split(',') %}
+                            {% for channel in channels %}
+                            {% set channel_final = channel.split('@') %}
 
-                                <tr class="{{ youtube_inf_data['channel_id'] }}" style="display: none">
-                                    <td class="align-middle">
-                                    </td>
-                                    <td class="align-middle"></td>
-                                    <td class="align-middle" id="channel">{{ channel_final[0] }}</td>
-                                    <td class="align-middle"></td>
-                                    <td class="align-middle" id="revenue{{ channel_final[1] }}"></td>
-                                    <td class="align-middle"></td>
-                                    <td class="align-middle"></td>
-                                    <td class="align-middle">{{youtube_inf_data['post_clicks']}}</td>
-                                    <td class="align-middle" id="new_users{{ channel_final[1] }}"></td>
-                                    <td class="align-middle"></td>
-                                    <td class="align-middle"></td>
-                                    <td class="align-middle" style="color:purple;">Coming soon</td>
-                                </tr>
+                            <tr class="{{ youtube_inf_data['channel_id'] }}" style="display: none">
+                                <td class="align-middle">
+                                </td>
+                                <td class="align-middle"></td>
+                                <td class="align-middle" id="channel">{{ channel_final[0] }}</td>
+                                <td class="align-middle"></td>
+                                <td class="align-middle" id="revenue{{ channel_final[1] }}"></td>
+                                <td class="align-middle"></td>
+                                <td class="align-middle"></td>
+                                <td class="align-middle">{{youtube_inf_data['post_clicks']}}</td>
+                                <td class="align-middle" id="new_users{{ channel_final[1] }}"></td>
+                                <td class="align-middle"></td>
+                                <td class="align-middle"></td>
+                                <td class="align-middle" style="color:purple;">Coming soon</td>
+                            </tr>
 
-                                {% endfor %}
+                            {% endfor %}
 
-                                {% endif %}
+                            {% endif %}
 
-                                {% endfor %}
+                            {% endfor %}
 
-                            </table>
-                        </div>
+                        </table>
                     </div>
                 </div>
             </div>

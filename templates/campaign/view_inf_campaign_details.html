@@ -21,7 +21,7 @@
 
 <div class="row">
     <div class="col-sm-12">
-        <div class="content-header">Campaign details
+        <div class="content-header">Campaign Details
             <div class="btn-wrapper">
                 <!-- Single Button Dropdown -->
                 <div class="btn-group mr-1 mb-1">
@@ -191,7 +191,6 @@
         <div class="card">
             <div class="card-body">
                 <div class="card-block campaign-item padding-top-normal">
-
                     <div style="background-color: white;">
                         <table class="text-center table table-bordered table-responsive-xl table-striped table-hover mystyle" style="background-color: white;">
                             <tr class="mystyle">
@@ -255,13 +254,13 @@
                                     {% for channel in channels %}
                                     {% set channel_final = channel.split('@') %}
                                     {% if channel_final[0] == 'youtube' %}
-                                    <a href="#" class="fa fa-youtube fa-lg" style="color:#9E57DD ;"></a>
+                                    <a href="#" class="fa fa-youtube fa-lg"></a>
                                     {% elif channel_final[0] == 'facebook' %}
-                                    <a href="#" class="fa fa-facebook fa-lg " style="color:#9E57DD ;"></a>
+                                    <a href="#" class="fa fa-facebook fa-lg " ></a>
                                     {% elif channel_final[0] == 'twitter' %}
-                                    <a href="#" class="fa fa-twitter fa-lg" style="color:#9E57DD ;"></a>
+                                    <a href="#" class="fa fa-twitter fa-lg" ></a>
                                     {% elif channel_final[0] == 'instagram' %}
-                                    <a href="#" class="fa fa-instagram fa-lg " style="color:#9E57DD ;"></a>
+                                    <a href="#" class="fa fa-instagram fa-lg " ></a>
                                     {% endif %}
                                     {% endfor %}
                                     {% endif %}
