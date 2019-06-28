@@ -3046,27 +3046,39 @@ def updateProfile_inf():
         try:
             response = requests.put(url=url,json=payload)
             result_json = response.json()
-            res_mapped_channels = requests.get(url=base_url + 'Influencer/getMappedChannels/' + str(user_id))
-            res_mapped_channels_json = res_mapped_channels.json()
-            print(res_mapped_channels_json)
+            # res_mapped_channels = requests.get(url=base_url + 'Influencer/getMappedChannels/' + str(user_id))
+            res_inf_details = requests.get(url=base_url + 'Influencer/getDetailsByUserId/' + str(user_id))
+            res_inf_details_json = res_inf_details.json()
+            print(res_inf_details_json)
             for item in youtube_video_categories:
                 print(item)
                 res = requests.get(url=base_url+'Influencer/addCategoriesToChannel/'+str(user_id)+'/'+str(item))
-                for channel_id in res_mapped_channels_json['data']:
-                    print(channel_id['twitter_channel_id'])
-                    if channel_id['twitter_channel_id']:
+                for inf_dict in res_inf_details_json['data']:
+                    # print(channel_id['twitter_channel_id'])
+                    if 'mapped_twitter_channel_id' in inf_dict  :
                        print('inside twitter channel id')
-                       res = requests.get(url=base_url + 'Influencer/addCategoriesToTwitterChannel/' + str(channel_id['twitter_channel_id']) + '/' + str(item))
-                    if channel_id['insta_channel_id']:
+                       res = requests.get(url=base_url + 'Influencer/addCategoriesToTwitterChannel/' + str(inf_dict['mapped_twitter_channel_id']) + '/' + str(item))
+                    if 'mapped_insta_channel_id' in inf_dict:
                        print('inside insta channel id')
-                       res = requests.get(url=base_url + 'Influencer/addCategoriesToInstaChannel/' + str(channel_id['insta_channel_id']) + '/' + str(item))
+                       res = requests.get(url=base_url + 'Influencer/addCategoriesToInstaChannel/' + str(inf_dict['mapped_insta_channel_id']) + '/' + str(item))
                 print(res.json())
+
+            for inf_dict in res_inf_details_json['data']:
+                country = ''
+                if 'youtube_country' in inf_dict:
+                    country = inf_dict['youtube_country']
+                if 'mapped_twitter_channel_id' in inf_dict:
+                    print('inside twitter channel id')
+                    res = requests.get(url=base_url + 'Influencer/updateCountryToTwitterChannel/' + str(inf_dict['mapped_twitter_channel_id']) + '/' + str(country))
+                if 'mapped_insta_channel_id' in inf_dict:
+                    print('inside insta channel id')
+                    res = requests.get(url=base_url + 'Influencer/updateCountryToInstaChannel/' + str(inf_dict['mapped_insta_channel_id']) + '/' + str(country))
             return redirect(url_for("inf_editProfile"))
         except Exception as e:
             print(e)
             pass
-            return ''
-            # return redirect(url_for("inf_editProfile"))
+            # return ''
+            return redirect(url_for("inf_editProfile"))
 
 @connecsiApp.route('/addOffer')
 @is_logged_in
