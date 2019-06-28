@@ -425,9 +425,7 @@
         crossorigin="anonymous"></script>
 <script>
     $(document).ready(function () {
-    getBrandReport('{{ view_campaign_details_data['data'][0]['campaign_id'] }}');
-
-
+        getBrandReport('{{ view_campaign_details_data['data'][0]['campaign_id'] }}');
 
     $("#send_message_form").submit(function (e) {
         var form = $(this);
@@ -444,9 +442,7 @@
         e.preventDefault(); // avoid to execute the actual submit of the form.
     });
 
-
     });
-
 
     function sendMessage(channel_id,email_id,title){
             alert(channel_id);
@@ -595,19 +591,16 @@
                             $('#reportIcon'+val.channel_id).show();
                         }
                     });
-
-
-
+                    <!--ashish code-->
                     {% if view_campaign_details_data['data'][0]['youtube_inf_data']%}
 
                            {% for influencers in view_campaign_details_data['data'][0]['youtube_inf_data']%}
 
-                                  console.log('{{influencers}}');
 
-                                  {% if influencers['proposal_channels']  %}
+                                  {% if influencers['proposal_channels']!=''%}
                                             var proposal='{{ influencers['proposal_channels']}}';
                                             var proposal_channels=proposal.split('@').join(',').split(',');
-                                            var flag = false;
+
 
                                             var total_post=0;
                                             var total_views=0;
@@ -615,7 +608,7 @@
 
                                             {% for item in influencers['icr_data_list'] %}
 
-                                               {% if item %}
+
                                                 var index = '{{loop.index}}'-1;
                                                 var post=0;
                                                 var views=0;
@@ -624,7 +617,7 @@
                                                 var likes=0;
                                                 var shares=0;
 
-                                                {% for item_list in item %}
+                                                {% for item_list in item%}
                                                     post++;
                                                     views=views+('{{item_list['post_views']}}'-0);
                                                     clicks=clicks+('{{item_list['post_clicks']}}'-0);
@@ -641,34 +634,31 @@
                                                 total_post=total_post+post;
                                                 total_views=total_views+views;
                                                 total_clicks=total_clicks+clicks;
-                                                flag = true;
-                                                {% endif %}
+
+
                                             {%  endfor %}
+                                            var total_use=($('#revenue_total'+'{{influencers['channel_id']}}')["0"].nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.childNodes["0"].data)-0;
+
+                                            var proposal_price=($('#revenue_total'+'{{influencers['channel_id']}}')[0].previousElementSibling.innerHTML)-0;
+                                            console.log(proposal_price)
+                                            var cpa = (total_use)/(proposal_price);
+                                            var ner = ((likes+shares+comments)/(views))/(total_post);
+                                            console.log("cpa",cpa);
+                                            console.log("ner",ner);
+                                            $('#revenue_total'+'{{influencers['channel_id']}}')[0].nextElementSibling.innerHTML=total_post;
+                                            $('#revenue_total'+'{{influencers['channel_id']}}')[0].nextElementSibling.nextElementSibling.innerHTML=total_views;
+                                            $('#revenue_total'+'{{influencers['channel_id']}}')[0].nextElementSibling.nextElementSibling.nextElementSibling.innerHTML=total_clicks;
+                                            console.log($('#revenue_total'+'{{influencers['channel_id']}}')["0"].nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling);
+                                            $('#revenue_total'+'{{influencers['channel_id']}}')[0].nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.innerHTML=ner+'%';
+                                            $('#revenue_total'+'{{influencers['channel_id']}}')[0].nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.innerHTML=cpa;
 
 
-                                            if(flag){
-                                                var total_use=($('#revenue_total'+'{{influencers['channel_id']}}')["0"].nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.childNodes["0"].data)-0;
-                                                var proposal_price=($('#revenue_total'+'{{influencers['channel_id']}}')[0].previousElementSibling.innerHTML)-0;
-                                                console.log(proposal_price)
-                                                var cpa = (total_use)/(proposal_price);
-                                                var ner = ((likes+shares+comments)/(views))/(total_post);
-                                                cpa  = cpa.toFixed(2);
-                                                ner  = ner.toFixed(2);
-                                                console.log("cpa",cpa);
-                                                console.log("ner",ner);
-                                                $('#revenue_total'+'{{influencers['channel_id']}}')[0].nextElementSibling.innerHTML=total_post;
-                                                $('#revenue_total'+'{{influencers['channel_id']}}')[0].nextElementSibling.nextElementSibling.innerHTML=total_views;
-                                                $('#revenue_total'+'{{influencers['channel_id']}}')[0].nextElementSibling.nextElementSibling.nextElementSibling.innerHTML=total_clicks;
-                                                console.log($('#revenue_total'+'{{influencers['channel_id']}}')["0"].nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling);
-                                                $('#revenue_total'+'{{influencers['channel_id']}}')[0].nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.innerHTML=ner+'%';
-                                                $('#revenue_total'+'{{influencers['channel_id']}}')[0].nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.innerHTML=cpa;
-                                            }
+                                    {% endif %}
 
+                            {% endfor %}
+                    {% endif %}
 
-                                    {% endif%}
-
-                            {% endfor%}
-                    {% endif%}
+                    <!--ashish code end-->
                 }
             }
         });

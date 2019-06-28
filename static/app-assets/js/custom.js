@@ -1734,7 +1734,27 @@ $("#add_insta_channel_form").submit(function(e) {
 getAllUnreadMessagesCount();
 
 
+//        var $pageLoad = jQuery('#loader');
+//        $pageLoad.hide();
+//
+//        jQuery(this).ajaxStart(function() {
+//            $pageLoad.show("fast");
+////            alert('start');
+////            $('body').addClass('loading');
+//        }).ajaxStop(function() {
+//            $pageLoad.hide();
+////            alert('stop');
+////            $('body').removeClass('loading');
+//        });
+
+
+
 });
+//$( document ).ajaxStart(function() {
+//  $("#loader").hide();
+//  $( "#loader" ).show();
+//});
+
 function goBack() {
         window.history.back();
     }
