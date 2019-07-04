@@ -1609,3 +1609,206 @@ td .menu .submenu:before {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+/* ashish code starts */
+
+/* for proposal channels css is here */
+
+
+#proposal_channels .custom-control{
+    display:inline;
+}
+#proposal_channels > div> label::after{
+    left:-2.25rem;
+    top:-1.4rem;
+    width:1.5rem;
+    height:1.5rem;
+}
+#proposal_channels > div > label::before{
+    left:-2.25rem;
+    top:-1.4rem;
+    width:1.5rem;
+    height:1.5rem;
+}
+#proposal_channels{
+    padding: 0 1.5rem;
+}
+#proposal_channels .custom-control{
+    margin-right: 3rem;
+}
+
+
+#edit_proposal_channels .custom-control{
+    display:inline;
+}
+#edit_proposal_channels > div> label::after{
+    left:-2.25rem;
+    top:-1.4rem;
+    width:1.5rem;
+    height:1.5rem;
+}
+#edit_proposal_channels > div > label::before{
+    left:-2.25rem;
+    top:-1.4rem;
+    width:1.5rem;
+    height:1.5rem;
+}
+#edit_proposal_channels{
+    padding: 0 1.5rem;
+}
+#edit_proposal_channels .custom-control{
+    margin-right: 3rem;
+}
+
+
+
+#proposal_arrangements .custom-control{
+    display:block;
+}
+#proposal_arrangements > div> label::after{
+    left:-2.25rem;
+    top:-1.2rem;
+    width:1.5rem;
+    height:1.5rem;
+
+}
+#proposal_arrangements > div > label::before{
+    left:-2.25rem;
+    top:-1.2rem;
+    width:1.5rem;
+    height:1.5rem;
+
+}
+#proposal_arrangements{
+    padding: 0 1.5rem;
+}
+#proposal_arrangements .custom-control{
+    margin-right: 3rem;
+    margin-bottom: 1rem;
+}
+
+
+#edit_proposal_arrangements .custom-control{
+    display:block;
+}
+#edit_proposal_arrangements > div> label::after{
+    left:-2.25rem;
+    top:-1.2rem;
+    width:1.5rem;
+    height:1.5rem;
+}
+#edit_proposal_arrangements > div > label::before{
+    left:-2.25rem;
+    top:-1.2rem;
+    width:1.5rem;
+    height:1.5rem;
+}
+#edit_proposal_arrangements{
+    padding: 0 1.5rem;
+}
+#edit_proposal_arrangements .custom-control{
+    margin-right: 3rem;
+    margin-bottom: 1rem;
+}
+
+
+
+
+#proposal_kpis .custom-control{
+    display:block;
+}
+#proposal_kpis > div> label::after{
+    left:-2.25rem;
+    top:-1.2rem;
+    width:1.5rem;
+    height:1.5rem;
+}
+#proposal_kpis > div > label::before{
+    left:-2.25rem;
+    top:-1.2rem;
+    width:1.5rem;
+    height:1.5rem;
+}
+#proposal_kpis{
+    padding: 0 1.5rem;
+}
+#proposal_kpis .custom-control{
+    margin-right: 3rem;
+    margin-bottom: 1rem;
+}
+
+
+#edit_proposal_kpis .custom-control{
+    display:block;
+}
+#edit_proposal_kpis > div> label::after{
+    left:-2.25rem;
+    top:-1.2rem;
+    width:1.5rem;
+    height:1.5rem;
+}
+#edit_proposal_kpis > div > label::before{
+    left:-2.25rem;
+    top:-1.2rem;
+    width:1.5rem;
+    height:1.5rem;
+}
+#edit_proposal_kpis{
+    padding: 0 1.5rem;
+}
+#edit_proposal_kpis .custom-control{
+    margin-right: 3rem;
+    margin-bottom: 1rem;
+}
+
+#viewProposal textarea{
+    border-radius:5px;
+    background-color:#f7f7f7;
+    border:1px solid #9370DB;
+    resize:none;
+    padding:2rem;
+}
+#edit_proposal_description,#proposal_description{
+    border-radius:5px;
+    background-color:#f7f7f7;
+    border:1px solid #9370DB;
+    resize:none;
+    padding:2rem;
+}
+.set-background{
+    border:1px solid #9370DB;
+    border-radius:5px;
+    background-color:#f7f7f7;
+    padding:1rem;
+}
+#view_proposal_campaign_name{
+    color:#6495ED !important;
+    font-weight:500;
+}
+#view_proposal_arrangements,#view_proposal_kpis,#view_proposal_price{
+    color:#9370DB !important;
+}
+#view_proposal_price{
+    font-size:1.2em;
+    font-weight:bold;
+}
+.get-bottom{
+    margin: 1rem 0;
+}
+
+.parent-div{
+    display:flex!important;
+    flex-wrap: wrap;
+    justify-content:space-between;
+}
+.child-box-1{
+    display:inline;
+}
+.child-box-1,.child-box-2,.child-box-3{
+    padding:1rem 0;
+    width:220px;
+    border-bottom:1px solid rgb(211, 216, 233);
+}
+
+
+/* ashish code ends */

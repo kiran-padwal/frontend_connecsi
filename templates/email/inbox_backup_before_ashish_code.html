@@ -421,100 +421,82 @@
                         <input type="hidden" name="influencer_id" value="">
                         <!--<div>message id = {{ glob.message_id }} Channel id = {{ glob.channel_id }}</div>-->
                         <div class="row">
-                            <div class="col-lg-6">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="form-group">
-                                            <label for="proposal_campaign_name">Select Campaign:</label>
-                                            <select class="form-control" id="proposal_campaign_name" name="campaign_id" data-channel-id="{{ glob.channel_id }}" required></select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="proposal_from_date">From Date:</label>
-                                            <input type="text" class="form-control" name="proposal_from_date" id="proposal_from_date" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="proposal_to_date">To Date:</label>
-                                            <input type="text" class="form-control" name="proposal_to_date" id="proposal_to_date" readonly>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="form-group">
-                                            <label for="proposal_to_date">Channels:</label>
-                                            <div id="proposal_channels"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="form-group">
-                                            <label for="proposal_arrangements">Arrangements:</label>
-                                            <div id="proposal_arrangements"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="form-group">
-                                            <label for="proposal_kpis">Kpis:</label>
-                                            <div id="proposal_kpis"></div>
-                                        </div>
-                                    </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="proposal_campaign_name">Select Campaign:</label>
+                                    <select class="form-control" id="proposal_campaign_name" name="campaign_id" data-channel-id="{{ glob.channel_id }}" required></select>
                                 </div>
                             </div>
-                            <div class="col-lg-6">
-                                <div class="container-fluid">
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <div class="form-group">
-                                                <label for="proposal_description">Description:</label>
-                                                <textarea class="form-control"  name="proposal_description" id="proposal_description" rows="15" required></textarea>
-                                            </div>
-                                        </div>
-                                    </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="proposal_description">Description:</label>
+                                    <textarea class="form-control"  name="proposal_description" id="proposal_description" required>
+                                    </textarea>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-8">
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label for="proposal_ref_link">Proposal ref. link:</label>
-                                            <input type="text" class="form-control" name="ref_link" id="proposal_ref_link" placeholder="ref link" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <div class="form-group">
-                                            <label for="price">Price:</label>
-                                            <input class="form-control" type="number" name="proposal_price" id="price" required placeholder="amount" min="0">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <div class="form-group">
-                                            <label for="proposal_currency">Currency:</label>
-                                            <select name="currency" id="proposal_currency" class="form-control">
-                                                <option value="USD">USD</option>
-                                                <option value="EUR">EUR</option>
-                                                <option value="PLN">PLN</option>
-                                                <option value="INR">INR</option>
-                                            </select>
-                                        </div>
-                                    </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="proposal_from_date">From Date:</label>
+                                    <input type="text" class="form-control" name="proposal_from_date" id="proposal_from_date" readonly>
                                 </div>
                             </div>
-                            <div class="col-md-4"></div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="proposal_to_date">To Date:</label>
+                                    <input type="text" class="form-control" name="proposal_to_date" id="proposal_to_date" readonly>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="proposal_to_date">Channels:</label>
+                                    <div id="proposal_channels"></div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="proposal_target_url">Target url:</label>
+                                    <input type="text" class="form-control" name="target_url" id="proposal_target_url" readonly>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="proposal_ref_link">Proposal ref. link:</label>
+                                    <input type="text" class="form-control" name="ref_link" id="proposal_ref_link" placeholder="ref link" required>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="proposal_arrangements">Arrangements:</label>
+                                    <div id="proposal_arrangements"></div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="proposal_kpis">Kpis:</label>
+                                    <div id="proposal_kpis"></div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="proposal_currency">Currency:</label>
+                                    <select name="currency" id="proposal_currency" class="form-control">
+                                        <option value="USD">USD</option>
+                                        <option value="EUR">EUR</option>
+                                        <option value="PLN">PLN</option>
+                                        <option value="INR">INR</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="price">Price:</label>
+                                    <input class="form-control" type="number" name="proposal_price" id="price" required placeholder="amount">
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" id="saveProposal" class="btn btn-primary bg-color1">Send</button>
+                        <button type="submit" id="saveProposal" class="btn btn-primary bg-color1">Save</button>
                     </div>
                 </form>
             </div>
@@ -524,7 +506,7 @@
     <div class="modal fade" id="viewProposal" role="dialog" data-backdrop="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header alert-primary">
                     <b class="modal-title">View Proposal</b>
                     <button  type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
@@ -534,58 +516,31 @@
                     <input type="hidden" name="channel_id" value="{{ glob.channel_id }}">
                     <input type="hidden" name="influencer_id" value="">
                     <!--<div>message id = {{ glob.message_id }} Channel id = {{ glob.channel_id }}</div>-->
-                    <div class="row text-center">
-                        <div class="col-12 get-bottom">
-                            <b><h5 id="view_proposal_campaign_name"></h5></b>
-                        </div>
-                    </div>
-                    <div class="parent-div text-center">
-                        <div class="child-box-1">
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="get-bottom"><h7><b>START DATE</b></h7></div>
-                                        <h7 id="view_proposal_from_date"></h7>
-                                    </div>
-                                    <div class="col">
-                                        <div class="get-bottom"><h7><b>END DATE</b></h7></div>
-                                    <h7 id="view_proposal_to_date"></h7>
-                                    </div>
-                                </div>
-                        </div>
-                        <div class="child-box-2">
-                                <div class="get-bottom"><h7><b>CHANNELS</b></h7></div>
-                                <h7 id="view_proposal_channels"></h7>
-                        </div>
-                        <div class="child-box-3">
-                                <div class="set-background">
-                                    <div class="get-bottom"><h7><b>REMUNERATION</b></h7></div>
-                                    <h7 id="view_proposal_price"></h7>
-                                </div>
-                        </div>
-                    </div>
-                    <div class="parent-div text-center">
-                        <div class="child-box-1">
-                            <div class="get-bottom" ><h7><b>ARRANGEMENTS</b></h7></div>
-                            <h7 id="view_proposal_arrangements" style="text-align:left;"></h7>
-                        </div>
-                        <div class="child-box-2">
-                            <div class="get-bottom"><h7><b>KPIs</b></h7></div>
-                            <h7 id="view_proposal_kpis"></h7>
-                        </div>
-                        <div class="child-box-3">
-                            <div class="get-bottom"><h7><b>REFLINK</b></h7></div>
-                            <h7 id="view_proposal_ref_link"></h7>
-                        </div>
-                    </div>
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col">
-                                <div class="text-center get-bottom"><h7><b>DESCRIPTION</b></h7></div>
-                                <textarea id="view_proposal_description" rows="8"  style="min-width:100%;"></textarea>
-                            </div>
-                        </div>
 
-                    </div>
+                    <div id="view_proposal_campaign_name"></div>
+
+
+                    <div id="view_proposal_description"></div>
+
+
+                    <div id="view_proposal_from_date"></div>
+
+
+                    <div id="view_proposal_to_date"></div>
+
+
+                    <div id="view_proposal_channels"></div>
+
+
+                    <div id="view_proposal_target_url">Target URL : </div>
+
+                    <div id="view_proposal_ref_link">Ref Link : </div>
+
+                    <div id="view_proposal_arrangements">Arrangements : </div>
+
+                    <div id="view_proposal_kpis">Kpis : </div>
+
+                    <div id="view_proposal_price">Price : </div>
 
 
                 </div>
@@ -599,7 +554,7 @@
     <div class="modal fade" id="editProposal" role="dialog" data-backdrop="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header alert-primary">
                     <b class="modal-title">Edit Proposal</b>
                     <button  type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
@@ -609,102 +564,94 @@
                         <input type="hidden" name="channel_id" value="{{ glob.channel_id }}">
                         <input type="hidden" id="edit_proposal_id" name="proposal_id" value="">
                         <!--<div>message id = {{ glob.message_id }} Channel id = {{ glob.channel_id }}</div>-->
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="form-group">
-                                            <label for="edit_proposal_campaign_name">Campaign Name:</label>
-                                            <input class="form-control" type="text" id="edit_proposal_campaign_name" name="edit_proposal_campaign_name" readonly>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="edit_proposal_from_date">From Date:</label>
-                                            <input type="text" class="form-control" name="edit_proposal_from_date" id="edit_proposal_from_date" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="edit_proposal_to_date">To Date:</label>
-                                            <input type="text" class="form-control" name="edit_proposal_to_date" id="edit_proposal_to_date" readonly>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="form-group">
-                                            <label for="edit_proposal_channels">Channels:</label>
-                                            <div id="edit_proposal_channels"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="form-group">
-                                            <label for="edit_proposal_arrangements">Arrangements:</label>
-                                            <div id="edit_proposal_arrangements"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="form-group">
-                                            <label for="edit_proposal_kpis">Kpis:</label>
-                                            <div id="edit_proposal_kpis"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="container-fluid">
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <div class="form-group">
-                                                <label for="edit_proposal_description">Description:</label>
-                                                <textarea class="form-control"  id="edit_proposal_description" name="edit_proposal_description" rows="15" required></textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-8">
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label for="proposal_ref_link">Ref link:</label>
-                                            <input type="text" class="form-control" name="edit_proposal_ref_link" id="edit_proposal_ref_link" placeholder="ref link" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <div class="form-group">
-                                            <label for="price">Price:</label>
-                                            <input class="form-control" type="number" name="proposal_price" id="edit_proposal_price" required placeholder="amount">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <div class="form-group">
-                                            <label for="edit_proposal_currency">Currency:</label>
-                                            <select name="currency" id="edit_proposal_currency" class="form-control">
-                                                <option id="USD" value="USD">USD</option>
-                                                <option id="EUR" value="EUR">EUR</option>
-                                                <option id="PLN" value="PLN">PLN</option>
-                                                <option id="INR" value="INR">INR</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4"></div>
-                        </div>
 
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="edit_proposal_campaign_name">Campaign Name:</label>
+                                    <input class="form-control" type="text" id="edit_proposal_campaign_name" name="edit_proposal_campaign_name" readonly>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="edit_proposal_description">Description:</label>
+                                    <textarea class="form-control"  id="edit_proposal_description" name="edit_proposal_description" required>
+                                    </textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="edit_proposal_from_date">From Date:</label>
+                                    <input type="text" class="form-control" name="edit_proposal_from_date" id="edit_proposal_from_date" readonly>
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="edit_proposal_to_date">To Date:</label>
+                                    <input type="text" class="form-control" name="edit_proposal_to_date" id="edit_proposal_to_date" readonly>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="edit_proposal_channels">Channels:</label>
+                                    <div id="edit_proposal_channels"></div>
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="edit_proposal_target_url">Target url:</label>
+                                    <input type="text" class="form-control" name="edit_proposal_target_url" id="edit_proposal_target_url" readonly>
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="proposal_ref_link">Ref link:</label>
+                                    <input type="text" class="form-control" name="edit_proposal_ref_link" id="edit_proposal_ref_link" placeholder="ref link" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="edit_proposal_arrangements">Arrangements:</label>
+                                    <div id="edit_proposal_arrangements"></div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="edit_proposal_kpis">Kpis:</label>
+                                    <div id="edit_proposal_kpis"></div>
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="edit_proposal_currency">Currency:</label>
+                                    <select name="currency" id="edit_proposal_currency" class="form-control">
+                                        <option id="USD" value="USD">USD</option>
+                                        <option id="EUR" value="EUR">EUR</option>
+                                        <option id="PLN" value="PLN">PLN</option>
+                                        <option id="INR" value="INR">INR</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="price">Price:</label>
+                                    <input class="form-control" type="number" name="proposal_price" id="edit_proposal_price" required placeholder="amount">
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" id="updateProposal" class="btn btn-primary bg-color1">Update</button>
+                        <button type="submit" id="updateProposal" class="btn btn-default">Update</button>
                     </div>
                 </form>
             </div>
@@ -784,11 +731,11 @@ function editProposal(message_id,campaign_id){
                        jQuery.each(data.results, function(i, val) {
                            var arrangements = val.arrangements.split(",");
                            for(i=0;i<arrangements.length;i++){
-                               $("#edit_proposal_arrangements").append('<div class="custom-control custom-checkbox custom-control-inline"><input type="checkbox" id="'+arrangements[i]+'" class="edit_proposal_arrangements_checkbox filled-in custom-control-input custom-control-input" multiple name="edit_proposal_arrangements" value="'+arrangements[i]+'"><label class="custom-control-label campaignCheckbox" for="'+arrangements[i]+'"></label><span>'+arrangements[i]+'</span></div>');
+                               $("#edit_proposal_arrangements").append('<input id="'+arrangements[i]+'" class="edit_proposal_arrangements_checkbox" multiple type ="checkbox" name="edit_proposal_arrangements" value="'+arrangements[i]+'">'+arrangements[i]);
                            }
                            var kpis = val.kpis.split(",");
                            for(i=0;i<kpis.length;i++){
-                               $("#edit_proposal_kpis").append('<div class="custom-control custom-checkbox custom-control-inline"><input type="checkbox" id="'+kpis[i]+'" class="edit_proposal_kpis_checkbox filled-in custom-control-input custom-control-input"  multiple name="edit_proposal_kpis" value="'+kpis[i]+'"><label class="custom-control-label campaignCheckbox" for="'+kpis[i]+'"></label><span>'+kpis[i]+'</span></div>');
+                               $("#edit_proposal_kpis").append('<input id="'+kpis[i]+'" class="edit_proposal_kpis_checkbox" multiple type ="checkbox" name="edit_proposal_kpis" value="'+kpis[i]+'">'+kpis[i]);
                            }
 
                        });
@@ -820,6 +767,7 @@ function editProposal(message_id,campaign_id){
                             for(i=0;i<channels.length;i++){
                                 $(".edit_proposal_channels_checkbox[name='edit_proposal_channels']").each(function(){
                                     var proposal_channel_id = $(this).attr('id');
+                                    <!--alert(proposal_channel_id);-->
                                     if(channels[i]==proposal_channel_id){
                                         $(this).attr('checked',true);
                                     }
@@ -927,17 +875,17 @@ function getAllMappedChannel_ids(channel_id){
                         <!--alert(val.mapped_insta_channel_id);-->
                             if(val.mapped_youtube_channel_id){
 
-                                $("#proposal_channels").append('<div class="custom-control custom-checkbox custom-control-inline"><input type="checkbox" id="youtube@'+val.mapped_youtube_channel_id+'" class="proposal_channels_checkbox filled-in custom-control-input custom-control-input" multiple name="proposal_channels" value="youtube@'+val.mapped_youtube_channel_id+'"><label class="custom-control-label campaignCheckbox" for="youtube@'+val.mapped_youtube_channel_id+'"></label><span data-toggle="tooltip" title="'+val.channel_id+'"><a target="_blank" href="https://www.youtube.com/channel/'+val.mapped_youtube_channel_id+'" class="fa fa-youtube red"></a></span></div>');
+                                $("#proposal_channels").append('<input class="custom-control-inline proposal_channels_checkbox" checked multiple type ="checkbox" name="proposal_channels" value="youtube@'+val.mapped_youtube_channel_id+'"><span data-toggle="tooltip" title="'+val.channel_id+'"><a target="_blank" href="https://www.youtube.com/channel/'+val.mapped_youtube_channel_id+'" class="fa fa-youtube red"></a></span>&nbsp&nbsp&nbsp');
 
                             }
                             if(val.mapped_twitter_channel_id){
 
-                                $("#proposal_channels").append('<div class="custom-control custom-checkbox custom-control-inline"><input type="checkbox" id="twitter@'+val.mapped_twitter_channel_id+'" class="proposal_channels_checkbox filled-in custom-control-input custom-control-input" multiple name="proposal_channels" value="twitter@'+val.mapped_twitter_channel_id+'"><label class="custom-control-label campaignCheckbox" for="twitter@'+val.mapped_twitter_channel_id+'"></label><span data-toggle="tooltip" title="'+val.twitter_url+'"><a target="_blank" href="'+val.twitter_url+'" class="fa fa-twitter"></a></span></div>');
+                                $("#proposal_channels").append('<input class="custom-control-inline proposal_channels_checkbox" checked multiple type ="checkbox" name="proposal_channels" value="twitter@'+val.mapped_twitter_channel_id+'"><span data-toggle="tooltip" title="'+val.twitter_url+'"><a target="_blank" href="'+val.twitter_url+'" class="fa fa-twitter"></span></a>');
 
                             }
                             if(val.mapped_insta_channel_id){
 
-                                $("#proposal_channels").append('<div class="custom-control custom-checkbox custom-control-inline"><input type="checkbox" id="instagram@'+val.mapped_insta_channel_id+'" class="proposal_channels_checkbox filled-in custom-control-input custom-control-input" multiple name="proposal_channels" value="instagram@'+val.mapped_insta_channel_id+'"><label class="custom-control-label campaignCheckbox" for="instagram@'+val.mapped_insta_channel_id+'"></label><span data-toggle="tooltip" title="'+val.insta_url+'"><a target="_blank" href="'+val.insta_url+'" class="fa fa-instagram"></a></span></div>');
+                                $("#proposal_channels").append('<input class="custom-control-inline proposal_channels_checkbox" checked multiple type ="checkbox" name="proposal_channels" value="instagram@'+val.mapped_insta_channel_id+'"><span data-toggle="tooltip" title="'+val.insta_url+'"><a target="_blank" href="'+val.insta_url+'" class="fa fa-instagram"></span></a>');
 
                             }
 
@@ -962,13 +910,13 @@ function getAllMappedChannel_ids1(channel_id){
                    if (data.results.length != 0){
                    jQuery.each(data.results, function(i, val) {
                             if(val.mapped_youtube_channel_id){
-                                $("#edit_proposal_channels").append('<div class="custom-control custom-checkbox custom-control-inline"><input type="checkbox" id="youtube@'+val.mapped_youtube_channel_id+'" class="edit_proposal_channels_checkbox filled-in custom-control-input custom-control-input"  multiple name="edit_proposal_channels" value="youtube@'+val.mapped_youtube_channel_id+'"><label class="custom-control-label campaignCheckbox" for="youtube@'+val.mapped_youtube_channel_id+'"></label><span data-toggle="tooltip" title="'+val.channel_id+'"><a target="_blank" href="https://www.youtube.com/channel/'+val.mapped_youtube_channel_id+'" class="fa fa-youtube red"></a></span></div>');
+                                $("#edit_proposal_channels").append('<input class="edit_proposal_channels_checkbox"  multiple type ="checkbox" name="edit_proposal_channels" value="youtube@'+val.mapped_youtube_channel_id+'" id="youtube@'+val.mapped_youtube_channel_id+'"><span data-toggle="tooltip" title="'+val.channel_id+'"><a target="_blank" href="https://www.youtube.com/channel/'+val.mapped_youtube_channel_id+'" class="fa fa-youtube red"></a></span>');
                             }
                             if(val.mapped_twitter_channel_id){
-                                $("#edit_proposal_channels").append('<div class="custom-control custom-checkbox custom-control-inline"><input type="checkbox" id="twitter@'+val.mapped_twitter_channel_id+'" class="edit_proposal_channels_checkbox filled-in custom-control-input custom-control-input"  multiple name="edit_proposal_channels" value="twitter@'+val.mapped_twitter_channel_id+'"><label class="custom-control-label campaignCheckbox" for="twitter@'+val.mapped_twitter_channel_id+'"></label><span data-toggle="tooltip" title="'+val.twitter_url+'"><a target="_blank" href="'+val.twitter_url+'" class="fa fa-twitter"></a></span></div>');
+                                $("#edit_proposal_channels").append('<input class="edit_proposal_channels_checkbox"  multiple type ="checkbox" name="edit_proposal_channels" value="twitter@'+val.mapped_twitter_channel_id+'" id="twitter@'+val.mapped_twitter_channel_id+'"><span data-toggle="tooltip" title="'+val.twitter_url+'"><a target="_blank" href="'+val.twitter_url+'" class="fa fa-twitter"></span></a>');
                             }
                             if(val.mapped_insta_channel_id){
-                                $("#edit_proposal_channels").append('<div class="custom-control custom-checkbox custom-control-inline"><input type="checkbox" id="instagram@'+val.mapped_insta_channel_id+'" class="edit_proposal_channels_checkbox filled-in custom-control-input custom-control-input"  multiple name="edit_proposal_channels" value="instagram@'+val.mapped_insta_channel_id+'"><label class="custom-control-label campaignCheckbox" for="instagram@'+val.mapped_insta_channel_id+'"></label><span data-toggle="tooltip" title="'+val.insta_url+'"><a target="_blank" href="'+val.insta_url+'" class="fa fa-instagram"></a></span></div>');
+                                $("#edit_proposal_channels").append('<input class="edit_proposal_channels_checkbox"  multiple type ="checkbox" name="edit_proposal_channels" value="instagram@'+val.mapped_insta_channel_id+'" id="instagram@'+val.mapped_insta_channel_id+'"><span data-toggle="tooltip" title="'+val.insta_url+'"><a target="_blank" href="'+val.insta_url+'" class="fa fa-instagram"></span></a>');
                             }
                     });
                     }
@@ -1062,31 +1010,25 @@ function getProposal(message_id,campaign_id){
 
                     console.log(val.proposal_channels);
                     $('#view_proposal_campaign_name').empty();
-                    $('#view_proposal_campaign_name').append(val.campaign_name);
+                    $('#view_proposal_campaign_name').append('Campaign Name : '+val.campaign_name);
                     $('#view_proposal_description').empty();
-                    $('#view_proposal_description').append(val.proposal_description);
+                    $('#view_proposal_description').append('Description : '+val.proposal_description);
                     $('#view_proposal_from_date').empty();
-                    $('#view_proposal_from_date').append(val.proposal_from_date);
+                    $('#view_proposal_from_date').append('From Date : '+val.proposal_from_date);
                     $('#view_proposal_to_date').empty();
-                    $('#view_proposal_to_date').append(val.proposal_to_date);
+                    $('#view_proposal_to_date').append('To Date : '+val.proposal_to_date);
                     $('#view_proposal_channels').empty();
-                    var proposal_c = val.proposal_channels.split('@').join(',').split(',');
-                    var channels_list=[];
-                    for(var i=0;i<proposal_c.length;i=i+2){
-                        channels_list.push(proposal_c[i]);
-                        $('#view_proposal_channels').append('<i class="fa fa-'+proposal_c[i]+'" style="padding:0 0.5em;"></i>');
-                    }
-
+                    $('#view_proposal_channels').append('Channels : '+val.proposal_channels);
                     $('#view_proposal_arrangements').empty();
-                    $('#view_proposal_arrangements').append(val.proposal_arrangements);
+                    $('#view_proposal_arrangements').append('Arrangements : '+val.proposal_arrangements);
                     $('#view_proposal_kpis').empty();
-                    $('#view_proposal_kpis').append(val.proposal_kpis);
+                    $('#view_proposal_kpis').append('Kpis : '+val.proposal_kpis);
                     $('#view_proposal_price').empty();
-                    $('#view_proposal_price').append(val.proposal_price+' '+val.currency);
+                    $('#view_proposal_price').append('Price : '+val.proposal_price+' '+val.currency);
                     $('#view_proposal_target_url').empty();
-                    $('#view_proposal_target_url').append(val.target_url);
+                    $('#view_proposal_target_url').append('Target Url : '+val.target_url);
                     $('#view_proposal_ref_link').empty();
-                    $('#view_proposal_ref_link').append('<a data-toggle="tooltip" title="'+val.ref_link+'" href="'+val.ref_link+'" target="_blank"><i class="fa fa-external-link" style="font-size:15px;color:#6495ED;"></i></a>');
+                    $('#view_proposal_ref_link').append('Ref Link : '+val.ref_link);
 
                     $('#viewProposal').modal('show');
 
@@ -1098,8 +1040,6 @@ function getProposal(message_id,campaign_id){
 
     $(document).ready(function(){
 
-
-
             <!--alert('{{glob.total_unread_messages}}');-->
             <!--$('#myinbox').append('<span class="badge badge-pill badge-danger">{{glob.total_unread_messages}}</span>')-->
 
@@ -1108,3 +1048,4 @@ function getProposal(message_id,campaign_id){
 
 
 {% endblock %}
+

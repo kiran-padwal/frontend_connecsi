@@ -614,9 +614,61 @@ $(document).ready(function () {
         e.preventDefault(); // avoid to execute the actual submit of the form.
     });
 
+// backup code for proposal onchange ///
 
+//    $("#proposal_campaign_name").on("change",function(){
+////        alert('first here');
+//        getAllMappedChannel_ids($(this).attr('data-channel-id'));
+//        $("#proposal_description").empty();
+//        $("#proposal_from_date").empty();
+//        $("#proposal_to_date").empty();
+//        $("#proposal_target_url").empty();
+//        $("#proposal_arrangements").empty();
+//        $("#proposal_kpis").empty();
+//        var campaign_id = $("#proposal_campaign_name").val();
+//        var $var = '';
+//        var $uniqid = Date.now();
+//
+//        $.ajax({
+//            type: "GET",
+//            url: '/getCampaignDetails/'+campaign_id,
+//            success: function(data)
+//            {
+//                jQuery.each(data.results, function(i, val) {
+//
+//                    $("#proposal_description").val(val.campaign_description);
+//
+//                    $("#proposal_from_date").val(val.from_date);
+//
+//                    $("#proposal_to_date").val(val.to_date);
+//                    $("#proposal_target_url").val(val.target_url);
+//
+//                    var arrangements = val.arrangements.split(",");
+//                    for(i=0;i<arrangements.length;i++){
+//                        $uniqid = $uniqid + 1;
+////                        $var = '<div class="custom-control custom-control-inline-block custom-checkbox custom-control-inline text-left"><input checked type="checkbox" class="filled-in custom-control-input custom-control-input" multiple value="'+arrangements[i]+'" name="proposal_arrangements" id="arrangements_id_'+$uniqid+'"><label class="custom-control-label campaignCheckbox" for="arrangements_id_'+$uniqid+'">'+arrangements[i]+'</label></div>';
+////                        $("#proposal_arrangements").append($var);
+//                        $("#proposal_arrangements").append('<input checked class="custom-control-inline proposal_arrangements_checkbox" multiple type ="checkbox" name="proposal_arrangements" value="'+arrangements[i]+'">'+arrangements[i]);
+//                    }
+//                    var kpis = val.kpis.split(",");
+//                    for(i=0;i<kpis.length;i++){
+//                        $uniqid = $uniqid + 1;
+////                        $var = '<div class="custom-control custom-control-inline-block custom-checkbox custom-control-inline text-left"><input checked type="checkbox" class="filled-in custom-control-input custom-control-input" multiple value="'+kpis[i]+'" name="proposal_kpis" id="kpis_id_'+$uniqid+'"><label class="custom-control-label campaignCheckbox" for="kpis_id_'+$uniqid+'">'+kpis[i]+'</label></div>';
+////                        $("#proposal_kpis").append($var);
+//                           $("#proposal_kpis").append('<input checked class="custom-control-inline proposal_kpis_checkbox" multiple type ="checkbox" name="proposal_kpis" value="'+kpis[i]+'">'+kpis[i]);
+//                    }
+//
+//                });
+//
+//            }
+//        });
+//    });
 
-    $("#proposal_campaign_name").on("change",function(){
+// backup code //
+
+// ashish code proposal channel onchange //
+
+$("#proposal_campaign_name").on("change",function(){
 //        alert('first here');
         getAllMappedChannel_ids($(this).attr('data-channel-id'));
         $("#proposal_description").empty();
@@ -648,14 +700,14 @@ $(document).ready(function () {
                         $uniqid = $uniqid + 1;
 //                        $var = '<div class="custom-control custom-control-inline-block custom-checkbox custom-control-inline text-left"><input checked type="checkbox" class="filled-in custom-control-input custom-control-input" multiple value="'+arrangements[i]+'" name="proposal_arrangements" id="arrangements_id_'+$uniqid+'"><label class="custom-control-label campaignCheckbox" for="arrangements_id_'+$uniqid+'">'+arrangements[i]+'</label></div>';
 //                        $("#proposal_arrangements").append($var);
-                        $("#proposal_arrangements").append('<input checked class="custom-control-inline proposal_arrangements_checkbox" multiple type ="checkbox" name="proposal_arrangements" value="'+arrangements[i]+'">'+arrangements[i]);
+                        $("#proposal_arrangements").append('<div class="custom-control custom-checkbox custom-control-inline"><input type="checkbox" id="proposal-arrangements-box-'+i+'" class="proposal_arrangements_checkbox filled-in custom-control-input custom-control-input"  multiple name="proposal_arrangements" value="'+arrangements[i]+'"><label class="custom-control-label campaignCheckbox" for="proposal-arrangements-box-'+i+'"></label><span>'+arrangements[i]+'</span></div>');
                     }
                     var kpis = val.kpis.split(",");
                     for(i=0;i<kpis.length;i++){
                         $uniqid = $uniqid + 1;
 //                        $var = '<div class="custom-control custom-control-inline-block custom-checkbox custom-control-inline text-left"><input checked type="checkbox" class="filled-in custom-control-input custom-control-input" multiple value="'+kpis[i]+'" name="proposal_kpis" id="kpis_id_'+$uniqid+'"><label class="custom-control-label campaignCheckbox" for="kpis_id_'+$uniqid+'">'+kpis[i]+'</label></div>';
 //                        $("#proposal_kpis").append($var);
-                           $("#proposal_kpis").append('<input checked class="custom-control-inline proposal_kpis_checkbox" multiple type ="checkbox" name="proposal_kpis" value="'+kpis[i]+'">'+kpis[i]);
+                           $("#proposal_kpis").append('<div class="custom-control custom-checkbox custom-control-inline"><input type="checkbox" id="proposal-kpis-box-'+i+'" class="proposal_kpis_checkbox filled-in custom-control-input custom-control-input" multiple name="proposal_kpis" value="'+kpis[i]+'"><label class="custom-control-label campaignCheckbox" for="proposal-kpis-box-'+i+'"></label><span>'+kpis[i]+'</span></div>');
                     }
 
                 });
@@ -663,7 +715,7 @@ $(document).ready(function () {
             }
         });
     });
-
+// ashish code end //
 
 
     $("#getCampaignsAddedToMessage").on("click",function(){
