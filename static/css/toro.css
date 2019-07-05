@@ -1855,8 +1855,8 @@ td .menu .submenu:before {
 #search-input-text{
     width:90%;
     padding:0.3rem 1rem;
-    border:3px solid #92b4f2 !important;
-    border-radius:100px;
+    border:none;
+    border-radius:5px;
     background-color:#9370DB !important;
     color:white;
     font-size:1rem;

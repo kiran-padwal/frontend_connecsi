@@ -410,5 +410,77 @@
 
 <!--<script type="text/javascript" src="http://materializecss.com/extras/noUiSlider/nouislider.js"></script>-->
 <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>-->
+<script>
+    function setValue(){
+        document.getElementsByClassName('create-campaign-data')[0].style.display='none';
+        document.getElementsByClassName('create-classified-ad-data')[0].style.display='none';
+        document.getElementsByClassName('search-influencers-data')[0].style.display='none';
+        document.getElementsByClassName('tag-campaigns-to-messages-data')[0].style.display='none';
+        document.getElementsByClassName('messaging-data')[0].style.display='none';
+    }
+    function previousMenu(){
+        if((document.getElementsByClassName('guide-menu-list')[0].style.display=='block')||(document.getElementsByClassName('billing-payments-menu-list')[0].style.display=='block')||(document.getElementsByClassName('account-menu-list')[0].style.display=='block')||(document.getElementsByClassName('report-issue-menu-list')[0].style.display=='block')){
+            clearInputText();
+            return;
+        }
+        if(document.getElementsByClassName('create-campaign-data')[0].style.display=='block'||document.getElementsByClassName('create-classified-ad-data')[0].style.display=='block'||document.getElementsByClassName('search-influencers-data')[0].style.display=='block'||document.getElementsByClassName('tag-campaigns-to-messages-data')[0].style.display=='block'||document.getElementsByClassName('messaging-data')[0].style.display=='block'){
+            document.getElementsByClassName('search-icon')[0].style.display='none';
+            document.getElementsByClassName('previous-icon')[0].style.display='block';
+            document.getElementsByClassName('clear-icon')[0].style.display='block';
+            document.getElementById('search-input-text').value='';
+            document.getElementById('search-input-text').value='Guide to Connecsi';
+            document.getElementsByClassName('help-menu')[0].style.display='none';
+            document.getElementsByClassName('guide-menu-list')[0].style.display='block';
+            setValue();
+            return;
+        }
+
+
+    }
+    function helpFunction(x){
+        console.log("help menu",x);
+        document.getElementsByClassName('search-icon')[0].style.display='none';
+        document.getElementsByClassName('previous-icon')[0].style.display='block';
+        document.getElementsByClassName('clear-icon')[0].style.display='block';
+        var listName=x.childNodes[1].innerText;
+        document.getElementById('search-input-text').value='';
+        document.getElementById('search-input-text').value=listName;
+        document.getElementsByClassName('help-menu')[0].style.display='none';
+        var classToShow=x.className+'-list';
+        document.getElementsByClassName(classToShow)[0].style.display='block';
+    }
+    function guideConnecsi(x){
+        console.log("GUIDE menu list",x);
+        var listName=x.childNodes[1].innerText;
+        document.getElementById('search-input-text').value='';
+        document.getElementById('search-input-text').value=listName;
+        document.getElementsByClassName('help-menu')[0].style.display='none';
+        document.getElementsByClassName('guide-menu-list')[0].style.display='none';
+        var classToShow=x.className+'-data';
+        document.getElementsByClassName(classToShow)[0].style.display='block';
+    }
+    function clearInputText(){
+        document.getElementById('search-input-text').value='';
+        document.getElementsByClassName('help-menu')[0].style.display='block';
+        document.getElementsByClassName('guide-menu-list')[0].style.display='none';
+        document.getElementsByClassName('billing-payments-menu-list')[0].style.display='none';
+        document.getElementsByClassName('account-menu-list')[0].style.display='none';
+        document.getElementsByClassName('report-issue-menu-list')[0].style.display='none';
+        document.getElementsByClassName('search-icon')[0].style.display='block';
+        document.getElementsByClassName('previous-icon')[0].style.display='none';
+        document.getElementsByClassName('clear-icon')[0].style.display='none';
+        setValue();
+    }
+    $('#search-input-text').keyup(function(){
+
+        if( $('#search-input-text').val()==''){
+            document.getElementsByClassName('clear-icon')[0].style.display='none';
+        }
+        else{
+            document.getElementsByClassName('clear-icon')[0].style.display='block';
+        }
+    })
+
+</script>
 </body>
 </html>
