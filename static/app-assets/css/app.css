@@ -32676,7 +32676,10 @@ datetime .form-group {
     height: auto; } }
 
 @media (max-width: 991.98px) {
-  .header-navbar .navbar-container ul.navbar-nav li {
+  /*.header-navbar .navbar-container ul.navbar-nav li {*/
+  /*ashish code*/
+  .header-navbar .navbar-container ul {
+  /* end */
     float: right !important; }
     .header-navbar .navbar-container ul.navbar-nav li > a.nav-link {
       padding: 0.5rem 0.5rem; } }

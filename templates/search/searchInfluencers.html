@@ -177,7 +177,7 @@
                                             <i class="fa fa-youtube"></i>
                                         {% elif form_filters['channel']=='Twitter' %}
                                             <a href="https://www.twitter.com/{{ item['screen_name'] }}" target="_blank">{{ item['title'] }}</a>
-                                            <i class="fa fa-twitter-square"></i>
+                                            <i class="fa fa-twitter"></i>
                                         {% elif form_filters['channel']=='Instagram' %}
                                             <a href="https://www.instagram.com/{{ item['username'] }}" target="_blank">{{ item['username'] }}</a>
                                             <i class="fa fa-instagram"></i>
@@ -474,7 +474,7 @@
                                         {% if form_filters['channel'] =='Youtube' %}
                                             {% if item['twitter_url'] %}
                                             <li><a href="{{ item['twitter_url'] }}" target="_blank"><i
-                                                    class="fa fa-twitter-square"></i></a>
+                                                    class="fa fa-twitter"></i></a>
                                             </li>
                                             {% endif %}
                                             {% if item['insta_url'] %}
@@ -491,7 +491,7 @@
                                         {% if form_filters['channel'] =='Twitter' %}
                                             {% if item['youtube_url'] %}
                                             <li><a href="{{ item['youtube_url'] }}" target="_blank"><i
-                                                    class="fa fa-youtube-square"></i></a>
+                                                    class="fa fa-youtube"></i></a>
                                             </li>
                                             {% endif %}
                                             {% if item['insta_url'] %}
@@ -508,7 +508,7 @@
                                         {% if form_filters['channel'] =='Instagram' %}
                                             {% if item['youtube_url'] %}
                                             <li><a href="{{ item['youtube_url'] }}" target="_blank"><i
-                                                    class="fa fa-youtube-square"></i></a>
+                                                    class="fa fa-youtube"></i></a>
                                             </li>
                                             {% endif %}
                                             {% if item['twitter_url'] %}
@@ -771,11 +771,11 @@
                                 {% set channels = item['channels'].split(',') %}
                                 {% for channel in channels %}
                                 {% if channel == 'youtube' %}
-                                <a href="#" class="fa fa-youtube-square"></a>
+                                <a href="#" class="fa fa-youtube"></a>
                                 {% elif channel == 'facebook' %}
                                 <a href="#" class="fa fa-facebook-square"></a>
                                 {% elif channel == 'twitter' %}
-                                <a href="#" class="fa fa-twitter-square"></a>
+                                <a href="#" class="fa fa-twitter"></a>
                                 {% elif channel == 'instagram' %}
                                 <a href="#" class="fa fa-instagram"></a>
                                 {% endif %}

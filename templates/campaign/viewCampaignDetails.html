@@ -44,11 +44,11 @@
                                         {% set channels = item['channels'].split(',') %}
                                         {% for channel in channels %}
                                         {% if channel == 'youtube' %}
-                                        <li><a href="#" target="_blank"><i class="fa fa-youtube-square"></i></a></li>
+                                        <li><a href="#" target="_blank"><i class="fa fa-youtube"></i></a></li>
                                         {% elif channel == 'facebook' %}
                                         <li><a href="#" target="_blank"><i class="fa fa-facebook-square"></i></a></li>
                                         {% elif channel == 'twitter' %}
-                                        <li><a href="#" target="_blank"><i class="fa fa-twitter-square"></i></a></li>
+                                        <li><a href="#" target="_blank"><i class="fa fa-twitter"></i></a></li>
                                         {% elif channel == 'instagram' %}
                                         <li><a href="#" target="_blank"><i class="fa fa-instagram"></i></a></li>
                                         {% endif %}
@@ -237,11 +237,11 @@
                                     {% for channel in channels %}
                                     {% set channel_final = channel.split('@') %}
                                     {% if channel_final[0] == 'youtube' %}
-                                    <a href="#" class="fa fa-youtube-square"></a>
+                                    <a href="#" class="fa fa-youtube"></a>
                                     {% elif channel_final[0] == 'facebook' %}
                                     <a href="#" class="fa fa-facebook-square"></a>
                                     {% elif channel_final[0] == 'twitter' %}
-                                    <a href="#" class="fa fa-twitter-square"></a>
+                                    <a href="#" class="fa fa-twitter"></a>
                                     {% elif channel_final[0] == 'instagram' %}
                                     <a href="#" class="fa fa-instagram"></a>
                                     {% endif %}
@@ -460,10 +460,10 @@
             return 'fa-facebook-square'
         }
         if(item === "youtube") {
-            return 'fa-youtube-square'
+            return 'fa-youtube'
         }
         if(item === "twitter") {
-            return 'fa-twitter-square'
+            return 'fa-twitter'
         }
         if(item === "instagram") {
             return 'fa-instagram'

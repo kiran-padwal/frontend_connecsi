@@ -1078,9 +1078,15 @@ function getProposal(message_id,campaign_id){
                     }
 
                     $('#view_proposal_arrangements').empty();
-                    $('#view_proposal_arrangements').append(val.proposal_arrangements);
+                    <!--$('#view_proposal_arrangements').append(val.proposal_arrangements);-->
+                    <!--$('#view_proposal_kpis').empty();-->
+                    <!--$('#view_proposal_kpis').append(val.proposal_kpis);-->
+                    var prop_arrangements=val.proposal_arrangements.split(',').join(', ');
+                    $('#view_proposal_arrangements').append(prop_arrangements);
                     $('#view_proposal_kpis').empty();
-                    $('#view_proposal_kpis').append(val.proposal_kpis);
+                    var prop_kpis=val.proposal_kpis.split(',').join(', ');
+                    $('#view_proposal_kpis').append(prop_kpis);
+                    <!--ashish code end-->
                     $('#view_proposal_price').empty();
                     $('#view_proposal_price').append(val.proposal_price+' '+val.currency);
                     $('#view_proposal_target_url').empty();
