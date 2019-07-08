@@ -515,6 +515,7 @@ def searchInfluencers():
 
         try:
             channel = request.form.get('channel')
+            print('channel name = ',channel)
             url = base_url+'Youtube/searchChannels/'+channel
             print(url)
             # del payload['channel']
@@ -582,7 +583,7 @@ def searchInfluencers():
 
     else:
         print('Not POST METHOD')
-        payload = {"category_id": "","country": "US","min_lower": 0,"max_upper": 100000000,"sort_order": "High To Low",
+        payload = {"channel":"Youtube","category_id": "","country": "US","min_lower": 0,"max_upper": 100000000,"sort_order": "High To Low",
             "offset": 0
         }
         try:
