@@ -374,9 +374,11 @@ button, input, select, a {
   color: #fff;
 }
 
+/*
 .engagement-color--forestgreen {
   background-color: #02813c !important;
 }
+*/
 
 .engagement-color--yellowgreen {
   background-color: #89c520 !important;
