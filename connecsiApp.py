@@ -319,6 +319,23 @@ def admin():
 
 #
 #
+@connecsiApp.route('/getTop20Influencers/<string:channel_name>',methods=['GET'])
+@is_logged_in
+def getTop20Influencers(channel_name):
+       try:
+           url = base_url + 'Youtube/searchChannels/' + channel_name
+           payload = {"channel": channel_name, "category_id": "", "country": "", "min_lower": 0, "max_upper": 100000000,
+                      "sort_order": "High To Low",
+                      "offset": 0
+                      }
+           response = requests.post(url=url,json=payload)
+           response_json = response.json()
+           return jsonify(results=response_json['data'])
+       except Exception as e:
+           print(e)
+           return e
+
+
 @connecsiApp.route('/profileView')
 @is_logged_in
 def profileView():

@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-
+    document.getElementById('loader-div').style.display="none";
 
     setTimeout(function(){
         $('body').removeClass('loading');
@@ -80,9 +80,9 @@ $(document).ready(function () {
         }
     }
 
-    $('a').on('click', function(){
+   $('a').on('click', function(){
         if($(this).attr('href').charAt(0)!="#"){
-            $('body').addClass('loading');
+            document.getElementById('loader-div').style.display="block";
         }
     });
 
