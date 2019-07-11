@@ -1,6 +1,52 @@
 $(document).ready(function () {
 
+//    ashish code starts
+    var influencerItem = document.getElementsByClassName('engagement-col');
+      var engagementBar = document.getElementsByClassName('engagement-bar');
+      var max=4;
+      var min=0.5;
+      var diff=(max-min)/3;
+      for(var i =0;i<influencerItem.length;i++){
+            var value = parseFloat(influencerItem[i].childNodes[5].innerText.split(' ')[0]);
+            if(value>=max){
+                engagementBar[i].childNodes[1].style.backgroundColor="rgb(0, 133, 15)";
+                engagementBar[i].childNodes[3].style.backgroundColor="rgb(0, 133, 15)";
+                engagementBar[i].childNodes[5].style.backgroundColor="rgb(0, 133, 15)";
+                engagementBar[i].childNodes[7].style.backgroundColor="rgb(0, 133, 15)";
+                engagementBar[i].childNodes[9].style.backgroundColor="rgb(0, 133, 15)";
+            }
+            else if(value<max&&value>max-diff){
+                engagementBar[i].childNodes[1].style.backgroundColor="rgb(96, 165, 55)";
+                engagementBar[i].childNodes[3].style.backgroundColor="rgb(96, 165, 55)";
+                engagementBar[i].childNodes[5].style.backgroundColor="rgb(96, 165, 55)";
+                engagementBar[i].childNodes[7].style.backgroundColor="rgb(96, 165, 55)";
+                engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
+            }
+            else if(value<=max-diff&&value>min+diff){
+                engagementBar[i].childNodes[1].style.backgroundColor="rgb(129, 212, 82)";
+                engagementBar[i].childNodes[3].style.backgroundColor="rgb(129, 212, 82)";
+                engagementBar[i].childNodes[5].style.backgroundColor="rgb(129, 212, 82)";
+                engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
+                engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
+            }
+            else if(value<=min+diff&&value>min){
+                engagementBar[i].childNodes[1].style.backgroundColor="rgb(230, 169, 0)";
+                engagementBar[i].childNodes[3].style.backgroundColor="rgb(230, 169, 0)";
+                engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
+                engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
+                engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
+            }
+            else if(value<=min){
+                engagementBar[i].childNodes[1].style.backgroundColor="rgb(204,0,0)";
+                engagementBar[i].childNodes[3].style.backgroundColor="lightgrey";
+                engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
+                engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
+                engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
+            }
+      }
+
     document.getElementById('loader-div').style.display="none";
+// ends
 
     setTimeout(function(){
         $('body').removeClass('loading');
@@ -82,7 +128,12 @@ $(document).ready(function () {
 
    $('a').on('click', function(){
         if($(this).attr('href').charAt(0)!="#"){
-            document.getElementById('loader-div').style.display="block";
+            if(($(this).attr('target'))||($(this).attr('download')!=undefined)){
+                document.getElementById('loader-div').style.display="none";
+            }
+            else{
+                document.getElementById('loader-div').style.display="block";
+            }
         }
     });
 
@@ -1866,3 +1917,104 @@ function getAllUnreadMessagesCount(){
          });
 
 }
+
+$(document).ajaxStart(function(){
+    document.getElementById('loader-div').style.display="block";
+})
+$(document).ajaxStop(function(){
+    document.getElementById('loader-div').style.display="none";
+})
+
+function imageExists(image_url){
+            var http = new XMLHttpRequest();
+            http.open('HEAD', image_url, false);
+            http.send();
+            return http.status != 404;
+        }
+
+function loadingTop10Influencers(){
+    var channel=document.getElementById('top10Influencer').value;
+    $.ajax({
+               type: "GET",
+               url: '/getTop20Influencers/'+channel,
+               success: function(data)
+               {
+                   value1=(data.results).slice(0,9);
+                   var loop = $('#top10Influencertable')[0].childNodes[3].childNodes;
+                   for( var i=1,j=0;i<loop.length;i=i+2,j++){
+                        // calculating engagement rate
+                        total = (value1[j]['total_100video_likes'] + value1[j]['total_100video_comments'] + value1[j]['total_100video_shares']);
+//                        total = parseInt(Math.round(total/value1[j]['totalVideos']));
+                        total = (total/value1[j]['subscriberCount_gained']);
+//                        total = parseFloat(total.toFixed(4))*100;
+                        total = total.toFixed(2) + ' '+'%';
+                        if(!(value1[j].channel_img).includes('https')){
+                            value1[j].channel_img=value1[j].channel_img.replace('http','https');
+                        }
+                        var status = imageExists(value1[j].channel_img);
+                        if(status === true){
+                            loop[i].childNodes[5].childNodes[0].src=value1[j].channel_img; // image set
+
+                        }
+                        else{
+                            alert(loop[i].childNodes[5].childNodes[0].src)
+                            loop[i].childNodes[5].childNodes[0].src='../static/img/fixed_image.png'; // image set
+                            alert(loop[i].childNodes[5].childNodes[0].src)
+                        }
+                        loop[i].childNodes[7].childNodes[5].innerText=total;          // engagement rate set
+//                        loop[i].childNodes[5].childNodes[0].src=value1[j].channel_img; // image set
+                        loop[i].childNodes[5].childNodes[1].data=value1[j].title;      // name set
+                        var image=loop[i].childNodes[5].childNodes[0];
+                        var engagementRate=loop[i].childNodes[7].childNodes[5];
+                        var name=loop[i].childNodes[5].childNodes[1].data;
+                   }
+                   // changing engagement bar color
+                   var influencerItem = document.getElementsByClassName('engagement-col');
+                        var engagementBar = document.getElementsByClassName('engagement-bar');
+                        var max=4;
+                        var min=0.5;
+                        var diff=(max-min)/3;
+                        for(var i =0;i<influencerItem.length;i++){
+                            var value = parseFloat(influencerItem[i].childNodes[5].innerText.split(' ')[0]);
+                            if(value>=max){
+                                engagementBar[i].childNodes[1].style.backgroundColor="rgb(0, 133, 15)";
+                                engagementBar[i].childNodes[3].style.backgroundColor="rgb(0, 133, 15)";
+                                engagementBar[i].childNodes[5].style.backgroundColor="rgb(0, 133, 15)";
+                                engagementBar[i].childNodes[7].style.backgroundColor="rgb(0, 133, 15)";
+                                engagementBar[i].childNodes[9].style.backgroundColor="rgb(0, 133, 15)";
+                            }
+                            else if(value<max&&value>max-diff){
+                                engagementBar[i].childNodes[1].style.backgroundColor="rgb(96, 165, 55)";
+                                engagementBar[i].childNodes[3].style.backgroundColor="rgb(96, 165, 55)";
+                                engagementBar[i].childNodes[5].style.backgroundColor="rgb(96, 165, 55)";
+                                engagementBar[i].childNodes[7].style.backgroundColor="rgb(96, 165, 55)";
+                                engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
+                            }
+                            else if(value<=max-diff&&value>min+diff){
+                                engagementBar[i].childNodes[1].style.backgroundColor="rgb(129, 212, 82)";
+                                engagementBar[i].childNodes[3].style.backgroundColor="rgb(129, 212, 82)";
+                                engagementBar[i].childNodes[5].style.backgroundColor="rgb(129, 212, 82)";
+                                engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
+                                engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
+                            }
+                            else if(value<=min+diff&&value>min){
+                                engagementBar[i].childNodes[1].style.backgroundColor="rgb(230, 169, 0)";
+                                engagementBar[i].childNodes[3].style.backgroundColor="rgb(230, 169, 0)";
+                                engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
+                                engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
+                                engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
+                            }
+                            else if(value<=min){
+                                engagementBar[i].childNodes[1].style.backgroundColor="rgb(204,0,0)";
+                                engagementBar[i].childNodes[3].style.backgroundColor="lightgrey";
+                                engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
+                                engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
+                                engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
+                            }
+                        }
+               }
+         });
+}
+
+
+

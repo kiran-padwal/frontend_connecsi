@@ -1,4 +1,3 @@
-
 {% extends 'admin_layout.html' %}
 {{ super() }}
 {% block body %}
@@ -195,15 +194,26 @@
                     <div class="col-xl-6 col-lg-6 col-md-6 mb-1">
                         <div class="card">
                             <div class="card-header">
-                                <h4 class="card-title">Top 10 Influencers</h4>
+                                <div class="row">
+                                    <div class="col-7">
+                                        <h4 class="card-title" style="white-space: pre-wrap;word-break: keep-all;">Top 10 Influencers</h4>
+                                    </div>
+                                    <div class="col-5 top10InfluencerWidth">
+                                        <select id="top10Influencer" name="channel" onchange="loadingTop10Influencers(this)">
+                                            <option id="Youtube" value="Youtube">Youtube</option>
+                                            <option id="Twitter"  value="Twitter">Twitter</option>
+                                            <option id="Instagram"  value="Instagram">Instagram</option>
+                                            <option value="Facebook" disabled>Facebook</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                             <div class="card-body">
-                                <table class="table table-responsive-xl text-left table-cell-middle">
+                                <table id="top10Influencertable" class="table text-left table-cell-middle">
                                     <thead>
                                     <tr>
                                         <th>#</th>
                                         <th>Influencers</th>
-                                        <th>Channels</th>
                                         <th>Eng Rate</th>
                                     </tr>
                                     </thead>
@@ -212,30 +222,16 @@
                                     <tr>
                                         <th scope="row">{{loop.index}}</th>
                                         <!--<td><img class="media-object height-50 img-border gradient-summer" src="static/app-assets/img/portrait/avatars/avatar-08.png" alt="" />Pew Dew Pie</td>-->
-                                        <td><img src="{{item['channel_img']}}" class="rounded-circle img-border gradient-summer" height="42" width="42" alt="Card image">{{item['title']}}</td>
-                                        <td>
-                                            <a href="#" class="fa fa-youtube red"></a>
-                                        {% if item['facebook_url'] %}
-                                        <a href="#" class="fa fa-facebook-square"></a>
-                                        {% endif %}
-                                        {% if item['twitter_url'] %}
-                                        <a href="#" class="fa fa-twitter"></a>
-                                        {% endif %}
-                                        {% if item['insta_url'] %}
-                                        <a href="#" class="fa fa-instagram" style="color:#9E57DD;"></a>
-                                        {% endif %}
-                                            <!--<a href="#" class="fa fa-facebook-square"></a>-->
-                                            <!--<a href="#" class="fa fa-twitter-square"></a>-->
-                                            <!--<a href="#" class="fa fa-youtube-square red"></a>-->
-                                        </td>
+                                        <td><img src="{{item['channel_img']}}" class="rounded-circle img-border gradient-summer" height="42" width="42" >{{item['title']}}</td>
+
                                         <td class="engagement-col">
                                             {% if item['total_videos'] %}
                                         {% set total = (item['total_100video_likes'] + item['total_100video_comments'] + item['total_100video_shares'])%}
                                         <!--{{ total }} <br>-->
-                                        {% set total = (total/item['total_videos'])|round|int %}
+                                        {# set total = (total/item['total_videos'])|round|int #}
                                         <!--{{ total }} <br>-->
                                         {% set total = (total/item['subscriberCount_gained']) %}
-                                        {% set total = total|round(4, 'floor')*100 %}
+                                        {# set total = total|round(4, 'floor')*100 #}
                                         {% set total = total|round(2, 'floor') %}
                                             <b style="color:#9370DB">{{ total }} %</b>
                                         {% endif %}
@@ -303,4 +299,6 @@
         </div>
 <!--&gt;>>>>>> 51c25d079bf4d2b362608a8408d566781ced9070-->
 <!--Statistics cards Ends-->
+
+
 {% endblock %}

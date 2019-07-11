@@ -329,7 +329,24 @@ def getTop20Influencers(channel_name):
                       "offset": 0
                       }
            response = requests.post(url=url,json=payload)
+
            response_json = response.json()
+           if(channel_name=="Youtube"):
+               for item in response_json['data']:
+                   url= base_url + 'Youtube/totalVideos/' + str(item['channel_id'])
+                   totalVideos=requests.get(url=url)
+                   totalVideos=totalVideos.json()
+                   print (totalVideos)
+                   item.update({'totalVideos':totalVideos['data'][0]['total_videos']})
+
+           elif (channel_name == "Twitter"):
+               for item in response_json['data']:
+                   item.update({'totalVideos':100})
+           elif (channel_name == "Instagram"):
+               for item in response_json['data']:
+                   item.update({'totalVideos': 100})
+
+           print (response_json['data'])
            return jsonify(results=response_json['data'])
        except Exception as e:
            print(e)

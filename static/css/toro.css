@@ -1961,4 +1961,21 @@ td .menu .submenu:before {
 }
 
 
+#notification-sidebar{
+    width:380px;
+    font-family: "Montserrat", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+.list-down-name{
+    font-size: 0.95rem;
+    font-weight: 400;
+    letter-spacing: 0.6px;
+    opacity: 1;
+}
+#notification-sidebar .fa-chevron-right{
+    font-size: 1rem;
+}
+.top10InfluencerWidth .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
+    width: 120px;
+}
+
 /* ashish code ends */

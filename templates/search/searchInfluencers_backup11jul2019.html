@@ -564,16 +564,11 @@
                                             class="fa fa-bell"></i> Alert</a></li>
                                 </ul>
                                 <div class="tabs-content">
-                                    <div class="tabs-content-item active" id="status{{ item['channel_id'] }}">
+                                    <div class="tabs-content-item " id="status{{ item['channel_id'] }}">
                                         <div class="tab-content-item-list-container">
-                                            <ul class="tab-content-item-list">
-
-                                                <li id="no_campaigns{{ item['channel_id'] }}">No Campaigns</li>
-
-                                            </ul>
                                         </div>
                                     </div>
-                                    <div class="tabs-content-item" id="alert{{ item['channel_id'] }}">
+                                    <div class="tabs-content-item active" id="alert{{ item['channel_id'] }}">
                                         <div class="tab-content-item-list-container">
                                             <ul class="tab-content-item-list">
                                             {% if item['channel_id'] in
@@ -886,15 +881,8 @@ function updateChannelStatusForCampaignByCampaignId(campaign_id){
                contentType: 'application/json;charset=UTF-8',
                success: function(data)
                {
-               console.log("values hai ji",data,data.results)
-
-                       <!--jQuery.each(data.results, function(i, val) {-->
-                                <!--$('#status'+val.channel_id).empty();-->
-                        <!--});-->
-
+                   if (data.results.length != 0){
                        jQuery.each(data.results, function(i, val) {
-                            console.log('data length -----',data.results.length);
-                            if (data.results.length != 0){
                             <!--alert(val.channel_id);-->
                             <!--alert(val.campaign_name);-->
                             <!--alert(val.status);-->
@@ -914,18 +902,14 @@ function updateChannelStatusForCampaignByCampaignId(campaign_id){
                                 if (val.status == 'Current Partner'){
                                     color = 'dark green'
                                 }
-                                <!--$('#status'+val.channel_id).empty();-->
                                 $('#status'+val.channel_id).append('<b style="font-weight:450; font-size:12px;">'+val.campaign_name+'<br/></b>');
                                 $('#status'+val.channel_id).append('<b style="font-weight:400; color:'+color+'; font-size:11px;">'+val.status+'</b>');
                                 $('#status'+val.channel_id).append('<hr style="height:0px; margin:auto;">');
-                                $('#no_campaigns'+val.channel_id).hide();
-                            }
-                            else{
-                                $('#status'+val.channel_id).append('<b>No Campaigns</b>');
-                            }
                         });
-
-
+                   }
+                    else{
+                        $('#status'+val.channel_id).append('<b>No Campaigns</b>');
+                    }
                }
              });
 
