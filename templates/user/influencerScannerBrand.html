@@ -1,0 +1,237 @@
+{% extends 'influencerScanner_layout.html' %}
+{{ super() }}
+{% block body %}
+
+<body>
+    <div id="loader-div">
+        <div class="loader-gif"></div>
+    </div>
+    <div class="container-fluid position-absolute padding">
+        <div class="row padding-temp">
+            <div class="col-lg-4 col-xs-6 text-left">
+                <a class="" href="https://www.connecsi.com" >
+                    <img  width="230" height="50" src="https://www.connecsi.com/wp-content/uploads/2018/12/Logo_icon.white_-e1545960005952.png" class="custom-logo" alt="Connecsi">
+                </a>
+            </div>
+            <div class="col-lg-4 col-xs-0"></div>
+            <div class="col-lg-4 col-xs-6 text-right">
+                <a class="" href="/">
+                    <h5 class="login-signup" style="color: white">Login/Signup</h5>
+                </a>
+            </div>
+        </div>
+        <div class="row padding text-center ">
+            <div class="col-12 influencer-scanner">
+                <img src="../static/images/Influencer%20Scanner.png" alt="">
+            </div>
+            <div class="col-12 header-1 padding-temp">
+                <h2>ANALYSE YOUR FAVORITE INFLUENCER</h2>
+            </div>
+            <div class="col-12 header-1 padding-temp">
+                <h4>Enter The Username Below And Check</h4>
+            </div>
+        </div>
+        <div class="row padding">
+            <form class="form-inline" onsubmit="return searchChannel()" style="align-items:baseline;">
+                <select class="form-control" name="channel_name" id="channel_name">
+                    <option value="instagram">Instagram</option>
+                    <option value="youtube">Youtube</option>
+                    <option value="twitter">Twitter</option>
+                </select>
+                <div class="parentBox">
+                    <div class="firstBox">
+                        <input id="search_name" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" autocomplete="off" onkeyup="settingDataDisplay()">
+                    </div>
+                    <div class="secondBox">
+                        <ul id="search-list"></ul>
+                    </div>
+                </div>
+                <div id="check_button">
+                    <button id="check_button_inside" class="btn btn-outline-success my-2 my-sm-0" type="submit">Check</button>
+                </div>
+            </form>
+        </div>
+        <div class="container message">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-6">
+                <div class="errorMessage">
+                    <h6></h6>
+                </div>
+            </div>
+            <div class="col-sm-3"></div>
+        </div>
+        <div class="score-display">
+            <div class="row">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-8">
+                    <hr class="my-4">
+                    <div class="container">
+                        <div class="row">
+
+                            <div class="col-sm-6 score-display-name">
+                                <h4>Influencer Score Is</h4>
+                            </div>
+                            <div class="col-sm-3 score-display-bar">
+                                <div class="progress">
+                                    <div id="progress_bar" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%"></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3 score-display-number">
+                                <h4>7</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2"></div>
+            </div>
+        </div>
+        <div class="data-display">
+
+            <div class="row">
+                <div class="col-md-2"></div>
+
+                <div class="col-md-2"></div>
+            </div>
+            <div class="row text-center">
+                <div class="col-2"></div>
+                <div class="col-8">
+                    <div class="container-fluid influence-data padding">
+                        <div class="box-1">
+                            <div class="influence-img">
+                                <img src="../static/images/0.png" alt="">
+                            </div>
+                        </div>
+                        <div class="box-2">
+                            <div class="influencer-name">
+                                <h5>No User</h5>
+                            </div>
+                            <div class="influence-rating">
+                                <h4>0%</h4>
+                                <h6>Business account</h6>
+                                <div class="rating-bar">
+                                    <div class="container">
+                                            <div class="engagement-bar">
+                                                <div class="engagement-bar__block engagement-color--forestgreen"></div>
+                                                <div class="engagement-bar__block engagement-color--forestgreen"></div>
+                                                <div class="engagement-bar__block engagement-color--forestgreen"></div>
+                                                <div class="engagement-bar__block engagement-color--forestgreen"></div>
+                                                <div class="engagement-bar__block engagement-color--forestgreen"></div>
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box-3 influence-average">
+                            <div class="top-data">
+                                <div class="influence-followers">
+                                    <h3>-</h3>
+                                    <h6>Total followers</h6>
+                                </div>
+                                <div class="influence-average-views">
+                                    <h3>-</h3>
+                                    <h6>Avg Views</h6>
+                                </div>
+                            </div>
+                            <div class="bottom-data">
+                                <div class="influence-average-likes">
+                                    <h3>-</h3>
+                                    <h6>Avg Likes</h6>
+                                </div>
+                                <div class="influence-average-comments">
+                                    <h3>-</h3>
+                                    <h6>Avg Comments</h6>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-2"></div>
+            </div>
+            <div class="row text-center">
+                <div class="what-next-button">
+                    <button type="button" class="btn tbn-info" data-toggle="collapse" data-target="#what-next-menu">WHAT'S NEXT?</button>
+                </div>
+            </div>
+            <div id="what-next-menu" class="collapse">
+<!--                <div class="container share-this-menu">-->
+<!--                    <div class="row">-->
+<!--                        <div class="col-sm-2"></div>-->
+<!--                        <div class="col-sm-4 share-this-name">-->
+<!--                            <h5>1. Share and Let The World Know:</h5>-->
+<!--                        </div>-->
+<!--                        <div class="col-sm-4 share-this-buttons">-->
+<!--                            <div class="share-buttons a2a_kit a2a_kit_size_32 a2a_default_style" data-a2a-url="https://www.connecsi.live/influencerScanner" data-a2a-title="Hurry!My profile passed as an Influencer at Connecsi with a score of 7. Check your's at ">-->
+<!--                                <a class="share-button-1 a2a_button_facebook"></a>-->
+<!--                                <a class="share-button-2 a2a_button_twitter"></a>-->
+<!--                                <a class="share-button-3 a2a_button_whatsapp"></a>-->
+<!--                                <a class="share-button-4 a2a_button_google_gmail"></a>-->
+<!--                                <a class="share-button-5 a2a_button_linkedin"></a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="col-sm-2"></div>-->
+<!--                    </div>-->
+<!--                </div>-->
+                <div class="container get-started-menu">
+<!--                    <div class="row">-->
+<!--                        <div class="col-sm-2"></div>-->
+<!--                        <div class="col-sm-10 get-started-with">-->
+<!--                            <h5>2. Get Started With: </h5>-->
+<!--                        </div>-->
+<!--                    </div>-->
+                    <div class="row get-started-list">
+                        <div class="col-sm-3 create-offer">
+                            <div class="get-started-A">
+                                <h5 style="margin-left: 0;">A</h5>
+                            </div>
+                            <div class="image-create-offer">
+                                <a onclick="settingLocalRoute('/searchInfluencers')" href="#"><img src="../static/images/getDiscovered.png" alt=""></a>
+                            </div>
+                            <div class="create-offer-name">
+                                <h5>Search Similar Influencers</h5>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 search-advertisers">
+                            <div class="get-started-B">
+                                <h5>B</h5>
+                            </div>
+                            <div class="image-search-advertisers">
+                                <a onclick="settingLocalRoute('/searchOffers')" href="#"><img src="../static/images/searchAdvertisers.png" alt=""></a>
+                            </div>
+                            <div class="search-advertisers-name">
+                                <h5>Search Available Offers</h5>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 get-discovered">
+                            <div class="get-started-C">
+                                <h5 style="margin-left: -1rem;">C</h5>
+                            </div>
+                            <div class="image-get-dicovered">
+                                <a onclick="settingLocalRoute('/addOffer')" href="#"><img src="../static/images/createOffer.png" alt=""></a>
+                            </div>
+                            <div class="get-discovered-name">
+                                <h5>Create Your Custom Offer</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container" style="margin-top:4rem;">
+                    <div class="row text-center">
+                        <div class="col-12 ">
+                            <h6><a target="_blank" href="https://www.connecsi.com/contact/"><span style="color:yellow;">Need Help?</span>Contact Us</a></h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row padding text-center chart-mine">
+                <div class="col-12" id="mainChart">
+                    <canvas id="myChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
+{% endblock %}

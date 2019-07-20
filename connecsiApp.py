@@ -1,5 +1,7 @@
 import datetime
+import http
 import re
+import urllib
 from functools import wraps
 import json
 from io import StringIO
@@ -7,6 +9,10 @@ import csv
 import time
 #
 import copy
+
+import parser
+
+import httplib2
 import requests
 from flask import Flask, render_template, flash, redirect, url_for, session, request, logging, jsonify, make_response,abort
 from itsdangerous import URLSafeSerializer, BadSignature
@@ -17,6 +23,11 @@ import os
 # from flask_paginate import Pagination, get_page_parameter
 from flask_uploads import UploadSet, configure_uploads, IMAGES
 from configparser import ConfigParser
+
+import urllib.parse as urlparse
+
+from oauth2client.client import _parse_exchange_token_response
+import pandas as pd
 
 connecsiApp = Flask(__name__)
 connecsiApp.secret_key = 'connecsiSecretKey'
@@ -2875,7 +2886,7 @@ scope=[
         "openid",
         "https://www.googleapis.com/auth/userinfo.email",
         "https://www.googleapis.com/auth/youtube.readonly",
-        "https://www.googleapis.com/auth/yt-analytics.readonly"
+        # "https://www.googleapis.com/auth/yt-analytics.readonly"
     ],
     offline=True,
     reprompt_consent=True,
@@ -3515,6 +3526,189 @@ def getClassifieds():
 #     return uri, headers, body
 #
 # linkedin.pre_request = change_linkedin_query
+
+#  google Analytics for brands section #################################
+from googleAnalyticsKiranLib import GoogleAnalyticsKiranLib
+@connecsiApp.route('/google_analytics',methods=['GET'])
+@is_logged_in
+def google_analytics():
+    google_analytics_kiran_lib = GoogleAnalyticsKiranLib()
+    auth_url = google_analytics_kiran_lib.get_auth_url()
+    print(auth_url)
+    return redirect(auth_url)
+
+@connecsiApp.route('/google_analytics_call_back_url',methods=['GET'])
+@is_logged_in
+def google_analytics_call_back_url():
+    user_id=session['user_id']
+    call_back_url = request.url
+    add_credentials_url = base_url + 'Brand/brandsGoogleAnalyticsCredentials/' + str(user_id)
+    print(call_back_url)
+    google_analytics_kiran_lib = GoogleAnalyticsKiranLib()
+    access_token,refresh_token = google_analytics_kiran_lib.get_access_token(call_back_url=call_back_url,user_id=user_id,add_credentials_url=add_credentials_url)
+    if access_token:
+        session['google_analytics_acess_token']=access_token
+        session['google_analytics_refresh_token'] = refresh_token
+        print('session acess_token= ',session['google_analytics_acess_token'])
+        print('session refresh_token= ', session['google_analytics_refresh_token'])
+        view_ids = google_analytics_kiran_lib.get_view_ids(access_token=access_token)
+        for viewId in view_ids:
+            data = google_analytics_kiran_lib.get_google_analytics_data(access_token=access_token,viewId=viewId)
+            print(data)
+        return 'data retrived'
+    else: return 'no access token'
+
+
+
+#  google Analytics for brands section  ends #################################
+
+
+#  youtube Analytics for influencers section #################################
+from youtubeAnalyticsKiranLib import YoutubeAnalyticsKiranLib
+@connecsiApp.route('/youtube_analytics',methods=['GET'])
+@is_logged_in
+def youtube_analytics():
+    youtube_analytics_kiran_lib = YoutubeAnalyticsKiranLib()
+    auth_url = youtube_analytics_kiran_lib.get_auth_url()
+    print(auth_url)
+    return redirect(auth_url)
+
+@connecsiApp.route('/youtube_analytics_call_back_url',methods=['GET'])
+@is_logged_in
+def youtube_analytics_call_back_url():
+    user_id=session['user_id']
+    print(user_id)
+    call_back_url = request.url
+    add_credentials_url = base_url + 'Influencer/influencerYoutubeAnalyticsCredentials/' + str(user_id)
+    print(call_back_url)
+    youtube_analytics_kiran_lib = YoutubeAnalyticsKiranLib()
+    access_token = youtube_analytics_kiran_lib.get_access_token(call_back_url=call_back_url,user_id=user_id,add_credentials_url=add_credentials_url)
+    if access_token:
+        print(access_token)
+        # view_ids = youtube_analytics_kiran_lib.get_view_ids(access_token=access_token)
+        # for viewId in view_ids:
+        #     data = youtube_analytics_kiran_lib.get_google_analytics_data(access_token=access_token,viewId=viewId)
+        #     print(data)
+        return 'data retrived'
+    else: return 'no access token'
+
+
+#  youtube Analytics for influencers section  ends #################################
+
+#----------------instagram route for landing page-------------------------------------------
+@connecsiApp.route('/getInstgramUserFromInstagramApi/<string:instagram_username>', methods=['GET'])
+#@is_logged_in
+def getInstgramUserFromInstagramApi(instagram_username):
+    try:
+        url = base_url + 'Insta/getInstagramChannel/' + instagram_username
+        response = requests.get(url=url)
+        response_json = response.json()
+        return jsonify(results=response_json)
+    except Exception as e:
+        print(e)
+        return e
+
+#------------------------------------------------------------------------------------------
+#----------------youtube routes for landing page-------------------------------------------
+
+
+@connecsiApp.route('/getYoutubeUserFromYoutubeApi/<string:youtube_username>', methods=['GET'])
+#@is_logged_in
+def getYoutubeUserFromYoutubeApi(youtube_username):
+    try:
+        url = base_url + 'Youtube/getYoutubeChannelDetailsFromYoutubeApi/' + youtube_username
+        response = requests.get(url=url)
+        response_json = response.json()
+        return jsonify(results=response_json)
+    except Exception as e:
+        print(e)
+        return e
+
+
+
+@connecsiApp.route('/getYoutubeSearchDropDownResults/<string:youtube_searchChannel>', methods=['GET'])
+# @is_logged_in
+def getYoutubeSearchDropDownResults(youtube_searchChannel):
+    try:
+        print (youtube_searchChannel)
+        url = base_url + '/Youtube/getYoutubeChannelSnippetFromYoutubeSearchApi/' + youtube_searchChannel
+        response = requests.get(url=url)
+        response_json = response.json()
+        print ("data ji",response_json)
+        return jsonify(results=response_json)
+    except Exception as e:
+        print(e)
+        return e
+
+@connecsiApp.route('/getYoutubeVideoCategory/<string:youtube_ChannelID>', methods=['GET'])
+# @is_logged_in
+def getYoutubeVideoCategory(youtube_ChannelID):
+    try:
+        print (youtube_ChannelID)
+        url = base_url + '/Youtube/getVideoCategoriesByChannelId/' + youtube_ChannelID
+        response = requests.get(url=url)
+        response_json = response.json()
+        print ("data ji",response_json)
+        return jsonify(results=response_json)
+    except Exception as e:
+        print(e)
+        return e
+
+
+#-------------------------------------------------------------------------------------------
+
+#------------------------------- twitter landing page routes--------------------------------
+
+@connecsiApp.route('/getTwitterUserFromTwitterApi/<string:twitter_username>', methods=['GET'])
+#@is_logged_in
+def getTwitterUserFromTwitterApi(twitter_username):
+    try:
+        url = base_url + '/Twitter/getTwitterChannelsDetailsFromConnecsi/' + twitter_username
+        response = requests.get(url=url)
+        response_json = response.json()
+        return jsonify(results=response_json)
+    except Exception as e:
+        print(e)
+        return e
+
+
+@connecsiApp.route('/getTwitterSearchDropDownResults/<string:twitter_searchChannel>', methods=['GET'])
+# @is_logged_in
+def getTwitterSearchDropDownResults(twitter_searchChannel):
+    try:
+        print(twitter_searchChannel)
+        url = base_url + '/Twitter/getTwitterChannelsFromTwitterSearchApi/' + twitter_searchChannel
+        response = requests.get(url=url)
+        response_json = response.json()
+        print("data ji", response_json)
+        return jsonify(results=response_json)
+    except Exception as e:
+        print(e)
+        return e
+
+# landing page route
+@connecsiApp.route('/influencerScanner-influencer')
+# @is_logged_in
+def influencerScanner():
+    title='Influencer Scanner'
+    data=[]
+    dataList= {
+        'title':'Influencer Scanner'
+    }
+    data.append(dataList)
+    return render_template('user/influencerScanner.html',data=data,title='Influencer Scanner')
+
+
+@connecsiApp.route('/influencerScanner-advertiser')
+# @is_logged_in
+def influencerScannerAdvertiser():
+    title='Influencer Scanner'
+    data=[]
+    dataList= {
+        'title':'Influencer Scanner'
+    }
+    data.append(dataList)
+    return render_template('user/influencerScannerBrand.html',data=data,title='Brand Influencer Scanner')
 
 if __name__ == '__main__':
     # connecsiApp.secret_key = 'connecsiSecretKey'

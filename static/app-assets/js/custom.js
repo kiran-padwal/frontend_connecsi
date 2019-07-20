@@ -126,7 +126,8 @@ $(document).ready(function () {
         }
     }
 
-   $('a').on('click', function(){
+   $('a').on('click', function(event){
+
         if($(this).attr('href').charAt(0)!="#"){
             if(($(this).attr('target'))||($(this).attr('download')!=undefined)){
                 document.getElementById('loader-div').style.display="none";
@@ -134,6 +135,25 @@ $(document).ready(function () {
             else{
                 document.getElementById('loader-div').style.display="block";
             }
+        }
+        if(event.ctrlKey){
+            document.getElementById('loader-div').style.display="none";
+        }
+    });
+
+
+    $('button').on('click', function(event){
+
+        if($(this).attr('name')=="search_inf"){
+
+                document.getElementById('loader-div').style.display="block";
+
+        }
+        if($(this).attr('id')=="btn-search-inf"){
+            document.getElementById('loader-div').style.display="block";
+        }
+        if(event.ctrlKey){
+            document.getElementById('loader-div').style.display="none";
         }
     });
 

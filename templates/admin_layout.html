@@ -414,6 +414,12 @@
 <!--<script type="text/javascript" src="http://materializecss.com/extras/noUiSlider/nouislider.js"></script>-->
 <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>-->
 <script>
+if(localStorage.getItem('loginRoute')){
+    var routing= localStorage.getItem('loginRoute');
+    console.log("login away going",localStorage.getItem('loginRoute'));
+    window.location.href = routing;
+    localStorage.removeItem('loginRoute');
+}
     function setValue(){
         document.getElementsByClassName('create-campaign-data')[0].style.display='none';
         document.getElementsByClassName('create-classified-ad-data')[0].style.display='none';
