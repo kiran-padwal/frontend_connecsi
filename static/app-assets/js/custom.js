@@ -1,3 +1,8 @@
+$(window).bind('beforeunload',function(){
+     document.getElementById('loader-div').style.display="block";
+
+});
+
 $(document).ready(function () {
 
 //    ashish code starts
@@ -1098,76 +1103,76 @@ $("#proposal_campaign_name").on("change",function(){
     });
 
     //searchinfluencers chart
-    $('.line-chart').each(function () {
-        var $this = $(this);
-        var $datasets = [];
-        var $items = [];
-        var $labels = [];
-
-        if (hasAttr($this, "data-labels")) {
-            $labels = $this.attr('data-labels').split(',').map(function (value) {
-                return value.trim();
-            });
-        }
-
-        if (hasAttr($this, "data-grafs")) {
-            $items = $this.attr('data-grafs').split(';').map(function (value) {
-                return value.trim();
-            });
-
-            $.each($items, function (key, value) {
-                if (value.trim().length > 0) {
-                    var $fields = value.split(':');
-                    var $data = [];
-                    $data = $fields[3].split(',').map(function (value) {
-                        return parseInt(value, 10);
-                    });
-                    $datasets.push({
-                        label: $fields[0].trim(),
-                        fill: true,
-                        backgroundColor: $fields[1].trim(),
-                        borderColor: $fields[2].trim(),
-                        borderCapStyle: 'butt',
-                        borderDash: [],
-                        borderWidth: 1,
-                        borderDashOffset: 0.0,
-                        borderJoinStyle: 'miter',
-                        pointBorderColor: "rgba(0,0,0,1)",
-                        pointBackgroundColor: "#fff",
-                        pointBorderWidth: 0.3,
-                        pointHoverRadius: 2,
-                        pointHoverBackgroundColor: "rgba(0,0,0,1)",
-                        pointHoverBorderColor: "rgba(0,0,0,1)",
-                        pointHoverBorderWidth: 1,
-                        pointRadius: 1,
-                        pointHitRadius: 10,
-                        data: $data,
-                    });
-                }
-            });
-        }
-
-        new Chart(document.getElementById($this.attr('id')), {
-            type: 'line',
-            data: {
-                labels: $labels,
-                datasets: $datasets
-            },
-            options: {
-                legend: {
-                    display: true,
-                },
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }]
-                }
-            }
-        });
-
-    });
+//    $('.line-chart').each(function () {
+//        var $this = $(this);
+//        var $datasets = [];
+//        var $items = [];
+//        var $labels = [];
+//
+//        if (hasAttr($this, "data-labels")) {
+//            $labels = $this.attr('data-labels').split(',').map(function (value) {
+//                return value.trim();
+//            });
+//        }
+//
+//        if (hasAttr($this, "data-grafs")) {
+//            $items = $this.attr('data-grafs').split(';').map(function (value) {
+//                return value.trim();
+//            });
+//
+//            $.each($items, function (key, value) {
+//                if (value.trim().length > 0) {
+//                    var $fields = value.split(':');
+//                    var $data = [];
+//                    $data = $fields[3].split(',').map(function (value) {
+//                        return parseInt(value, 10);
+//                    });
+//                    $datasets.push({
+//                        label: $fields[0].trim(),
+//                        fill: true,
+//                        backgroundColor: $fields[1].trim(),
+//                        borderColor: $fields[2].trim(),
+//                        borderCapStyle: 'butt',
+//                        borderDash: [],
+//                        borderWidth: 1,
+//                        borderDashOffset: 0.0,
+//                        borderJoinStyle: 'miter',
+//                        pointBorderColor: "rgba(0,0,0,1)",
+//                        pointBackgroundColor: "#fff",
+//                        pointBorderWidth: 0.3,
+//                        pointHoverRadius: 2,
+//                        pointHoverBackgroundColor: "rgba(0,0,0,1)",
+//                        pointHoverBorderColor: "rgba(0,0,0,1)",
+//                        pointHoverBorderWidth: 1,
+//                        pointRadius: 1,
+//                        pointHitRadius: 10,
+//                        data: $data,
+//                    });
+//                }
+//            });
+//        }
+//
+//        new Chart(document.getElementById($this.attr('id')), {
+//            type: 'line',
+//            data: {
+//                labels: $labels,
+//                datasets: $datasets
+//            },
+//            options: {
+//                legend: {
+//                    display: true,
+//                },
+//                scales: {
+//                    yAxes: [{
+//                        ticks: {
+//                            beginAtZero: true
+//                        }
+//                    }]
+//                }
+//            }
+//        });
+//
+//    });
 
     // range slider starts
     $('.sliderUI').each(function () {

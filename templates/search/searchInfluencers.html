@@ -541,17 +541,19 @@
                         <!--</div>-->
 
                         <!-- chart -->
-                        <div class="col-lg-4 col-nc-lg-12 line-area vertically-centered">
-                            <canvas id="lineChart{{ item['linechart_id'] }}" class="line-chart"
-                                    data-labels="May,Jun,Jul,Aug,Sep,Oct,Nov" data-grafs="
-                            Youtube:rgba(255,0,0,0.1):rgba(255,0,0,0.5):90,59,180,81,120,55,10,20;
-                            Twitter:rgba(0,255,255,0.1):rgba(0,255,255,0.5):100,20,60,20,80,55,90;
-                            Instagram:rgba(193, 53, 132,0.1):rgba(193, 53, 132,0.5):23,20,50,20,80,23,54;
-                            Facebook:rgba(59,89,152,0.1):rgba(59,89,152,0.5):23,54,60,63,65,23,65;
-                            " height="180px"></canvas>
-                        </div>
+                        <!--<div class="col-lg-4 col-nc-lg-12 line-area vertically-centered">-->
+                            <!--<canvas id="lineChart{{ item['linechart_id'] }}" class="line-chart"-->
+                                    <!--data-labels="May,Jun,Jul,Aug,Sep,Oct,Nov" data-grafs="-->
+                            <!--Youtube:rgba(255,0,0,0.1):rgba(255,0,0,0.5):90,59,180,81,120,55,10,20;-->
+                            <!--Twitter:rgba(0,255,255,0.1):rgba(0,255,255,0.5):100,20,60,20,80,55,90;-->
+                            <!--Instagram:rgba(193, 53, 132,0.1):rgba(193, 53, 132,0.5):23,20,50,20,80,23,54;-->
+                            <!--Facebook:rgba(59,89,152,0.1):rgba(59,89,152,0.5):23,54,60,63,65,23,65;-->
+                            <!--" height="180px"></canvas>-->
+                        <!--</div>-->
                         <!-- end of chart -->
-
+                        <div class="col-lg-4 col-nc-lg-12 line-area vertically-centered">
+                            <canvas id="lineChart{{ item['linechart_id'] }}" class="line-chart" height="180px"></canvas>
+                        </div>
                         <!-- status -->
                         <div class="col-lg-2 col-nc-lg-12 offer-status">
                             <div class="tabs-container">
@@ -876,6 +878,219 @@
 <!--</script>-->
 <!-- end of autocomplete -->
 <script>
+
+function getGraphUpdated(){
+    var channel_name_graph='{{ form_filters['channel'] }}';
+    var channel_name_graph_label=channel_name_graph;
+    channel_name_graph=channel_name_graph.toLowerCase();
+    var graph_color=[];
+    var graph_border=[];
+    if(channel_name_graph=='youtube'){
+        graph_color='rgba(255,0,0,0.1)'
+        graph_border='rgba(255,0,0,0.5)';
+    }
+    else if(channel_name_graph=='twitter'){
+        graph_color='rgba(0,255,255,0.1)';
+        graph_border='rgba(0,255,255,0.5)';
+    }
+    else if(channel_name_graph=='facebook'){
+        graph_color='rgba(59,89,152,0.1)';
+        graph_border='rgba(59,89,152,0.5)';
+    }
+    else if(channel_name_graph=='instagram'){
+        graph_color='rgba(193, 53, 132,0.1)';
+        graph_border='rgba(193, 53, 132,0.5)';
+    }
+    {% for item in data['data']%}
+    $.ajax({
+               type: "GET",
+               url: '/getChannelGraphData/'+channel_name_graph+'/'+'{{item['channel_id']}}',
+               contentType: 'application/json;charset=UTF-8',
+               success: function(data)
+               {
+                     if(data.length!=0){
+                     var months=[];
+                     var monthsSet=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sept','Oct','Nov','Dec'];
+                     var currentDate=new Date().getMonth();
+                     var start=currentDate-3;
+                     var end=currentDate+2;
+                     var looping=6;
+                     while(looping){
+                        var dataSet1={};
+                        var followers=0;
+                        if(start<=currentDate){
+                            followers=10000000;
+                        }
+                        if(start<0){
+                            dataSet1={
+                                'month':12+start,
+                                'followers':followers
+                            }
+                        }
+                        else if(start>11){
+                            dataSet1={
+                                'month':start-12,
+                                'followers':followers
+                            }
+                        }
+                        else{
+                            dataSet1={
+                                'month':start,
+                                'followers':followers
+                            }
+                        }
+                        months.push(dataSet1);
+                        start++;
+                        looping--;
+                     }
+                     for(var i=0;i<data['results'].length;i++){
+
+                            var d= new Date(parseInt(data['results'][i]['timestamp'])*1000).getMonth();
+                            var dat={
+                                'month':d,
+                                'followers':data['results'][i]['no_of_followers']
+                            }
+                            for(var m=0;m<months.length;m++){
+                                if(months[m]['month']==d){
+                                    months[m]['followers']=data['results'][i]['no_of_followers'];
+                                    break;
+                                }
+                            }
+
+                     }
+                     var demo=[0,0,0,0,0,0];
+                     for(var n=0;n<months.length;n++){
+                            if(months[n].followers==10000000){
+                            demo[n]=1;
+                            var min=0;
+                            var max=0;
+                            if(n==0){
+                                max=months[n+1].followers;
+                            }
+                            else if(n-1==0){
+                                max=months[n+1].followers;
+                            }
+                            else if(n-1>0&&n+1<months.length){
+                                min=months[n-1].followers;
+                                max=months[n+1].followers;
+                            }
+                            else if(n+1==months.length){
+                                min=months[n].followers;
+                            }
+                            months[n].followers=max-(max*16.67)/100;
+                          }
+                          if(months[n].followers==0){
+                            demo[n]=-1;
+                          }
+                     }
+                     var labels=[];
+                     var dataSetValues=[];
+                     for(var m=0;m<months.length;m++){
+                            labels.push(monthsSet[months[m]['month']]);
+                            dataSetValues.push(months[m]['followers'])
+                     }
+                     var realDataSet=[];
+                     var futureDataSet=[];
+                     for(var m=0;m<demo.length;m++){
+                         realDataSet.push(dataSetValues[m]);
+                         futureDataSet.push(dataSetValues[m]);
+                     }
+                     for(var m=0;m<demo.length;m++){
+                            if(demo[m]==1||demo[m]==0){
+                                futureDataSet[m]=NaN;
+                            }
+                            else if(demo[m]=-1){
+                                realDataSet[m]=NaN;
+                            }
+                     }
+                     var m=0;
+                     while(m<realDataSet.length&&!Number.isNaN(realDataSet[m])){
+                        m++;
+                     }
+                     if(m-1>0){
+                        m--;
+                        futureDataSet[m]=realDataSet[m];
+                        m++;
+                     }
+                     var increasePercentage=16.67;
+                     while(m<realDataSet.length){
+                        var val=futureDataSet[m-1]+(futureDataSet[m-1]*16.67)/100;
+                        futureDataSet[m]=val;
+                        m++;
+                     }
+                      var ctx = document.getElementById("lineChart"+{{loop.index}});
+                             var myChart = new Chart(ctx, {
+                                type: 'line',
+                                data: {
+                                    labels: labels,
+                                    datasets:[
+                                    {
+                                            label: "Real",
+                                            data: realDataSet,
+                                            backgroundColor :graph_color,
+                                            borderColor: graph_border,
+                                            borderWidth : 1
+                                    },
+                                    {
+                                            label: "Projected",
+                                            data: futureDataSet,
+                                            backgroundColor :'rgba(183, 183, 183, 0.1)',
+                                            borderColor: 'rgba(183, 183, 183, 0.5)',
+                                            borderWidth : 1
+                                    }]
+                                },
+                                options: {
+<!--                                    legend: {-->
+<!--                                        onClick: (e) => e.stopPropagation()-->
+<!--                                    },-->
+                                    scales: {
+                                        yAxes: [{
+                                            ticks: {
+                                                callback: function(label,index,labels){
+                                                        if (label >= 1000000000) {
+                                                           return (label / 1000000000).toFixed(1).replace(/\.0$/, '') + 'G';
+                                                        }
+                                                        if (label >= 1000000) {
+                                                            return (label / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+                                                        }
+                                                        if (label >= 1000) {
+                                                            return (label / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+                                                        }
+                                                        return label;
+                                                },
+                                                beginAtZero:true
+                                            }
+                                        }]
+                                    },
+                                    tooltips: {
+                                             callbacks: {
+                                                          label: function(tooltipItems, data) {
+                                                                    var valueChange=tooltipItems.yLabel;
+                                                                    if (valueChange >= 1000000000) {
+                                                                       return (valueChange / 1000000000).toFixed(1).replace(/\.0$/, '') + 'G';
+                                                                    }
+                                                                    if (valueChange >= 1000000) {
+                                                                        return (valueChange / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+                                                                    }
+                                                                    if (valueChange >= 1000) {
+                                                                        return (valueChange / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+                                                                    }
+                                                                    return valueChange;
+                                                                }
+                                                          }
+                                             }
+
+                                    }
+                             });
+
+                }
+               }
+    });
+    {% endfor%}
+
+}
+getGraphUpdated();
+
 
 function updateChannelStatusForCampaignByCampaignId(campaign_id){
     <!--alert(channel_id);-->

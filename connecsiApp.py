@@ -2978,6 +2978,72 @@ def google_login():
             return redirect(url_for('admin_inf'))
     else:return redirect(url_for('login'))
 
+
+# from twitterAnalyticsOauthKiranLib import TwitterAnalyticsOauthKiranLib
+# @connecsiApp.route('/twitter_oauth')
+# def twitter_oauth():
+#     CALLBACK_URL = request.url_root+'twitter_callback_url'
+#     print(CALLBACK_URL)
+    # twitter_kiran_lib = TwitterAnalyticsOauthKiranLib()
+    # twitter_kiran_lib.get_bearer_token()
+    # return 'i m here'
+
+from birdy.twitter import UserClient
+@connecsiApp.route('/twitter_oauth')
+def twitter_oauth():
+    # CALLBACK_URL = request.url_root+'twitter_callback_url'
+    CONSUMER_KEY = 'lOhkeJRZhYXvkm0lYq1ZgTtYa'
+    CONSUMER_SECRET = 'TbMKSZBbcqhnedjjqG66JuStxunBdKLelfjgxTW4UNJndbatJa'
+    CALLBACK_URL = request.url_root + 'twitter_callback_url'
+    client = UserClient(CONSUMER_KEY, CONSUMER_SECRET)
+    token = client.get_authorize_token(CALLBACK_URL)
+    print(token)
+    OAUTH_TOKEN = token.oauth_token
+    OAUTH_TOKEN_SECRET = token.oauth_token_secret
+    AUTH_URL = token.auth_url
+    print(OAUTH_TOKEN)
+    print(OAUTH_TOKEN_SECRET)
+    print(AUTH_URL)
+    session['twitter_oauth_token']=OAUTH_TOKEN
+    session['twitter_oauth_token_secret'] = OAUTH_TOKEN_SECRET
+    return redirect(AUTH_URL)
+
+@connecsiApp.route('/twitter_callback_url')
+def twitter_callback_url():
+    OAUTH_VERIFIER = request.args.get('oauth_verifier')
+    print(OAUTH_VERIFIER)
+    CONSUMER_KEY = 'lOhkeJRZhYXvkm0lYq1ZgTtYa'
+    CONSUMER_SECRET = 'TbMKSZBbcqhnedjjqG66JuStxunBdKLelfjgxTW4UNJndbatJa'
+    client = UserClient(CONSUMER_KEY, CONSUMER_SECRET,session['twitter_oauth_token'], session['twitter_oauth_token_secret'])
+
+    token = client.get_access_token(OAUTH_VERIFIER)
+    print(token)
+    FINAL_ACCESS_TOKEN = token.oauth_token
+    FINAL_ACCESS_TOKEN_SECRET = token.oauth_token_secret
+    twitter_id = token.user_id
+    screen_name = token.screen_name
+    print(FINAL_ACCESS_TOKEN)
+    print(FINAL_ACCESS_TOKEN_SECRET)
+
+    add_credentials_url = base_url + 'Influencer/influencerTwitterAnalyticsCredentials/' + str(twitter_id)
+    try:
+        print('i m inside try')
+        json_post_data = {
+            'access_token': FINAL_ACCESS_TOKEN,
+            'access_token_secret': FINAL_ACCESS_TOKEN_SECRET,
+            'screen_name':screen_name
+        }
+        res = requests.post(url=add_credentials_url, json=json_post_data)
+        print('added/updated credentials')
+    except:
+        print('error while adding or updating credentials')
+        pass
+    response = client.api.statuses.home_timeline.get()
+    # print(response.data)
+    return 'i m here'
+
+
+
 @connecsiApp.route("/twitter_login")
 def twitter_login():
     if not twitter.authorized:
@@ -3708,6 +3774,23 @@ def influencerScannerAdvertiser():
     }
     data.append(dataList)
     return render_template('user/influencerScannerBrand.html',data=data,title='Brand Influencer Scanner')
+
+
+
+@connecsiApp.route('/getChannelGraphData/<string:channel_name>/<string:channel_id>',methods=['GET'])
+@is_logged_in
+def getChannelGraphData(channel_name,channel_id):
+       try:
+           url = base_url + '/GraphHistory/getNoOfFollowersHistory/' + channel_name+'/'+channel_id
+
+           response = requests.get(url=url)
+
+           response_json = response.json()
+
+           return jsonify(results=response_json['data'])
+       except Exception as e:
+           print(e)
+           return e
 
 
 if __name__ == '__main__':

@@ -133,7 +133,9 @@ a{
 
     cursor:pointer;
 }
-
+#check_button,#search_name{
+    margin-top:-.1rem;
+}
 .errorMessage{
     background-color:rgb(7, 164, 196);
     font-size:5px;
