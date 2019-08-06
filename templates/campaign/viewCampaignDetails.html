@@ -248,7 +248,23 @@
                                     {% endfor %}
                                     {% endif %}
                                 </td>
-                                <td class="align-middle" >{{youtube_inf_data['proposal_price']}}</td>
+                                <td class="align-middle" >
+                                    {% if item['currency']=='USD' %}
+                                    &#36; {{youtube_inf_data['proposal_price']}}
+                                    {% endif %}
+                                    {% if item['currency']=='GBP' %}
+                                    &#163; {{youtube_inf_data['proposal_price']}}
+                                    {% endif %}
+                                    {% if item['currency']=='PLN' %}
+                                    &#122; {{youtube_inf_data['proposal_price']}}
+                                    {% endif %}
+                                    {% if item['currency']=='INR' %}
+                                    &#8377; {{youtube_inf_data['proposal_price']}}
+                                    {% endif %}
+                                    {% if item['currency']=='EUR' %}
+                                    &#8364; {{youtube_inf_data['proposal_price']}}
+                                    {% endif %}
+                                </td>
                                 <td class="align-middle" id="revenue_total{{ youtube_inf_data['channel_id'] }}"></td>
                                 <td class="align-middle"></td>
                                 <td class="align-middle"></td>
@@ -577,12 +593,31 @@
                         }
                         {% endfor %}
                     });
-                    $("#revenue_total{{ youtube_inf_data['channel_id'] }}").html(total_revenue);
+                    $("#revenue_total{{ youtube_inf_data['channel_id'] }}").html('dollar+euro'+total_revenue);
                     $("#new_users_total{{ youtube_inf_data['channel_id'] }}").html(total_new_users);
                     {% endif %}
                     {% endfor %}
                     jQuery.each(data.results, function(i, val) {
-                        $('#revenue'+val.channel_id).html(val.revenue_generated);
+                        var currency = val.currency;
+                        <!--alert(currency);-->
+                        var currency_symbol = '';
+                        if (currency == 'USD'){
+                            currency_symbol = '&#36;'
+                        }
+                        if (currency == 'GBP'){
+                            currency_symbol = '&#163;'
+                        }
+                        if (currency == 'PLN'){
+                            currency_symbol = '&#122;'
+                        }
+                        if (currency == 'INR'){
+                            currency_symbol = '&#8377;'
+                        }
+                        if (currency == 'EUR'){
+                            currency_symbol = '&#8364;'
+                        }
+
+                        $('#revenue'+val.channel_id).html(currency_symbol+' '+val.revenue_generated);
                         $('#new_users'+val.channel_id).html(val.new_users);
                         $('#delReport'+val.channel_id).attr("onclick","delBrandReport("+val.brand_campaign_report_id+")");
                         if(val.revenue_generated && val.new_users){

@@ -266,7 +266,23 @@
                                     {% endif %}
                                 </td>
                                 {% set _ = glob.update({'proposal_price': youtube_inf_data['proposal_price']}) %}
-                                <td class="align-middle" >{{ youtube_inf_data['proposal_price'] }}</td>
+                                <td class="align-middle" >
+                                    {% if youtube_inf_data['currency']=='USD' %}
+                                    &#36; {{youtube_inf_data['proposal_price']}}
+                                    {% endif %}
+                                    {% if youtube_inf_data['currency']=='GBP' %}
+                                    &#163; {{youtube_inf_data['proposal_price']}}
+                                    {% endif %}
+                                    {% if youtube_inf_data['currency']=='PLN' %}
+                                    &#122; {{youtube_inf_data['proposal_price']}}
+                                    {% endif %}
+                                    {% if youtube_inf_data['currency']=='INR' %}
+                                    &#8377; {{youtube_inf_data['proposal_price']}}
+                                    {% endif %}
+                                    {% if youtube_inf_data['currency']=='EUR' %}
+                                    &#8364; {{youtube_inf_data['proposal_price']}}
+                                    {% endif %}
+                                </td>
                                 <td class="align-middle" id="revenue_total{{ session['user_id'] }}"></td>
                                 <td class="align-middle" id="total_posts{{ session['user_id'] }}"></td>
                                 <td class="align-middle" id="total_views{{ session['user_id'] }}"></td>
@@ -321,7 +337,26 @@
                                 {% if bcr[0]['data']|length != 0 %}
                                 <!--alert('{{ bcr[0]['data']|length }}');-->
                                 {% for item in bcr %}
-                                    $('#revenue{{item['data'][0]['channel_id']}}').text({{ item['data'][0]['revenue_generated'] }});
+                                    var currency = '{{item['data'][0]['currency']}}';
+                                    <!--alert(currency);-->
+                                    var currency_symbol = '';
+                                    if (currency == 'USD'){
+                                        currency_symbol = '&#36;'
+                                    }
+                                    if (currency == 'GBP'){
+                                        currency_symbol = '&#163;'
+                                    }
+                                    if (currency == 'PLN'){
+                                        currency_symbol = '&#122;'
+                                    }
+                                    if (currency == 'INR'){
+                                        currency_symbol = '&#8377;'
+                                    }
+                                    if (currency == 'EUR'){
+                                        currency_symbol = '&#8364;'
+                                    }
+
+                                    $('#revenue{{item['data'][0]['channel_id']}}').html(currency_symbol+' '+{{ item['data'][0]['revenue_generated'] }});
                                     $('#new_users{{item['data'][0]['channel_id']}}').text({{ item['data'][0]['new_users'] }});
                                     revenue_total += parseInt({{ item['data'][0]['revenue_generated'] }});
                                     new_users_total += parseInt({{ item['data'][0]['new_users'] }});
