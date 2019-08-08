@@ -3752,7 +3752,7 @@ def getTwitterSearchDropDownResults(twitter_searchChannel):
         return e
 
 # landing page route
-@connecsiApp.route('/influencerScanner-influencer')
+@connecsiApp.route('/influencer-scanner/influencer')
 # @is_logged_in
 def influencerScanner():
     title='Influencer Scanner'
@@ -3764,7 +3764,7 @@ def influencerScanner():
     return render_template('user/influencerScanner.html',data=data,title='Influencer Scanner')
 
 
-@connecsiApp.route('/influencerScanner-advertiser')
+@connecsiApp.route('/influencer-scanner/advertiser')
 # @is_logged_in
 def influencerScannerAdvertiser():
     title='Influencer Scanner'
