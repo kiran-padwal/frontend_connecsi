@@ -853,6 +853,8 @@ def thanks():
 
 @connecsiApp.route('/pay', methods=['POST'])
 def pay():
+    secret_key = 'sk_test_4YZbWgXJul77g819JY5REXLL005jjbeXaG'
+    stripe.api_key = secret_key
     customer = stripe.Customer.create(email=request.form['stripeEmail'], source=request.form['stripeToken'])
     data=request.form.to_dict()
     subScriptionData=data['data']
@@ -888,30 +890,30 @@ def pay():
        return render_template('payment/thanks.html', data=subScriptionData)
     else:return render_template('payment/error.html',data=subScriptionData)
 
-@is_logged_in
-@connecsiApp.route('/checkoutSession', methods=['POST'])
-def checkoutSession():
-    # Set your secret key: remember to change this to your live secret key in production
-    # See your keys here: https://dashboard.stripe.com/account/apikeys
-    pub_key = 'pk_test_KCfQnVzaUJoSOE8Yk3B8qvGM00rakAIYnH'
-    secret_key = 'sk_test_4YZbWgXJul77g819JY5REXLL005jjbeXaG'
-    stripe.api_key = secret_key
-    checkout_session = stripe.checkout.Session.create(
-        customer_email=session['email_id'],
-        customer= session['user_id'] ,
-        payment_method_types=['card'],
-        line_items=[{
-            'name': 'T-shirt',
-            'description': 'Comfortable cotton t-shirt',
-            'images': ['https://example.com/t-shirt.png'],
-            'amount': 500,
-            'currency': 'usd',
-            'quantity': 1,
-        }],
-        success_url=redirect(thanks),
-        # cancel_url='https://example.com/cancel',
-    )
-    return checkout_session
+# @is_logged_in
+# @connecsiApp.route('/checkoutSession', methods=['POST'])
+# def checkoutSession():
+#     # Set your secret key: remember to change this to your live secret key in production
+#     # See your keys here: https://dashboard.stripe.com/account/apikeys
+#     pub_key = 'pk_test_KCfQnVzaUJoSOE8Yk3B8qvGM00rakAIYnH'
+#     secret_key = 'sk_test_4YZbWgXJul77g819JY5REXLL005jjbeXaG'
+#     stripe.api_key = secret_key
+#     checkout_session = stripe.checkout.Session.create(
+#         customer_email=session['email_id'],
+#         customer= session['user_id'] ,
+#         payment_method_types=['card'],
+#         line_items=[{
+#             'name': 'T-shirt',
+#             'description': 'Comfortable cotton t-shirt',
+#             'images': ['https://example.com/t-shirt.png'],
+#             'amount': 500,
+#             'currency': 'usd',
+#             'quantity': 1,
+#         }],
+#         success_url=redirect(thanks),
+#         # cancel_url='https://example.com/cancel',
+#     )
+#     return checkout_session
 
 
 
