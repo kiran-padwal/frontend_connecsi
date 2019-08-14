@@ -29,7 +29,7 @@
                                 <td>{{ item['email_id'] }}</td>
                                 <td>{{ item['amount'] }}</td>
                                 <td>{{ item['description'] }}</td>
-                                <td><a href="generateInvoice" class="btn hoverable"> Generate Invoice</a></td>
+                                <td><a href="{{item['receipt_url']}}" class="btn hoverable" target="_blank">Receipt</a></td>
                             </tr>
                             {% endfor %}
                             </tbody>

@@ -2,6 +2,7 @@
 {{ super() }}
 {% block body %}
 
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
@@ -10,8 +11,8 @@
     </div>
     <div class="row">
         <div class="col-12">
-            <div class="card">
-                <div class="card-body">
+            <div class="card" id="create-campaign">
+                <div class="card-body" >
                     <div class="card-block">
                         <form class="form" name="campaign_form" id="campaign_form" method="POST" action="/saveCampaign"
                               enctype="multipart/form-data">
@@ -152,10 +153,28 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-12 my-1">
-                                            <input type="checkbox" class="form-check-input" id="classifiedAds"
-                                                   name="is_classified_post" style="margin-left: 0rem">
-                                            <label class="form-check-label"
-                                                   for="classifiedAds" style="margin-left: 1.25rem">Post as classified ads</label>
+                                            {% if classified_count>0 %}
+                                                <input type="checkbox" class="form-check-input" id="classifiedAds" name="is_classified_post" style="margin-left: 0rem">
+                                                <label class="form-check-label" for="classifiedAds" style="margin-left: 1.25rem">Post as classified ads</label>
+                                            {% else%}
+                                                <input type="checkbox" class="form-check-input" id="classifiedAds" name="is_classified_post" style="margin-left: 0rem">
+                                                <label class="form-check-label" for="classifiedAds" style="margin-left: 1.25rem">Post as classified ads</label>
+                                                <script>
+                                                    document.getElementById('addMessageSubscription').innerHTML='{{messageSubscription['Classified Ads Posting']}}'
+                                                    $('#classifiedAds').click(function(){
+                                                        document.getElementById('create-campaign').style.filter='blur(3px)';
+                                                        document.getElementById('create-campaign').style.pointerEvents='none';
+                                                        document.getElementsByClassName('subscription-message')[0].style.display="block";
+                                                        document.getElementById("classifiedAds").checked = false;
+                                                        document.getElementById('subscription-message-close').style.display="block";
+
+                                                    })
+                                                    $('#subscription-message-close').click(function(){
+                                                         document.getElementById('create-campaign').style.filter='none';
+                                                         document.getElementById('create-campaign').style.pointerEvents='';
+                                                    })
+                                                </script>
+                                            {% endif %}
                                         </div>
                                     </div>
                                 </div>
@@ -175,11 +194,21 @@
                                 <div class="col-12">
                                     <hr style="margin: 1rem 0; border-color: #d3dce9;">
                                 </div>
+                                {% if campaign_count==0 %}
+                                <script>
+                                    document.getElementById('addMessageSubscription').innerHTML='{{messageSubscription['Create Campaign']}}'
+                                    document.getElementById('create-campaign').style.filter='blur(3px)';
+                                    document.getElementById('create-campaign').style.pointerEvents='none';
+                                    document.getElementsByClassName('subscription-message')[0].style.display="block";
+                                </script>
+                                {% else %}
                                 <div class="col-12 my-1 d-flex justify-content-end">
                                     <button type="submit" id="savecampaign" class="btn btn-primary m-0 bg-color1">
                                         Save
                                     </button>
                                 </div>
+
+                                {% endif %}
                             </div>
                         </form>
                     </div>
@@ -188,4 +217,6 @@
         </div>
     </div>
 </div>
+
+
 {% endblock %}

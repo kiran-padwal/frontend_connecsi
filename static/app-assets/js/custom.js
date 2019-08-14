@@ -3,9 +3,115 @@ $(window).bind('beforeunload',function(){
 
 });
 
+
+
+function submitNewClassifiedAdd(val){
+     if(valueClassified<=0){
+        document.getElementsByClassName('content-wrapper')[0].style.filter='blur(3px)';
+        document.getElementsByClassName('content-wrapper')[0].style.pointerEvents='none';
+        document.getElementsByClassName('subscription-message')[0].style.display="block";
+        document.getElementById('subscription-message-close').style.display='block';
+     }
+     else{
+        $.ajax({
+            type:'GET',
+            url:'/getClassified/'+val,
+            success:function(data){
+                classifiedData=data['data'][0]
+                var max_upper=classifiedData['max_upper_followers']
+                var min_lower=classifiedData['min_lower_followers']
+                var video_cat_id=classifiedData['video_cat_id']
+                delete classifiedData['video_cat_id']
+                delete classifiedData['classified_id']
+                delete classifiedData['posted_date']
+                delete classifiedData['user_id']
+                delete classifiedData['no_of_replies']
+                delete classifiedData['no_of_views']
+                delete classifiedData['deleted']
+                delete classifiedData['min_lower_followers']
+                delete classifiedData['max_upper_followers']
+                classifiedData['max_upper']=(max_upper);
+                classifiedData['min_lower']=(min_lower);
+                classifiedData['video_cat']=video_cat_id;
+                classifiedData['convert_to_campaign']='FALSE'
+
+                $.ajax({
+                    type:'POST',
+                    url:'/saveClassifiedAds',
+                    data:classifiedData,
+                    success:function(data1){
+                        window.location='/viewAllClassifiedAds'
+                    }
+                })
+            }
+        })
+     }
+
+}
+function showMultipleMenu(val){
+        if($('#delete-option'+val)[0].style.display=="none"){
+            $('#delete-option'+val).fadeToggle('100');
+
+            setTimeout(function(){
+                $('#edit-option'+val).fadeToggle('100');
+            },200);
+            setTimeout(function(){
+                $('#copy-option'+val).fadeToggle('100');
+            },400);
+        }
+        else{
+
+            $('#copy-option'+val).fadeToggle('100');
+            setTimeout(function(){
+                $('#edit-option'+val).fadeToggle('100');
+            },200);
+            setTimeout(function(){
+                $('#delete-option'+val).fadeToggle('100');
+
+            },400);
+        }
+}
+
 $(document).ready(function () {
 
 //    ashish code starts
+$('#count1').change(function(){
+    console.log("yes");
+    console.log($('#count1').val())
+    document.getElementById('price1').value=$('#count1').val();
+    document.getElementById('totalPrice').innerHTML=$('#count1').val();
+    document.getElementById('total_amount').innerHTML=$('#count1').val();
+    document.getElementById('total_units').innerHTML=$('#count1').val();
+
+})
+
+
+
+    $('[data-toggle="tooltip"]').on('click', function () {
+    $(this).tooltip('hide')
+})
+$('#upgrade-button').click(function(){
+    $('.subscription-popup').fadeIn("slow");
+
+})
+$('#subscription-close').click(function(){
+    $('.subscription-popup').fadeOut("slow");
+})
+
+$('#subscription-message-close').click(function(){
+    $('.subscription-message').fadeOut("slow");
+})
+$('#customSubButton').click(function(){
+    console.log("clicked on custom button")
+})
+
+$('#upgradeSubButton').click(function(){
+    console.log("clicked on upgrade button")
+})
+
+
+
+
     var influencerItem = document.getElementsByClassName('engagement-col');
       var engagementBar = document.getElementsByClassName('engagement-bar');
       var max=4;

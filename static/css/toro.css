@@ -1979,3 +1979,60 @@ td .menu .submenu:before {
 }
 
 /* ashish code ends */
+#subscription-message-close{
+    display:none;
+}
+.subscription-popup{
+    display:none;
+    position:fixed;
+    left:25%;
+    top:25%;
+    width:50vw;
+    min-height:50vh;
+    background-color:lightgray;
+    z-index:9;
+
+}
+.subscription-message{
+    display:none;
+    position:fixed;
+    left:30%;
+    top:35%;
+    width:40vw;
+    padding:1rem 2rem 1rem 1rem;
+    background-color:lightgray;
+    z-index:9999;
+    border-radius:5px;
+}
+@media only screen and (max-width: 768px) {
+  .subscription-message{
+    display:none;
+    position:fixed;
+    left:5%;
+    top:30%;
+    width:90vw;
+
+    background-color:lightgray;
+    z-index:9;
+}
+}
+
+.classified-status-button{
+    font-size: 0.7rem;
+    color: lightgreen;
+    border-radius: 50%;
+    cursor:pointer;
+}
+.copy-classified-ads,.edit-classified-ads,.delete-classified-ads,.multiple-classified-ads{
+    position:relative;
+    color:#599ae9;
+    top:5px;
+    font-size:20px;
+}
+.all-menu a{
+    margin-right:5px;
+    margin-bottom:5px;
+}
+.edit-option,.delete-option,.copy-option{
+    display:none;
+}

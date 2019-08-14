@@ -28,6 +28,8 @@ import urllib.parse as urlparse
 
 from oauth2client.client import _parse_exchange_token_response
 import pandas as pd
+import  stripe
+
 
 connecsiApp = Flask(__name__)
 connecsiApp.secret_key = 'connecsiSecretKey'
@@ -255,6 +257,50 @@ def logout():
 
 #
 # # User login
+# @connecsiApp.route('/login',methods=['POST'])
+# def login():
+#     if request.method=='POST':
+#         if 'brand' in request.form:
+#             url = base_url + 'User/login'
+#             payload = request.form.to_dict()
+#             print(payload)
+#             del payload['brand']
+#             print(payload)
+#             title = ''
+#             try:
+#                 response = requests.post(url, json=payload)
+#                 print('user response =',response.json())
+#                 result_json = response.json()
+#                 user_id = result_json['user_id']
+#                 confirmed_email = result_json['confirmed_email']
+#                 print('confirmed email = ',confirmed_email)
+#                 print(user_id)
+#                 # exit()
+#                 if user_id:
+#                     if confirmed_email =='confirmed':
+#                         flash("logged in", 'success')
+#                         session['logged_in'] = True
+#                         session['email_id']=payload.get('email')
+#                         session['type'] = 'brand'
+#                         session['user_id']=user_id
+#                         print(session['user_id'])
+#                         return redirect(url_for('admin'))
+#                     else:
+#                         flash("You have not Activated your account, To Activate your account please click on the activation link sent to your email address", 'danger')
+#                         return render_template('user/login.html', title=title)
+#
+#                 else:
+#                     flash("Internal error please try later", 'danger')
+#                     return render_template('user/login.html', title=title)
+#             except:
+#                 flash("Internal error please try later", 'danger')
+#                 return render_template('user/login.html', title='Login')
+#         elif 'influencer' in request.form:
+#             email_id = request.form.get('inf_username')
+#             password = request.form.get('inf_password')
+#             print(email_id)
+#             print(password)
+
 @connecsiApp.route('/login',methods=['POST'])
 def login():
     if request.method=='POST':
@@ -270,6 +316,15 @@ def login():
                 print('user response =',response.json())
                 result_json = response.json()
                 user_id = result_json['user_id']
+                response2=getSubscriptionValues(str(user_id))
+                print('hello response',response2,response2['data'])
+                if(not len(response2['data'])):
+                    #adding free subscription for first login Free
+                    check=freeSubscription(str(user_id))
+                    if(check['response']==1):
+                        print("free package ADDED")
+                    else:
+                        print("free package NOT added")
                 confirmed_email = result_json['confirmed_email']
                 print('confirmed email = ',confirmed_email)
                 print(user_id)
@@ -298,6 +353,8 @@ def login():
             password = request.form.get('inf_password')
             print(email_id)
             print(password)
+
+
 
 @connecsiApp.route('/admin')
 @is_logged_in
@@ -364,12 +421,36 @@ def getTop20Influencers(channel_name):
            return e
 
 
+# @connecsiApp.route('/profileView')
+# @is_logged_in
+# def profileView():
+#     title='Profile View'
+#     type = session['type']
+#     user_id = session['user_id']
+#     if type == 'brand':
+#         url = base_url + 'Brand/'+str(user_id)
+#         try:
+#             response = requests.get(url)
+#             # print(response.json())
+#             data_json = response.json()
+#             print(data_json)
+#             return render_template('user/user-profile-page.html', data=data_json, title=title)
+#         except Exception as e:
+#             print(e)
+#     else:
+#         table_name = 'users_inf'
+
+
+
 @connecsiApp.route('/profileView')
 @is_logged_in
 def profileView():
     title='Profile View'
     type = session['type']
     user_id = session['user_id']
+    allValue=getSubscriptionValues(str(user_id))
+    subscriptionData=allValue
+    subType=allValue['data'][0]['package_name']
     if type == 'brand':
         url = base_url + 'Brand/'+str(user_id)
         try:
@@ -377,12 +458,11 @@ def profileView():
             # print(response.json())
             data_json = response.json()
             print(data_json)
-            return render_template('user/user-profile-page.html', data=data_json, title=title)
+            return render_template('user/user-profile-page.html', subscriptionData=subscriptionData,type=subType,data=data_json, title=title)
         except Exception as e:
             print(e)
     else:
         table_name = 'users_inf'
-
 
 
 @connecsiApp.route('/editProfile')
@@ -694,18 +774,147 @@ def saveFundsBrands():
         flash('No Funds added','danger')
         return redirect(url_for('addFundsBrands'))
 
+
+#
+
+
 #
 # @connecsiApp.route('/payment')
 # @is_logged_in
 # def payment():
+#     pub_key = 'pk_test_KCfQnVzaUJoSOE8Yk3B8qvGM00rakAIYnH'
+#     secret_key = 'sk_test_4YZbWgXJul77g819JY5REXLL005jjbeXaG'
+#     stripe.api_key = secret_key
 #     # print(user_id,date,email_id,amount,description)
-#     return render_template('payment/payment.html')
+#     return render_template('payment/payment.html',pub_key=pub_key)
 #
+# # @connecsiApp.route('/checkout')
+# # @is_logged_in
+# # def checkout():
+# #     return redirect(url_for('viewMyPayments'))
+# #
+#
+#
+#
+#
+#
+#
+#
+# @connecsiApp.route('/thanks')
+# @is_logged_in
+# def thanks():
+#     return render_template('payment/thanks.html')
+#
+#
+# @connecsiApp.route('/pay', methods=['POST'])
+# def pay():
+#     customer = stripe.Customer.create(email=request.form['stripeEmail'], source=request.form['stripeToken'])
+#     charge = stripe.Charge.create(
+#         customer=customer.id,
+#         amount=19900,
+#         currency='usd',
+#         description='The Product'
+#     )
+#     return redirect(url_for('thanks'))
+
+
+
+@connecsiApp.route('/payment',methods=['POST'])
+@is_logged_in
+def payment():
+    print(request.form.to_dict())
+    data=request.form.to_dict()
+    pub_key = 'pk_test_KCfQnVzaUJoSOE8Yk3B8qvGM00rakAIYnH'
+    secret_key = 'sk_test_4YZbWgXJul77g819JY5REXLL005jjbeXaG'
+    amount=0
+    if(data['package_name']=='Custom'):
+        amount = data['price1']
+    elif (data['package_name'] == 'Basic'):
+        amount = data['price2']
+    elif (data['package_name'] == 'Professional'):
+        amount = data['price3']
+    elif (data['package_name'] == 'Enterprise'):
+        amount = data['price4']
+    stripe.api_key = secret_key
+    # print(user_id,date,email_id,amount,description)
+    amount=int(amount)*100
+    print(amount,type(amount))
+    return render_template('payment/payment.html',amount=amount,data=data,pub_key=pub_key)
+
 # @connecsiApp.route('/checkout')
 # @is_logged_in
 # def checkout():
 #     return redirect(url_for('viewMyPayments'))
-#
+
+@connecsiApp.route('/thanks')
+@is_logged_in
+def thanks():
+    return render_template('payment/thanks.html')
+
+@connecsiApp.route('/pay', methods=['POST'])
+def pay():
+    customer = stripe.Customer.create(email=request.form['stripeEmail'], source=request.form['stripeToken'])
+    data=request.form.to_dict()
+    subScriptionData=data['data']
+    charge = stripe.Charge.create(
+        customer=customer.id,
+        amount=data['amount'],
+        currency='usd',
+        description='Package',
+        metadata = {'email_id': session['email_id'],'connecsi_user_id':session['user_id'],'stripe_customer_id':customer.id}
+    )
+    print(charge)
+
+    print('customer id =',customer.id)
+    print('reciept url = ',charge.receipt_url)
+    if customer.id and charge.receipt_url:
+       try:
+           payload={
+               "customer_id":customer.id,
+               "amount":data['amount'],
+               "description":"Subscription/Package/Features added",
+               "receipt_url":charge.receipt_url
+           }
+           print(payload)
+           save_payment_url = base_url + 'Payments/' + str(session['user_id'])
+           print(save_payment_url)
+           res = requests.post(url=base_url+'Payments/'+str(session['user_id']),json=payload)
+           if res.status_code==201:
+              return render_template('payment/thanks.html', data=subScriptionData)
+       except Exception as e:
+           print(e)
+    # customer_list = stripe.Customer.list()
+    # print(customer_list)
+       return render_template('payment/thanks.html', data=subScriptionData)
+    else:return render_template('payment/error.html',data=subScriptionData)
+
+@is_logged_in
+@connecsiApp.route('/checkoutSession', methods=['POST'])
+def checkoutSession():
+    # Set your secret key: remember to change this to your live secret key in production
+    # See your keys here: https://dashboard.stripe.com/account/apikeys
+    pub_key = 'pk_test_KCfQnVzaUJoSOE8Yk3B8qvGM00rakAIYnH'
+    secret_key = 'sk_test_4YZbWgXJul77g819JY5REXLL005jjbeXaG'
+    stripe.api_key = secret_key
+    checkout_session = stripe.checkout.Session.create(
+        customer_email=session['email_id'],
+        customer= session['user_id'] ,
+        payment_method_types=['card'],
+        line_items=[{
+            'name': 'T-shirt',
+            'description': 'Comfortable cotton t-shirt',
+            'images': ['https://example.com/t-shirt.png'],
+            'amount': 500,
+            'currency': 'usd',
+            'quantity': 1,
+        }],
+        success_url=redirect(thanks),
+        # cancel_url='https://example.com/cancel',
+    )
+    return checkout_session
+
+
+
 @connecsiApp.route('/viewMyPayments')
 @is_logged_in
 def viewMyPayments():
@@ -722,11 +931,52 @@ def viewMyPayments():
     return render_template('user/view_my_payments.html',data=data)
 
 
+# @connecsiApp.route('/addCampaign')
+# @is_logged_in
+# def addCampaign():
+#     url_regionCodes = base_url + 'Youtube/regionCodes'
+#     regionCodes_json = ''
+#     try:
+#         regionCodes_response = requests.get(url=url_regionCodes)
+#         regionCodes_json = regionCodes_response.json()
+#         print(regionCodes_json)
+#     except:pass
+#     url_videoCat = base_url + 'Youtube/videoCategories'
+#     videoCat_json=''
+#     try:
+#         response_videoCat = requests.get(url=url_videoCat)
+#         videoCat_json = response_videoCat.json()
+#         print(videoCat_json)
+#     except Exception as e:
+#         print(e)
+#     return render_template('campaign/add_campaignForm.html',regionCodes=regionCodes_json,videoCategories = videoCat_json)
+
 @connecsiApp.route('/addCampaign')
 @is_logged_in
 def addCampaign():
     url_regionCodes = base_url + 'Youtube/regionCodes'
     regionCodes_json = ''
+    subscriptionValue=getSubscriptionValues(str(session["user_id"]))
+    campaign_count=0
+    classified_count=0
+    feature_name=''
+    messageSubscription = {
+        'Create Campaign': '',
+        'Classified Ads Posting': ''
+    }
+    for i in subscriptionValue['data']:
+        if(i['feature_name']=='Create Campaign'):
+            campaign_count=i['units']
+            feature_name=i['feature_name']
+        elif(i['feature_name']=='Classified Ads Posting'):
+            classified_count=i['units']
+    if(classified_count==0):
+        messageSubscription['Classified Ads Posting']="You ran out of Classified Ads Posting Units of your "+subscriptionValue['data'][0]['package_name']+" package. Continue without posting it as a Classified Ads. Or Just upgrade your subscription"
+    elif classified_count==-1:
+        messageSubscription['Classified Ads Posting'] = " Your package " + \
+        subscriptionValue['data'][0]['package_name'] + "does not have this feature"
+    if(campaign_count==0):
+        messageSubscription['Create Campaign']="You ran out of "+feature_name+" Units of your "+subscriptionValue['data'][0]['package_name']+" package. You can add more create campaigns in custom option or upgrade subscription."
     try:
         regionCodes_response = requests.get(url=url_regionCodes)
         regionCodes_json = regionCodes_response.json()
@@ -740,7 +990,7 @@ def addCampaign():
         print(videoCat_json)
     except Exception as e:
         print(e)
-    return render_template('campaign/add_campaignForm.html',regionCodes=regionCodes_json,videoCategories = videoCat_json)
+    return render_template('campaign/add_campaignForm.html',classified_count=classified_count,messageSubscription=messageSubscription,campaign_count=campaign_count,regionCodes=regionCodes_json,videoCategories = videoCat_json)
 
 
 @connecsiApp.route('/editCampaign/<string:campaign_id>',methods=['GET'])
@@ -1158,6 +1408,90 @@ def getCampaignDetails(campaign_id):
     view_campaign_details_data = campaignObj.get_campaign_details()
     return jsonify(results=view_campaign_details_data['data'])
 
+# @connecsiApp.route('/saveCampaign',methods=['POST'])
+# @is_logged_in
+# def saveCampaign():
+#     if request.method == 'POST':
+#         payload = request.form.to_dict()
+#         print(payload)
+#         # exit()
+#         channels = request.form.getlist('channels')
+#         channels_string = ','.join(channels)
+#         payload.update({'channels':channels_string})
+#         regions = request.form.getlist('country')
+#         regions_string = ','.join(regions)
+#         payload.update({'regions':regions_string})
+#
+#
+#         arrangements = request.form.getlist('arrangements')
+#         arrangements_string = ','.join(arrangements)
+#         payload.update({'arrangements': arrangements_string})
+#
+#         kpis = request.form.getlist('kpis')
+#         kpis_string = ','.join(kpis)
+#         payload.update({'kpis': kpis_string})
+#
+#         is_classified_post = request.form.get('is_classified_post')
+#         print('is classified = ',is_classified_post)
+#         try:
+#             del payload['country']
+#             del payload['is_classified_post']
+#         except:pass
+#
+#         files = request.files.getlist("campaign_files")
+#         print(files)
+#         # exit()
+#         filenames=[]
+#         for file in files:
+#             if (file.filename):
+#                 filename = campaign_files.save(file)
+#                 filenames.append(filename)
+#         filenames_string = ','.join(filenames)
+#         payload.update({'files': filenames_string})
+#         print(payload)
+#         # exit()
+#         if is_classified_post == 'on':
+#             payload.update({'is_classified_post':'TRUE'})
+#             print('payload inside if =',payload)
+#             for file in files:
+#                 # brands_classified_files.save(file)
+#                 if(file.filename):
+#                     campaign_files.save(file)
+#             user_id = session['user_id']
+#             classified_url = base_url + 'Classified/' + str(user_id)
+#             print(classified_url)
+#             classified_payload = copy.deepcopy(payload)
+#             classified_payload['classified_name'] = classified_payload.pop('campaign_name')
+#             classified_payload['classified_description'] = classified_payload.pop('campaign_description')
+#             classified_payload['convert_to_campaign'] = classified_payload.pop('is_classified_post')
+#             print('classified_payload=',classified_payload)
+#             try:
+#                 requests.post(url=classified_url, json=classified_payload)
+#             except Exception as e:
+#                 print(e)
+#                 pass
+#
+#         else:
+#             payload.update({'is_classified_post':'FALSE'})
+#
+#         user_id = session['user_id']
+#         url = base_url + 'Campaign/' + str(user_id)
+#         print(url)
+#         print('campaign payload = ',payload)
+#         try:
+#             response = requests.post(url=url, json=payload)
+#             result_json = response.json()
+#             print(result_json)
+#             flash('saved Campaign', 'success')
+#             return viewCampaigns()
+#         except Exception as e:
+#             print(e)
+#             flash('campaign didnt saved Please try again later','danger')
+#             pass
+#     else:
+#         flash('Unauthorized', 'danger')
+
+
 @connecsiApp.route('/saveCampaign',methods=['POST'])
 @is_logged_in
 def saveCampaign():
@@ -1232,6 +1566,13 @@ def saveCampaign():
             response = requests.post(url=url, json=payload)
             result_json = response.json()
             print(result_json)
+            check = subscriptionReduction("Create Campaign")
+            if (check['response'] == 1):
+                print("done subscription create campaign")
+                if(payload['is_classified_post']=='TRUE'):
+                    check1 = subscriptionReduction("Classified Ads Posting")
+                    if(check1['response']==1):
+                        print("done subscription create campaign with classified ads posting")
             flash('saved Campaign', 'success')
             return viewCampaigns()
         except Exception as e:
@@ -1240,6 +1581,7 @@ def saveCampaign():
             pass
     else:
         flash('Unauthorized', 'danger')
+
 
 
 @connecsiApp.route('/calendarView',methods=['GET'])
@@ -2883,7 +3225,7 @@ google_blueprint = make_google_blueprint(
         # "https://www.googleapis.com/auth/youtube.readonly"
     # ],
 scope=[
-        "openid",
+        # "openid",
         "https://www.googleapis.com/auth/userinfo.email",
         "https://www.googleapis.com/auth/youtube.readonly",
         # "https://www.googleapis.com/auth/yt-analytics.readonly"
@@ -3791,6 +4133,499 @@ def getChannelGraphData(channel_name,channel_id):
        except Exception as e:
            print(e)
            return e
+
+
+
+#-----------subscription levels with its feautes-------------------------------------------------
+
+def levelsWithFeatures(package_name):
+    package_features={}
+    if(package_name=='Free'):
+        package_features = {
+            "data":[
+            {
+                "feature_name":"Create Campaign",
+                "units":2,
+                "price":2,
+                "customized_feature":"No"
+            },
+            {
+                "feature_name": "Export Lists",
+                "units": -1,
+                "price": 0,
+                "customized_feature": "No"
+            },
+            {
+                "feature_name": "Add to favorites",
+                "units": 5,
+                "price": 1,
+                "customized_feature": "No"
+            },
+            {
+                "feature_name": "Classified Ads Posting",
+                "units": -1,
+                "price": 0,
+                "customized_feature": "No"
+            },
+            {
+                "feature_name": "Custom Offers Reply",
+                "units": 5,
+                "price": 5,
+                "customized_feature": "No"
+            },
+            {
+                "feature_name": "Alerts",
+                "units": -1,
+                "price": 0,
+                "customized_feature": "No"
+            }
+            ]
+        }
+    elif(package_name=='Basic'):
+        package_features = {
+            "data":[
+            {
+                "feature_name": "Create Campaign",
+                "units": 10,
+                "price": 10,
+                "customized_feature": "No"
+            },
+            {
+                "feature_name": "Export Lists",
+                "units": -1,
+                "price": 0,
+                "customized_feature": "No"
+            },
+            {
+                "feature_name": "Add to favorites",
+                "units": 25,
+                "price": 6,
+                "customized_feature": "No"
+            },
+            {
+                "feature_name": "Classified Ads Posting",
+                "units": 10,
+                "price": 20,
+                "customized_feature": "No"
+            },
+            {
+                "feature_name": "Custom Offers Reply",
+                "units": 20,
+                "price": 20,
+                "customized_feature": "No"
+            },
+            {
+                "feature_name": "Alerts",
+                "units": -1,
+                "price": 0,
+                "customized_feature": "No"
+            }
+            ]
+        }
+    elif (package_name == 'Professional'):
+        package_features = {
+            "data":[
+            {
+                "feature_name": "Create Campaign",
+                "units": 20,
+                "price": 20,
+                "customized_feature": "No"
+            },
+            {
+                "feature_name": "Export Lists",
+                "units": 100,
+                "price": 40,
+                "customized_feature": "No"
+            },
+            {
+                "feature_name": "Add to favorites",
+                "units": 50,
+                "price": 12,
+                "customized_feature": "No"
+            },
+            {
+                "feature_name": "Classified Ads Posting",
+                "units": 20,
+                "price": 40,
+                "customized_feature": "No"
+            },
+            {
+                "feature_name": "Custom Offers Reply",
+                "units": 50,
+                "price": 50,
+                "customized_feature": "No"
+            },
+            {
+                "feature_name": "Alerts",
+                "units": 50,
+                "price": 25,
+                "customized_feature": "No"
+            }
+            ]
+        }
+    elif (package_name == 'Enterprise'):
+        package_features = {
+            "data":[
+            {
+                "feature_name": "Create Campaign",
+                "units": 1000000,
+                "price": 0,
+                "customized_feature": "No"
+            },
+            {
+                "feature_name": "Export Lists",
+                "units": 500,
+                "price": 200,
+                "customized_feature": "No"
+            },
+            {
+                "feature_name": "Add to favorites",
+                "units": 1000000,
+                "price": 0,
+                "customized_feature": "No"
+            },
+            {
+                "feature_name": "Classified Ads Posting",
+                "units": 1000000,
+                "price": 0,
+                "customized_feature": "No"
+            },
+            {
+                "feature_name": "Custom Offers Reply",
+                "units": 1000000,
+                "price": 0,
+                "customized_feature": "No"
+            },
+            {
+                "feature_name": "Alerts",
+                "units": 250,
+                "price": 125,
+                "customized_feature": "No"
+            }
+            ]
+        }
+    return package_features
+#----------------------subscription methods-------------------------------------------------------
+
+
+
+def getSubscriptionValues(u_id):
+    print("get value")
+    url2 = base_url + 'Brand/subscriptionPackageDetails/' + u_id
+    response1 = requests.get(url2)
+    print('hello i m here',response1.json())
+    value=response1.json()
+    if value['data']:
+        print('hello')
+        expiryDate=value['data'][0]['p_expiry_date']
+        readable = datetime.datetime.fromtimestamp(expiryDate)
+        if(datetime.datetime.now()>readable):
+            print("ending current subscription")
+            check=freeSubscription(u_id)
+            if(check['response']==1):
+                print("subscription reverted to free version")
+    return value
+
+def freeSubscription(u_id):
+    print("free")
+    startTime = str(int(time.time()))
+    newDate = datetime.datetime.now() + datetime.timedelta(30)
+    endTime = str(int(time.mktime(newDate.timetuple())))
+    url3 = base_url + 'Brand/updatePackageDetails/' + u_id
+    payload3 = {}
+    payload3["package_name"] = "Free"
+    payload3["p_created_date"] = startTime
+    payload3["p_expiry_date"] = endTime
+    response3 = requests.post(url3, json=payload3)
+
+    check=response3.json()
+    response4=None
+    print(check)
+    if(check['response']==1):
+        url4 = base_url + 'Brand/subscriptionFeatureDetails/' + u_id
+        allFeatures=levelsWithFeatures("Free")
+        response4=0
+        print(allFeatures['data'])
+        for i in allFeatures["data"]:
+            print('inside for',i)
+            payload4 = {}
+            payload4["feature_name"] = i["feature_name"]
+            payload4["units"] = i["units"]
+            payload4["price"] = i["price"]
+            payload4["customized_feature"] = i["customized_feature"]
+            response4 = requests.post(url4, json=payload4)
+    return response4.json()
+
+def customSubscription(features, u_id):
+    print("custom",features)
+    url4 = base_url + 'Brand/subscriptionFeatureDetails/' + u_id
+    response4=None
+    for i in features:
+        print(i)
+        payload4 = {}
+        payload4["feature_name"] = i['feature_name']
+        payload4["units"] = i['units']
+        payload4["price"] = i['price']
+        payload4["customized_feature"] = i['customized_feature']
+        response4 = requests.post(url4, json=payload4)
+        check=response4.json()
+        print("res",check)
+        if(check['response']==1):
+            print("feature added")
+    return response4.json()
+
+def basicSubscription(u_id):
+    print("basic")
+    startTime = str(int(time.time()))
+    newDate = datetime.datetime.now() + datetime.timedelta(30)
+    endTime = str(int(time.mktime(newDate.timetuple())))
+    url3 = base_url + 'Brand/updatePackageDetails/' + u_id
+    payload3 = {}
+    payload3["package_name"] = "Basic"
+    payload3["p_created_date"] = startTime
+    payload3["p_expiry_date"] = endTime
+    response3 = requests.post(url3, json=payload3)
+    check = response3.json()
+    response4=None
+    if(check['response']==1):
+        url4 = base_url + 'Brand/subscriptionFeatureDetails/' + u_id
+        allFeatures = levelsWithFeatures("Basic")
+        for i in allFeatures["data"]:
+            payload4 = {}
+            payload4["feature_name"] = i['feature_name']
+            payload4["units"] = i['units']
+            payload4["price"] = i['price']
+            payload4["customized_feature"] = i['customized_feature']
+            response4 = requests.post(url4, json=payload4)
+    return response4.json()
+
+
+def professionalSubscription(u_id):
+    print("professional")
+    startTime = str(int(time.time()))
+    newDate = datetime.datetime.now() + datetime.timedelta(30)
+    endTime = str(int(time.mktime(newDate.timetuple())))
+    url3 = base_url + 'Brand/updatePackageDetails/' + u_id
+    payload3 = {}
+    payload3["package_name"] = "Professional"
+    payload3["p_created_date"] = startTime
+    payload3["p_expiry_date"] = endTime
+    response3 = requests.post(url3, json=payload3)
+    check = response3.json()
+    response4=None
+    if (check['response']==1):
+        url4 = base_url + 'Brand/subscriptionFeatureDetails/' + u_id
+        allFeatures = levelsWithFeatures("Professional")
+        for i in allFeatures['data']:
+            payload4 = {}
+            payload4["feature_name"] = i['feature_name']
+            payload4["units"] = i['units']
+            payload4["price"] = i['price']
+            payload4["customized_feature"] = i['customized_feature']
+            response4 = requests.post(url4, json=payload4)
+    return response4.json()
+
+def enterpriseSubscription(u_id):
+    print("enterprise")
+    startTime = str(int(time.time()))
+    newDate = datetime.datetime.now() + datetime.timedelta(30)
+    endTime = str(int(time.mktime(newDate.timetuple())))
+    url3 = base_url + 'Brand/updatePackageDetails/' + u_id
+    payload3 = {}
+    payload3["package_name"] = "Enterprise"
+    payload3["p_created_date"] = startTime
+    payload3["p_expiry_date"] = endTime
+    response3 = requests.post(url3, json=payload3)
+    check = response3.json()
+    response4=None
+    if (check['response']==1):
+        url4 = base_url + 'Brand/subscriptionFeatureDetails/' + u_id
+        allFeatures = levelsWithFeatures("Enterprise")
+        response4 = 0
+        for i in allFeatures["data"]:
+            payload4 = {}
+            payload4["feature_name"] = allFeatures[i]["feature_name"]
+            payload4["units"] = allFeatures[i]["units"]
+            payload4["price"] = allFeatures[i]["price"]
+            payload4["customized_feature"] = allFeatures[i]["customized_feature"]
+            response4 = requests.post(url4, json=payload4)
+    return response4.json()
+# -------ashish----------------subscription routes------------------------------------------------
+
+
+@connecsiApp.route('/updateBrandSubscriptionPackageDetails',methods=['POST'])
+@is_logged_in
+def updateBrandSubscriptionPackageDetails():
+       try:
+           url = base_url + 'Brand/updatePackageDetails/' + str(session["user_id"])
+           payload = request.form.to_dict()
+           payloadNew={}
+           startTime = str(int(time.time()))
+           newDate = datetime.datetime.now() + datetime.timedelta(30)
+           endTime = str(int(time.mktime(newDate.timetuple())))
+           payloadNew["package_name"]=payload["package_name"]
+           payloadNew["p_created_date"]=startTime
+           payloadNew["p_expiry_date"]=endTime
+           if(payload["package_name"]=="Custom"):
+               print("inside custom")
+               allValue=getSubscriptionValues(str(session["user_id"]))
+               features=[]
+               valueLen=(len(payload)-1)/2
+               value=int(valueLen)+1
+
+               for j in range(1,value):
+                   print(j)
+                   for i in allValue['data']:
+                       if(i['feature_name']==payload['feature'+str(j)]):
+                           print("match",i)
+                           units=i['units']+int(payload['count'+str(j)])
+                           #enter price value here for each module
+                           price=i['price']+(int(payload['count'+str(j)])*1)
+
+                           dat = {
+                               'feature_name': payload['feature' + str(j)],
+                               'units': units,
+                               'price':price,
+                               'customized_feature':"Yes"
+                           }
+                           features.append(dat)
+                           print("yo", features)
+               check = customSubscription(features, str(session["user_id"]))
+               print("check value", check)
+
+           elif(payload["package_name"]=="Basic"):
+               print("inside basic")
+               check=basicSubscription(str(session["user_id"]))
+               if(check['response']==1):
+                   print("basic plan ADDED")
+
+               else:
+                   print("basic plan NOT added")
+
+           elif (payload["package_name"] == "Professional"):
+               print("inside Professional")
+               check = professionalSubscription(str(session["user_id"]))
+               if (check['response'] == 1):
+                   print("professional plan ADDED")
+
+               else:
+                   print("professional plan NOT added")
+
+
+           elif (payload["package_name"] == "Enterprise"):
+               print("inside Enterprise")
+               check = enterpriseSubscription(str(session["user_id"]))
+               if (check['response'] == 1):
+                   print("enterprise plan ADDED")
+
+               else:
+                   print("enterprise plan NOT added")
+
+           return redirect('/profileView')
+       except Exception as e:
+           print(e)
+           return e
+#---------- route for subtraction values on click and all----------------------------------------
+
+
+@connecsiApp.route('/updatingFeatureValue/<string:feature_name>',methods=['POST'])
+@is_logged_in
+def updatingFeatureValue(feature_name):
+       try:
+           subscriptionReduction(feature_name)
+           return jsonify({"response":1})
+       except Exception as e:
+           print(e)
+           return e
+
+#------- route for adding back value --------------------------------------------------------
+@connecsiApp.route('/addingBackFeatureValue/<string:feature_name>',methods=['POST'])
+@is_logged_in
+def addingBackFeatureValue(feature_name):
+       try:
+           subscriptionAddition(feature_name)
+           return jsonify({"response":1})
+       except Exception as e:
+           print(e)
+           return e
+#-------- subtraction method for units in subscription-------------------------------------------
+
+def subscriptionReduction(feature):
+    feature_name=feature.split('_')
+
+    subValues = getSubscriptionValues(str(session["user_id"]))
+    for i in subValues['data']:
+        if(i['feature_name']==feature_name[0]):
+            if(len(feature_name)==1):
+                i['units'] = i['units'] - 1
+            else:
+                i['units'] = i['units'] - int(feature_name[1])
+            #update call for feature details
+            check=updateFeatureSubscription(str(session["user_id"]),i)
+            if(check['response']==1):
+                print("feature value updated")
+                return check
+
+
+def subscriptionAddition(feature):
+    feature_name=feature.split('_')
+
+    subValues = getSubscriptionValues(str(session["user_id"]))
+    for i in subValues['data']:
+        if(i['feature_name']==feature_name[0]):
+            if(len(feature_name)==1):
+                i['units'] = i['units'] + 1
+            else:
+                i['units'] = i['units'] + int(feature_name[1])
+            #update call for feature details
+            check=updateFeatureSubscription(str(session["user_id"]),i)
+            if(check['response']==1):
+                print("feature value updated")
+
+
+
+# ----------------updating single feature one by one------------------------------------------------------------
+def updateFeatureSubscription(u_id,feature):
+    url4 = base_url + 'Brand/subscriptionFeatureDetails/' + u_id
+    payload4 = {}
+    payload4["feature_name"] = feature['feature_name']
+    payload4["units"] = feature['units']
+    payload4["price"] = feature['price']
+    payload4["customized_feature"] = feature['customized_feature']
+    response4 = requests.post(url4, json=payload4)
+    return response4.json()
+
+#-------------- getting classified values-------------------------------------------------------
+
+@connecsiApp.route('/getClassified/<string:classified_id>',methods=['GET'])
+@is_logged_in
+def getClassified(classified_id):
+    url = base_url + 'Classified/'+classified_id+'/'+str(session['user_id'])
+    response=requests.get(url)
+    return response.json()
+
+#----------------saving classified ads---------------------------------------------------------
+@connecsiApp.route('/saveClassifiedAds',methods=['POST'])
+@is_logged_in
+def saveClassifiedAds():
+    data=request.form.to_dict()
+    print(session['user_id'])
+    print(data)
+    url = base_url + 'Classified/'+str(session['user_id'])
+    response=requests.post(url=url,json=data)
+    check=response.json()
+    if(check['response']==1):
+        check2 = subscriptionReduction("Classified Ads Posting")
+        if (check2['response'] == 1):
+            print("done subscription Classified Ads Posting")
+    return response.json()
+
+
+
+
+
+#################################################################################################################
+
 
 
 if __name__ == '__main__':

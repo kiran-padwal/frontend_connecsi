@@ -29,12 +29,13 @@
                                     }}</h4>
                                 <div class="user_content">
                                     <div class="role">Role: {{data['data']['role'] }}</div>
-                                    <div class="subscription">Subscription Type : Beta</div>
+                                    <div class="subscription">Subscription Type : {{type}}</div>
                                 </div>
-                                <button class="btn btn-raised bg-color1 color-white text-capitalize" type="button"
+                                <button id="upgrade-button" class="btn btn-raised bg-color1 color-white text-capitalize" type="button"
                                         data-toggle="tooltip" title="Feature Coming Soon">
                                     Upgrade Here
                                 </button>
+
                             </div>
                         </div>
                         <div class="col-xl-6 mt-2">
@@ -195,4 +196,28 @@
 
     </div>
 </section>
+<!--my code for displaying subscription page.-->
+<script>
+    var value='{{subscriptionData}}';
+    var readyString=value.replace(/&#39;/g,'"');
+    var subscriptionData=JSON.parse(readyString)['data'];
+    console.log("heloo ji",subscriptionData)
+    var package_name='{{type}}';
+    console.log(package_name)
+    if(package_name=='Free'){
+
+    }
+    else if(package_name=='Basic'){
+
+    }
+    else if(package_name=='Professional'){
+
+    }
+    else if(package_name=='Enterprise'){
+
+    }
+
+</script>
+
+<!--&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
 {% endblock %}
