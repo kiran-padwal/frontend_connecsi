@@ -775,49 +775,6 @@ def saveFundsBrands():
         return redirect(url_for('addFundsBrands'))
 
 
-#
-
-
-#
-# @connecsiApp.route('/payment')
-# @is_logged_in
-# def payment():
-#     pub_key = 'pk_test_KCfQnVzaUJoSOE8Yk3B8qvGM00rakAIYnH'
-#     secret_key = 'sk_test_4YZbWgXJul77g819JY5REXLL005jjbeXaG'
-#     stripe.api_key = secret_key
-#     # print(user_id,date,email_id,amount,description)
-#     return render_template('payment/payment.html',pub_key=pub_key)
-#
-# # @connecsiApp.route('/checkout')
-# # @is_logged_in
-# # def checkout():
-# #     return redirect(url_for('viewMyPayments'))
-# #
-#
-#
-#
-#
-#
-#
-#
-# @connecsiApp.route('/thanks')
-# @is_logged_in
-# def thanks():
-#     return render_template('payment/thanks.html')
-#
-#
-# @connecsiApp.route('/pay', methods=['POST'])
-# def pay():
-#     customer = stripe.Customer.create(email=request.form['stripeEmail'], source=request.form['stripeToken'])
-#     charge = stripe.Charge.create(
-#         customer=customer.id,
-#         amount=19900,
-#         currency='usd',
-#         description='The Product'
-#     )
-#     return redirect(url_for('thanks'))
-
-
 
 @connecsiApp.route('/payment',methods=['POST'])
 @is_logged_in
@@ -840,11 +797,6 @@ def payment():
     amount=int(amount)*100
     print(amount,type(amount))
     return render_template('payment/payment.html',amount=amount,data=data,pub_key=pub_key)
-
-# @connecsiApp.route('/checkout')
-# @is_logged_in
-# def checkout():
-#     return redirect(url_for('viewMyPayments'))
 
 @connecsiApp.route('/thanks')
 @is_logged_in
@@ -889,32 +841,6 @@ def pay():
     # print(customer_list)
        return render_template('payment/thanks.html', data=subScriptionData)
     else:return render_template('payment/error.html',data=subScriptionData)
-
-# @is_logged_in
-# @connecsiApp.route('/checkoutSession', methods=['POST'])
-# def checkoutSession():
-#     # Set your secret key: remember to change this to your live secret key in production
-#     # See your keys here: https://dashboard.stripe.com/account/apikeys
-#     pub_key = 'pk_test_KCfQnVzaUJoSOE8Yk3B8qvGM00rakAIYnH'
-#     secret_key = 'sk_test_4YZbWgXJul77g819JY5REXLL005jjbeXaG'
-#     stripe.api_key = secret_key
-#     checkout_session = stripe.checkout.Session.create(
-#         customer_email=session['email_id'],
-#         customer= session['user_id'] ,
-#         payment_method_types=['card'],
-#         line_items=[{
-#             'name': 'T-shirt',
-#             'description': 'Comfortable cotton t-shirt',
-#             'images': ['https://example.com/t-shirt.png'],
-#             'amount': 500,
-#             'currency': 'usd',
-#             'quantity': 1,
-#         }],
-#         success_url=redirect(thanks),
-#         # cancel_url='https://example.com/cancel',
-#     )
-#     return checkout_session
-
 
 
 @connecsiApp.route('/viewMyPayments')
