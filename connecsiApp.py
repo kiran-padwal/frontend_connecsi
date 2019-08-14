@@ -840,7 +840,8 @@ def pay():
     # customer_list = stripe.Customer.list()
     # print(customer_list)
        return render_template('payment/thanks.html', data=subScriptionData)
-    else:return render_template('payment/error.html',data=subScriptionData)
+    else:
+        return render_template('payment/error.html',data=subScriptionData)
 
 
 @connecsiApp.route('/viewMyPayments')
