@@ -114,6 +114,10 @@ def index():
 def privacy_policy():
     return render_template('user/privacy_policy.html')
 
+@connecsiApp.route('/terms_use')
+def terms_use():
+    return render_template('user/terms_use.html')
+
 # @connecsiApp.route('/loginLinkedin')
 # def loginLinkedin():
 #     return linkedin.authorize(callback=url_for('authorized', _external=True))
