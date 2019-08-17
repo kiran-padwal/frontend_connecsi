@@ -3181,6 +3181,7 @@ connecsiApp.register_blueprint(twitter_blueprint, url_prefix="/login")
 
 @connecsiApp.route("/google_login")
 def google_login():
+    print('i m here in google_login()')
     if not google.authorized:
         print('i m here always')
         return redirect(url_for("google.login"))
