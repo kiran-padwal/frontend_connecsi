@@ -3150,10 +3150,10 @@ os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
 
 
 google_blueprint = make_google_blueprint(
-    # client_id = "493258682854-ubb1m8e59t5teebtj3lclllb04j4dn0t.apps.googleusercontent.com",
-    # client_secret="tFk1KLwBXpwaIJOUIYQwgpWZ",
-    client_id="413672402805-dvv0v7bft07iqhj2du2eqq59itbeqcv1.apps.googleusercontent.com",
-    client_secret="wNxRXqxGrz7inj2yE2nlgcyO",
+    client_id = "493258682854-ubb1m8e59t5teebtj3lclllb04j4dn0t.apps.googleusercontent.com",
+    client_secret="tFk1KLwBXpwaIJOUIYQwgpWZ",
+    # client_id="413672402805-dvv0v7bft07iqhj2du2eqq59itbeqcv1.apps.googleusercontent.com",
+    # client_secret="wNxRXqxGrz7inj2yE2nlgcyO",
 
     # scope=[
         # "https://www.googleapis.com/auth/plus.me",
