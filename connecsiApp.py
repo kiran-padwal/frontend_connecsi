@@ -3146,15 +3146,17 @@ os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
 
 
 google_blueprint = make_google_blueprint(
-    client_id="413672402805-dvv0v7bft07iqhj2du2eqq59itbeqcv1.apps.googleusercontent.com",
-    client_secret="wNxRXqxGrz7inj2yE2nlgcyO",
+    client_id = "493258682854-ubb1m8e59t5teebtj3lclllb04j4dn0t.apps.googleusercontent.com",
+    # old_client_id="413672402805-dvv0v7bft07iqhj2du2eqq59itbeqcv1.apps.googleusercontent.com",
+    # old_client_secret="wNxRXqxGrz7inj2yE2nlgcyO",
+    client_secret="tFk1KLwBXpwaIJOUIYQwgpWZ",
     # scope=[
         # "https://www.googleapis.com/auth/plus.me",
         # "https://www.googleapis.com/auth/userinfo.email",
         # "https://www.googleapis.com/auth/youtube.readonly"
     # ],
 scope=[
-        # "openid",
+        "openid",
         "https://www.googleapis.com/auth/userinfo.email",
         "https://www.googleapis.com/auth/youtube.readonly",
         # "https://www.googleapis.com/auth/yt-analytics.readonly"
