@@ -6,18 +6,23 @@ $(window).bind('beforeunload',function(){
 
 
 function submitNewClassifiedAdd(val){
-     if(valueClassified<=0){
+//alert('inside');
+     if(valueClassified <= 0){
         document.getElementsByClassName('content-wrapper')[0].style.filter='blur(3px)';
         document.getElementsByClassName('content-wrapper')[0].style.pointerEvents='none';
         document.getElementsByClassName('subscription-message')[0].style.display="block";
         document.getElementById('subscription-message-close').style.display='block';
      }
      else{
+
+//    document.getElementById('loader-div').style.display="block";
         $.ajax({
             type:'GET',
             url:'/getClassified/'+val,
             success:function(data){
+//                alert(data['data'][0]);
                 classifiedData=data['data'][0]
+
                 var max_upper=classifiedData['max_upper_followers']
                 var min_lower=classifiedData['min_lower_followers']
                 var video_cat_id=classifiedData['video_cat_id']
@@ -35,12 +40,15 @@ function submitNewClassifiedAdd(val){
                 classifiedData['video_cat']=video_cat_id;
                 classifiedData['convert_to_campaign']='FALSE'
 
+//document.getElementById('loader-div').style.display="block";
                 $.ajax({
                     type:'POST',
                     url:'/saveClassifiedAds',
                     data:classifiedData,
                     success:function(data1){
+//                        document.getElementById('loader-div').style.display="block";
                         window.location='/viewAllClassifiedAds'
+
                     }
                 })
             }
@@ -48,6 +56,7 @@ function submitNewClassifiedAdd(val){
      }
 
 }
+
 function showMultipleMenu(val){
         if($('#delete-option'+val)[0].style.display=="none"){
             $('#delete-option'+val).fadeToggle('100');
@@ -71,6 +80,9 @@ function showMultipleMenu(val){
             },400);
         }
 }
+
+
+
 
 $(document).ready(function () {
 
@@ -238,19 +250,24 @@ $('#upgradeSubButton').click(function(){
     }
 
    $('a').on('click', function(event){
-
-        if($(this).attr('href').charAt(0)!="#"){
-            if(($(this).attr('target'))||($(this).attr('download')!=undefined)){
-                document.getElementById('loader-div').style.display="none";
-            }
-            else{
-                document.getElementById('loader-div').style.display="block";
-            }
-        }
-        if(event.ctrlKey){
-            document.getElementById('loader-div').style.display="none";
-        }
-    });
+     if($(this).attr('href')==undefined){
+         return;
+     }
+     if($(this).attr('href').charAt(0)!="#"){
+         if(($(this).attr('target'))||($(this).attr('download')!=undefined)){
+             document.getElementById('loader-div').style.display="none";
+         }
+         else{
+             document.getElementById('loader-div').style.display="block";
+         }
+     }
+     else{
+         document.getElementById('loader-div').style.display="none";
+     }
+     if(event.ctrlKey){
+         document.getElementById('loader-div').style.display="none";
+     }
+ });
 
 
     $('button').on('click', function(event){
@@ -882,14 +899,14 @@ $("#proposal_campaign_name").on("change",function(){
                         $uniqid = $uniqid + 1;
 //                        $var = '<div class="custom-control custom-control-inline-block custom-checkbox custom-control-inline text-left"><input checked type="checkbox" class="filled-in custom-control-input custom-control-input" multiple value="'+arrangements[i]+'" name="proposal_arrangements" id="arrangements_id_'+$uniqid+'"><label class="custom-control-label campaignCheckbox" for="arrangements_id_'+$uniqid+'">'+arrangements[i]+'</label></div>';
 //                        $("#proposal_arrangements").append($var);
-                        $("#proposal_arrangements").append('<div class="custom-control custom-checkbox custom-control-inline"><input type="checkbox" id="proposal-arrangements-box-'+i+'" class="proposal_arrangements_checkbox filled-in custom-control-input custom-control-input"  multiple name="proposal_arrangements" value="'+arrangements[i]+'"><label class="custom-control-label campaignCheckbox" for="proposal-arrangements-box-'+i+'"></label><span>'+arrangements[i]+'</span></div>');
+                        $("#proposal_arrangements").append('<div class="custom-control custom-checkbox custom-control-inline"><input type="checkbox" checked id="proposal-arrangements-box-'+i+'" class="proposal_arrangements_checkbox filled-in custom-control-input custom-control-input"  multiple name="proposal_arrangements" value="'+arrangements[i]+'"><label class="custom-control-label campaignCheckbox" for="proposal-arrangements-box-'+i+'"></label><span>'+arrangements[i]+'</span></div>');
                     }
                     var kpis = val.kpis.split(",");
                     for(i=0;i<kpis.length;i++){
                         $uniqid = $uniqid + 1;
 //                        $var = '<div class="custom-control custom-control-inline-block custom-checkbox custom-control-inline text-left"><input checked type="checkbox" class="filled-in custom-control-input custom-control-input" multiple value="'+kpis[i]+'" name="proposal_kpis" id="kpis_id_'+$uniqid+'"><label class="custom-control-label campaignCheckbox" for="kpis_id_'+$uniqid+'">'+kpis[i]+'</label></div>';
 //                        $("#proposal_kpis").append($var);
-                           $("#proposal_kpis").append('<div class="custom-control custom-checkbox custom-control-inline"><input type="checkbox" id="proposal-kpis-box-'+i+'" class="proposal_kpis_checkbox filled-in custom-control-input custom-control-input" multiple name="proposal_kpis" value="'+kpis[i]+'"><label class="custom-control-label campaignCheckbox" for="proposal-kpis-box-'+i+'"></label><span>'+kpis[i]+'</span></div>');
+                           $("#proposal_kpis").append('<div class="custom-control custom-checkbox custom-control-inline"><input type="checkbox" checked id="proposal-kpis-box-'+i+'" class="proposal_kpis_checkbox filled-in custom-control-input custom-control-input" multiple name="proposal_kpis" value="'+kpis[i]+'"><label class="custom-control-label campaignCheckbox" for="proposal-kpis-box-'+i+'"></label><span>'+kpis[i]+'</span></div>');
                     }
 
                 });
@@ -960,24 +977,72 @@ $("#proposal_campaign_name").on("change",function(){
         $("#total_comments").val(0);
     });
 
-    $("#create_alert_form").submit(function (e) {
+//    $("#create_alert_form").submit(function (e) {
+//        var form = $(this);
+//        var url = form.attr('action');
+//        var channel_id = $('#create_alert_channel_id').val();
+//        $.ajax({
+//            type: "POST",
+//            url: url,
+//            data: form.serialize(), // serializes the form's elements.
+//            success: function (data) {
+//                alert(data); // show response from the python script.
+//                $('#create_alert_modal').modal('toggle');
+//                getFavInfList();
+//                <!--$( '#status'+channel_id).empty();-->
+////                $( 'div[id*=alert]').empty();
+//            }
+//        });
+//        e.preventDefault(); // avoid to execute the actual submit of the form.
+//    });
+
+
+$("#create_alert_form").submit(function (e) {
+//        alert('i m here');
         var form = $(this);
         var url = form.attr('action');
         var channel_id = $('#create_alert_channel_id').val();
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: form.serialize(), // serializes the form's elements.
-            success: function (data) {
-                alert(data); // show response from the python script.
-                $('#create_alert_modal').modal('toggle');
-                getFavInfList();
-                <!--$( '#status'+channel_id).empty();-->
-//                $( 'div[id*=alert]').empty();
-            }
-        });
-        e.preventDefault(); // avoid to execute the actual submit of the form.
+        var checkIf=$( '#alert'+channel_id)[0].childNodes[1].childNodes[1].childNodes[1].innerHTML;
+//        alert(checkIf);
+        if(checkIf=="No Alerts Set"){
+//            alert('inside if');
+//            alert(url);
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: form.serialize(), // serializes the form's elements.
+                success: function (data) {
+//                    alert(data); // show response from the python script.
+//                    alert(countAlerts);
+                    countAlerts=countAlerts-1;
+                    countAddToFavorites=countAddToFavorites-1;
+                    $('#create_alert_modal').modal('toggle');
+                    getFavInfList();
+                }
+            });
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+        }
+        else{
+            console.log("nothing ji")
+            $.ajax({
+                type: "POST",
+                url: '/createAlerts1',
+                data: form.serialize(), // serializes the form's elements.
+                success: function (data) {
+                    alert(data); // show response from the python script.
+                    $('#create_alert_modal').modal('toggle');
+                    getFavInfList();
+                    <!--$( '#status'+channel_id).empty();-->
+    //                $( 'div[id*=alert]').empty();
+
+                }
+            });
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+        }
+
+
     });
+
 
 
     $('.influencer-item').each(function () {
@@ -1720,7 +1785,7 @@ $("#proposal_campaign_name").on("change",function(){
                         '<a  href="#"   class="reply-offer btn btn-raised btn-primary bg-color2 mt-0 mr-1 mb-0"'+
                                                    'data-business-email="'+value.email_id+'"'+
                                                    'data-title="'+value.first_name+'"'+
-                                                   'data-backdrop="true" data-toggle="modal" data-target="#sendMessage">Reply</a>' +
+                                                   'data-backdrop="true" data-toggle="modal" data-target="#sendMessage" onclick="openMessage()">Reply</a>' +
                         '<a href="/viewOfferDetails/' + value.offer_id + '" class="btn btn-raised btn-primary bg-color1 mt-0 mb-0">Details</a>' +
                         '</div>' +
                         '</div>' +

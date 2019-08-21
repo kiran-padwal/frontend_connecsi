@@ -545,6 +545,215 @@ def changePassword():
 
 
 
+# @connecsiApp.route('/searchInfluencers',methods=['POST','GET'])
+# @is_logged_in
+# def searchInfluencers():
+#     start = time.time()
+#     user_id = session['user_id']
+#     url_regionCodes = base_url + 'Youtube/regionCodes'
+#     url_videoCat = base_url + 'Youtube/videoCategories'
+#     regionCodes_json=''
+#     videoCat_json=''
+#     form_filters=''
+#     country_name=''
+#     view_campaign_data=''
+#     data=''
+#     favInfList_data=''
+#     try:
+#         response_regionCodes = requests.get(url=url_regionCodes)
+#         regionCodes_json = response_regionCodes.json()
+#     except Exception as e:
+#         print(e)
+#     try:
+#         response_videoCat = requests.get(url=url_videoCat)
+#         videoCat_json = response_videoCat.json()
+#     except Exception as e:
+#         print(e)
+#
+#     lookup_string = ''
+#     for cat in videoCat_json['data']:
+#         lookup_string += ''.join(',' + cat['video_cat_name'])
+#     # lookup_string = lookup_string.replace('&', 'and')
+#
+#     print('before getting campaigns')
+#     from templates.campaign import campaign
+#     campaignObj = campaign.Campaign(user_id=user_id)
+#     view_campaign_data = campaignObj.get_all_campaigns()
+#     for item in view_campaign_data['data']:
+#         if item['deleted']=='true':
+#             view_campaign_data['data'].remove(item)
+#
+#     print('after getting campaigns')
+#     print(view_campaign_data)
+#     try:
+#         url = base_url + '/Brand/getInfluencerFavList/' + str(user_id)
+#         response = requests.get(url=url)
+#         favInfList_data = response.json()
+#         linechart_id = 1
+#         for item in favInfList_data['data']:
+#             item.update({'linechart_id': linechart_id})
+#             linechart_id += 1
+#     except Exception as e:
+#         print(e)
+#         pass
+#     ###### POST METHOD#######
+#     print('before POST METHOD')
+#     if request.method == 'POST':
+#         print('i m inside POST METHOD')
+#         string_word = request.form.get('string_word')
+#         category = string_word.replace('and','&')
+#         sort_order = request.form.get('sort_order')
+#         print(sort_order)
+#         print(category)
+#         category_id=''
+#         for cat in videoCat_json['data']:
+#             if cat['video_cat_name'] == category:
+#                 print("category id = ",cat['video_cat_id'])
+#                 category_id = cat['video_cat_id']
+#
+#         form_filters = request.form.to_dict()
+#         print('post form filters =',form_filters)
+#         if form_filters['country']:
+#             url_country_name = base_url + 'Youtube/regionCode/'+form_filters['country']
+#             try:
+#                 response_country_name = requests.get(url=url_country_name)
+#                 country_name_json = response_country_name.json()
+#                 print(country_name_json['data'][0][1])
+#                 country_name = country_name_json['data'][0][1]
+#             except Exception as e:
+#                 print(e)
+#             form_filters.update({'country_name':country_name})
+#         print('final form filters = ',form_filters)
+#
+#         payload = request.form.to_dict()
+#         payload.update({'category_id': str(category_id)})
+#         payload.update({'min_lower':payload.get('min_lower')})
+#         payload.update({'max_upper':payload.get('max_upper')})
+#
+#         try:
+#             if form_filters['offset']:
+#                 payload.update({'offset':int(form_filters['offset'])})
+#             else:
+#                  payload.update({'offset': 0})
+#                  print('i m in else no offset set')
+#         except:
+#                payload.update({'offset': 0})
+#                pass
+#
+#         print('payload form filter = ',payload)
+#
+#         try:
+#             channel = request.form.get('channel')
+#             print('channel name = ',channel)
+#             url = base_url+'Youtube/searchChannels/'+channel
+#             print(url)
+#             # del payload['channel']
+#             # del payload['string_word']
+#             print(payload)
+#             response = requests.post(url, json=payload)
+#             print(response.json())
+#             data = response.json()
+#             linechart_id=1
+#             for item in data['data']:
+#                 item.update({'linechart_id':linechart_id})
+#                # print(item)
+#                 linechart_id+=1
+#             # try:
+#             #     exportCsv(data=data)
+#             # except Exception as e:
+#             #     print(e)
+#             #     pass
+#             if form_filters['channel']=='Twitter':
+#                 for item in data['data']:
+#                     item.update({'total_videos':100})
+#                     # total_videos_url = base_url + 'Youtube/totalVideos/' + str(item['channel_id'])
+#                     # try:
+#                     #     response = requests.get(total_videos_url)
+#                     #     total_videos = response.json()
+#                     #     for item1 in total_videos['data']:
+#                     #         item.update(item1)
+#                         # print(item)
+#                     # except:
+#                     #     pass
+#             if form_filters['channel'] == 'Youtube':
+#                 for item in data['data']:
+#                     total_videos_url = base_url + 'Youtube/totalVideos/' + str(item['channel_id'])
+#                     try:
+#                         response = requests.get(total_videos_url)
+#                         total_videos = response.json()
+#                         for item1 in total_videos['data']:
+#                             item.update(item1)
+#                         print(item)
+#                     except:
+#                         pass
+#             if form_filters['channel']=='Instagram':
+#                 for item in data['data']:
+#                     item.update({'total_videos':100})
+#                     # total_videos_url = base_url + 'Youtube/totalVideos/' + str(item['channel_id'])
+#                     # try:
+#                     #     response = requests.get(total_videos_url)
+#                     #     total_videos = response.json()
+#                     #     for item1 in total_videos['data']:
+#                     #         item.update(item1)
+#                         # print(item)
+#                     # except:
+#                     #     pass
+#             # print(data)
+#             return render_template('search/searchInfluencers.html', regionCodes=regionCodes_json,
+#                                    lookup_string=lookup_string, form_filters=form_filters,data=data,view_campaign_data=view_campaign_data
+#                                    ,favInfList_data=favInfList_data,payload_form_filter=payload)
+#         except Exception as e:
+#             print(e)
+#             print('i m hee')
+#             return render_template('search/searchInfluencers.html', regionCodes=regionCodes_json,
+#                                lookup_string=lookup_string,form_filters=form_filters,data=data,view_campaign_data=view_campaign_data
+#                                    ,favInfList_data=favInfList_data,payload_form_filter=payload)
+#
+#
+#     else:
+#         print('Not POST METHOD')
+#         payload = {"channel":"Youtube","category_id": "","country": "US","min_lower": 0,"max_upper": 100000000,"sort_order": "High To Low",
+#             "offset": 0
+#         }
+#         try:
+#             url = base_url + '/Youtube/searchChannels/youtube'
+#             response = requests.post(url, json=payload)
+#             print(response.json())
+#             data = response.json()
+#             linechart_id = 1
+#             for item in data['data']:
+#                 item.update({'linechart_id': linechart_id})
+#                 # print(item)
+#                 linechart_id += 1
+#             form_filters = {'channel': 'Youtube', 'string_word': '', 'country': 'US', 'min_lower': '0', 'max_upper': '100000000', 'sort_order': 'High To Low', 'country_name': 'Poland'}
+#         except:
+#             pass
+#
+#         # try:
+#         #     exportCsv(data=data)
+#         # except Exception as e:
+#         #     print(e)
+#         #     pass
+#         print('I M HERE BEFORE GETTING TOTAL VIDEOS')
+#         for item in data['data']:
+#             total_videos_url = base_url + 'Youtube/totalVideos/' + str(item['channel_id'])
+#             try:
+#                 response = requests.get(total_videos_url)
+#                 total_videos = response.json()
+#                 for item1 in total_videos['data']:
+#                     item.update(item1)
+#                 # print(item)
+#             except:
+#                 pass
+#         end = time.time()
+#         print(end - start)
+#         return render_template('search/searchInfluencers.html', regionCodes=regionCodes_json,
+#                                lookup_string=lookup_string,form_filters=form_filters,data=data,pagination='',view_campaign_data=view_campaign_data,
+#                                favInfList_data=favInfList_data,payload_form_filter=payload)
+
+
+
+
 @connecsiApp.route('/searchInfluencers',methods=['POST','GET'])
 @is_logged_in
 def searchInfluencers():
@@ -556,6 +765,51 @@ def searchInfluencers():
     videoCat_json=''
     form_filters=''
     country_name=''
+    subValues=getSubscriptionValues(str(user_id))
+    countExportList=0
+    packageName=''
+    countAddToFavorites=0
+    countAlerts=0
+    countMessages=0
+    messageSubscription={
+        'Export Lists':'',
+        'Add to Favorites':'',
+        'Alerts':'',
+        'Messages':''
+    }
+    for i in subValues['data']:
+        print(i['feature_name'])
+        if(i['feature_name'].lower()=='export lists'):
+            countExportList=i['units']
+            packageName=i['package_name']
+            messageSubscription['Export Lists'] = 'Your have less Export Lists units than the influencers in current export List. Add more in custom or upgrade your ' + packageName + ' package.'
+        if(i['feature_name'].lower()=='add to favorites'):
+            countAddToFavorites=i['units']
+            messageSubscription['Add to Favorites'] = ''
+        if(i['feature_name'].lower()=='alerts'):
+            countAlerts=i['units']
+            messageSubscription['Alerts']=''
+        if (i['feature_name'].lower() == 'messages'):
+            countMessages = i['units']
+            messageSubscription['Messages'] = ''
+
+    if(countMessages==-1):
+        messageSubscription['Messages']="Your "+packageName+" package doesn't have this feature. Please Upgrade your subscription to use this feature."
+    elif(countMessages==0):
+        messageSubscription['Messages']="You ran out of Messages feature of "+packageName+" package. PLease add more in custom or upgrade your subscription."
+
+    if (countExportList == 0):
+        messageSubscription[
+            'Export Lists'] = "You ran out of Export Lists feature of " + packageName + " package. PLease add more in custom or upgrade your subscription."
+
+    if(countAddToFavorites==0):
+        messageSubscription['Add to Favorites']="You ran out of Add to Favorites feature of "+packageName+" package. PLease add more in custom or upgrade your subscription."
+
+    if(countAlerts==-1):
+        messageSubscription['Alerts']="Your "+packageName+" package doesn't have this feature. Please Upgrade your subscription to use this feature."
+    elif(countAlerts==0):
+        messageSubscription['Alerts']="You ran out of Alerts(Milestone Based) feature of "+packageName+" package. PLease add more in custom or upgrade your subscription."
+
     view_campaign_data=''
     data=''
     favInfList_data=''
@@ -699,13 +953,13 @@ def searchInfluencers():
                     # except:
                     #     pass
             # print(data)
-            return render_template('search/searchInfluencers.html', regionCodes=regionCodes_json,
+            return render_template('search/searchInfluencers.html', countMessages=countMessages,packageName=packageName,countAlerts=countAlerts,countAddToFavorites=countAddToFavorites,messageSubscription=messageSubscription,countExportList=countExportList,regionCodes=regionCodes_json,
                                    lookup_string=lookup_string, form_filters=form_filters,data=data,view_campaign_data=view_campaign_data
                                    ,favInfList_data=favInfList_data,payload_form_filter=payload)
         except Exception as e:
             print(e)
             print('i m hee')
-            return render_template('search/searchInfluencers.html', regionCodes=regionCodes_json,
+            return render_template('search/searchInfluencers.html',countMessages=countMessages,packageName=packageName,countAlerts=countAlerts,countAddToFavorites=countAddToFavorites, messageSubscription=messageSubscription,countExportList=countExportList,regionCodes=regionCodes_json,
                                lookup_string=lookup_string,form_filters=form_filters,data=data,view_campaign_data=view_campaign_data
                                    ,favInfList_data=favInfList_data,payload_form_filter=payload)
 
@@ -747,9 +1001,10 @@ def searchInfluencers():
                 pass
         end = time.time()
         print(end - start)
-        return render_template('search/searchInfluencers.html', regionCodes=regionCodes_json,
+        return render_template('search/searchInfluencers.html',packageName=packageName,countMessages=countMessages,countAlerts=countAlerts,countAddToFavorites=countAddToFavorites, messageSubscription=messageSubscription,countExportList=countExportList,regionCodes=regionCodes_json,
                                lookup_string=lookup_string,form_filters=form_filters,data=data,pagination='',view_campaign_data=view_campaign_data,
                                favInfList_data=favInfList_data,payload_form_filter=payload)
+
 
 
 #
@@ -2111,6 +2366,34 @@ def sendEmail():
 
 
 
+# @connecsiApp.route('/sendMessage',methods = ['POST'])
+# @is_logged_in
+# def sendMessage():
+#     if request.method == 'POST':
+#        payload = request.form.to_dict()
+#        # print(payload)
+#        payload.update({'from_email_id': session['email_id']})
+#        # print(payload)
+#        date = datetime.datetime.now().strftime("%A, %d. %B %Y %I:%M%p")
+#        payload.update({'date':date})
+#        if payload['to_email_id'] == '':
+#           payload.update({'to_email_id':'kiran.padwal@connecsi.com'})
+#        print(payload)
+#        user_id= session['user_id']
+#        type = session['type']
+#        url = base_url + 'Messages/' + str(user_id) +'/' + type
+#        try:
+#            response = requests.post(url=url, json=payload)
+#            data = response.json()
+#            print(data)
+#            # if data['resposne'] == 1:
+#            return 'Your message has been sent'
+#            # else: return "Failed to sent mail"
+#        except:
+#            pass
+#            return  'Server Error'
+
+
 @connecsiApp.route('/sendMessage',methods = ['POST'])
 @is_logged_in
 def sendMessage():
@@ -2132,6 +2415,11 @@ def sendMessage():
            data = response.json()
            print(data)
            # if data['resposne'] == 1:
+           if(data['response']==1):
+               check = subscriptionReduction("Messages")
+               if (check['response'] == 1):
+                   print("done subscription Messages")
+
            return 'Your message has been sent'
            # else: return "Failed to sent mail"
        except:
@@ -2154,7 +2442,7 @@ def show_youtube_channels_without_email_id():
         channel_name_list = item['channel_id'].split('@')
         print(channel_name_list)
         channel_name = channel_name_list[1]
-        if channel_name == 'Youtube':
+        if channel_name == 'youtube':
            item['channel_id']=channel_name_list[0]
            data.append(item)
            channel_details_url = base_url+'Youtube/getChannelDetailsByChannelId/'+item['channel_id']
@@ -2165,7 +2453,8 @@ def show_youtube_channels_without_email_id():
            for channel_details in resposne_channel_details_json['data']:
                title = channel_details['title']
                item.update({'title':title})
-           print(item)
+           print('my item= ',item)
+    print('data = ',data)
     return render_template('show_youtube_channels_without_email_id.html',data = data)
 
 
@@ -2501,11 +2790,116 @@ def getFavInfList():
     return jsonify(results=response_json['data'])
 
 
+# @connecsiApp.route('/influencerFavoritesList/<string:channel_name>',methods=['GET','POST'])
+# @is_logged_in
+# def influencerFavoritesList(channel_name):
+#     data=''
+#     view_campaign_data=''
+#     try:
+#         user_id = session['user_id']
+#         url = base_url+'/Brand/getInfluencerFavList_with_details/'+str(user_id)+'/'+channel_name
+#         response = requests.get(url=url)
+#         data = response.json()
+#         print(data)
+#         print(len(data))
+#         linechart_id = 1
+#         for item in data['data']:
+#             item.update({'linechart_id': linechart_id})
+#             item.update({'total_rows': len(data['data'])})
+#             linechart_id += 1
+#         from templates.campaign import campaign
+#         campaignObj = campaign.Campaign(user_id=user_id)
+#         view_campaign_data = campaignObj.get_all_campaigns()
+#         for item in view_campaign_data['data']:
+#             if item['deleted'] == 'true':
+#                 view_campaign_data['data'].remove(item)
+#         print('i m n search')
+#         print('data=',data)
+#         # print('fav list=',favInfList_data)
+#         # exportCsv(data=data)
+#         if channel_name == 'youtube':
+#             for item in data['data']:
+#                 total_videos_url = base_url + 'Youtube/totalVideos/' + str(item['channel_id'])
+#                 try:
+#                     response = requests.get(total_videos_url)
+#                     total_videos = response.json()
+#                     for item1 in total_videos['data']:
+#                         item.update(item1)
+#                     print(item)
+#                 except:
+#                     pass
+#         if channel_name == 'twitter':
+#             for item in data['data']:
+#                 item.update({'total_videos': 100})
+#         if channel_name == 'instagram':
+#             for item in data['data']:
+#                 item.update({'total_videos': 100})
+#
+#         return render_template('partnerships/influencerFavoritesList.html',data=data,view_campaign_data=view_campaign_data,channel_name=channel_name)
+#     except Exception as e:
+#         print(e)
+#         pass
+#         return render_template('partnerships/influencerFavoritesList.html',data=data,view_campaign_data=view_campaign_data,channel_name=channel_name)
+
+
+
 @connecsiApp.route('/influencerFavoritesList/<string:channel_name>',methods=['GET','POST'])
 @is_logged_in
 def influencerFavoritesList(channel_name):
     data=''
     view_campaign_data=''
+    subscriptionValue = getSubscriptionValues(str(session["user_id"]))
+    export_count = 0
+    feature_name = ''
+    packageName=''
+    countMessages=0
+    countAddToFavorites=0
+    countAlerts=0
+    messageSubscription={
+        'Export Lists':'',
+        'Messages':'',
+        'Add To Favorites':'',
+        'Alerts':''
+    }
+    for i in subscriptionValue['data']:
+        if (i['feature_name'].lower() == 'export lists'):
+            export_count = i['units']
+            feature_name = i['feature_name']
+            packageName=i['package_name']
+        if (i['feature_name'].lower() == 'messages'):
+            countMessages = i['units']
+            feature_name = i['feature_name']
+            packageName=i['package_name']
+        if (i['feature_name'].lower() == 'add to favorites'):
+            countAddToFavorites = i['units']
+            feature_name = i['feature_name']
+            packageName = i['package_name']
+        if (i['feature_name'].lower() == 'alerts'):
+            countAlerts = i['units']
+            feature_name = i['feature_name']
+            packageName = i['package_name']
+    messageSubscription['Export Lists'] = 'Your have less Export Lists units than the influencers in current export List. Add more in custom or upgrade your '+packageName+' package.'
+    if (countAlerts == 0):
+        messageSubscription['Alerts'] = "You ran out of Alerts Units of your " + subscriptionValue['data'][0][
+            'package_name'] + " package. You can add more create campaigns in custom option or upgrade subscription."
+
+    if (countAddToFavorites == 0):
+        messageSubscription['Add to Favorites'] = "You ran out of Add to Favorites Units of your " + subscriptionValue['data'][0][
+            'package_name'] + " package. You can add more create campaigns in custom option or upgrade subscription."
+
+    if (export_count == 0):
+        messageSubscription['Export Lists'] = "You ran out of Export List Units of your " + subscriptionValue['data'][0][
+            'package_name'] + " package. You can add more create campaigns in custom option or upgrade subscription."
+    if (export_count == -1):
+        messageSubscription['Export Lists'] = "Your "+subscriptionValue['data'][0]['package_name']+" package doesn't have Export list feature. Please upgrade your package."
+
+    if (countMessages == -1):
+        messageSubscription[
+            'Messages'] = "Your " + packageName + " package doesn't have this feature. Please Upgrade your subscription to use this feature."
+    elif (countMessages == 0):
+        messageSubscription[
+            'Messages'] = "You ran out of Messages feature of " + packageName + " package. PLease add more in custom or upgrade your subscription."
+
     try:
         user_id = session['user_id']
         url = base_url+'/Brand/getInfluencerFavList_with_details/'+str(user_id)+'/'+channel_name
@@ -2546,16 +2940,38 @@ def influencerFavoritesList(channel_name):
             for item in data['data']:
                 item.update({'total_videos': 100})
 
-        return render_template('partnerships/influencerFavoritesList.html',data=data,view_campaign_data=view_campaign_data,channel_name=channel_name)
+        return render_template('partnerships/influencerFavoritesList.html',countAddToFavorites=countAddToFavorites,countAlerts=countAlerts,packageName=packageName,countMessages=countMessages,export_count=export_count,messageSubscription=messageSubscription,data=data,view_campaign_data=view_campaign_data,channel_name=channel_name)
     except Exception as e:
         print(e)
         pass
-        return render_template('partnerships/influencerFavoritesList.html',data=data,view_campaign_data=view_campaign_data,channel_name=channel_name)
+        return render_template('partnerships/influencerFavoritesList.html',countAddToFavorites=countAddToFavorites,countAlerts=countAlerts,packageName=packageName,countMessages=countMessages,export_count=export_count,messageSubscription=messageSubscription,data=data,view_campaign_data=view_campaign_data,channel_name=channel_name)
 
+
+
+
+# @connecsiApp.route('/createAlerts', methods=['POST','GET'])
+# @is_logged_in
+# def createAlerts():
+#     user_id=session['user_id']
+#     if request.method == 'POST':
+#         print("i m in post")
+#         payload = request.form.to_dict()
+#         print(payload)
+#         try:
+#             url = base_url + '/Brand/createInfluencerAlerts/'+str(user_id)
+#             response = requests.put(url=url,json=payload)
+#             # data = response.json()
+#             return 'Created Alerts for Favorite Influencer'
+#
+#         except Exception as e:
+#             print('i m in exception')
+#             print(e)
+#             return 'Server error'
 
 @connecsiApp.route('/createAlerts', methods=['POST','GET'])
 @is_logged_in
 def createAlerts():
+    print(' inside create alerts')
     user_id=session['user_id']
     if request.method == 'POST':
         print("i m in post")
@@ -2564,7 +2980,14 @@ def createAlerts():
         try:
             url = base_url + '/Brand/createInfluencerAlerts/'+str(user_id)
             response = requests.put(url=url,json=payload)
-            # data = response.json()
+            data = response.json()
+            if(data['response']==1):
+                check = subscriptionReduction("Alerts")
+                if (check['response'] == 1):
+                    print("done subscription ALERTS")
+                    check1 = subscriptionReduction("Add to favorites")
+                    if (check1['response'] == 1):
+                        print("done subscription ADD TO FAVORITES")
             return 'Created Alerts for Favorite Influencer'
 
         except Exception as e:
@@ -2574,11 +2997,74 @@ def createAlerts():
 
 
 
+@connecsiApp.route('/createAlerts1', methods=['POST','GET'])
+@is_logged_in
+def createAlerts1():
+    user_id=session['user_id']
+    if request.method == 'POST':
+        print("i m in post")
+        payload = request.form.to_dict()
+        print(payload)
+        try:
+            url = base_url + '/Brand/createInfluencerAlerts/'+str(user_id)
+            response = requests.put(url=url,json=payload)
+            data = response.json()
+            return 'Created Alerts for Favorite Influencer'
+
+        except Exception as e:
+            print('i m in exception')
+            print(e)
+            return 'Server error'
+
+
+# @connecsiApp.route('/addClassified')
+# @is_logged_in
+# def addClassified():
+#     url_regionCodes = base_url + 'Youtube/regionCodes'
+#     regionCodes_json = ''
+#     try:
+#         regionCodes_response = requests.get(url=url_regionCodes)
+#         regionCodes_json = regionCodes_response.json()
+#         print(regionCodes_json)
+#     except:pass
+#     url_videoCat = base_url + 'Youtube/videoCategories'
+#     videoCat_json=''
+#     try:
+#         response_videoCat = requests.get(url=url_videoCat)
+#         videoCat_json = response_videoCat.json()
+#         print(videoCat_json)
+#     except Exception as e:
+#         print(e)
+#     return render_template('classifiedAds/add_classifiedForm.html',regionCodes=regionCodes_json,videoCategories = videoCat_json)
+
+
 @connecsiApp.route('/addClassified')
 @is_logged_in
 def addClassified():
     url_regionCodes = base_url + 'Youtube/regionCodes'
     regionCodes_json = ''
+    subscriptionValue = getSubscriptionValues(str(session["user_id"]))
+    classified_count = 0
+    campaign_count=0
+    feature_name = ''
+    messageSubscription={
+        'Create Campaign':'',
+        'Classified Ads Posting':''
+    }
+    for i in subscriptionValue['data']:
+        if (i['feature_name'].lower() == 'classified ads posting'):
+            classified_count = i['units']
+            feature_name = i['feature_name']
+        elif(i['feature_name'].lower() == 'create campaign'):
+            campaign_count=i['units']
+    messageSubscription['Classified Ads Posting'] = "Your " + subscriptionValue['data'][0]['package_name'] + " package does not have Classified Ads Posting. You can upgrade subscription."
+    if (campaign_count == 0):
+        messageSubscription['Create Campaign'] = "You ran out of Create Campaign Units of your " + subscriptionValue['data'][0][
+            'package_name'] + " package. Continue without posting it as a Campaign or just upgrade your subscription."
+
+    if (classified_count == 0):
+        messageSubscription['Classified Ads Posting'] = "You ran out of Classified Ads Posting Units of your " + subscriptionValue['data'][0]['package_name'] + " package. You can add more Classified Ads Posting in custom option or upgrade subscription."
+
     try:
         regionCodes_response = requests.get(url=url_regionCodes)
         regionCodes_json = regionCodes_response.json()
@@ -2592,8 +3078,96 @@ def addClassified():
         print(videoCat_json)
     except Exception as e:
         print(e)
-    return render_template('classifiedAds/add_classifiedForm.html',regionCodes=regionCodes_json,videoCategories = videoCat_json)
+    return render_template('classifiedAds/add_classifiedForm.html',campaign_count=campaign_count,classified_count=classified_count,messageSubscription=messageSubscription,regionCodes=regionCodes_json,videoCategories = videoCat_json)
 
+
+# @connecsiApp.route('/saveClassified',methods=['POST'])
+# @is_logged_in
+# def saveClassified():
+#     if request.method == 'POST':
+#         payload = request.form.to_dict()
+#
+#         # post_as_campaign = 'post_as_campaign' in request.form
+#         channels = request.form.getlist('channels')
+#         channels_string = ','.join(channels)
+#         payload.update({'channels':channels_string})
+#
+#         regions = request.form.getlist('country')
+#         regions_string = ','.join(regions)
+#         payload.update({'regions':regions_string})
+#         # payload.update({"post_as_campaign": post_as_campaign})
+#
+#         arrangements = request.form.getlist('arrangements')
+#         arrangements_string = ','.join(arrangements)
+#         payload.update({'arrangements': arrangements_string})
+#
+#         kpis = request.form.getlist('kpis')
+#         kpis_string = ','.join(kpis)
+#         payload.update({'kpis': kpis_string})
+#
+#         convert_to_campaign = request.form.get('convert_to_campaign')
+#         print('convert to campaign = ', convert_to_campaign)
+#         try:
+#             del payload['country']
+#             del payload['convert_to_campaign']
+#         except:
+#             pass
+#         print(payload)
+#
+#         files = request.files.getlist("campaign_files")
+#         print(files)
+#         # exit()
+#         filenames = []
+#         for file in files:
+#             # filename = brands_classified_files.save(file)
+#             filename = campaign_files.save(file)
+#             print(filename)
+#             filenames.append(filename)
+#         filenames_string = ','.join(filenames)
+#         payload.update({'files': filenames_string})
+#         print(payload)
+#
+#         # exit()
+#         if convert_to_campaign == 'on':
+#             payload.update({'convert_to_campaign':'TRUE'})
+#             print('payload inside if =',payload)
+#             for file in files:
+#                 campaign_files.save(file)
+#             user_id = session['user_id']
+#             campaign_url = base_url + 'Campaign/' + str(user_id)
+#             print(campaign_url)
+#             campaign_payload = copy.deepcopy(payload)
+#             campaign_payload['campaign_name'] = campaign_payload.pop('classified_name')
+#             campaign_payload['campaign_description'] = campaign_payload.pop('classified_description')
+#             campaign_payload['is_classified_post'] = campaign_payload.pop('convert_to_campaign')
+#             print('campaign_payload=',campaign_payload)
+#             try:
+#                 requests.post(url=campaign_url, json=campaign_payload)
+#             except Exception as e:
+#                 print(e)
+#                 pass
+#
+#         else:
+#             payload.update({'convert_to_campaign':'FALSE'})
+#
+#         user_id = session['user_id']
+#         url = base_url + 'Classified/' + str(user_id)
+#         print(url)
+#         # return ''
+#         try:
+#             response = requests.post(url=url, json=payload)
+#             result_json = response.json()
+#             print(result_json)
+#             flash('saved Classified', 'success')
+#             return redirect(url_for("viewAllClassifiedAds"))
+#             # return viewAllClassifiedAds()
+#         except Exception as e:
+#             print(e)
+#             flash('Classified didnt saved Please try again later','danger')
+#             return addClassified()
+#
+#     else:
+#         flash('Unauthorized', 'danger')
 
 
 @connecsiApp.route('/saveClassified',methods=['POST'])
@@ -2634,10 +3208,9 @@ def saveClassified():
         # exit()
         filenames = []
         for file in files:
-            # filename = brands_classified_files.save(file)
-            filename = campaign_files.save(file)
-            print(filename)
-            filenames.append(filename)
+            if (file.filename):
+                filename = campaign_files.save(file)
+                filenames.append(filename)
         filenames_string = ','.join(filenames)
         payload.update({'files': filenames_string})
         print(payload)
@@ -2647,7 +3220,8 @@ def saveClassified():
             payload.update({'convert_to_campaign':'TRUE'})
             print('payload inside if =',payload)
             for file in files:
-                campaign_files.save(file)
+                if (file.filename):
+                    campaign_files.save(file)
             user_id = session['user_id']
             campaign_url = base_url + 'Campaign/' + str(user_id)
             print(campaign_url)
@@ -2670,12 +3244,20 @@ def saveClassified():
         print(url)
         # return ''
         try:
+            print('total classified ads values sent ',payload)
             response = requests.post(url=url, json=payload)
             result_json = response.json()
             print(result_json)
+            check = subscriptionReduction("Classified Ads Posting")
+            if (check['response'] == 1):
+                print("done subscription classified ads posting")
+                if (payload['convert_to_campaign'] == 'TRUE'):
+                    check1 = subscriptionReduction("Create Campaign")
+                    if (check1['response'] == 1):
+                        print("done subscription classified ads posting with create campaign")
             flash('saved Classified', 'success')
-            return redirect(url_for("viewAllClassifiedAds"))
-            # return viewAllClassifiedAds()
+            #return redirect(url_for("viewAllClassifiedAds"))
+            return viewAllClassifiedAds()
         except Exception as e:
             print(e)
             flash('Classified didnt saved Please try again later','danger')
@@ -2683,6 +3265,7 @@ def saveClassified():
 
     else:
         flash('Unauthorized', 'danger')
+
 
 
 
@@ -2883,12 +3466,51 @@ def exportCsv(data):
             # print(item['title'])
             writer.writerow({'Channel Name': item['title'], 'Total Followers': item['subscriberCount_gained'], 'Avg Views/video': item['total_100video_views']/100,'Avg Likes/video':item['total_100video_likes']/100,'Avg Comments/video':item['total_100video_comments']/100})
 
+# @connecsiApp.route('/viewAllClassifiedAds',methods=['GET','POST'])
+# @is_logged_in
+# def viewAllClassifiedAds():
+#     user_id=session['user_id']
+#     from templates.classifiedAds.classified import Classified
+#     classifiedObj = Classified(user_id=user_id)
+#     all_classified_data = classifiedObj.get_all_classifieds()
+#     view_classified_data_list = []
+#     for item in all_classified_data['data']:
+#         if item['deleted'] != 'true':
+#             view_classified_data_list.append(item)
+#     print(view_classified_data_list)
+#
+#     view_profile_url = base_url + 'Brand/' + str(user_id)
+#     response = requests.get(view_profile_url)
+#     profile_data_json = response.json()
+#     print(profile_data_json)
+#
+#     return render_template('classifiedAds/view_all_classifiedAds.html',all_classified_data=view_classified_data_list,profile_data=profile_data_json)
+
+
 @connecsiApp.route('/viewAllClassifiedAds',methods=['GET','POST'])
 @is_logged_in
 def viewAllClassifiedAds():
     user_id=session['user_id']
     from templates.classifiedAds.classified import Classified
     classifiedObj = Classified(user_id=user_id)
+    subValues=getSubscriptionValues(str(user_id))
+    countClassified=0
+    messageSubscription = {
+        'Classified Ads Posting': ''
+    }
+    for i in subValues['data']:
+        print(i['feature_name'])
+        if (i['feature_name'].lower() == 'classified ads posting'):
+            countClassified = i['units']
+            packageName = i['package_name']
+            feature_name=i['feature_name']
+
+
+    if (countClassified == -1):
+        messageSubscription['Classified Ads Posting'] = "Your " + packageName + " package doesn't have this feature. Please Upgrade your subscription to use this feature."
+    elif (countClassified == 0):
+        messageSubscription['Classified Ads Posting'] = "You ran out of "+feature_name+" feature of " + packageName + " package. PLease add more in custom or upgrade your subscription."
+
     all_classified_data = classifiedObj.get_all_classifieds()
     view_classified_data_list = []
     for item in all_classified_data['data']:
@@ -2900,9 +3522,7 @@ def viewAllClassifiedAds():
     response = requests.get(view_profile_url)
     profile_data_json = response.json()
     print(profile_data_json)
-
-    return render_template('classifiedAds/view_all_classifiedAds.html',all_classified_data=view_classified_data_list,profile_data=profile_data_json)
-
+    return render_template('classifiedAds/view_all_classifiedAds.html',countClassified=countClassified,messageSubscription=messageSubscription,all_classified_data=view_classified_data_list,profile_data=profile_data_json)
 
 @connecsiApp.route('/viewClassifiedDetails/<string:classified_id>')
 @is_logged_in
@@ -3576,10 +4196,44 @@ def viewAllOffers():
     return render_template('offers/view_all_offer.html',
                            all_offer_data=view_offer_data_list, profile_data=profile_data_json)
 
+# @connecsiApp.route('/viewOfferDetails/<string:offer_id>')
+# @is_logged_in
+# def viewOfferDetails(offer_id):
+#     user_id = session['user_id']
+#     print(user_id)
+#     channel_id=''
+#     from templates.offers.offer import Offer
+#     offerObj = Offer(user_id=user_id, offer_id=offer_id)
+#     offer_details = offerObj.get_offer_details()
+#     print(offer_details)
+#     for item in offer_details['data']:
+#         channel_id=item['channel_id']
+#     view_profile_url = base_url + 'Influencer/getDetailsByUserId/' + str(channel_id)
+#     response = requests.get(view_profile_url)
+#     profile_data_json = response.json()
+#     print(profile_data_json)
+#
+#     return render_template('offers/viewOfferDetails.html', offer_details=offer_details,
+#                            profile_data=profile_data_json)
+
+
 @connecsiApp.route('/viewOfferDetails/<string:offer_id>')
 @is_logged_in
 def viewOfferDetails(offer_id):
     user_id = session['user_id']
+    subscriptionValue = getSubscriptionValues(str(session["user_id"]))
+    custom_offers_reply_count = 0
+    feature_name = ''
+    messageSubscription = {
+        'Custom Offers Reply':''
+    }
+    for i in subscriptionValue['data']:
+        if (i['feature_name'].lower() == 'custom offers reply'):
+            custom_offers_reply_count = i['units']
+            feature_name = i['feature_name']
+    if (custom_offers_reply_count == 0):
+        messageSubscription['Custom Offer Reply'] = "You ran out of " + feature_name + " Units of your " + subscriptionValue['data'][0][
+            'package_name'] + " package. Add more units in custom or upgrade your package."
     print(user_id)
     channel_id=''
     from templates.offers.offer import Offer
@@ -3593,8 +4247,9 @@ def viewOfferDetails(offer_id):
     profile_data_json = response.json()
     print(profile_data_json)
 
-    return render_template('offers/viewOfferDetails.html', offer_details=offer_details,
+    return render_template('offers/viewOfferDetails.html', custom_offers_reply_count=custom_offers_reply_count,messageSubscription=messageSubscription,offer_details=offer_details,
                            profile_data=profile_data_json)
+
 
 @connecsiApp.route('/deleteOffer/<string:offer_id>', methods=['GET'])
 @is_logged_in
@@ -3746,11 +4401,49 @@ def updateOffer():
         flash('Unauthorized', 'danger')
 
 
+# @connecsiApp.route('/searchOffers',methods=['GET','POST'])
+# @is_logged_in
+# def searchOffers():
+#     url_regionCodes = base_url + 'Youtube/regionCodes'
+#     regionCodes_json = ''
+#     try:
+#         regionCodes_response = requests.get(url=url_regionCodes)
+#         regionCodes_json = regionCodes_response.json()
+#         # print(regionCodes_json)
+#     except:
+#         pass
+#     url_videoCat = base_url + 'Youtube/videoCategories'
+#     videoCat_json = ''
+#     try:
+#         response_videoCat = requests.get(url=url_videoCat)
+#         videoCat_json = response_videoCat.json()
+#         # print(videoCat_json)
+#     except Exception as e:
+#         print(e)
+#     return render_template('offers/search_offers.html',videoCategories=videoCat_json,
+#                            regionCodes=regionCodes_json)
+
+
 @connecsiApp.route('/searchOffers',methods=['GET','POST'])
 @is_logged_in
 def searchOffers():
     url_regionCodes = base_url + 'Youtube/regionCodes'
     regionCodes_json = ''
+    subscriptionValue = getSubscriptionValues(str(session["user_id"]))
+    custom_offers_reply_count = 0
+    feature_name = ''
+    package_name=''
+    messageSubscription = {
+        'Custom Offers Reply':''
+    }
+    for i in subscriptionValue['data']:
+        if (i['feature_name'].lower() == 'custom offers reply'):
+            custom_offers_reply_count = i['units']
+            feature_name = i['feature_name']
+            package_name=i['package_name']
+    if (custom_offers_reply_count == 0):
+        messageSubscription['Custom Offers Reply'] = "You ran out of "+feature_name+" Units of your " + subscriptionValue['data'][0][
+            'package_name'] + " package. Add more units in custom or upgrade your package."
     try:
         regionCodes_response = requests.get(url=url_regionCodes)
         regionCodes_json = regionCodes_response.json()
@@ -3765,8 +4458,43 @@ def searchOffers():
         # print(videoCat_json)
     except Exception as e:
         print(e)
-    return render_template('offers/search_offers.html',videoCategories=videoCat_json,
+    return render_template('offers/search_offers.html',package_name=package_name,messageSubscription=messageSubscription,custom_offers_reply_count=custom_offers_reply_count,videoCategories=videoCat_json,
                            regionCodes=regionCodes_json)
+
+@connecsiApp.route('/sendCustomReply',methods = ['POST'])
+@is_logged_in
+def sendCustomReply():
+    if request.method == 'POST':
+       payload = request.form.to_dict()
+       # print(payload)
+       payload.update({'from_email_id': session['email_id']})
+       # print(payload)
+       date = datetime.datetime.now().strftime("%A, %d. %B %Y %I:%M%p")
+       payload.update({'date':date})
+       if payload['to_email_id'] == '':
+          payload.update({'to_email_id':'kiran.padwal@connecsi.com'})
+       print(payload)
+       user_id= session['user_id']
+       type = session['type']
+       url = base_url + 'Messages/' + str(user_id) +'/' + type
+       try:
+           response = requests.post(url=url, json=payload)
+           data = response.json()
+           print(data)
+           # if data['resposne'] == 1:
+           if(data['response']==1):
+               check = subscriptionReduction("Custom Offers Reply")
+               if (check['response'] == 1):
+                   print("done subscription Custom offer Reply")
+
+           return 'Your message has been sent'
+           # else: return "Failed to sent mail"
+       except:
+           pass
+           return  'Server Error'
+
+
+
 
 @connecsiApp.route('/getOffers',methods=['GET','POST'])
 @is_logged_in
@@ -4075,6 +4803,12 @@ def getChannelGraphData(channel_name,channel_id):
 
 #-----------subscription levels with its feautes-------------------------------------------------
 
+@connecsiApp.route('/upgrade')
+@is_logged_in
+def upgrade():
+
+    return render_template('user/upgrade.html')
+
 def levelsWithFeatures(package_name):
     package_features={}
     if(package_name=='Free'):
@@ -4112,8 +4846,20 @@ def levelsWithFeatures(package_name):
             },
             {
                 "feature_name": "Alerts",
+                "units": 5,
+                "price": 1,
+                "customized_feature": "No"
+            },
+            {
+                "feature_name": "Messages",
                 "units": -1,
                 "price": 0,
+                "customized_feature": "No"
+            },
+            {
+                "feature_name": "Autofill Proposal",
+                "units": 1,
+                "price": 2,
                 "customized_feature": "No"
             }
             ]
@@ -4153,8 +4899,20 @@ def levelsWithFeatures(package_name):
             },
             {
                 "feature_name": "Alerts",
-                "units": -1,
-                "price": 0,
+                "units": 25,
+                "price": 6,
+                "customized_feature": "No"
+            },
+            {
+                "feature_name": "Messages",
+                "units": 15,
+                "price": 7,
+                "customized_feature": "No"
+            },
+            {
+                "feature_name": "Autofill Proposal",
+                "units": 5,
+                "price": 10,
                 "customized_feature": "No"
             }
             ]
@@ -4195,7 +4953,19 @@ def levelsWithFeatures(package_name):
             {
                 "feature_name": "Alerts",
                 "units": 50,
-                "price": 25,
+                "price": 12,
+                "customized_feature": "No"
+            },
+            {
+                "feature_name": "Messages",
+                "units": 30,
+                "price": 15,
+                "customized_feature": "No"
+            },
+            {
+                "feature_name": "Autofill Proposal",
+                "units": 20,
+                "price": 40,
                 "customized_feature": "No"
             }
             ]
@@ -4235,8 +5005,20 @@ def levelsWithFeatures(package_name):
             },
             {
                 "feature_name": "Alerts",
-                "units": 250,
-                "price": 125,
+                "units": 1000000,
+                "price": 0,
+                "customized_feature": "No"
+            },
+            {
+                "feature_name": "Messages",
+                "units": 1000000,
+                "price": 0,
+                "customized_feature": "No"
+            },
+            {
+                "feature_name": "Autofill Proposal",
+                "units": 1000000,
+                "price": 0,
                 "customized_feature": "No"
             }
             ]
@@ -4539,7 +5321,9 @@ def updateFeatureSubscription(u_id,feature):
 def getClassified(classified_id):
     url = base_url + 'Classified/'+classified_id+'/'+str(session['user_id'])
     response=requests.get(url)
-    return response.json()
+    response_json = response.json()
+    return jsonify(response_json)
+    # return response.json()
 
 #----------------saving classified ads---------------------------------------------------------
 @connecsiApp.route('/saveClassifiedAds',methods=['POST'])
@@ -4555,11 +5339,8 @@ def saveClassifiedAds():
         check2 = subscriptionReduction("Classified Ads Posting")
         if (check2['response'] == 1):
             print("done subscription Classified Ads Posting")
-    return response.json()
-
-
-
-
+    response_json = response.json()
+    return jsonify(response_json)
 
 #################################################################################################################
 

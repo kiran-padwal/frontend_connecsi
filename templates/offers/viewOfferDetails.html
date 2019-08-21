@@ -164,7 +164,7 @@
                             <a href="#" data-business-email="{{ item['business_email'] }}"
                                         data-title="{{ item['first_name'] }}"
                                         data-backdrop="true" data-toggle="modal" data-target="#sendMessage"
-                            class="reply-offer btn btn-raised btn-secondary bg-color1 m-0">Reply</a>
+                            class="reply-offer btn btn-raised btn-secondary bg-color1 m-0" onclick="openMessage()">Reply</a>
                             {% endfor %}
                             <a href="/searchOffers" class="btn btn-raised btn-primary bg-color2 mb-0">Back</a>
                             {% endif %}
@@ -190,7 +190,7 @@
                 <b class="modal-title">Send Message</b>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
-            <form name="create_alert_form" id="send_message_form" action="/sendMessage" method="POST">
+            <form name="create_alert_form" id="send_message_form" action="/sendCustomReply" method="POST">
                 <div class="modal-body">
                     <input class="form-control" type="hidden" value="" name="channel_id" id="message_channel_id">
                     <div class="row">
@@ -215,9 +215,47 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-default bg-color1 color-white">Save</button>
-                </div>
+                {% if custom_offers_reply_count>0 %}
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-default bg-color1 color-white">Save</button>
+                    </div>
+                    <script>
+                        var custom_offers_reply_count=Number('{{custom_offers_reply_count}}');
+                        var package_name='{{package_name}}';
+                        function openMessage(){
+                            if(custom_offers_reply_count<=0){
+                                document.getElementById('addMessageSubscription').innerHTML="You ran out of Custom Offers Reply Units of your " + package_name + " package. Add more units in custom or upgrade your package.";
+                                document.getElementById('sendMessage').style.filter='blur(3px)';
+                                document.getElementById('sendMessage').style.pointerEvents='none';
+                                document.getElementsByClassName('subscription-message')[0].style.display="block";
+                                document.getElementById('subscription-message-close').style.display="block";
+                            }
+                        }
+                        $('#subscription-message-close').click(function(){
+                             document.getElementById('sendMessage').style.filter='none';
+                             document.getElementById('sendMessage').style.pointerEvents='';
+                             $('#sendMessage').modal('toggle');
+                        })
+                    </script>
+                {% else%}
+                    <script>
+                        var custom_offers_reply_count=Number('{{custom_offers_reply_count}}');
+                        document.getElementById('addMessageSubscription').innerHTML='{{messageSubscription['Custom Offers Reply']}}'
+                        var package_name='{{package_name}}';
+                        function openMessage(){
+                            document.getElementById('sendMessage').style.filter='blur(3px)';
+                            document.getElementById('sendMessage').style.pointerEvents='none';
+                            document.getElementsByClassName('subscription-message')[0].style.display="block";
+                            document.getElementById('subscription-message-close').style.display="block";
+
+                        }
+                        $('#subscription-message-close').click(function(){
+                             document.getElementById('sendMessage').style.filter='none';
+                             document.getElementById('sendMessage').style.pointerEvents='';
+                             $('#sendMessage').modal('toggle');
+                        })
+                    </script>
+                {% endif %}
             </form>
         </div>
     </div>
@@ -236,6 +274,7 @@
                     $('#sendMessage').modal('toggle');
                     <!--$( '#status'+channel_id).empty();-->
                     <!--$( 'div[id*=status]').empty();-->
+                    custom_offers_reply_count=custom_offers_reply_count-1;
                 }
             });
             e.preventDefault(); // avoid to execute the actual submit of the form.

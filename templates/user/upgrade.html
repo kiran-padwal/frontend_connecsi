@@ -1,0 +1,103 @@
+{% extends 'admin_layout.html' %}
+{{ super() }}
+{% block body %}
+
+<div class="container">
+    <div  class="section">
+        <div class="row">
+            <div class="subscription-popup">
+                <div class="container-fluid">
+                    <div class="row" >
+                        <button id="subscription-close" type="button" style="margin-left:95%;">X</button>
+                    </div>
+                    <div class="row">
+                        <table>
+                            <tr>
+                                <th>FEATURES</th>
+                                <td colspan="2">Create Campaign</td>
+                                <td>Price</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <form action="/payment" method="post">
+                                    <th>Custom
+                                        <input type="text" name="package_name" value="Custom" style="display:none;">
+                                    </th>
+                                    <td>
+                                        <input type="text" name="feature1" value="Create Campaign" style="display:none;">
+                                        <input id="count1" type="number"  name="count1" min="0" max="1000" value="0" step="5">
+                                    </td>
+                                    <td>5</td>
+                                    <td>
+                                        <input  id="price1" type="hidden"  name="price1"  value="">
+                                        <p id="totalPrice" style="margin:0;">0</p>
+                                    </td>
+                                    <td>
+                                        <button type="submit">BUY</button>
+                                    </td>
+                                </form>
+                            </tr>
+                            <tr>
+                                <form action="/payment" method="post">
+                                    <th>Basic
+                                        <input type="text" name="package_name" value="Basic" style="display:none;">
+                                    </th>
+                                    <td>10
+                                        <input  id="count2" type="hidden"  name="count2"  value="10">
+                                    </td>
+                                    <td>10</td>
+                                    <td>10
+                                        <input  id="price2" type="hidden"  name="price2"  value="10">
+                                    </td>
+                                    <td>
+                                        <button type="submit">BUY</button>
+                                    </td>
+                                </form>
+                            </tr>
+                            <tr>
+                                <form action="/payment" method="post">
+                                    <th>Professional
+                                        <input type="text" name="package_name" value="Professional" style="display:none;">
+                                    </th>
+                                    <td>20
+                                        <input  id="count3" type="hidden"  name="count3"  value="20">
+                                    </td>
+                                    <td>20</td>
+                                    <td>20
+                                        <input  id="price3" type="hidden"  name="price3"  value="20">
+                                    </td>
+                                    <td>
+                                        <button type="submit">BUY</button>
+                                    </td>
+                                </form>
+                            </tr>
+                            <tr>
+
+                                <form action="/payment" method="post">
+                                    <th>Enterprise
+                                        <input type="text" name="package_name" value="Enterprise" style="display:none;">
+                                    </th>
+                                    <td>Unlimited
+                                        <input  id="count4" type="hidden"  name="count4"  value="1000000">
+                                    </td>
+                                    <td>-</td>
+                                    <td>100
+                                        <input  id="price4" type="hidden"  name="price4"  value="100">
+                                    </td>
+                                    <td>
+                                        <button type="submit">BUY</button>
+                                    </td>
+                                </form>
+                            </tr>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

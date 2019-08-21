@@ -10,7 +10,7 @@
     </div>
     <div class="row">
         <div class="col-12">
-            <div class="card">
+            <div class="card" id="create-classified">
                 <div class="card-body">
                     <div class="card-block">
                         <form class="form" name="classified_form" id="classified_form" method="POST"
@@ -153,10 +153,34 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-12 my-1">
-                                            <input type="checkbox" class="form-check-input" id="convert_to_campaign"
-                                                   name="convert_to_campaign" style="margin-left: 0rem">
-                                            <label class="form-check-label"
-                                                   for="convert_to_campaign" style="margin-left: 1.25rem">Post As Campaign</label>
+
+
+                                            {% if campaign_count>0 %}
+                                                <input type="checkbox" class="form-check-input" id="convert_to_campaign" name="convert_to_campaign" style="margin-left: 0rem">
+                                                <label class="form-check-label" for="convert_to_campaign" style="margin-left: 1.25rem">Post As Campaign</label>
+                                            {% else%}
+                                                <input type="checkbox" class="form-check-input" id="convert_to_campaign" name="convert_to_campaign" style="margin-left: 0rem">
+                                                <label class="form-check-label" for="convert_to_campaign" style="margin-left: 1.25rem">Post As Campaign</label>
+                                                <script>
+
+                                                    $('#convert_to_campaign').click(function(){
+                                                        document.getElementById('addMessageSubscription').innerHTML='{{messageSubscription['Create Campaign']}}';
+                                                        document.getElementById('create-classified').style.filter='blur(3px)';
+                                                        document.getElementById('create-classified').style.pointerEvents='none';
+                                                        document.getElementsByClassName('subscription-message')[0].style.display="block";
+                                                        document.getElementById("convert_to_campaign").checked = false;
+                                                        document.getElementById('subscription-message-close').style.display="block";
+
+                                                    })
+                                                    $('#subscription-message-close').click(function(){
+                                                         document.getElementById('create-classified').style.filter='none';
+                                                         document.getElementById('create-classified').style.pointerEvents='';
+                                                    })
+                                                </script>
+                                            {% endif %}
+
+
+
                                         </div>
                                     </div>
                                 </div>
@@ -177,11 +201,21 @@
                                 <div class="col-12">
                                     <hr style="margin: 1rem 0; border-color: #d3dce9;">
                                 </div>
+                                {% if classified_count<=0 %}
+                                <script>
+                                    document.getElementById('addMessageSubscription').innerHTML='{{messageSubscription['Classified Ads Posting']}}';
+                                    document.getElementById('create-classified').style.filter='blur(3px)';
+                                    document.getElementById('create-classified').style.pointerEvents='none';
+                                    document.getElementsByClassName('subscription-message')[0].style.display="block";
+                                </script>
+
+                                {% else %}
                                 <div class="col-12 my-1 d-flex justify-content-end">
-                                    <button type="submit" id="saveclassified" class="btn btn-primary m-0 bg-color1">
+                                    <button type="submit" id="savecampaign" class="btn btn-primary m-0 bg-color1">
                                         Save
                                     </button>
                                 </div>
+                                {% endif %}
                             </div>
                         </form>
                     </div>

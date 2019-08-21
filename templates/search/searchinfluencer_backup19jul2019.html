@@ -141,35 +141,8 @@
                 <div class="btn-group mr-1 mb-1">
                     <div class="input-group-btn">
                         {% if data['data'] %}
-                            {% if countExportList>=data['data']| length %}
-                                <a id="export-list-button" href="{{ url_for('static',filename='infList.csv') }}" class="btn btn-primary" download>Export CSV</a>
-                                <script>
-                                    var fileDownloaded=false;
-                                    $('#export-list-button').click(function(){
-                                        var countOfInfluencers=document.getElementsByClassName('offer-user').length;
-                                        if(fileDownloaded==false){
-                                            $.ajax({
-                                                type:'POST',
-                                                url:'/updatingFeatureValue/'+'Export Lists_'+countOfInfluencers,
-                                                success:function(data){
-                                                    console.log("done",data);
-                                                    fileDownloaded=true;
-                                                }
-                                            })
-                                        }
-                                    })
-                                </script>
-                            {% else %}
-                                <a class="btn btn-primary" id="export-list-button" style="color:white;">Export CSV</a>
-                                <script>
-                                    var exportListMessage='{{messageSubscription['Export Lists']}}';
-                                    $('#export-list-button').click(function(){
-                                        document.getElementById('addMessageSubscription').innerHTML=exportListMessage;
-                                        document.getElementsByClassName('subscription-message')[0].style.display="block";
-                                        document.getElementById('subscription-message-close').style.display="block";
-                                    })
-                                </script>
-                            {% endif %}
+                        <a href="{{ url_for('static',filename='infList.csv') }}"
+                           class="btn btn-primary" download>Export CSV</a>
                         {% else %}
                         <!--<button type="button"  style="background-color: purple; margin-left: 2%; color:white; border-radius: 10px; font-size:15px;">Export CSV</button>-->
                         {% endif %}
@@ -230,7 +203,7 @@
                                                    data-channel-id="{{item['channel_id']}}@{{form_filters['channel']}}"
                                                    data-business-email="{{ item['business_email'] }}"
                                                    data-title="{{ item['title'] }}"
-                                                   data-backdrop="true" data-toggle="modal" data-target="#sendMessage" onclick="openMessage()">
+                                                   data-backdrop="true" data-toggle="modal" data-target="#sendMessage">
                                                     <svg data-toggle="tooltip" title="Messages" width="24" height="18"
                                                          viewBox="0 0 24 18" fill="none"
                                                          xmlns="http://www.w3.org/2000/svg">
@@ -310,7 +283,7 @@
                                                 {% endif %}
 
                                             </li>
-                                            <li><a href="#" data-toggle="modal" data-backdrop="true" onclick="openAlert()"
+                                            <li><a href="#" data-toggle="modal" data-backdrop="true"
                                                    data-target="#create_alert_modal" class="create-alert"
                                                    data-channel-id="{{ item['channel_id'] }}"
                                                    data-channel-name="{{form_filters['channel']}}"
@@ -740,44 +713,9 @@
                         </div>
                     </div>
                 </div>
-                {% if countAlerts>0 %}
-                    <div class="modal-footer">
-                        <button id="createAlertButton" type="submit" class="btn btn-default bg-color1 color-white">Save</button>
-                    </div>
-                    <script>
-                        var countAlerts=Number('{{countAlerts}}');
-                        var messageSubscription='{{messageSubscription['Alerts']}}';
-                        var packageName='{{packageName}}';
-                        function openAlert(){
-
-                        }
-                        $('#subscription-message-close').click(function(){
-                             document.getElementById('create_alert_modal').style.filter='none';
-                             document.getElementById('create_alert_modal').style.pointerEvents='';
-                             $('#create_alert_modal').modal('hide');
-                        })
-                    </script>
-                {% else %}
-                    <script>
-                        var countAlerts=Number('{{countAlerts}}');
-                        var messageSubscription='{{messageSubscription['Alerts']}}';
-                        var packageName='{{packageName}}';
-                        function openAlert(){
-                            document.getElementById('addMessageSubscription').innerHTML='{{messageSubscription['Alerts']}}'
-
-                            document.getElementById('create_alert_modal').style.filter='blur(3px)';
-                            document.getElementById('create_alert_modal').style.pointerEvents='none';
-                            document.getElementsByClassName('subscription-message')[0].style.display="block";
-                            document.getElementById('subscription-message-close').style.display="block";
-
-                        }
-                        $('#subscription-message-close').click(function(){
-                             document.getElementById('create_alert_modal').style.filter='none';
-                             document.getElementById('create_alert_modal').style.pointerEvents='';
-                             $('#create_alert_modal').modal('hide');
-                        })
-                    </script>
-                {% endif %}
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-default bg-color1 color-white">Save</button>
+                </div>
             </form>
         </div>
     </div>
@@ -920,47 +858,9 @@
                         </div>
                     </div>
                 </div>
-                {% if countMessages>0 %}
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-default bg-color1 color-white">Send</button>
-                    </div>
-                    <script>
-                        var countMessages=Number('{{countMessages}}');
-                        var package_name='{{packageName}}';
-                        function openMessage(){
-                            if(countMessages==0){
-                                document.getElementById('addMessageSubscription').innerHTML="You ran out of Messages Units of your " + package_name + " package. Add more units in custom or upgrade your package.";
-                                document.getElementById('sendMessage').style.filter='blur(3px)';
-                                document.getElementById('sendMessage').style.pointerEvents='none';
-                                document.getElementsByClassName('subscription-message')[0].style.display="block";
-                                document.getElementById('subscription-message-close').style.display="block";
-                            }
-                        }
-                        $('#subscription-message-close').click(function(){
-                             document.getElementById('sendMessage').style.filter='none';
-                             document.getElementById('sendMessage').style.pointerEvents='';
-                             $('#sendMessage').modal('hide');
-                        })
-                    </script>
-                {% else%}
-                    <script>
-                        var countMessages=Number('{{countMessages}}');
-                        document.getElementById('addMessageSubscription').innerHTML='{{messageSubscription['Messages']}}'
-                        var package_name='{{package_name}}';
-                        function openMessage(){
-                            document.getElementById('sendMessage').style.filter='blur(3px)';
-                            document.getElementById('sendMessage').style.pointerEvents='none';
-                            document.getElementsByClassName('subscription-message')[0].style.display="block";
-                            document.getElementById('subscription-message-close').style.display="block";
-
-                        }
-                        $('#subscription-message-close').click(function(){
-                             document.getElementById('sendMessage').style.filter='none';
-                             document.getElementById('sendMessage').style.pointerEvents='';
-                             $('#sendMessage').modal('hide');
-                        })
-                    </script>
-                {% endif %}
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-default bg-color1 color-white">Send</button>
+                </div>
             </form>
         </div>
     </div>
@@ -977,29 +877,6 @@
     <!--});-->
 <!--</script>-->
 <!-- end of autocomplete -->
-
-
-{% if countAddToFavorites==0 %}
-    <script>
-        var countAddToFavorites=Number('{{countAddToFavorites}}');
-        var messageSubscription='{{messageSubscription['Add To Favorites']}}';
-        var packageName='{{packageName}}';
-        $('#subscription-message-close').click(function(){
-            document.getElementsByClassName('subscription-message')[0].style.display="none";
-            document.getElementById('subscription-message-close').style.display="none";
-        })
-    </script>
-{% else %}
-    <script>
-        var countAddToFavorites=Number('{{countAddToFavorites}}');
-        var messageSubscription='{{messageSubscription['Add To Favorites']}}';
-        var packageName='{{packageName}}';
-        $('#subscription-message-close').click(function(){
-             document.getElementsByClassName('subscription-message')[0].style.display="none";
-             document.getElementById('subscription-message-close').style.display="none";
-        })
-    </script>
-{% endif %}
 <script>
 
 function getGraphUpdated(){
@@ -1324,46 +1201,18 @@ function getCampaign_ids(channel_id){
         {% endfor %}
     {% endfor %}
     }
+
+
     function add_to_fav_inf_list(channel_id,channel_name){
-        var valueFav=countAddToFavorites;
-        if(valueFav==0){
-                document.getElementById('addMessageSubscription').innerHTML="You ran out of Add to Favorites feature of "+packageName+" package. PLease add more in custom or upgrade your subscription.";
-                document.getElementsByClassName('subscription-message')[0].style.display="block";
-                document.getElementById('subscription-message-close').style.display="block";
-
-        }
-        else{
-            document.getElementById('loader-div').style.display="block";
-            $.ajax({
-                type: "GET",
-                url: '/addToFavInfList/'+channel_id+'/'+channel_name,
-                <!--data: form.serialize(), // serializes the form's elements.-->
-                success: function (data) {
-                    alert(data);
-                    document.getElementById('loader-div').style.display="block";
-                    getFavInfList();
-                    $.ajax({
-                        type:'POST',
-                        url:'/updatingFeatureValue/'+'Add to favorites',
-                        success:function(data){
-                            console.log("done updating favorites units",data);
-                            countAddToFavorites--;
-                            document.getElementById('loader-div').style.display="block";
-                            $.ajax({
-                                type:'POST',
-                                url:'/updatingFeatureValue/'+'Alerts',
-                                success:function(){
-                                    countAlerts--;
-
-                                    document.getElementById('loader-div').style.display="none";
-                                }
-                            })
-
-                        }
-                    })
-                }
-            });
-        }
+        $.ajax({
+            type: "GET",
+            url: '/addToFavInfList/'+channel_id+'/'+channel_name,
+            <!--data: form.serialize(), // serializes the form's elements.-->
+            success: function (data) {
+                alert(data);
+                getFavInfList();
+            }
+        });
     }
     function getFavInfList(){
         $.ajax({
@@ -1424,25 +1273,6 @@ function getCampaign_ids(channel_id){
                  $("#favList"+channel_id).html(svg);
                  $('#alert'+channel_id).find('.tab-content-item-list').empty();
                  $('#alert'+channel_id).find('.tab-content-item-list').append('<li>No Alerts Set</li></hr>');
-                 document.getElementById('loader-div').style.display="block";
-                 $.ajax({
-                    type:'POST',
-                    url:'/addingBackFeatureValue/'+'Add to favorites',
-                    success:function(data){
-                        console.log("done adding back favorites units",data);
-                        countAddToFavorites=countAddToFavorites+1;
-                        document.getElementById('loader-div').style.display="block";
-                        $.ajax({
-                            type:'POST',
-                            url:'/addingBackFeatureValue/'+'Alerts',
-                            success:function(data){
-                                console.log("done adding back favorites units",data);
-                                countAlerts=countAlerts+1;
-                                document.getElementById('loader-div').style.display="none";
-                            }
-                        })
-                    }
-                })
             }
         });
     }
@@ -1550,7 +1380,6 @@ function getCampaign_ids(channel_id){
             success: function (data) {
                 alert(data); // show response from the python script.
                 $('#sendMessage').modal('toggle');
-                countMessages=countMessages-1;
                 <!--$( '#status'+channel_id).empty();-->
                 $( 'div[id*=status]').empty();
 
