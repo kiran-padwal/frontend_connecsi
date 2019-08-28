@@ -1255,6 +1255,7 @@ function updateChannelStatusForCampaignByCampaignId(campaign_id){
                                 <!--$('#status'+val.channel_id).empty();-->
                                 $('#status'+val.channel_id).append('<b style="font-weight:450; font-size:12px;">'+val.campaign_name+'<br/></b>');
                                 $('#status'+val.channel_id).append('<b style="font-weight:400; color:'+color+'; font-size:11px;">'+val.status+'</b>');
+                                $('#status'+val.channel_id).append('&nbsp;<a href="/inbox/'+val.message_id+'" style = "font-size:11px;">inbox</a>');
                                 $('#status'+val.channel_id).append('<hr style="height:0px; margin:auto;">');
                                 $('#no_campaigns'+val.channel_id).hide();
                             }

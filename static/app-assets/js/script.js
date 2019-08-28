@@ -1,7 +1,3 @@
-/**
- * Created by ashishtyagi9622 on 17/6/19.
- */
-//----------------timer for keyup---------------------------
 function settingLocalRoute(route){
     console.log(route);
     localStorage.setItem("loginRoute" , route);
@@ -11,85 +7,94 @@ $(document).ready(function(){
 });
 
 
-(function($){
-    $.fn.extend({
-        donetyping: function(callback,timeout){
-            timeout = timeout || 100; // 1 second default timeout
-            var timeoutReference,
-                doneTyping = function(el){
-                    if (!timeoutReference) return;
-                    timeoutReference = null;
-                    callback.call(el);
-                };
-            return this.each(function(i,el){
-                var $el = $(el);
+//(function($){
+//    $.fn.extend({
+//        donetyping: function(callback,timeout){
+//            timeout = timeout || 100; // 1 second default timeout
+//            var timeoutReference,
+//                doneTyping = function(el){
+//                    if (!timeoutReference) return;
+//                    timeoutReference = null;
+//                    callback.call(el);
+//                };
+//            return this.each(function(i,el){
+//                var $el = $(el);
+//
+//                // Chrome Fix (Use keyup over keypress to detect backspace)
+//                // thank you @palerdot
+//                $el.is(':input') && $el.on('keyup keypress paste',function(e){
+//                    // This catches the backspace button in chrome, but also prevents
+//                    // the event from triggering too preemptively. Without this line,
+//                    // using tab/shift+tab will make the focused element fire the callback.
+//                    if(e.keyCode==8){
+//                        $('#search-list').hide();
+//                    }
+//                    if (e.type=='keyup' && e.keyCode!=8){$('#search-list').show();return;}
+//
+//                    // Check if timeout has been set. If it has, "reset" the clock and
+//                    // start over again.
+//                    if (timeoutReference) clearTimeout(timeoutReference);
+//                    timeoutReference = setTimeout(function(){
+//                        // if we made it here, our timeout has elapsed. Fire the
+//                        // callback
+//                        doneTyping(el);
+//                    }, timeout);
+//                }).on('input',function(){
+//                    // If we can, fire the event since we're leaving the field
+//                    doneTyping(el);
+//                });
+//            });
+//        }
+//    });
+//})(jQuery);
 
-                // Chrome Fix (Use keyup over keypress to detect backspace)
-                // thank you @palerdot
-                $el.is(':input') && $el.on('keyup keypress paste',function(e){
-                    // This catches the backspace button in chrome, but also prevents
-                    // the event from triggering too preemptively. Without this line,
-                    // using tab/shift+tab will make the focused element fire the callback.
-                    if(e.keyCode==8){
-                        $('#search-list').hide();
-                    }
-                    if (e.type=='keyup' && e.keyCode!=8){$('#search-list').show();return;}
-
-                    // Check if timeout has been set. If it has, "reset" the clock and
-                    // start over again.
-                    if (timeoutReference) clearTimeout(timeoutReference);
-                    timeoutReference = setTimeout(function(){
-                        // if we made it here, our timeout has elapsed. Fire the
-                        // callback
-                        doneTyping(el);
-                    }, timeout);
-                }).on('blur',function(){
-                    // If we can, fire the event since we're leaving the field
-                    doneTyping(el);
-                });
-            });
-        }
-    });
-})(jQuery);
-
-$('#search_name').donetyping(function(){
-    var searchName = document.getElementById('search_name').value;
-    var channel_type=document.getElementById('channel_name').value;
-    if(channel_type=='youtube'&&searchName!=''){
-        $.ajax({
-            type:'GET',
-            url:'/getYoutubeSearchDropDownResults/'+searchName,
-            success:function(res){
-                $('#search-list').empty();
-                for(var i =0;i<res.results.length;i++){
-                    var options='<li id="'+res.results[i].channel_id+'" onclick="displayThisChannel(this.id,this)"><div style="display:flex;justify-content:space-between;"><div>'+res.results[i].title+'</div><div><img src="'+res.results[i].channel_img+'" width="30px" height="30px"></div></div></li>';
-                    $('#search-list').append(options);
-                }
-
-            }
-        });
+function onInput(){
+    if(document.getElementById('search_name').value==''){
+        $('#search-list').hide();
     }
-    else if(channel_type=='twitter'&&searchName!=''){
-
-        $.ajax({
+    else{
+        $('#search-list').empty();
+        $('#search-list').show();
+        console.log("doing",document.getElementById('search_name').value);
+        var searchName = document.getElementById('search_name').value;
+        var channel_type=document.getElementById('channel_name').value;
+        if(channel_type=='youtube'&&searchName!=''){
+            $.ajax({
                 type:'GET',
-                url:'/getTwitterSearchDropDownResults/'+searchName,
+                url:'/getYoutubeSearchDropDownResults/'+searchName,
                 success:function(res){
-                     console.log(res);
                     $('#search-list').empty();
                     for(var i =0;i<res.results.length;i++){
-                        var options='<li id="'+res.results[i].screen_name+'" onclick="displayThisChannel(this.id,this)"><div style="display:flex;justify-content:space-between;"><div>'+res.results[i].screen_name+'</div><div><img src="'+res.results[i].channel_img+'" width="30px" height="30px"></div></div></li>';
+                        var options='<li id="'+res.results[i].channel_id+'" onclick="displayThisChannel(this.id,this)"><div style="display:flex;justify-content:space-between;"><div>'+res.results[i].title+'</div><div><img src="'+res.results[i].channel_img+'" width="30px" height="30px"></div></div></li>';
                         $('#search-list').append(options);
                     }
 
                 }
-        });
+            });
+        }
+        else if(channel_type=='twitter'&&searchName!=''){
 
+            $.ajax({
+                    type:'GET',
+                    url:'/getTwitterSearchDropDownResults/'+searchName,
+                    success:function(res){
+                         console.log(res);
+                        $('#search-list').empty();
+                        for(var i =0;i<res.results.length;i++){
+                            var options='<li id="'+res.results[i].screen_name+'" onclick="displayThisChannel(this.id,this)"><div style="display:flex;justify-content:space-between;"><div>'+res.results[i].screen_name+'</div><div><img src="'+res.results[i].channel_img+'" width="30px" height="30px"></div></div></li>';
+                            $('#search-list').append(options);
+                        }
+
+                    }
+            });
+
+        }
+        else{
+            $('#search-list').empty();
+        }
     }
-    else{
-        $('#search-list').empty();
-    }
-});
+
+};
 
 
 
@@ -139,7 +144,6 @@ $('.what-next-button').click(function () {
         'slow');
 });
 function settingDataDisplay() {
-    document.getElementsByClassName('score-display')[0].style.display='none';
     document.getElementsByClassName('data-display')[0].style.display='none';
 }
 var massPopChart =null;
@@ -628,9 +632,6 @@ function displayThisChannel(x,y){
                     var loc=window.location.href;
                     loc=loc.split('/');
                     loc=loc[loc.length-1];
-                    loc=loc.split('-');
-                    loc=loc[1];
-                    console.log(loc);
                     if(loc=='influencer'){
                         if(score<4){
                         document.getElementsByClassName('score-4')[0].style.display="none";
@@ -660,7 +661,6 @@ function displayThisChannel(x,y){
                     document.getElementsByClassName('influencer-name')[0].childNodes[1].innerText=influencer_name;
                     document.getElementsByClassName("influence-img")[0].childNodes[1].src=influencer_image;
                     document.getElementsByClassName("influence-rating")[0].childNodes[1].innerText=engagementRate+'%';
-                    document.getElementsByClassName("influence-rating")[0].childNodes[3].innerText=business_category_name;
                     document.getElementsByClassName("influence-followers")[0].childNodes[1].innerText=total_followers;
                     document.getElementsByClassName("influence-average-views")[0].childNodes[1].innerText=average_views;
                     document.getElementsByClassName("influence-average-likes")[0].childNodes[1].innerText=average_likes;
@@ -718,9 +718,8 @@ function displayThisChannel(x,y){
                     setTimeout(function () {
 
                         document.getElementsByClassName('score-display-name')[0].childNodes[1].innerText='Your Influencer Score Is';
-                        document.getElementsByClassName('score-display')[0].style.display='block';
                         $('html,body').animate({
-                                scrollTop: $(".score-display").offset().top},
+                                scrollTop: $(".data-display").offset().top},
                             'slow');
                         var progressbar = $('#progress_bar');
                         max = progressbar.attr('aria-valuemax');
@@ -833,10 +832,8 @@ function displayThisChannel(x,y){
                     var score=calculateScore(total_followers,engagementRate);
                     var loc=window.location.href;
                     loc=loc.split('/');
-                    loc=loc[loc.length-1];
-                    loc=loc.split('-');
-                    loc=loc[1];
                     console.log(loc);
+                    loc=loc[loc.length-1];
                     if(loc=='influencer'){
                         if(score<4){
                         document.getElementsByClassName('score-4')[0].style.display="none";
@@ -867,7 +864,6 @@ function displayThisChannel(x,y){
                     document.getElementsByClassName('influencer-name')[0].childNodes[1].innerText=influencer_name;
                     document.getElementsByClassName("influence-img")[0].childNodes[1].src=influencer_image;
                     document.getElementsByClassName("influence-rating")[0].childNodes[1].innerText=engagementRate+'%';
-                    document.getElementsByClassName("influence-rating")[0].childNodes[3].innerText=business_category_name;
                     document.getElementsByClassName("influence-followers")[0].childNodes[1].innerText=total_followers;
                     document.getElementsByClassName("influence-average-views")[0].childNodes[1].innerText=average_views;
                     document.getElementsByClassName("influence-average-likes")[0].childNodes[1].innerText=average_likes;
@@ -935,7 +931,6 @@ function displayThisChannel(x,y){
                     setTimeout(function () {
 
                         document.getElementsByClassName('score-display-name')[0].childNodes[1].innerText='Your Influencer Score Is';
-                        document.getElementsByClassName('score-display')[0].style.display='block';
                         $('html,body').animate({
                                 scrollTop: $(".score-display").offset().top},
                             'slow');
@@ -1094,10 +1089,8 @@ function searchChannel(channelId) {
                     var score=calculateScore(data[0].page_data.no_of_followers,engagementRate);
                     var loc=window.location.href;
                     loc=loc.split('/');
-                    loc=loc[loc.length-1];
-                    loc=loc.split('-');
-                    loc=loc[1];
                     console.log(loc);
+                    loc=loc[loc.length-1];
                     if(loc=='influencer'){
                         if(score<4){
                         document.getElementsByClassName('score-4')[0].style.display="none";
@@ -1127,7 +1120,6 @@ function searchChannel(channelId) {
                     document.getElementsByClassName('influencer-name')[0].childNodes[1].innerText=influencer_name;
                     document.getElementsByClassName("influence-img")[0].childNodes[1].src=influencer_image;
                     document.getElementsByClassName("influence-rating")[0].childNodes[1].innerText=engagementRate+'%';
-                    document.getElementsByClassName("influence-rating")[0].childNodes[3].innerText=business_category_name;
                     document.getElementsByClassName("influence-followers")[0].childNodes[1].innerText=total_followers;
                     document.getElementsByClassName("influence-average-views")[0].childNodes[1].innerText=average_views;
                     document.getElementsByClassName("influence-average-likes")[0].childNodes[1].innerText=average_likes;
@@ -1194,9 +1186,8 @@ function searchChannel(channelId) {
                     setTimeout(function () {
 
                         document.getElementsByClassName('score-display-name')[0].childNodes[1].innerText='Your Influencer Score Is';
-                        document.getElementsByClassName('score-display')[0].style.display='block';
                         $('html,body').animate({
-                                scrollTop: $(".score-display").offset().top},
+                                scrollTop: $(".data-display").offset().top},
                             'slow');
                         var progressbar = $('#progress_bar');
                         max = progressbar.attr('aria-valuemax');
@@ -1283,5 +1274,3 @@ function searchChannel(channelId) {
 
 
 }
-
-//------------------------------------------------------

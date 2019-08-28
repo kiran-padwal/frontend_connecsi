@@ -40,7 +40,7 @@
                 </select>
                 <div class="parentBox">
                     <div class="firstBox">
-                        <input id="search_name" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" autocomplete="off" onkeyup="settingDataDisplay()">
+                        <input oninput="onInput()" id="search_name" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" autocomplete="off" onkeyup="settingDataDisplay()">
                     </div>
                     <div class="secondBox">
                         <ul id="search-list"></ul>
@@ -58,42 +58,29 @@
                 </div>
             </div>
         </div>
-        <div class="score-display">
-            <div class="row">
-                <div class="col-sm-2"></div>
-                <div class="col-sm-8">
-                    <hr class="my-4">
-                    <div class="container">
-                        <div class="row">
 
-                            <div class="col-sm-6 score-display-name">
-                                <h4>Your Influencer Score Is</h4>
-                            </div>
-                            <div class="col-sm-3 score-display-bar">
-                                <div class="progress">
-                                    <div id="progress_bar" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%"></div>
+        <div class="data-display">
+            <div class="row text-center">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-8" style="padding-bottom:2rem;">
+                    <hr class="my-4">
+                    <div class="container" style="background-color: rgba(17, 17, 17, 0.3); padding-top:2rem;">
+                            <div class="row">
+
+                                <div class="col-sm-6 score-display-name">
+                                    <h4>Your Influencer Score Is</h4>
+                                </div>
+                                <div class="col-sm-5 score-display-bar">
+                                    <div class="progress">
+                                        <div id="progress_bar" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%"></div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-1 score-display-number">
+                                    <h4>7</h4>
                                 </div>
                             </div>
-                            <div class="col-sm-3 score-display-number">
-                                <h4>7</h4>
-                            </div>
-                        </div>
                     </div>
-                </div>
-                <div class="col-sm-2"></div>
-            </div>
-        </div>
-        <div class="data-display">
-
-            <div class="row">
-                <div class="col-md-2"></div>
-
-                <div class="col-md-2"></div>
-            </div>
-            <div class="row text-center">
-                <div class="col-2"></div>
-                <div class="col-8">
-                    <div class="container-fluid influence-data padding">
+                    <div class="container-fluid influence-data padding" style="background-color: rgba(17, 17, 17, 0.3); padding-bottom:2rem;">
                         <div class="box-1">
                             <div class="influence-img">
                                 <img src="../static/images/0.png" alt="">
@@ -105,7 +92,7 @@
                             </div>
                             <div class="influence-rating">
                                 <h4>0%</h4>
-                                <h6>Business account</h6>
+                                <h6>Engagement Rate</h6>
                                 <div class="rating-bar">
                                     <div class="container">
                                             <div class="engagement-bar">
@@ -144,7 +131,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-2"></div>
+                <div class="col-sm-2"></div>
             </div>
             <div class="row text-center">
                 <div class="what-next-button">
@@ -278,3 +265,4 @@
 </body>
 </html>
 {% endblock %}
+

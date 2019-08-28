@@ -227,7 +227,7 @@
                                 <td class="align-middle">
                                     {% for status in channel_status_campaign_data['data'] %}
                                     {% if youtube_inf_data['channel_id']==status['channel_id']  %}
-                                    {{ status['status'] }}
+                                    {{ status['status'] }}&nbsp;<a href="/inbox/{{status['message_id']}}">inbox</a>
                                     {% endif %}
                                     {% endfor %}
                                 </td>
