@@ -932,7 +932,7 @@ function displayThisChannel(x,y){
 
                         document.getElementsByClassName('score-display-name')[0].childNodes[1].innerText='Your Influencer Score Is';
                         $('html,body').animate({
-                                scrollTop: $(".score-display").offset().top},
+                                scrollTop: $(".data-display").offset().top},
                             'slow');
                         var progressbar = $('#progress_bar');
                         max = progressbar.attr('aria-valuemax');

@@ -4818,49 +4818,65 @@ def levelsWithFeatures(package_name):
                 "feature_name":"Create Campaign",
                 "units":2,
                 "price":2,
-                "customized_feature":"No"
+                "customized_feature":"No",
+                "added_units":0,
+                "base_units":2
             },
             {
                 "feature_name": "Export Lists",
                 "units": -1,
                 "price": 0,
-                "customized_feature": "No"
+                "customized_feature": "No",
+                "added_units":0,
+                "base_units":-1
             },
             {
                 "feature_name": "Add to favorites",
                 "units": 5,
                 "price": 1,
-                "customized_feature": "No"
+                "customized_feature": "No",
+                "added_units":0,
+                "base_units":5
             },
             {
                 "feature_name": "Classified Ads Posting",
                 "units": -1,
                 "price": 0,
-                "customized_feature": "No"
+                "customized_feature": "No",
+                "added_units":0,
+                "base_units":-1
             },
             {
                 "feature_name": "Custom Offers Reply",
                 "units": 5,
                 "price": 5,
-                "customized_feature": "No"
+                "customized_feature": "No",
+                "added_units":0,
+                "base_units":5
             },
             {
                 "feature_name": "Alerts",
                 "units": 5,
                 "price": 1,
-                "customized_feature": "No"
+                "customized_feature": "No",
+                "added_units":0,
+                "base_units":5
             },
             {
                 "feature_name": "Messages",
                 "units": -1,
                 "price": 0,
-                "customized_feature": "No"
+                "customized_feature": "No",
+                "added_units":0,
+                "base_units":-1
             },
             {
                 "feature_name": "Autofill Proposal",
                 "units": 1,
                 "price": 2,
-                "customized_feature": "No"
+                "customized_feature": "No",
+                "added_units":0,
+                "base_units":1
             }
             ]
         }
@@ -4871,49 +4887,65 @@ def levelsWithFeatures(package_name):
                 "feature_name": "Create Campaign",
                 "units": 10,
                 "price": 10,
-                "customized_feature": "No"
+                "customized_feature": "No",
+                "added_units":0,
+                "base_units":10
             },
             {
                 "feature_name": "Export Lists",
                 "units": -1,
                 "price": 0,
-                "customized_feature": "No"
+                "customized_feature": "No",
+                "added_units":0,
+                "base_units":-1
             },
             {
                 "feature_name": "Add to favorites",
                 "units": 25,
                 "price": 6,
-                "customized_feature": "No"
+                "customized_feature": "No",
+                "added_units":0,
+                "base_units":25
             },
             {
                 "feature_name": "Classified Ads Posting",
                 "units": 10,
                 "price": 20,
-                "customized_feature": "No"
+                "customized_feature": "No",
+                "added_units":0,
+                "base_units":10
             },
             {
                 "feature_name": "Custom Offers Reply",
                 "units": 20,
                 "price": 20,
-                "customized_feature": "No"
+                "customized_feature": "No",
+                "added_units":0,
+                "base_units":20
             },
             {
                 "feature_name": "Alerts",
                 "units": 25,
                 "price": 6,
-                "customized_feature": "No"
+                "customized_feature": "No",
+                "added_units":0,
+                "base_units":25
             },
             {
                 "feature_name": "Messages",
                 "units": 15,
                 "price": 7,
-                "customized_feature": "No"
+                "customized_feature": "No",
+                "added_units":0,
+                "base_units":15
             },
             {
                 "feature_name": "Autofill Proposal",
                 "units": 5,
                 "price": 10,
-                "customized_feature": "No"
+                "customized_feature": "No",
+                "added_units":0,
+                "base_units":5
             }
             ]
         }
@@ -4924,49 +4956,65 @@ def levelsWithFeatures(package_name):
                 "feature_name": "Create Campaign",
                 "units": 20,
                 "price": 20,
-                "customized_feature": "No"
+                "customized_feature": "No",
+                "added_units":0,
+                "base_units":20
             },
             {
                 "feature_name": "Export Lists",
                 "units": 100,
                 "price": 40,
-                "customized_feature": "No"
+                "customized_feature": "No",
+                "added_units":0,
+                "base_units":100
             },
             {
                 "feature_name": "Add to favorites",
                 "units": 50,
                 "price": 12,
-                "customized_feature": "No"
+                "customized_feature": "No",
+                "added_units":0,
+                "base_units":12
             },
             {
                 "feature_name": "Classified Ads Posting",
                 "units": 20,
                 "price": 40,
-                "customized_feature": "No"
+                "customized_feature": "No",
+                "added_units":0,
+                "base_units":20
             },
             {
                 "feature_name": "Custom Offers Reply",
                 "units": 50,
                 "price": 50,
-                "customized_feature": "No"
+                "customized_feature": "No",
+                "added_units":0,
+                "base_units":50
             },
             {
                 "feature_name": "Alerts",
                 "units": 50,
                 "price": 12,
-                "customized_feature": "No"
+                "customized_feature": "No",
+                "added_units":0,
+                "base_units":50
             },
             {
                 "feature_name": "Messages",
                 "units": 30,
                 "price": 15,
-                "customized_feature": "No"
+                "customized_feature": "No",
+                "added_units":0,
+                "base_units":30
             },
             {
                 "feature_name": "Autofill Proposal",
                 "units": 20,
                 "price": 40,
-                "customized_feature": "No"
+                "customized_feature": "No",
+                "added_units":0,
+                "base_units":20
             }
             ]
         }
@@ -4977,55 +5025,70 @@ def levelsWithFeatures(package_name):
                 "feature_name": "Create Campaign",
                 "units": 1000000,
                 "price": 0,
-                "customized_feature": "No"
+                "customized_feature": "No",
+                "added_units":0,
+                "base_units":1000000
             },
             {
                 "feature_name": "Export Lists",
                 "units": 500,
                 "price": 200,
-                "customized_feature": "No"
+                "customized_feature": "No",
+                "added_units":0,
+                "base_units":500
             },
             {
                 "feature_name": "Add to favorites",
                 "units": 1000000,
                 "price": 0,
-                "customized_feature": "No"
+                "customized_feature": "No",
+                "added_units":0,
+                "base_units":1000000
             },
             {
                 "feature_name": "Classified Ads Posting",
                 "units": 1000000,
                 "price": 0,
-                "customized_feature": "No"
+                "customized_feature": "No",
+                "added_units":0,
+                "base_units":1000000
             },
             {
                 "feature_name": "Custom Offers Reply",
                 "units": 1000000,
                 "price": 0,
-                "customized_feature": "No"
+                "customized_feature": "No",
+                "added_units":0,
+                "base_units":1000000
             },
             {
                 "feature_name": "Alerts",
                 "units": 1000000,
                 "price": 0,
-                "customized_feature": "No"
+                "customized_feature": "No",
+                "added_units":0,
+                "base_units":1000000
             },
             {
                 "feature_name": "Messages",
                 "units": 1000000,
                 "price": 0,
-                "customized_feature": "No"
+                "customized_feature": "No",
+                "added_units":0,
+                "base_units":1000000
             },
             {
                 "feature_name": "Autofill Proposal",
                 "units": 1000000,
                 "price": 0,
-                "customized_feature": "No"
+                "customized_feature": "No",
+                "added_units":0,
+                "base_units":1000000
             }
             ]
         }
     return package_features
 #----------------------subscription methods-------------------------------------------------------
-
 
 
 def getSubscriptionValues(u_id):
@@ -5055,6 +5118,7 @@ def freeSubscription(u_id):
     payload3["package_name"] = "Free"
     payload3["p_created_date"] = startTime
     payload3["p_expiry_date"] = endTime
+    payload3["base_package"] = "Free"
     response3 = requests.post(url3, json=payload3)
 
     check=response3.json()
@@ -5072,6 +5136,8 @@ def freeSubscription(u_id):
             payload4["units"] = i["units"]
             payload4["price"] = i["price"]
             payload4["customized_feature"] = i["customized_feature"]
+            payload4["added_units"] = i["added_units"]
+            payload4["base_units"] = i["base_units"]
             response4 = requests.post(url4, json=payload4)
     return response4.json()
 
@@ -5086,6 +5152,8 @@ def customSubscription(features, u_id):
         payload4["units"] = i['units']
         payload4["price"] = i['price']
         payload4["customized_feature"] = i['customized_feature']
+        payload4["added_units"] = i["added_units"]
+        payload4["base_units"] = i["base_units"]
         response4 = requests.post(url4, json=payload4)
         check=response4.json()
         print("res",check)
@@ -5103,6 +5171,7 @@ def basicSubscription(u_id):
     payload3["package_name"] = "Basic"
     payload3["p_created_date"] = startTime
     payload3["p_expiry_date"] = endTime
+    payload3["base_package"] = "Basic"
     response3 = requests.post(url3, json=payload3)
     check = response3.json()
     response4=None
@@ -5115,6 +5184,8 @@ def basicSubscription(u_id):
             payload4["units"] = i['units']
             payload4["price"] = i['price']
             payload4["customized_feature"] = i['customized_feature']
+            payload4["added_units"] = i["added_units"]
+            payload4["base_units"] = i["base_units"]
             response4 = requests.post(url4, json=payload4)
     return response4.json()
 
@@ -5129,6 +5200,7 @@ def professionalSubscription(u_id):
     payload3["package_name"] = "Professional"
     payload3["p_created_date"] = startTime
     payload3["p_expiry_date"] = endTime
+    payload3["base_package"] = "Professional"
     response3 = requests.post(url3, json=payload3)
     check = response3.json()
     response4=None
@@ -5141,6 +5213,8 @@ def professionalSubscription(u_id):
             payload4["units"] = i['units']
             payload4["price"] = i['price']
             payload4["customized_feature"] = i['customized_feature']
+            payload4["added_units"] = i["added_units"]
+            payload4["base_units"] = i["base_units"]
             response4 = requests.post(url4, json=payload4)
     return response4.json()
 
@@ -5154,6 +5228,7 @@ def enterpriseSubscription(u_id):
     payload3["package_name"] = "Enterprise"
     payload3["p_created_date"] = startTime
     payload3["p_expiry_date"] = endTime
+    payload3["base_package"] = "Enterprise"
     response3 = requests.post(url3, json=payload3)
     check = response3.json()
     response4=None
@@ -5167,10 +5242,11 @@ def enterpriseSubscription(u_id):
             payload4["units"] = allFeatures[i]["units"]
             payload4["price"] = allFeatures[i]["price"]
             payload4["customized_feature"] = allFeatures[i]["customized_feature"]
+            payload4["added_units"] = i["added_units"]
+            payload4["base_units"] = i["base_units"]
             response4 = requests.post(url4, json=payload4)
     return response4.json()
 # -------ashish----------------subscription routes------------------------------------------------
-
 
 @connecsiApp.route('/updateBrandSubscriptionPackageDetails',methods=['POST'])
 @is_logged_in
@@ -5185,6 +5261,8 @@ def updateBrandSubscriptionPackageDetails():
            payloadNew["package_name"]=payload["package_name"]
            payloadNew["p_created_date"]=startTime
            payloadNew["p_expiry_date"]=endTime
+
+
            if(payload["package_name"]=="Custom"):
                print("inside custom")
                allValue=getSubscriptionValues(str(session["user_id"]))
@@ -5195,21 +5273,26 @@ def updateBrandSubscriptionPackageDetails():
                for j in range(1,value):
                    print(j)
                    for i in allValue['data']:
+                       payloadNew['base_package'] =i['base_package']
                        if(i['feature_name']==payload['feature'+str(j)]):
                            print("match",i)
                            units=i['units']+int(payload['count'+str(j)])
                            #enter price value here for each module
                            price=i['price']+(int(payload['count'+str(j)])*1)
-
+                           added=i['added_units']+int(payload['count'+str(j)])
                            dat = {
                                'feature_name': payload['feature' + str(j)],
                                'units': units,
                                'price':price,
-                               'customized_feature':"Yes"
+                               'customized_feature':"Yes",
+                               'added_units':added,
+                               'base_units':i['base_units']
                            }
                            features.append(dat)
                            print("yo", features)
                check = customSubscription(features, str(session["user_id"]))
+
+               response1 = requests.post(url=url, json=payloadNew)
                print("check value", check)
 
            elif(payload["package_name"]=="Basic"):
@@ -5311,6 +5394,8 @@ def updateFeatureSubscription(u_id,feature):
     payload4["units"] = feature['units']
     payload4["price"] = feature['price']
     payload4["customized_feature"] = feature['customized_feature']
+    payload4["added_units"] = feature['added_units']
+    payload4["base_units"] = feature['base_units']
     response4 = requests.post(url4, json=payload4)
     return response4.json()
 
