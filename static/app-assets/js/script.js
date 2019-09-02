@@ -1,5 +1,46 @@
+**
+ * Created by ashishtyagi9622 on 17/6/19.
+ */
+
+
+
+$(window).scroll(function(){
+  // This is then function used to detect if the element is scrolled into view
+  function elementScrolled(elem)
+  {
+    var docViewTop = $(window).scrollTop();
+    var docViewBottom = docViewTop + $(window).height();
+    var elemTop = $(elem).offset().top+10;
+    return ((elemTop <= docViewBottom) && (elemTop >= docViewTop));
+  }
+  // This is where we use the function to detect if ".box2" is scrolled into view, and when it is add the class ".animated" to the <p> child element
+  if(elementScrolled('#mainChart')) {
+
+        $("#mainChart").addClass("fade-in-element");
+  // Your function here
+
+  }
+  if(elementScrolled('#mainChart2')) {
+
+        $("#mainChart2").addClass("fade-in-element");
+  // Your function here
+
+  }
+  if(elementScrolled('.graph-1')) {
+
+        $(".graph-1").addClass("fade-in-element");
+  // Your function here
+
+  }
+    if(elementScrolled('.graph-2')) {
+
+        $(".graph-2").addClass("fade-in-element");
+  // Your function here
+
+  }
+});
+//----------------timer for keyup---------------------------
 function settingLocalRoute(route){
-    console.log(route);
     localStorage.setItem("loginRoute" , route);
 }
 $(document).ready(function(){
@@ -55,7 +96,6 @@ function onInput(){
     else{
         $('#search-list').empty();
         $('#search-list').show();
-        console.log("doing",document.getElementById('search_name').value);
         var searchName = document.getElementById('search_name').value;
         var channel_type=document.getElementById('channel_name').value;
         if(channel_type=='youtube'&&searchName!=''){
@@ -78,7 +118,6 @@ function onInput(){
                     type:'GET',
                     url:'/getTwitterSearchDropDownResults/'+searchName,
                     success:function(res){
-                         console.log(res);
                         $('#search-list').empty();
                         for(var i =0;i<res.results.length;i++){
                             var options='<li id="'+res.results[i].screen_name+'" onclick="displayThisChannel(this.id,this)"><div style="display:flex;justify-content:space-between;"><div>'+res.results[i].screen_name+'</div><div><img src="'+res.results[i].channel_img+'" width="30px" height="30px"></div></div></li>';
@@ -140,7 +179,7 @@ function onInput(){
 //------------------------------------------------------------
 $('.what-next-button').click(function () {
     $('html,body').animate({
-            scrollTop: $(window).scrollTop() + 400},
+            scrollTop: $(window).scrollTop() + 300},
         'slow');
 });
 function settingDataDisplay() {
@@ -184,21 +223,27 @@ function calculateRating(data) {
 
 // function for getting the chart rendered with json data received
 
-function getChart(label,like) {
-    Chart.pluginService.register({
-        beforeDraw: function (chart, easing) {
-            if (chart.config.options.chartArea && chart.config.options.chartArea.backgroundColor) {
-                var helpers = Chart.helpers;
-                var ctx = chart.chart.ctx;
-                var chartArea = chart.chartArea;
-
-                ctx.save();
-                ctx.fillStyle = chart.config.options.chartArea.backgroundColor;
-                ctx.fillRect(chartArea.left, chartArea.top, chartArea.right - chartArea.left, chartArea.bottom - chartArea.top);
-                ctx.restore();
-            }
-        }
-    });
+function getChart(label,like,comment) {
+    total=[]
+    for(var f=0;f<like.length;f++){
+        total.push(like[f]+comment[f]);
+    }
+    total.reverse();
+    label.reverse();
+//    Chart.pluginService.register({
+//        beforeDraw: function (chart, easing) {
+//            if (chart.config.options.chartArea && chart.config.options.chartArea.backgroundColor) {
+//                var helpers = Chart.helpers;
+//                var ctx = chart.chart.ctx;
+//                var chartArea = chart.chartArea;
+//
+//                ctx.save();
+//                ctx.fillStyle = chart.config.options.chartArea.backgroundColor;
+//                ctx.fillRect(chartArea.left, chartArea.top, chartArea.right - chartArea.left, chartArea.bottom - chartArea.top);
+//                ctx.restore();
+//            }
+//        }
+//    });
 
     document.getElementById('mainChart').innerText='';
     $('#mainChart').append('<canvas id="myChart"></canvas>');
@@ -216,17 +261,40 @@ function getChart(label,like) {
         data:{
             labels:label,
             datasets:[{
-                label:'NUMBER OF LIKES',
-                data: like,
+                label:'ENGAGEMENT',
+                data: total,
                 backgroundColor:[
-                    'rgba(255,99,132,0.6)',
-                    'rgba(255,99,132,0.6)',
-                    'rgba(255,99,132,0.6)',
-                    'rgba(255,99,132,0.6)',
-                    'rgba(255,99,132,0.6)'
+//                    'rgb(255,99,97)',
+//                    'rgb(255,99,97)',
+//                    'rgb(255,99,97)',
+//                    'rgb(255,99,97)',
+//                    'rgb(255,99,97)'
+
+                      //blue
+//                      'rgb(69, 92, 254)',
+//                      'rgb(69, 92, 254)',
+//                      'rgb(69, 92, 254)',
+//                      'rgb(69, 92, 254)',
+//                      'rgb(69, 92, 254)'
+
+                      //light blue
+//                        'rgb(109, 166, 255)',
+//                        'rgb(109, 166, 255)',
+//                        'rgb(109, 166, 255)',
+//                        'rgb(109, 166, 255)',
+//                        'rgb(109, 166, 255)'
+
+
+                      //pink
+                        'rgba(0, 140, 249,.25)',
+                        'rgba(0, 140, 249,.25)',
+                        'rgba(0, 140, 249,.25)',
+                        'rgba(0, 140, 249,.25)',
+                        'rgba(0, 140, 249,.25)'
+
                 ],
                 borderWidth: 1,
-                borderColor: '#b8b8b8',
+                borderColor: 'rgba(0, 140, 249,.7)',
                 hoverBorderWidth: 3,
                 hoverBorderColor: '#00f01a',
                 hoverPointer: 'cursor'
@@ -236,33 +304,41 @@ function getChart(label,like) {
             responsive:true,
             maintainAspectRatio:aspectRatio,
             title:{
-                display:true,
-                text:'LIKES VS POSTS'
+                display:false,
+                text:'ENGAGEMENT VS POSTS',
+                fontSize: fontSizeT+3
             },
             legend:{
                 position:'bottom',
-                display: true,
+                display: false,
                 labels: {
                 fontColor: "white",
-                fontSize: fontSizeT
+                fontSize: fontSizeT-2
                 }
             },
             scales: {
                 xAxes: [{
                     scaleLabel: {
                         display: true,
-                        labelString: 'LAST FIVE POSTS'
+                        labelString: 'LAST FIVE POSTS',
+                        fontSize: fontSizeT-2
                     },
                     ticks: {
                         autoSkip: false,
                         maxRotation: 90,
-                        minRotation: 90
+                        minRotation: 90,
+                        fontSize: fontSizeT-3
                     }
                 }],
                 yAxes: [{
                     scaleLabel: {
                         display: true,
-                        labelString: 'NUMBER OF LIKES'
+                        labelString: 'ENGAGEMENT',
+                        fontSize: fontSizeT-2
+                    },
+                    ticks: {
+                        beginAtZero: true,
+                        fontSize: fontSizeT-3
                     }
                 }]
             },
@@ -297,6 +373,298 @@ function getChart(label,like) {
     });
 }
 
+
+function getChart2(counts) {
+    console.log(counts)
+    label=[]
+    total=[]
+    counts.sort(function (a, b) {
+        return a.count>b.count;
+    });
+    var j=0;
+    for(var i=counts.length-1;i>=0&&j<10;i--){
+        label.push(counts[i].tag);
+        total.push(counts[i].count);
+        j++;
+    }
+//    Chart.pluginService.register({
+//        beforeDraw: function (chart, easing) {
+//            if (chart.config.options.chartArea && chart.config.options.chartArea.backgroundColor) {
+//                var helpers = Chart.helpers;
+//                var ctx = chart.chart.ctx;
+//                var chartArea = chart.chartArea;
+//
+//                ctx.save();
+//                ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+//                ctx.fillRect(chartArea.left, chartArea.top, chartArea.right - chartArea.left, chartArea.bottom - chartArea.top);
+//                ctx.restore();
+//            }
+//        }
+//    });
+
+    document.getElementById('mainChart2').innerText='';
+    $('#mainChart2').append('<canvas id="myChart2"></canvas>');
+    var myChart = document.getElementById('myChart2').getContext('2d');
+
+    Chart.defaults.global.defaultFontColor = "white";
+    var fontSizeT=18;
+    var aspectRatio=true;
+    if($(window).width()<748){
+        aspectRatio=false;
+        fontSizeT=10;
+    }
+    massPopChart = new Chart(myChart, {
+        type:'horizontalBar',
+        data:{
+            labels:label,
+            datasets:[{
+                label:'Hashtag Count',
+                data: total,
+                backgroundColor:[
+
+                // blue
+
+                    'rgba(0, 140, 249,.25)',
+                    'rgba(0, 140, 249,.25)',
+                    'rgba(0, 140, 249,.25)',
+                    'rgba(0, 140, 249,.25)',
+                    'rgba(0, 140, 249,.25)',
+                    'rgba(0, 140, 249,.25)',
+                    'rgba(0, 140, 249,.25)',
+                    'rgba(0, 140, 249,.25)',
+                    'rgba(0, 140, 249,.25)',
+                    'rgba(0, 140, 249,.25)'
+
+                ],
+                fillOpacity: .3,
+                borderWidth: 1,
+                borderColor: 'rgba(0, 140, 249,.7)',
+                hoverBorderWidth: 3,
+                hoverBorderColor: '#00f01a',
+                hoverPointer: 'cursor'
+            }]
+        },
+        options:{
+            responsive:true,
+            maintainAspectRatio:aspectRatio,
+            title:{
+                display:false,
+                text:'TOP 10 HASHTAGS',
+                fontSize: fontSizeT+3
+            },
+            legend:{
+                position:'bottom',
+                display: false,
+                labels: {
+                fontColor: "white",
+                fontSize: fontSizeT-2
+                }
+            },
+            scales: {
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'FREQUENCY',
+                        fontSize: fontSizeT-2
+                    },
+                    ticks: {
+                        beginAtZero: true,
+                        fontSize: fontSizeT-3,
+                        precision:0
+                    },
+                    barPercentage: 0.6
+                }],
+                yAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'HASHTAG',
+                        fontSize: fontSizeT-2
+                    },
+                    ticks: {
+                        fontSize: fontSizeT-3
+                    },
+                    barPercentage: 0.6
+                }]
+            },
+            chartArea: {
+                backgroundColor: 'rgb(255, 255, 255)'
+            },
+            plugins: {
+                datalabels: {
+                    anchor: 'end',
+                    align: 'end',
+                    backgroundColor: null,
+                    borderColor: null,
+                    borderRadius: 4,
+                    borderWidth: 1,
+                    color: '#223388',
+                    font: function (context) {
+                        var width = context.chart.width;
+                        var size = Math.round(width / 32);
+                        return {
+                            size: size,
+                            weight: 600
+                        };
+                    },
+                    offset: 4,
+                    padding: 0,
+                    formatter: function (value) {
+                        return Math.round(value * 10) / 10
+                    }
+                }
+            }
+        }
+    });
+
+}
+
+
+
+
+
+//---------------------------------------------
+
+Chart.pluginService.register({
+        beforeDraw: function (chart, easing) {
+            if (chart.config.options.chartArea && chart.config.options.chartArea.backgroundColor) {
+                var helpers = Chart.helpers;
+                var ctx = chart.chart.ctx;
+                var chartArea = chart.chartArea;
+
+                ctx.save();
+                ctx.fillStyle = 'white';
+                ctx.fillRect(chartArea.left, chartArea.top, chartArea.right - chartArea.left, chartArea.bottom - chartArea.top);
+                ctx.restore();
+            }
+        }
+});
+function getChart3(counts) {
+    console.log(counts)
+    label=[]
+    total=[]
+    counts.sort(function (a, b) {
+        return a.count>b.count;
+    });
+    var j=0;
+
+    for(var i=counts.length-1;i>=0&&j<5;i--){
+        label.push(counts[i].tag);
+        total.push(counts[i].count);
+        j++;
+    }
+
+
+    document.getElementById('mainChart2').innerText='';
+    $('#mainChart2').append('<canvas id="myChart2"></canvas>');
+    var myChart = document.getElementById('myChart2').getContext('2d');
+
+    Chart.defaults.global.defaultFontColor = "white";
+    var fontSizeT=18;
+    var aspectRatio=true;
+    if($(window).width()<748){
+        aspectRatio=false;
+        fontSizeT=10;
+    }
+    massPopChart = new Chart(myChart, {
+        type:'horizontalBar',
+        data:{
+            labels:label,
+            datasets:[{
+                label:'Hashtag Count',
+                data: total,
+                backgroundColor:[
+
+                // blue
+
+                    'rgba(0, 140, 249,.25)',
+                    'rgba(0, 140, 249,.25)',
+                    'rgba(0, 140, 249,.25)',
+                    'rgba(0, 140, 249,.25)',
+                    'rgba(0, 140, 249,.25)'
+
+                ],
+                fillOpacity: .3,
+                borderWidth: 1,
+                borderColor: 'rgba(0, 140, 249,.7)',
+                hoverBorderWidth: 3,
+                hoverBorderColor: '#00f01a',
+                hoverPointer: 'cursor'
+            }]
+        },
+        options:{
+            responsive:true,
+            maintainAspectRatio:aspectRatio,
+            title:{
+                display:false,
+                text:'TOP 5 HASHTAGS',
+                fontSize: fontSizeT+3
+            },
+            legend:{
+                position:'bottom',
+                display: false,
+                labels: {
+                fontColor: "white",
+                fontSize: fontSizeT-2
+                }
+            },
+            scales: {
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'FREQUENCY',
+                        fontSize: fontSizeT-2
+                    },
+                    ticks: {
+                        beginAtZero: true,
+                        fontSize: fontSizeT-3,
+                        precision:0
+                    },
+                    barPercentage: 0.6
+                }],
+                yAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'HASHTAG',
+                        fontSize: fontSizeT-2
+                    },
+                    ticks: {
+                        fontSize: fontSizeT-3
+                    },
+                    barPercentage: 0.6
+                }]
+            },
+            chartArea: {
+                backgroundColor: 'rgb(255, 255, 255)'
+            },
+            plugins: {
+                datalabels: {
+                    anchor: 'end',
+                    align: 'end',
+                    backgroundColor: null,
+                    borderColor: null,
+                    borderRadius: 4,
+                    borderWidth: 1,
+                    color: '#223388',
+                    font: function (context) {
+                        var width = context.chart.width;
+                        var size = Math.round(width / 32);
+                        return {
+                            size: size,
+                            weight: 600
+                        };
+                    },
+                    offset: 4,
+                    padding: 0,
+                    formatter: function (value) {
+                        return Math.round(value * 10) / 10
+                    }
+                }
+            }
+        }
+    });
+    $('.graph-2')[0].childNodes[1].innerText=j+' Most Used Hashtags';
+
+}
 //----------------------------------------------
 
 
@@ -332,7 +700,7 @@ function calcaulateAverage(data) {
 
 //function for conversion of followers, views, likes and comments into M and K
 
-function convertion(data) {
+function conversion(data) {
     var value;
     if(data>999999){
 
@@ -340,8 +708,8 @@ function convertion(data) {
         var m = Math.round(data * 100) / 100;
         value = m+'M';
     }
-    else if(data>1000){
-        data=data/1000;
+    else if(data>9999){
+        data=data/10000;
         var m = Math.round(data * 100) / 100;
         value=m+'K';
     }
@@ -394,10 +762,10 @@ function calculateScore(followers,Rate){
     else if(Rate>1.5){
         pointEngagementRate=4;
     }
-    else if(Rate>1){
+    else if(Rate>0.75){
         pointEngagementRate=3;
     }
-    else if(Rate>0.5){
+    else if(Rate>0.25){
         pointEngagementRate=2;
     }
     else{
@@ -428,7 +796,7 @@ function calculateScore(followers,Rate){
     else if(followers>2500){
         pointFollowers=3;
     }
-    else if(followers>1000){
+    else if(followers>500){
         pointFollowers=2;
     }
     else{
@@ -447,8 +815,8 @@ function renderYoutubeCategoryGraph(channelId){
             type:'GET',
             url:'/getYoutubeVideoCategory/'+channelId,
             success:function(res){
+                console.log(res,"video category");
                 data=res.results.data;
-                console.log("graph data",res);
                 var labels=[];
                 var dat=[];
                 for(var i=0;i<data.length;i++){
@@ -590,7 +958,6 @@ function renderYoutubeCategoryGraph(channelId){
 // function youtube channel when clicked
 
 function displayThisChannel(x,y){
-    console.log(x,y.childNodes[0].childNodes[0].innerText);
     $('#search-list').hide();
     $('#search_name').val(y.childNodes[0].childNodes[0].innerText);
     document.getElementById("check_button_inside").disabled = true;
@@ -614,8 +981,13 @@ function displayThisChannel(x,y){
                     }
                     document.getElementById('loader-div').style.display='none';
                     data=res.results.data[0];
-                    console.log("hello");
-                    console.log(data);
+                    total_videos=res.totalVideos.data[0].total_videos;
+                    if(total_videos==0){
+                        total_videos=1;
+                    }
+                    if(total_videos>100){
+                        total_videos=100;
+                    }
                     influencer_name=data.title;
                     business_category_name=data.desc;
                     if(business_category_name.length>20){
@@ -624,9 +996,9 @@ function displayThisChannel(x,y){
                     influencer_image=data.channel_img;
                     total_followers=data.subscriberCount_gained;
                     // engagement rate calculation
-                    var engagementRate=((data.total_100video_comments+data.total_100video_views+data.total_100video_likes)/(total_followers)).toFixed(2);
-                    console.log(engagementRate);
-
+                    var engagementRate=(data.total_100video_comments+data.total_100video_likes+data.total_100video_shares);
+                    engagementRate=Math.round(engagementRate/total_videos)
+                    engagementRate=(((engagementRate/total_followers).toFixed(4))*100).toFixed(2);
                     //------------------------------
                     var score=calculateScore(total_followers,engagementRate);
                     var loc=window.location.href;
@@ -642,11 +1014,10 @@ function displayThisChannel(x,y){
                             document.getElementsByClassName('score-not-4')[0].style.display="none";
                         }
                     }
-                    console.log(score);
-                    total_followers=convertion(total_followers);
-                    average_views=convertion(data.total_100video_views);
-                    average_likes=convertion(data.total_100video_likes);
-                    average_comments=convertion(data.total_100video_comments);
+                    total_followers=conversion(total_followers);
+                    average_views=conversion(Math.round(data.total_100video_views/total_videos));
+                    average_likes=conversion(Math.round(data.total_100video_likes/total_videos));
+                    average_comments=conversion(Math.round(data.total_100video_comments/total_videos));
                     if(average_comments==0){
                         average_comments='N/A';
                     }
@@ -665,11 +1036,10 @@ function displayThisChannel(x,y){
                     document.getElementsByClassName("influence-average-views")[0].childNodes[1].innerText=average_views;
                     document.getElementsByClassName("influence-average-likes")[0].childNodes[1].innerText=average_likes;
                     document.getElementsByClassName("influence-average-comments")[0].childNodes[1].innerText=average_comments;
-                    console.log();
                     var label=[];
                     var like=[];
                     $('#myChart').hide();
-                    renderYoutubeCategoryGraph(x);
+//                    renderYoutubeCategoryGraph(x);                 //graph youtube not needed
                     var influencerItem = document.getElementsByClassName("influence-rating");
                     var engagementBar = document.getElementsByClassName('engagement-bar');
                     var max=4;
@@ -677,35 +1047,35 @@ function displayThisChannel(x,y){
                     var diff=(max-min)/3;
                     for(var i =0;i<influencerItem.length;i++){
                         var value = parseFloat(influencerItem[i].innerText.split(' ')[0]);
-                        if(value>=max){
+                        if(value>=5){
                             engagementBar[i].childNodes[1].style.backgroundColor="rgb(0, 133, 15)";
                             engagementBar[i].childNodes[3].style.backgroundColor="rgb(0, 133, 15)";
                             engagementBar[i].childNodes[5].style.backgroundColor="rgb(0, 133, 15)";
                             engagementBar[i].childNodes[7].style.backgroundColor="rgb(0, 133, 15)";
                             engagementBar[i].childNodes[9].style.backgroundColor="rgb(0, 133, 15)";
                         }
-                        else if(value<max&&value>max-diff){
+                        else if(value<5&&value>4){
                             engagementBar[i].childNodes[1].style.backgroundColor="rgb(96, 165, 55)";
                             engagementBar[i].childNodes[3].style.backgroundColor="rgb(96, 165, 55)";
                             engagementBar[i].childNodes[5].style.backgroundColor="rgb(96, 165, 55)";
                             engagementBar[i].childNodes[7].style.backgroundColor="rgb(96, 165, 55)";
                             engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
                         }
-                        else if(value<=max-diff&&value>min+diff){
+                        else if(value<=4&&value>3){
                             engagementBar[i].childNodes[1].style.backgroundColor="rgb(129, 212, 82)";
                             engagementBar[i].childNodes[3].style.backgroundColor="rgb(129, 212, 82)";
                             engagementBar[i].childNodes[5].style.backgroundColor="rgb(129, 212, 82)";
                             engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
                             engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
                         }
-                        else if(value<=min+diff&&value>min){
+                        else if(value<=3&&value>2){
                             engagementBar[i].childNodes[1].style.backgroundColor="rgb(230, 169, 0)";
                             engagementBar[i].childNodes[3].style.backgroundColor="rgb(230, 169, 0)";
                             engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
                             engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
                             engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
                         }
-                        else if(value<=min){
+                        else if(value<=2){
                             engagementBar[i].childNodes[1].style.backgroundColor="rgb(204,0,0)";
                             engagementBar[i].childNodes[3].style.backgroundColor="lightgrey";
                             engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
@@ -795,12 +1165,17 @@ function displayThisChannel(x,y){
 
                 }
             });
+            $('#mainChart2').hide();
+        $('.graph-2').hide();
+        $('.graph-1').hide();
     }
     else if($('#channel_name').val()=='twitter'){
+
         $.ajax({
                 type: 'GET',
                 url: "/getTwitterUserFromTwitterApi/"+x,
                 success:function(res){
+                    console.log("twitter",res);
                     if(res.results.data.length==0){
                         document.getElementById("check_button_inside").disabled = false;
                         document.getElementById('loader-div').style.display='none';
@@ -815,8 +1190,6 @@ function displayThisChannel(x,y){
                     }
                     document.getElementById('loader-div').style.display='none';
                     data=res.results.data[0];
-                    console.log("hello");
-                    console.log(data);
                     influencer_name=data.title;
                     business_category_name=data.desc;
                     if(business_category_name.length>20){
@@ -825,14 +1198,12 @@ function displayThisChannel(x,y){
                     influencer_image='../static/images/imageNotAvailable.jpeg';
                     total_followers=data.subscriberCount_gained;
                     // engagement rate calculation
-                    var engagementRate=((data.total_100video_comments+data.total_100video_views+data.total_100video_likes)/(total_followers)).toFixed(2);
-                    console.log(engagementRate);
+                    var engagementRate=((data.total_100video_comments+data.total_100video_likes)/(total_followers)).toFixed(2);
 
                     //------------------------------
                     var score=calculateScore(total_followers,engagementRate);
                     var loc=window.location.href;
                     loc=loc.split('/');
-                    console.log(loc);
                     loc=loc[loc.length-1];
                     if(loc=='influencer'){
                         if(score<4){
@@ -845,11 +1216,10 @@ function displayThisChannel(x,y){
                         }
                     }
 
-                    console.log(score);
-                    total_followers=convertion(total_followers);
-                    average_views=convertion(data.total_100video_views);
-                    average_likes=convertion(data.total_100video_likes);
-                    average_comments=convertion(data.total_100video_comments);
+                    total_followers=conversion(total_followers);
+                    average_views=conversion(data.total_100video_views);
+                    average_likes=conversion(data.total_100video_likes);
+                    average_comments=conversion(data.total_100video_comments);
                     if(average_comments==0){
                         average_comments='N/A';
                     }
@@ -868,21 +1238,37 @@ function displayThisChannel(x,y){
                     document.getElementsByClassName("influence-average-views")[0].childNodes[1].innerText=average_views;
                     document.getElementsByClassName("influence-average-likes")[0].childNodes[1].innerText=average_likes;
                     document.getElementsByClassName("influence-average-comments")[0].childNodes[1].innerText=average_comments;
-                    console.log();
                     var label=[];
                     var like=[];
                     $('#myChart').hide();
-//                    if(isEmpty(data[0].post_data)){
-//                        document.getElementsByClassName("chart-mine")[0].style.display="none";
-//                    }
-//                    else{
+
+                    if(res.results.data[0].hashtags==''){
+                        document.getElementsByClassName("chart-mine")[0].style.display="none";
+                    }
+                    else{
 //                        document.getElementsByClassName("chart-mine")[0].style.display="block";
-//                        for(var j=0;j<data[0].post_data.length&&j<5;j++){
-//                            label.push((data[0].post_data[j].post_time).substring(0,10));
-//                            like.push(data[0].post_data[j].no_of_post_likes);
-//                        }
-//                        getChart(label,like);
-//                    }
+                        var counts = {};
+                        var hashTags=res.results.data[0].hashtags;
+                        hashTags=hashTags.split(',');
+                        for (var i = 0; i < hashTags.length; i++) {
+                          var num = hashTags[i];
+                          if(num!=""){
+                            counts[num] = counts[num] ? counts[num] + 1 : 1;
+                          }
+
+                        }
+                        hashTags=[]
+                        for(var i in counts){
+                            hashTags.push({
+                                tag:i,
+                                count:counts[i]
+                            })
+                        }
+
+
+                        console.log(counts);
+                        getChart3(hashTags);
+                    }
                     var influencerItem = document.getElementsByClassName("influence-rating");
                     var engagementBar = document.getElementsByClassName('engagement-bar');
                     var max=4;
@@ -890,35 +1276,35 @@ function displayThisChannel(x,y){
                     var diff=(max-min)/3;
                     for(var i =0;i<influencerItem.length;i++){
                         var value = parseFloat(influencerItem[i].innerText.split(' ')[0]);
-                        if(value>=max){
+                        if(value>=5){
                             engagementBar[i].childNodes[1].style.backgroundColor="rgb(0, 133, 15)";
                             engagementBar[i].childNodes[3].style.backgroundColor="rgb(0, 133, 15)";
                             engagementBar[i].childNodes[5].style.backgroundColor="rgb(0, 133, 15)";
                             engagementBar[i].childNodes[7].style.backgroundColor="rgb(0, 133, 15)";
                             engagementBar[i].childNodes[9].style.backgroundColor="rgb(0, 133, 15)";
                         }
-                        else if(value<max&&value>max-diff){
+                        else if(value<5&&value>4){
                             engagementBar[i].childNodes[1].style.backgroundColor="rgb(96, 165, 55)";
                             engagementBar[i].childNodes[3].style.backgroundColor="rgb(96, 165, 55)";
                             engagementBar[i].childNodes[5].style.backgroundColor="rgb(96, 165, 55)";
                             engagementBar[i].childNodes[7].style.backgroundColor="rgb(96, 165, 55)";
                             engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
                         }
-                        else if(value<=max-diff&&value>min+diff){
+                        else if(value<=4&&value>3){
                             engagementBar[i].childNodes[1].style.backgroundColor="rgb(129, 212, 82)";
                             engagementBar[i].childNodes[3].style.backgroundColor="rgb(129, 212, 82)";
                             engagementBar[i].childNodes[5].style.backgroundColor="rgb(129, 212, 82)";
                             engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
                             engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
                         }
-                        else if(value<=min+diff&&value>min){
+                        else if(value<=3&&value>2){
                             engagementBar[i].childNodes[1].style.backgroundColor="rgb(230, 169, 0)";
                             engagementBar[i].childNodes[3].style.backgroundColor="rgb(230, 169, 0)";
                             engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
                             engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
                             engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
                         }
-                        else if(value<=min){
+                        else if(value<=2){
                             engagementBar[i].childNodes[1].style.backgroundColor="rgb(204,0,0)";
                             engagementBar[i].childNodes[3].style.backgroundColor="lightgrey";
                             engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
@@ -1008,6 +1394,10 @@ function displayThisChannel(x,y){
 
                 }
             });
+//            $('#mainChart2').hide();
+//        $('.graph-2').hide();
+        $('.graph-1').hide();
+
     }
 
 }
@@ -1057,7 +1447,8 @@ function searchChannel(channelId) {
                 type: 'GET',
                 url: "/getInstgramUserFromInstagramApi/"+channelName,
                 success:function(res){
-                    if(res.results.length==0){
+                    console.log(res);
+                    if(res.results.length==0||res.results.message=='Internal Server Error'){
                         document.getElementById("check_button_inside").disabled = false;
                         document.getElementById('loader-div').style.display='none';
                         document.getElementsByClassName('message')[0].style.display='flex';
@@ -1071,8 +1462,6 @@ function searchChannel(channelId) {
                     }
                     document.getElementById('loader-div').style.display='none';
                     data=res.results;
-                    console.log("hello");
-                    console.log(data);
                     influencer_name=data[0].page_data.title;
                     business_category_name=data[0].page_data.business_category_name;
                     influencer_image=data[0].page_data.channel_img;
@@ -1081,15 +1470,13 @@ function searchChannel(channelId) {
                     // engagement rate calculation
                     var engagementRate=0;
                     if((data[0].post_data).length!=0){
-                        engagementRate=((v.avg_comments+v.avg_views+v.avg_likes)/(data[0].page_data.no_of_followers)).toFixed(2);
+                        engagementRate=((v.avg_comments+v.avg_likes)/(data[0].page_data.no_of_followers)).toFixed(2);
                     }
-                    console.log(engagementRate);
 
                     //------------------------------
                     var score=calculateScore(data[0].page_data.no_of_followers,engagementRate);
                     var loc=window.location.href;
                     loc=loc.split('/');
-                    console.log(loc);
                     loc=loc[loc.length-1];
                     if(loc=='influencer'){
                         if(score<4){
@@ -1101,11 +1488,10 @@ function searchChannel(channelId) {
                             document.getElementsByClassName('score-not-4')[0].style.display="none";
                         }
                     }
-                    console.log(score);
-                    total_followers=convertion(total_followers);
-                    average_views=convertion(v.avg_views);
-                    average_likes=convertion(v.avg_likes);
-                    average_comments=convertion(v.avg_comments);
+                    total_followers=conversion(total_followers);
+                    average_views=conversion(v.avg_views);
+                    average_likes=conversion(v.avg_likes);
+                    average_comments=conversion(v.avg_comments);
                     if(average_comments==0){
                         average_comments='N/A';
                     }
@@ -1124,9 +1510,10 @@ function searchChannel(channelId) {
                     document.getElementsByClassName("influence-average-views")[0].childNodes[1].innerText=average_views;
                     document.getElementsByClassName("influence-average-likes")[0].childNodes[1].innerText=average_likes;
                     document.getElementsByClassName("influence-average-comments")[0].childNodes[1].innerText=average_comments;
-                    console.log();
                     var label=[];
                     var like=[];
+                    var comment=[];
+                    var hashTags=[];
                     if(isEmpty(data[0].post_data)){
                         document.getElementsByClassName("chart-mine")[0].style.display="none";
                     }
@@ -1135,8 +1522,31 @@ function searchChannel(channelId) {
                         for(var j=0;j<data[0].post_data.length&&j<5;j++){
                             label.push((data[0].post_data[j].post_time).substring(0,10));
                             like.push(data[0].post_data[j].no_of_post_likes);
+                            comment.push(data[0].post_data[j].no_of_post_comments);
                         }
-                        getChart(label,like);
+                        for(var j=0;j<data[0].post_data.length;j++){
+                            values=data[0].post_data[j].insta_hashtags;
+                            valuesData=values.split(',');
+                            hashTags=hashTags.concat(valuesData);
+                        }
+                        var counts = {};
+
+                        for (var i = 0; i < hashTags.length; i++) {
+                          var num = hashTags[i];
+                          if(num!=""){
+                            counts[num] = counts[num] ? counts[num] + 1 : 1;
+                          }
+
+                        }
+                        hashTags=[]
+                        for(var i in counts){
+                            hashTags.push({
+                                tag:i,
+                                count:counts[i]
+                            })
+                        }
+                        getChart(label,like,comment);
+                        getChart2(hashTags);
                     }
                     var influencerItem = document.getElementsByClassName("influence-rating");
                     var engagementBar = document.getElementsByClassName('engagement-bar');
@@ -1145,35 +1555,35 @@ function searchChannel(channelId) {
                     var diff=(max-min)/3;
                     for(var i =0;i<influencerItem.length;i++){
                         var value = parseFloat(influencerItem[i].innerText.split(' ')[0]);
-                        if(value>=max){
+                        if(value>=5){
                             engagementBar[i].childNodes[1].style.backgroundColor="rgb(0, 133, 15)";
                             engagementBar[i].childNodes[3].style.backgroundColor="rgb(0, 133, 15)";
                             engagementBar[i].childNodes[5].style.backgroundColor="rgb(0, 133, 15)";
                             engagementBar[i].childNodes[7].style.backgroundColor="rgb(0, 133, 15)";
                             engagementBar[i].childNodes[9].style.backgroundColor="rgb(0, 133, 15)";
                         }
-                        else if(value<max&&value>max-diff){
+                        else if(value<5&&value>4){
                             engagementBar[i].childNodes[1].style.backgroundColor="rgb(96, 165, 55)";
                             engagementBar[i].childNodes[3].style.backgroundColor="rgb(96, 165, 55)";
                             engagementBar[i].childNodes[5].style.backgroundColor="rgb(96, 165, 55)";
                             engagementBar[i].childNodes[7].style.backgroundColor="rgb(96, 165, 55)";
                             engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
                         }
-                        else if(value<=max-diff&&value>min+diff){
+                        else if(value<=4&&value>3){
                             engagementBar[i].childNodes[1].style.backgroundColor="rgb(129, 212, 82)";
                             engagementBar[i].childNodes[3].style.backgroundColor="rgb(129, 212, 82)";
                             engagementBar[i].childNodes[5].style.backgroundColor="rgb(129, 212, 82)";
                             engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
                             engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
                         }
-                        else if(value<=min+diff&&value>min){
+                        else if(value<=3&&value>2){
                             engagementBar[i].childNodes[1].style.backgroundColor="rgb(230, 169, 0)";
                             engagementBar[i].childNodes[3].style.backgroundColor="rgb(230, 169, 0)";
                             engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
                             engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
                             engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
                         }
-                        else if(value<=min){
+                        else if(value<=2){
                             engagementBar[i].childNodes[1].style.backgroundColor="rgb(204,0,0)";
                             engagementBar[i].childNodes[3].style.backgroundColor="lightgrey";
                             engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
@@ -1187,7 +1597,7 @@ function searchChannel(channelId) {
 
                         document.getElementsByClassName('score-display-name')[0].childNodes[1].innerText='Your Influencer Score Is';
                         $('html,body').animate({
-                                scrollTop: $(".data-display").offset().top},
+                                scrollTop: $(".data-display").offset().top-200},
                             'slow');
                         var progressbar = $('#progress_bar');
                         max = progressbar.attr('aria-valuemax');
@@ -1274,3 +1684,5 @@ function searchChannel(channelId) {
 
 
 }
+
+//------------------------------------------------------

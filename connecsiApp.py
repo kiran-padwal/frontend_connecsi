@@ -4684,6 +4684,19 @@ def getInstgramUserFromInstagramApi(instagram_username):
 #----------------youtube routes for landing page-------------------------------------------
 
 
+# @connecsiApp.route('/getYoutubeUserFromYoutubeApi/<string:youtube_username>', methods=['GET'])
+# #@is_logged_in
+# def getYoutubeUserFromYoutubeApi(youtube_username):
+#     try:
+#         url = base_url + 'Youtube/getYoutubeChannelDetailsFromYoutubeApi/' + youtube_username
+#         response = requests.get(url=url)
+#         response_json = response.json()
+#         return jsonify(results=response_json)
+#     except Exception as e:
+#         print(e)
+#         return e
+
+
 @connecsiApp.route('/getYoutubeUserFromYoutubeApi/<string:youtube_username>', methods=['GET'])
 #@is_logged_in
 def getYoutubeUserFromYoutubeApi(youtube_username):
@@ -4691,11 +4704,16 @@ def getYoutubeUserFromYoutubeApi(youtube_username):
         url = base_url + 'Youtube/getYoutubeChannelDetailsFromYoutubeApi/' + youtube_username
         response = requests.get(url=url)
         response_json = response.json()
-        return jsonify(results=response_json)
+        url2 = base_url + 'Youtube/totalVideos/' + youtube_username
+        response2 = requests.get(url=url2)
+        response_json2=response2.json()
+        wholeData={}
+        wholeData["results"]=response_json
+        wholeData["totalVideos"]=response_json2
+        return jsonify(wholeData)
     except Exception as e:
         print(e)
         return e
-
 
 
 @connecsiApp.route('/getYoutubeSearchDropDownResults/<string:youtube_searchChannel>', methods=['GET'])
