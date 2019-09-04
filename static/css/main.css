@@ -2,7 +2,7 @@ html {
     height: 100%;
 }
 html {
-    background: linear-gradient(rgba(127, 37, 154,0.5), rgba(127, 37, 154,.5)),url(https://media-public.canva.com/MADGxpvJ-vE/4/screen.jpg) no-repeat center center fixed;
+    background: linear-gradient(rgba(127, 37, 154,0.6), rgba(127, 37, 154,.6)),url(https://media-public.canva.com/MADGxpvJ-vE/4/screen.jpg) no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -52,6 +52,7 @@ a{
     /*flex-wrap: wrap;*/
     justify-content: flex-start;
 }
+
 .box-1{
     flex-basis: 25%;
 }
@@ -122,7 +123,7 @@ a{
 }
 #myChart2{
     margin:0 auto;
-    height:80%!important;
+    height:70%!important;
     width:95%!important;
     min-height: 300px;
     margin-bottom:3rem;
@@ -154,7 +155,7 @@ a{
     font-size: 1rem;
     padding: 1rem;
     border-radius: 5px;
-    width: 70%;
+    width: 50%;
     margin: 0 auto;
     margin-top: 2rem;
 
@@ -532,7 +533,7 @@ body .engagement-bar__block {
         margin-right:0;
     }
     .errorMessage{
-        padding:0.1rem;
+
         width: 100%;
     }
     #search-list{
@@ -565,3 +566,4 @@ body .engagement-bar__block {
 .fade-in-element {
   animation: fade-in 1.8s;
 }
+.influence

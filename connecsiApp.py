@@ -5256,10 +5256,10 @@ def enterpriseSubscription(u_id):
         response4 = 0
         for i in allFeatures["data"]:
             payload4 = {}
-            payload4["feature_name"] = allFeatures[i]["feature_name"]
-            payload4["units"] = allFeatures[i]["units"]
-            payload4["price"] = allFeatures[i]["price"]
-            payload4["customized_feature"] = allFeatures[i]["customized_feature"]
+            payload4["feature_name"] = i["feature_name"]
+            payload4["units"] = i["units"]
+            payload4["price"] = i["price"]
+            payload4["customized_feature"] = i["customized_feature"]
             payload4["added_units"] = i["added_units"]
             payload4["base_units"] = i["base_units"]
             response4 = requests.post(url4, json=payload4)
