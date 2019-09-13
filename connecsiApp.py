@@ -385,6 +385,29 @@ def admin():
         #
         #     except:pass
         #     print(item)
+
+        user_id = session['user_id']
+        from templates.campaign.campaign import Campaign
+        campaignObj = Campaign(user_id=user_id)
+        # campaignObj = templates.campaign.campaign.Campaign(user_id=user_id)
+        view_campaign_data = campaignObj.get_all_campaigns()
+        view_campaign_data_list = []
+        for item in view_campaign_data['data']:
+            if item['deleted'] != 'true':
+                view_campaign_data_list.append(item)
+        # print(view_campaign_data_list)
+        for item1 in view_campaign_data_list:
+            campaign_id = item1['campaign_id']
+            channel_status_campaign = requests.get(
+                url=base_url + 'Campaign/channel_status_for_campaign_by_campaign_id/' + str(campaign_id))
+            # print(channel_status_campaign.json())
+            channel_status_campaign_json = channel_status_campaign.json()
+            try:
+                item1.update({'status': channel_status_campaign_json['data'][0]['status']})
+            except:
+                item1.update({'status': ''})
+                pass
+        print('final campaign list with status = ',view_campaign_data_list)
         return render_template('index.html', title=title, top10Inf=top10Inf)
     except Exception as e:
         print(e)
