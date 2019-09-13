@@ -162,9 +162,11 @@
                                                 <input type="checkbox" class="form-check-input" id="convert_to_campaign" name="convert_to_campaign" style="margin-left: 0rem">
                                                 <label class="form-check-label" for="convert_to_campaign" style="margin-left: 1.25rem">Post As Campaign</label>
                                                 <script>
-
+                                                    var campaignMessage='{{messageSubscription['Create Campaign']['text']}}';
+                                                    var campaignMessageHead='{{messageSubscription['Create Campaign']['heading']}}';
                                                     $('#convert_to_campaign').click(function(){
-                                                        document.getElementById('addMessageSubscription').innerHTML='{{messageSubscription['Create Campaign']}}';
+                                                        document.getElementById('addMessageSubscription').innerHTML=campaignMessage;
+                                                        document.getElementById('subscription-message-header').innerHTML=campaignMessageHead;
                                                         document.getElementById('create-classified').style.filter='blur(3px)';
                                                         document.getElementById('create-classified').style.pointerEvents='none';
                                                         document.getElementsByClassName('subscription-message')[0].style.display="block";
@@ -203,10 +205,12 @@
                                 </div>
                                 {% if classified_count<=0 %}
                                 <script>
-                                    document.getElementById('addMessageSubscription').innerHTML='{{messageSubscription['Classified Ads Posting']}}';
+                                    document.getElementById('addMessageSubscription').innerHTML='{{messageSubscription['Classified Ads Posting']['text']}}';
+                                    document.getElementById('subscription-message-header').innerHTML='{{messageSubscription['Classified Ads Posting']['heading']}}';
                                     document.getElementById('create-classified').style.filter='blur(3px)';
                                     document.getElementById('create-classified').style.pointerEvents='none';
                                     document.getElementsByClassName('subscription-message')[0].style.display="block";
+                                    document.getElementById('subscription-message-close').style.display='none';
                                 </script>
 
                                 {% else %}

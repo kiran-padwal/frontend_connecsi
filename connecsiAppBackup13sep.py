@@ -468,6 +468,7 @@ def getTop20Influencers(channel_name):
 #         table_name = 'users_inf'
 
 
+
 @connecsiApp.route('/profileView')
 @is_logged_in
 def profileView():
@@ -489,6 +490,7 @@ def profileView():
             print(e)
     else:
         table_name = 'users_inf'
+
 
 @connecsiApp.route('/editProfile')
 @is_logged_in
@@ -793,72 +795,43 @@ def searchInfluencers():
     countAlerts=0
     countMessages=0
     messageSubscription={
-        'Export Lists':{
-            'heading':'',
-            'text':''
-        },
-        'Add to Favorites':{
-            'heading':'',
-            'text':''
-        },
-        'Alerts':{
-            'heading':'',
-            'text':''
-        },
-        'Messages':{
-            'heading':'',
-            'text':''
-        }
+        'Export Lists':'',
+        'Add to Favorites':'',
+        'Alerts':'',
+        'Messages':''
     }
-    maxAlerts=0
-    maxAddToFavorites=0
-    maxMessages=0
-    maxExportLists=0
     for i in subValues['data']:
         print(i['feature_name'])
         if(i['feature_name'].lower()=='export lists'):
             countExportList=i['units']
             packageName=i['package_name']
-            maxExportLists=i['base_units']+i['added_units']
-            messageSubscription['Export Lists']['heading']="Limit Reached"
-            messageSubscription['Export Lists']['text'] = "Your current plan has only "+str(countExportList)+" records left (Allowed: "+str(maxExportLists)+" ) therefore, only "+str(countExportList)+" records will be added to to you export list. Please customize your plan to add more or upgrade to unlock more features and add-ons."
+            messageSubscription['Export Lists'] = 'Your have less Export Lists units than the influencers in current export List. Add more in custom or upgrade your ' + packageName + ' package.'
         if(i['feature_name'].lower()=='add to favorites'):
             countAddToFavorites=i['units']
-            maxAddToFavorites=i['base_units']+i['added_units']
-            messageSubscription['Add to Favorites']['text'] = ''
+            messageSubscription['Add to Favorites'] = ''
         if(i['feature_name'].lower()=='alerts'):
             countAlerts=i['units']
-            maxAlerts=i['base_units']+i['added_units']
-            messageSubscription['Alerts']['text']=''
+            messageSubscription['Alerts']=''
         if (i['feature_name'].lower() == 'messages'):
             countMessages = i['units']
-            maxMessages=i['base_units'] + i['added_units']
-            messageSubscription['Messages']['text'] = ''
+            messageSubscription['Messages'] = ''
 
     if(countMessages==-1):
-        messageSubscription['Messages']['heading']='Upgrade Plan'
-        messageSubscription['Messages']['text']="This feature is unavailable in your current plan. Please upgrade your account to get access to additional features and add-ons."
+        messageSubscription['Messages']="Your "+packageName+" package doesn't have this feature. Please Upgrade your subscription to use this feature."
     elif(countMessages==0):
-        messageSubscription['Messages']['heading'] = 'Limit Reached'
-        messageSubscription['Messages']['text']="You have reached the limit of Messages. (Allowed: "+str(maxMessages)+" ) Please customize your plan to add more or upgrade to unlock more features and add-ons."
+        messageSubscription['Messages']="You ran out of Messages feature of "+packageName+" package. PLease add more in custom or upgrade your subscription."
 
     if (countExportList == 0):
-        messageSubscription['Export Lists']['heading']="Limit Reached"
-        messageSubscription['Export Lists']['text'] = "You have reached the limit of Export Lists. (Allowed: "+str(maxExportLists)+" ) Please customize your plan to add more or upgrade to unlock more features and add-ons."
-    elif(countExportList == -1):
-        messageSubscription['Export Lists']['heading']="Upgrade Plan"
-        messageSubscription['Export Lists']['text'] = "This feature is unavailable in your current plan. Please upgrade your account to get access to additional features and add-ons."
+        messageSubscription[
+            'Export Lists'] = "You ran out of Export Lists feature of " + packageName + " package. PLease add more in custom or upgrade your subscription."
 
     if(countAddToFavorites==0):
-        messageSubscription['Add to Favorites']['heading'] = "Limit Reached"
-        messageSubscription['Add to Favorites']['text']="You have reached the limit of Add to Favorites. (Allowed: "+str(maxAddToFavorites)+" ) Please customize your plan to add more or upgrade to unlock more features and add-ons."
+        messageSubscription['Add to Favorites']="You ran out of Add to Favorites feature of "+packageName+" package. PLease add more in custom or upgrade your subscription."
 
     if(countAlerts==-1):
-        messageSubscription['Alerts']['heading'] = "Upgrade Plan"
-        messageSubscription['Alerts']['text']="This feature is unavailable in your current plan. Please upgrade your account to get access to additional features and add-ons."
+        messageSubscription['Alerts']="Your "+packageName+" package doesn't have this feature. Please Upgrade your subscription to use this feature."
     elif(countAlerts==0):
-        messageSubscription['Alerts']['heading'] = "Limit Reached"
-        messageSubscription['Alerts']['text']="You have reached the limit of Alerts. (Allowed: "+str(maxAlerts)+" ) Please customize your plan to add more or upgrade to unlock more features and add-ons."
+        messageSubscription['Alerts']="You ran out of Alerts(Milestone Based) feature of "+packageName+" package. PLease add more in custom or upgrade your subscription."
 
     view_campaign_data=''
     data=''
@@ -890,7 +863,7 @@ def searchInfluencers():
     print('after getting campaigns')
     print(view_campaign_data)
     try:
-        url = base_url + '/Brand/getInfluencerFavListNew/' + str(user_id)
+        url = base_url + '/Brand/getInfluencerFavList/' + str(user_id)
         response = requests.get(url=url)
         favInfList_data = response.json()
         linechart_id = 1
@@ -900,20 +873,6 @@ def searchInfluencers():
     except Exception as e:
         print(e)
         pass
-
-    try:
-        url = base_url + '/Brand/getInfluencerFavList/' + str(user_id)
-        response3 = requests.get(url=url)
-        favInfList_data_alerts = response3.json()
-        linechart_id_alert = 1
-        for item in favInfList_data_alerts['data']:
-            item.update({'linechart_id': linechart_id_alert})
-            linechart_id_alert += 1
-    except Exception as e:
-        print(e)
-        pass
-
-
     ###### POST METHOD#######
     print('before POST METHOD')
     if request.method == 'POST':
@@ -1017,13 +976,13 @@ def searchInfluencers():
                     # except:
                     #     pass
             # print(data)
-            return render_template('search/searchInfluencers.html',favInfList_data_alerts=favInfList_data_alerts, maxAlerts=maxAlerts,maxAddToFavorites=maxAddToFavorites,maxExportLists=maxExportLists,maxMessages=maxMessages,countMessages=countMessages,packageName=packageName,countAlerts=countAlerts,countAddToFavorites=countAddToFavorites,messageSubscription=messageSubscription,countExportList=countExportList,regionCodes=regionCodes_json,
+            return render_template('search/searchInfluencers.html', countMessages=countMessages,packageName=packageName,countAlerts=countAlerts,countAddToFavorites=countAddToFavorites,messageSubscription=messageSubscription,countExportList=countExportList,regionCodes=regionCodes_json,
                                    lookup_string=lookup_string, form_filters=form_filters,data=data,view_campaign_data=view_campaign_data
                                    ,favInfList_data=favInfList_data,payload_form_filter=payload)
         except Exception as e:
             print(e)
             print('i m hee')
-            return render_template('search/searchInfluencers.html',favInfList_data_alerts=favInfList_data_alerts,maxAlerts=maxAlerts,maxAddToFavorites=maxAddToFavorites,maxExportLists=maxExportLists,maxMessages=maxMessages,countMessages=countMessages,packageName=packageName,countAlerts=countAlerts,countAddToFavorites=countAddToFavorites, messageSubscription=messageSubscription,countExportList=countExportList,regionCodes=regionCodes_json,
+            return render_template('search/searchInfluencers.html',countMessages=countMessages,packageName=packageName,countAlerts=countAlerts,countAddToFavorites=countAddToFavorites, messageSubscription=messageSubscription,countExportList=countExportList,regionCodes=regionCodes_json,
                                lookup_string=lookup_string,form_filters=form_filters,data=data,view_campaign_data=view_campaign_data
                                    ,favInfList_data=favInfList_data,payload_form_filter=payload)
 
@@ -1065,7 +1024,7 @@ def searchInfluencers():
                 pass
         end = time.time()
         print(end - start)
-        return render_template('search/searchInfluencers.html',favInfList_data_alerts=favInfList_data_alerts,maxAlerts=maxAlerts,maxAddToFavorites=maxAddToFavorites,maxExportLists=maxExportLists,maxMessages=maxMessages,packageName=packageName,countMessages=countMessages,countAlerts=countAlerts,countAddToFavorites=countAddToFavorites, messageSubscription=messageSubscription,countExportList=countExportList,regionCodes=regionCodes_json,
+        return render_template('search/searchInfluencers.html',packageName=packageName,countMessages=countMessages,countAlerts=countAlerts,countAddToFavorites=countAddToFavorites, messageSubscription=messageSubscription,countExportList=countExportList,regionCodes=regionCodes_json,
                                lookup_string=lookup_string,form_filters=form_filters,data=data,pagination='',view_campaign_data=view_campaign_data,
                                favInfList_data=favInfList_data,payload_form_filter=payload)
 
@@ -1098,115 +1057,32 @@ def saveFundsBrands():
         return redirect(url_for('addFundsBrands'))
 
 
-@connecsiApp.route('/checkout',methods=['POST'])
+
+@connecsiApp.route('/payment',methods=['POST'])
 @is_logged_in
 def payment():
-    global subData
     print(request.form.to_dict())
     data=request.form.to_dict()
-    print(data)
-    if(data):
-        pub_key = 'pk_test_KCfQnVzaUJoSOE8Yk3B8qvGM00rakAIYnH'
-        secret_key = 'sk_test_4YZbWgXJul77g819JY5REXLL005jjbeXaG'
-        amount = 0
-        if (data['package_name'] == 'Custom'):
-            amount = data['price1']
-        elif (data['package_name'] == 'Basic'):
-            amount = data['price2']
-        elif (data['package_name'] == 'Professional'):
-            amount = data['price3']
-        elif (data['package_name'] == 'Enterprise'):
-            amount = data['price4']
-        stripe.api_key = secret_key
-        # print(user_id,date,email_id,amount,description)
-        amount = int(amount) * 100
-        print(amount, type(amount))
-
-        # global subData
-
-        subData = {
-            'amount': amount,
-            'data': data,
-            'pub_key': pub_key
-        }
-    else:
-        pub_key = 'pk_test_KCfQnVzaUJoSOE8Yk3B8qvGM00rakAIYnH'
-        secret_key = 'sk_test_4YZbWgXJul77g819JY5REXLL005jjbeXaG'
-        amount = 0
-        # global subData
-        subData = {
-            'amount': amount,
-            'data': data,
-            'pub_key': pub_key
-        }
-
-    return jsonify({'response':1})
-
-@connecsiApp.route('/checkout',methods=['GET'])
-@is_logged_in
-def payment1():
-    print("hello ji",subData['data'])
-    subValue1 = getSubscriptionValues(str(session['user_id']))
-    expiryDateOfPackage=subValue1['data'][0]['p_expiry_date']
-    date=None
-    if(subData['data']):
-        # date will be current plus 30 days
-        startTime = str(int(time.time()))
-        newDate = datetime.datetime.now() + datetime.timedelta(30)
-        endTime = str(int(time.mktime(newDate.timetuple())))
-        date = datetime.datetime.utcfromtimestamp(int(endTime)).strftime('%d/%m/%Y')
-        print(subData['data']['package_name'],date)
-
-        val=levelsWithFeatures(subData['data']['package_name'])
-        value = {}
-        for i in val['data']:
-            if (i['base_units'] == -1):
-                value[i['feature_name']] = 0
-            else:
-                value[i['feature_name']] = 1
-    else:
-        #date will be expiry date
-        subValue = getSubscriptionValues(str(session['user_id']))
-        ts = int(subValue['data'][0]['p_expiry_date'])
-        date=datetime.datetime.utcfromtimestamp(ts).strftime('%d/%m/%Y')
-        print("date",date)
-        print("all data",subValue['data'])
-        value = {}
-        for i in subValue['data']:
-            if (i['base_units'] == -1):
-                value[i['feature_name']] = 0
-            else:
-                value[i['feature_name']] = 1
-    print("box",value)
-    return render_template('payment/checkout.html',data=subData['data'],amount=subData['amount'],pub_key=subData['pub_key'],subValue=value,date=date)
-
-
-# @connecsiApp.route('/payment',methods=['POST'])
-# @is_logged_in
-# def payment():
-#     print(request.form.to_dict())
-#     data=request.form.to_dict()
-#     pub_key = 'pk_test_KCfQnVzaUJoSOE8Yk3B8qvGM00rakAIYnH'
-#     secret_key = 'sk_test_4YZbWgXJul77g819JY5REXLL005jjbeXaG'
-#     amount=0
-#     if(data['package_name']=='Custom'):
-#         amount = data['price1']
-#     elif (data['package_name'] == 'Basic'):
-#         amount = data['price2']
-#     elif (data['package_name'] == 'Professional'):
-#         amount = data['price3']
-#     elif (data['package_name'] == 'Enterprise'):
-#         amount = data['price4']
-#     stripe.api_key = secret_key
-#     # print(user_id,date,email_id,amount,description)
-#     amount=int(amount)*100
-#     print(amount,type(amount))
-#     return render_template('payment/payment.html',amount=amount,data=data,pub_key=pub_key)
+    pub_key = 'pk_test_KCfQnVzaUJoSOE8Yk3B8qvGM00rakAIYnH'
+    secret_key = 'sk_test_4YZbWgXJul77g819JY5REXLL005jjbeXaG'
+    amount=0
+    if(data['package_name']=='Custom'):
+        amount = data['price1']
+    elif (data['package_name'] == 'Basic'):
+        amount = data['price2']
+    elif (data['package_name'] == 'Professional'):
+        amount = data['price3']
+    elif (data['package_name'] == 'Enterprise'):
+        amount = data['price4']
+    stripe.api_key = secret_key
+    # print(user_id,date,email_id,amount,description)
+    amount=int(amount)*100
+    print(amount,type(amount))
+    return render_template('payment/payment.html',amount=amount,data=data,pub_key=pub_key)
 
 @connecsiApp.route('/thanks')
 @is_logged_in
 def thanks():
-    subData={}
     return render_template('payment/thanks.html')
 
 @connecsiApp.route('/pay', methods=['POST'])
@@ -1216,7 +1092,6 @@ def pay():
     customer = stripe.Customer.create(email=request.form['stripeEmail'], source=request.form['stripeToken'])
     data=request.form.to_dict()
     subScriptionData=data['data']
-    subScriptionData2=data['data2']
     charge = stripe.Charge.create(
         customer=customer.id,
         amount=data['amount'],
@@ -1224,6 +1099,10 @@ def pay():
         description='Package',
         metadata = {'email_id': session['email_id'],'connecsi_user_id':session['user_id'],'stripe_customer_id':customer.id}
     )
+    print(charge)
+
+    print('customer id =',customer.id)
+    print('reciept url = ',charge.receipt_url)
     if customer.id and charge.receipt_url:
        try:
            payload={
@@ -1237,26 +1116,14 @@ def pay():
            print(save_payment_url)
            res = requests.post(url=base_url+'Payments/'+str(session['user_id']),json=payload)
            if res.status_code==201:
-              print("code 201",subScriptionData,subScriptionData2,type(subScriptionData),type(subScriptionData2))
-              if (len(subScriptionData)!=2):
-                  json_acceptable_string = subScriptionData.replace("'", "\"")
-                  updateBrandSubscriptionPackageDetails(json.loads(json_acceptable_string))
-
-              if (len(subScriptionData2)!=2):
-                  json_acceptable_string = subScriptionData2.replace("'", "\"")
-                  updateBrandSubscriptionPackageDetails(json.loads(json_acceptable_string))
-              subValue1 = getSubscriptionValues(str(session['user_id']))
-              package_buy = subValue1['data'][0]['package_name']
-              expiryDateOfPackage = subValue1['data'][0]['p_expiry_date']
-              expiryDateOfPackage = datetime.datetime.utcfromtimestamp(int(expiryDateOfPackage)).strftime('%d/%m/%Y')
-              return render_template('payment/thanks.html',package_buy=package_buy,expiryDateOfPackage=expiryDateOfPackage)
+              return render_template('payment/thanks.html', data=subScriptionData)
        except Exception as e:
-           return render_template('payment/error.html')
+           print(e)
     # customer_list = stripe.Customer.list()
     # print(customer_list)
+       return render_template('payment/thanks.html', data=subScriptionData)
     else:
-
-        return render_template('payment/error.html')
+        return render_template('payment/error.html',data=subScriptionData)
 
 
 @connecsiApp.route('/viewMyPayments')
@@ -1305,34 +1172,22 @@ def addCampaign():
     classified_count=0
     feature_name=''
     messageSubscription = {
-        'Create Campaign': {
-            'text':'',
-            'heading':''
-        },
-        'Classified Ads Posting': {
-            'text':'',
-            'heading':''
-        }
+        'Create Campaign': '',
+        'Classified Ads Posting': ''
     }
-    maxCampaign=0
-    maxClassified=0
     for i in subscriptionValue['data']:
         if(i['feature_name']=='Create Campaign'):
             campaign_count=i['units']
-            maxCampaign=i['base_units']+i['added_units']
             feature_name=i['feature_name']
-        if(i['feature_name']=='Classified Ads Posting'):
+        elif(i['feature_name']=='Classified Ads Posting'):
             classified_count=i['units']
-            maxClassified = i['base_units'] + i['added_units']
     if(classified_count==0):
-        messageSubscription['Classified Ads Posting']['text']="You have reached the limit of Classified Ads Posting. (Allowed: "+str(maxClassified)+" ) Please customize your plan to add more or upgrade to unlock more features and add-ons."
-        messageSubscription['Classified Ads Posting']['heading'] = "Limit Reached"
+        messageSubscription['Classified Ads Posting']="You ran out of Classified Ads Posting Units of your "+subscriptionValue['data'][0]['package_name']+" package. Continue without posting it as a Classified Ads. Or Just upgrade your subscription"
     elif classified_count==-1:
-        messageSubscription['Classified Ads Posting']['text'] = "This feature is unavailable in your current plan. Please upgrade your account to get access to additional features and add-ons."
-        messageSubscription['Classified Ads Posting']['heading'] = "Upgrade Plan"
+        messageSubscription['Classified Ads Posting'] = " Your package " + \
+        subscriptionValue['data'][0]['package_name'] + "does not have this feature"
     if(campaign_count==0):
-        messageSubscription['Create Campaign']['text']="You have reached the limit of Create Campaign. (Allowed: "+str(maxCampaign)+" ) Please customize your plan to add more or upgrade to unlock more features and add-ons."
-        messageSubscription['Create Campaign']['heading']="Limit Reached"
+        messageSubscription['Create Campaign']="You ran out of "+feature_name+" Units of your "+subscriptionValue['data'][0]['package_name']+" package. You can add more create campaigns in custom option or upgrade subscription."
     try:
         regionCodes_response = requests.get(url=url_regionCodes)
         regionCodes_json = regionCodes_response.json()
@@ -1346,7 +1201,8 @@ def addCampaign():
         print(videoCat_json)
     except Exception as e:
         print(e)
-    return render_template('campaign/add_campaignForm.html',maxCampaign=maxCampaign,maxClassified=maxClassified,classified_count=classified_count,messageSubscription=messageSubscription,campaign_count=campaign_count,regionCodes=regionCodes_json,videoCategories = videoCat_json)
+    return render_template('campaign/add_campaignForm.html',classified_count=classified_count,messageSubscription=messageSubscription,campaign_count=campaign_count,regionCodes=regionCodes_json,videoCategories = videoCat_json)
+
 
 @connecsiApp.route('/editCampaign/<string:campaign_id>',methods=['GET'])
 @is_logged_in
@@ -1973,31 +1829,7 @@ def inbox(message_id):
     full_conv=''
     conv_title=''
     length_conv=''
-    countAutoProposal=0
     user_id = session['user_id']
-
-    subValues = getSubscriptionValues(str(user_id))
-    countMessages = 0
-    packageName=''
-    messageSubscription = {
-        'Autofill Proposal': {
-            'text':'',
-            'heading':''
-        }
-    }
-
-    maxAuto=0
-    for i in subValues['data']:
-        if (i['feature_name'].lower() == 'autofill proposal'):
-            packageName = i['package_name']
-            countAutoProposal = i['units']
-            maxAuto=i['base_units']+i['added_units']
-            messageSubscription['Autofill Proposal']['text'] = ''
-
-    if (countAutoProposal == 0):
-        messageSubscription['Autofill Proposal']['text'] = "You have reached the limit of Autofill Proposal. (Allowed: "+str(maxAuto)+" ) Please customize your plan to add more or upgrade to unlock more features and add-ons."
-        messageSubscription['Autofill Proposal']['heading'] = "Limit Reached"
-
     print('user id=',user_id)
     type = session['type']
     print('user type = ',type)
@@ -2195,7 +2027,7 @@ def inbox(message_id):
                 print('after sorting inbox = ',item)
         print(message_id_list1)
         ############## sort end ####################################
-        return render_template('email/inbox.html', maxAuto=maxAuto,packageName=packageName,countAutoProposal=countAutoProposal,messageSubscription=messageSubscription,inbox = inbox, full_conv = full_conv, conv_title=conv_title,view_campaign_data=view_campaign_data)
+        return render_template('email/inbox.html', inbox = inbox, full_conv = full_conv, conv_title=conv_title,view_campaign_data=view_campaign_data)
     except Exception as e:
         print(e)
         pass
@@ -2206,8 +2038,7 @@ def inbox(message_id):
 
     print('final conv default = ', full_conv)
 
-    return render_template('email/inbox.html',maxAuto=maxAuto,packageName=packageName,countAutoProposal=countAutoProposal,messageSubscription=messageSubscription,inbox=inbox, full_conv = full_conv,conv_title=conv_title,view_campaign_data=view_campaign_data)
-
+    return render_template('email/inbox.html',inbox=inbox, full_conv = full_conv,conv_title=conv_title,view_campaign_data=view_campaign_data)
 
 
 @connecsiApp.route('/update_message_as_read/<string:message_id>',methods=['GET'])
@@ -2960,7 +2791,7 @@ def addToFavInfList(channel_id,channel_name):
         print(channel_id)
         print(channel_name)
         user_id = session['user_id']
-        url = base_url+'/Brand/addToFavListNew/'+channel_id+'/'+str(user_id)+'/'+channel_name
+        url = base_url+'/Brand/addToFavList/'+channel_id+'/'+str(user_id)+'/'+channel_name
         response = requests.post(url=url)
         print(response)
         return channel_name+' Influencer Added To Your Favorite List'
@@ -2974,16 +2805,6 @@ def addToFavInfList(channel_id,channel_name):
 @connecsiApp.route('/getFavInfList',methods=['GET'])
 @is_logged_in
 def getFavInfList():
-    user_id = session['user_id']
-    url = base_url + '/Brand/getInfluencerFavListNew/' + str(user_id)
-    response = requests.get(url=url)
-    response_json=response.json()
-    print(response_json)
-    return jsonify(results=response_json['data'])
-
-@connecsiApp.route('/getFavInfListOne',methods=['GET'])
-@is_logged_in
-def getFavInfListOne():
     user_id = session['user_id']
     url = base_url + '/Brand/getInfluencerFavList/' + str(user_id)
     response = requests.get(url=url)
@@ -3057,88 +2878,54 @@ def influencerFavoritesList(channel_name):
     countMessages=0
     countAddToFavorites=0
     countAlerts=0
-    messageSubscription = {
-        'Export Lists': {
-            'heading': '',
-            'text': ''
-        },
-        'Add to Favorites': {
-            'heading': '',
-            'text': ''
-        },
-        'Alerts': {
-            'heading': '',
-            'text': ''
-        },
-        'Messages': {
-            'heading': '',
-            'text': ''
-        }
+    messageSubscription={
+        'Export Lists':'',
+        'Messages':'',
+        'Add To Favorites':'',
+        'Alerts':''
     }
-    maxAlerts = 0
-    maxAddToFavorites = 0
-    maxMessages = 0
-    maxExportLists = 0
     for i in subscriptionValue['data']:
-        print(i['feature_name'])
         if (i['feature_name'].lower() == 'export lists'):
             export_count = i['units']
-            packageName = i['package_name']
-            maxExportLists = i['base_units'] + i['added_units']
-            messageSubscription['Export Lists']['heading'] = "Limit Reached"
-            messageSubscription['Export Lists']['text'] = "Your current plan has only " + str(
-                export_count) + " records left (Allowed: " + str(maxExportLists) + " ) therefore, only " + str(
-                export_count) + " records will be added to to you export list. Please customize your plan to add more or upgrade to unlock more features and add-ons."
-        if (i['feature_name'].lower() == 'add to favorites'):
-            countAddToFavorites = i['units']
-            maxAddToFavorites = i['base_units'] + i['added_units']
-            messageSubscription['Add to Favorites']['text'] = ''
-        if (i['feature_name'].lower() == 'alerts'):
-            countAlerts = i['units']
-            maxAlerts = i['base_units'] + i['added_units']
-            messageSubscription['Alerts']['text'] = ''
+            feature_name = i['feature_name']
+            packageName=i['package_name']
         if (i['feature_name'].lower() == 'messages'):
             countMessages = i['units']
-            maxMessages = i['base_units'] + i['added_units']
-            messageSubscription['Messages']['text'] = ''
-
-    if (countMessages == -1):
-        messageSubscription['Messages']['heading'] = 'Upgrade Plan'
-        messageSubscription['Messages'][
-            'text'] = "This feature is unavailable in your current plan. Please upgrade your account to get access to additional features and add-ons."
-    elif (countMessages == 0):
-        messageSubscription['Messages']['heading'] = 'Limit Reached'
-        messageSubscription['Messages']['text'] = "You have reached the limit of Messages. (Allowed: " + str(
-            maxMessages) + " ) Please customize your plan to add more or upgrade to unlock more features and add-ons."
-
-    if (export_count == 0):
-        messageSubscription['Export Lists']['heading'] = "Limit Reached"
-        messageSubscription['Export Lists']['text'] = "You have reached the limit of Export Lists. (Allowed: " + str(
-            maxExportLists) + " ) Please customize your plan to add more or upgrade to unlock more features and add-ons."
-    elif (export_count == -1):
-        messageSubscription['Export Lists']['heading'] = "Upgrade Plan"
-        messageSubscription['Export Lists'][
-            'text'] = "This feature is unavailable in your current plan. Please upgrade your account to get access to additional features and add-ons."
+            feature_name = i['feature_name']
+            packageName=i['package_name']
+        if (i['feature_name'].lower() == 'add to favorites'):
+            countAddToFavorites = i['units']
+            feature_name = i['feature_name']
+            packageName = i['package_name']
+        if (i['feature_name'].lower() == 'alerts'):
+            countAlerts = i['units']
+            feature_name = i['feature_name']
+            packageName = i['package_name']
+    messageSubscription['Export Lists'] = 'Your have less Export Lists units than the influencers in current export List. Add more in custom or upgrade your '+packageName+' package.'
+    if (countAlerts == 0):
+        messageSubscription['Alerts'] = "You ran out of Alerts Units of your " + subscriptionValue['data'][0][
+            'package_name'] + " package. You can add more create campaigns in custom option or upgrade subscription."
 
     if (countAddToFavorites == 0):
-        messageSubscription['Add to Favorites']['heading'] = "Limit Reached"
-        messageSubscription['Add to Favorites'][
-            'text'] = "You have reached the limit of Add to Favorites. (Allowed: " + str(
-            maxAddToFavorites) + " ) Please customize your plan to add more or upgrade to unlock more features and add-ons."
+        messageSubscription['Add to Favorites'] = "You ran out of Add to Favorites Units of your " + subscriptionValue['data'][0][
+            'package_name'] + " package. You can add more create campaigns in custom option or upgrade subscription."
 
-    if (countAlerts == -1):
-        messageSubscription['Alerts']['heading'] = "Upgrade Plan"
-        messageSubscription['Alerts'][
-            'text'] = "This feature is unavailable in your current plan. Please upgrade your account to get access to additional features and add-ons."
-    elif (countAlerts == 0):
-        messageSubscription['Alerts']['heading'] = "Limit Reached"
-        messageSubscription['Alerts']['text'] = "You have reached the limit of Alerts. (Allowed: " + str(
-            maxAlerts) + " ) Please customize your plan to add more or upgrade to unlock more features and add-ons."
+    if (export_count == 0):
+        messageSubscription['Export Lists'] = "You ran out of Export List Units of your " + subscriptionValue['data'][0][
+            'package_name'] + " package. You can add more create campaigns in custom option or upgrade subscription."
+    if (export_count == -1):
+        messageSubscription['Export Lists'] = "Your "+subscriptionValue['data'][0]['package_name']+" package doesn't have Export list feature. Please upgrade your package."
 
+    if (countMessages == -1):
+        messageSubscription[
+            'Messages'] = "Your " + packageName + " package doesn't have this feature. Please Upgrade your subscription to use this feature."
+    elif (countMessages == 0):
+        messageSubscription[
+            'Messages'] = "You ran out of Messages feature of " + packageName + " package. PLease add more in custom or upgrade your subscription."
 
     try:
         user_id = session['user_id']
-        url = base_url+'/Brand/getInfluencerFavList_with_details_new/'+str(user_id)+'/'+channel_name
+        url = base_url+'/Brand/getInfluencerFavList_with_details/'+str(user_id)+'/'+channel_name
         response = requests.get(url=url)
         data = response.json()
         print(data)
@@ -3176,24 +2963,12 @@ def influencerFavoritesList(channel_name):
             for item in data['data']:
                 item.update({'total_videos': 100})
 
-        try:
-            url3 = base_url + '/Brand/getInfluencerFavList/' + str(user_id)
-            response3 = requests.get(url=url3)
-            favInfList_data_alerts = response3.json()
-            linechart_id_alert = 1
-            for item in favInfList_data_alerts['data']:
-                item.update({'linechart_id': linechart_id_alert})
-                linechart_id_alert += 1
-
-
-        except Exception as e:
-            print(e)
-            pass
-        return render_template('partnerships/influencerFavoritesList.html',favInfList_data_alerts=favInfList_data_alerts,maxAlerts=maxAlerts,maxAddToFavorites=maxAddToFavorites,maxExportLists=maxExportLists,maxMessages=maxMessages,countAddToFavorites=countAddToFavorites,countAlerts=countAlerts,packageName=packageName,countMessages=countMessages,export_count=export_count,messageSubscription=messageSubscription,data=data,view_campaign_data=view_campaign_data,channel_name=channel_name)
+        return render_template('partnerships/influencerFavoritesList.html',countAddToFavorites=countAddToFavorites,countAlerts=countAlerts,packageName=packageName,countMessages=countMessages,export_count=export_count,messageSubscription=messageSubscription,data=data,view_campaign_data=view_campaign_data,channel_name=channel_name)
     except Exception as e:
         print(e)
         pass
-        return render_template('partnerships/influencerFavoritesList.html',favInfList_data_alerts=favInfList_data_alerts,maxAlerts=maxAlerts,maxAddToFavorites=maxAddToFavorites,maxExportLists=maxExportLists,maxMessages=maxMessages,countAddToFavorites=countAddToFavorites,countAlerts=countAlerts,packageName=packageName,countMessages=countMessages,export_count=export_count,messageSubscription=messageSubscription,data=data,view_campaign_data=view_campaign_data,channel_name=channel_name)
+        return render_template('partnerships/influencerFavoritesList.html',countAddToFavorites=countAddToFavorites,countAlerts=countAlerts,packageName=packageName,countMessages=countMessages,export_count=export_count,messageSubscription=messageSubscription,data=data,view_campaign_data=view_campaign_data,channel_name=channel_name)
+
 
 
 
@@ -3233,6 +3008,9 @@ def createAlerts():
                 check = subscriptionReduction("Alerts")
                 if (check['response'] == 1):
                     print("done subscription ALERTS")
+                    check1 = subscriptionReduction("Add to favorites")
+                    if (check1['response'] == 1):
+                        print("done subscription ADD TO FAVORITES")
             return 'Created Alerts for Favorite Influencer'
 
         except Exception as e:
@@ -3242,24 +3020,24 @@ def createAlerts():
 
 
 
-# @connecsiApp.route('/createAlerts1', methods=['POST','GET'])
-# @is_logged_in
-# def createAlerts1():
-#     user_id=session['user_id']
-#     if request.method == 'POST':
-#         print("i m in post")
-#         payload = request.form.to_dict()
-#         print(payload)
-#         try:
-#             url = base_url + '/Brand/createInfluencerAlerts/'+str(user_id)
-#             response = requests.put(url=url,json=payload)
-#             data = response.json()
-#             return 'Created Alerts for Favorite Influencer'
-#
-#         except Exception as e:
-#             print('i m in exception')
-#             print(e)
-#             return 'Server error'
+@connecsiApp.route('/createAlerts1', methods=['POST','GET'])
+@is_logged_in
+def createAlerts1():
+    user_id=session['user_id']
+    if request.method == 'POST':
+        print("i m in post")
+        payload = request.form.to_dict()
+        print(payload)
+        try:
+            url = base_url + '/Brand/createInfluencerAlerts/'+str(user_id)
+            response = requests.put(url=url,json=payload)
+            data = response.json()
+            return 'Created Alerts for Favorite Influencer'
+
+        except Exception as e:
+            print('i m in exception')
+            print(e)
+            return 'Server error'
 
 
 # @connecsiApp.route('/addClassified')
@@ -3292,40 +3070,24 @@ def addClassified():
     classified_count = 0
     campaign_count=0
     feature_name = ''
-    messageSubscription = {
-        'Create Campaign': {
-            'text': '',
-            'heading': ''
-        },
-        'Classified Ads Posting': {
-            'text': '',
-            'heading': ''
-        }
+    messageSubscription={
+        'Create Campaign':'',
+        'Classified Ads Posting':''
     }
-    maxCampaign = 0
-    maxClassified = 0
     for i in subscriptionValue['data']:
-        if (i['feature_name'] == 'Create Campaign'):
-            campaign_count = i['units']
-            maxCampaign = i['base_units'] + i['added_units']
-            feature_name = i['feature_name']
-        if (i['feature_name'] == 'Classified Ads Posting'):
+        if (i['feature_name'].lower() == 'classified ads posting'):
             classified_count = i['units']
-            maxClassified = i['base_units'] + i['added_units']
-    if (classified_count == 0):
-        messageSubscription['Classified Ads Posting'][
-            'text'] = "You have reached the limit of Classified Ads Posting. (Allowed: " + str(
-            maxClassified) + " ) Please customize your plan to add more or upgrade to unlock more features and add-ons."
-        messageSubscription['Classified Ads Posting']['heading'] = "Limit Reached"
-    elif classified_count == -1:
-        messageSubscription['Classified Ads Posting'][
-            'text'] = "This feature is unavailable in your current plan. Please upgrade your account to get access to additional features and add-ons."
-        messageSubscription['Classified Ads Posting']['heading'] = "Upgrade Plan"
+            feature_name = i['feature_name']
+        elif(i['feature_name'].lower() == 'create campaign'):
+            campaign_count=i['units']
+    messageSubscription['Classified Ads Posting'] = "Your " + subscriptionValue['data'][0]['package_name'] + " package does not have Classified Ads Posting. You can upgrade subscription."
     if (campaign_count == 0):
-        messageSubscription['Create Campaign'][
-            'text'] = "You have reached the limit of Create Campaign. (Allowed: " + str(
-            maxCampaign) + " ) Please customize your plan to add more or upgrade to unlock more features and add-ons."
-        messageSubscription['Create Campaign']['heading'] = "Limit Reached"
+        messageSubscription['Create Campaign'] = "You ran out of Create Campaign Units of your " + subscriptionValue['data'][0][
+            'package_name'] + " package. Continue without posting it as a Campaign or just upgrade your subscription."
+
+    if (classified_count == 0):
+        messageSubscription['Classified Ads Posting'] = "You ran out of Classified Ads Posting Units of your " + subscriptionValue['data'][0]['package_name'] + " package. You can add more Classified Ads Posting in custom option or upgrade subscription."
+
     try:
         regionCodes_response = requests.get(url=url_regionCodes)
         regionCodes_json = regionCodes_response.json()
@@ -3339,7 +3101,8 @@ def addClassified():
         print(videoCat_json)
     except Exception as e:
         print(e)
-    return render_template('classifiedAds/add_classifiedForm.html',maxClassified=maxClassified,maxCampaign=maxCampaign,campaign_count=campaign_count,classified_count=classified_count,messageSubscription=messageSubscription,regionCodes=regionCodes_json,videoCategories = videoCat_json)
+    return render_template('classifiedAds/add_classifiedForm.html',campaign_count=campaign_count,classified_count=classified_count,messageSubscription=messageSubscription,regionCodes=regionCodes_json,videoCategories = videoCat_json)
+
 
 # @connecsiApp.route('/saveClassified',methods=['POST'])
 # @is_logged_in
@@ -3756,27 +3519,20 @@ def viewAllClassifiedAds():
     subValues=getSubscriptionValues(str(user_id))
     countClassified=0
     messageSubscription = {
-        'Classified Ads Posting': {
-            'text':'',
-            'heading':''
-        }
+        'Classified Ads Posting': ''
     }
-    maxClassified=0
     for i in subValues['data']:
         print(i['feature_name'])
         if (i['feature_name'].lower() == 'classified ads posting'):
             countClassified = i['units']
             packageName = i['package_name']
-            maxClassified=i['base_units']+i['added_units']
             feature_name=i['feature_name']
 
 
     if (countClassified == -1):
-        messageSubscription['Classified Ads Posting']['text'] = "This feature is unavailable in your current plan. Please upgrade your account to get access to additional features and add-ons."
-        messageSubscription['Classified Ads Posting']['heading'] = "Upgrade Plan"
+        messageSubscription['Classified Ads Posting'] = "Your " + packageName + " package doesn't have this feature. Please Upgrade your subscription to use this feature."
     elif (countClassified == 0):
-        messageSubscription['Classified Ads Posting']['text'] = "You have reached the limit of Classified Ads Posting. (Allowed: "+str(maxClassified)+" ) Please customize your plan to add more or upgrade to unlock more features and add-ons."
-        messageSubscription['Classified Ads Posting']['heading'] = "Limit Reached"
+        messageSubscription['Classified Ads Posting'] = "You ran out of "+feature_name+" feature of " + packageName + " package. PLease add more in custom or upgrade your subscription."
 
     all_classified_data = classifiedObj.get_all_classifieds()
     view_classified_data_list = []
@@ -3789,39 +3545,13 @@ def viewAllClassifiedAds():
     response = requests.get(view_profile_url)
     profile_data_json = response.json()
     print(profile_data_json)
-    return render_template('classifiedAds/view_all_classifiedAds.html',maxClassified=maxClassified,countClassified=countClassified,messageSubscription=messageSubscription,all_classified_data=view_classified_data_list,profile_data=profile_data_json)
+    return render_template('classifiedAds/view_all_classifiedAds.html',countClassified=countClassified,messageSubscription=messageSubscription,all_classified_data=view_classified_data_list,profile_data=profile_data_json)
 
 @connecsiApp.route('/viewClassifiedDetails/<string:classified_id>')
 @is_logged_in
 def viewClassifiedDetails(classified_id):
     user_id=session['user_id']
     # user_id = ''
-    subValues = getSubscriptionValues(str(user_id))
-    countClassified = 0
-    messageSubscription = {
-        'Classified Ads Posting': {
-            'text': '',
-            'heading': ''
-        }
-    }
-    maxClassified = 0
-    for i in subValues['data']:
-        print(i['feature_name'])
-        if (i['feature_name'].lower() == 'classified ads posting'):
-            countClassified = i['units']
-            packageName = i['package_name']
-            maxClassified = i['base_units'] + i['added_units']
-            feature_name = i['feature_name']
-
-    if (countClassified == -1):
-        messageSubscription['Classified Ads Posting'][
-            'text'] = "This feature is unavailable in your current plan. Please upgrade your account to get access to additional features and add-ons."
-        messageSubscription['Classified Ads Posting']['heading'] = "Upgrade Plan"
-    elif (countClassified == 0):
-        messageSubscription['Classified Ads Posting'][
-            'text'] = "You have reached the limit of Classified Ads Posting. (Allowed: " + str(
-            maxClassified) + " ) Please customize your plan to add more or upgrade to unlock more features and add-ons."
-        messageSubscription['Classified Ads Posting']['heading'] = "Limit Reached"
     from templates.classifiedAds.classified import Classified
     classifiedObj = Classified(user_id=user_id,classified_id=classified_id)
     classified_details = classifiedObj.get_classified_details()
@@ -3835,10 +3565,7 @@ def viewClassifiedDetails(classified_id):
     profile_data_json = response.json()
     print(profile_data_json)
 
-    return render_template('classifiedAds/viewClassifiedDetails.html',countClassified=countClassified,messageSubscription=messageSubscription,maxClassified=maxClassified,classified_details=classified_details,profile_data=profile_data_json)
-
-
-
+    return render_template('classifiedAds/viewClassifiedDetails.html',classified_details=classified_details,profile_data=profile_data_json)
 
 @connecsiApp.route('/addYoutubeInfToCampaignList',methods=['POST'])
 @is_logged_in
@@ -3907,7 +3634,7 @@ def getChannelStatusForCampaignByCampaignId(campaign_id):
 @connecsiApp.route('/delFavInf/<string:channel_id>/<string:user_id>',methods=['GET'])
 def delFavInf(channel_id,user_id):
         print(channel_id)
-        url = base_url+'Brand/deleteFromFavListNew/'+ str(channel_id) + '/' + str(user_id)
+        url = base_url+'Brand/deleteFromFavList/'+ str(channel_id) + '/' + str(user_id)
         print(url)
         response = requests.post(url=url)
         response = response.json()
@@ -3915,8 +3642,6 @@ def delFavInf(channel_id,user_id):
         if response['response']==1:
             return 'Influencer Removed From Favourite List'
         else: return 'Server Error'
-
-
 
 
 
@@ -4523,23 +4248,15 @@ def viewOfferDetails(offer_id):
     custom_offers_reply_count = 0
     feature_name = ''
     messageSubscription = {
-        'Custom Offers Reply': {
-            'text': '',
-            'heading': ''
-        }
+        'Custom Offers Reply':''
     }
-    maxCustom = 0
     for i in subscriptionValue['data']:
         if (i['feature_name'].lower() == 'custom offers reply'):
             custom_offers_reply_count = i['units']
-            maxCustom = i['added_units'] + i['base_units']
             feature_name = i['feature_name']
-            package_name = i['package_name']
     if (custom_offers_reply_count == 0):
-        messageSubscription['Custom Offers Reply'][
-            'text'] = "You have reached the limit of Custom Offers Reply. (Allowed: " + str(
-            maxCustom) + " ) Please customize your plan to add more or upgrade to unlock more features and add-ons."
-        messageSubscription['Custom Offers Reply']['heading'] = "Limit Reached"
+        messageSubscription['Custom Offer Reply'] = "You ran out of " + feature_name + " Units of your " + subscriptionValue['data'][0][
+            'package_name'] + " package. Add more units in custom or upgrade your package."
     print(user_id)
     channel_id=''
     from templates.offers.offer import Offer
@@ -4553,7 +4270,7 @@ def viewOfferDetails(offer_id):
     profile_data_json = response.json()
     print(profile_data_json)
 
-    return render_template('offers/viewOfferDetails.html', maxCustom=maxCustom,custom_offers_reply_count=custom_offers_reply_count,messageSubscription=messageSubscription,offer_details=offer_details,
+    return render_template('offers/viewOfferDetails.html', custom_offers_reply_count=custom_offers_reply_count,messageSubscription=messageSubscription,offer_details=offer_details,
                            profile_data=profile_data_json)
 
 
@@ -4740,21 +4457,16 @@ def searchOffers():
     feature_name = ''
     package_name=''
     messageSubscription = {
-        'Custom Offers Reply':{
-            'text':'',
-            'heading':''
-        }
+        'Custom Offers Reply':''
     }
-    maxCustom=0
     for i in subscriptionValue['data']:
         if (i['feature_name'].lower() == 'custom offers reply'):
             custom_offers_reply_count = i['units']
-            maxCustom=i['added_units']+i['base_units']
             feature_name = i['feature_name']
             package_name=i['package_name']
     if (custom_offers_reply_count == 0):
-        messageSubscription['Custom Offers Reply']['text'] = "You have reached the limit of Custom Offers Reply. (Allowed: "+str(maxCustom)+" ) Please customize your plan to add more or upgrade to unlock more features and add-ons."
-        messageSubscription['Custom Offers Reply']['heading'] = "Limit Reached"
+        messageSubscription['Custom Offers Reply'] = "You ran out of "+feature_name+" Units of your " + subscriptionValue['data'][0][
+            'package_name'] + " package. Add more units in custom or upgrade your package."
     try:
         regionCodes_response = requests.get(url=url_regionCodes)
         regionCodes_json = regionCodes_response.json()
@@ -4769,7 +4481,7 @@ def searchOffers():
         # print(videoCat_json)
     except Exception as e:
         print(e)
-    return render_template('offers/search_offers.html',maxCustom=maxCustom,package_name=package_name,messageSubscription=messageSubscription,custom_offers_reply_count=custom_offers_reply_count,videoCategories=videoCat_json,
+    return render_template('offers/search_offers.html',package_name=package_name,messageSubscription=messageSubscription,custom_offers_reply_count=custom_offers_reply_count,videoCategories=videoCat_json,
                            regionCodes=regionCodes_json)
 
 @connecsiApp.route('/sendCustomReply',methods = ['POST'])
@@ -5132,56 +4844,11 @@ def getChannelGraphData(channel_name,channel_id):
 
 #-----------subscription levels with its feautes-------------------------------------------------
 
-@connecsiApp.route('/auto_or_manual/<string:channel_id>',methods = ['POST'])
-@is_logged_in
-def auto_or_manual(channel_id):
-    if request.method == 'POST':
-       payload = request.form.to_dict()
-       user_id= session['user_id']
-       url = base_url + 'Brand/subscriptionAutoFillProposal/' + str(user_id)+'/'+ str(channel_id)
-       print(url)
-       # exit()
-       try:
-           response = requests.post(url=url, json=payload)
-           data = response.json()
-           print("auto manual set",data)
-           return jsonify(data)
-       except:
-           pass
-           return  'Server Error'
-
-
-@connecsiApp.route('/get_auto_or_manual/<string:channel_id>',methods = ['GET'])
-@is_logged_in
-def get_auto_or_manual(channel_id):
-    if request.method == 'GET':
-       user_id= session['user_id']
-       url = base_url + 'Brand/subscriptionAutoFillProposal/' + str(user_id)+'/'+ str(channel_id)
-       print(url)
-       try:
-           response = requests.get(url=url)
-           data = response.json()
-           print("auto manual set",data)
-           return jsonify(data)
-       except:
-           pass
-           return  'Server Error'
-
-
 @connecsiApp.route('/upgrade')
 @is_logged_in
 def upgrade():
-    subValue=getSubscriptionValues(str(session['user_id']))
-    subscriptionName=subValue['data'][0]['base_package']
-    expiryDateOfPackage=subValue['data'][0]['p_expiry_date']
-    print("expiryDateOfPackage",expiryDateOfPackage)
-    value = {}
-    for i in subValue['data']:
-        if (i['base_units'] == -1):
-            value[i['feature_name']] = 0
-        else:
-            value[i['feature_name']] = 1
-    return render_template('user/upgrade.html',subscriptionName=subscriptionName,subValue=value,expiryDateOfPackage=expiryDateOfPackage)
+
+    return render_template('user/upgrade.html')
 
 def levelsWithFeatures(package_name):
     package_features={}
@@ -5230,22 +4897,14 @@ def levelsWithFeatures(package_name):
             },
             {
                 "feature_name": "Alerts",
-                "units": -1,
-                "price": 0,
-                "customized_feature": "No",
-                "added_units":0,
-                "base_units":-1
-            },
-            {
-                "feature_name": "Messages",
                 "units": 5,
-                "price": 5,
+                "price": 1,
                 "customized_feature": "No",
                 "added_units":0,
                 "base_units":5
             },
             {
-                "feature_name": "Autofill Proposal",
+                "feature_name": "Messages",
                 "units": -1,
                 "price": 0,
                 "customized_feature": "No",
@@ -5253,12 +4912,12 @@ def levelsWithFeatures(package_name):
                 "base_units":-1
             },
             {
-                "feature_name": "Team Members",
-                "units": -1,
-                "price": 0,
+                "feature_name": "Autofill Proposal",
+                "units": 1,
+                "price": 2,
                 "customized_feature": "No",
                 "added_units":0,
-                "base_units":-1
+                "base_units":1
             }
             ]
         }
@@ -5275,11 +4934,11 @@ def levelsWithFeatures(package_name):
             },
             {
                 "feature_name": "Export Lists",
-                "units": 25,
-                "price": 25,
+                "units": -1,
+                "price": 0,
                 "customized_feature": "No",
                 "added_units":0,
-                "base_units":25
+                "base_units":-1
             },
             {
                 "feature_name": "Add to favorites",
@@ -5291,11 +4950,11 @@ def levelsWithFeatures(package_name):
             },
             {
                 "feature_name": "Classified Ads Posting",
-                "units": 5,
+                "units": 10,
                 "price": 20,
                 "customized_feature": "No",
                 "added_units":0,
-                "base_units":5
+                "base_units":10
             },
             {
                 "feature_name": "Custom Offers Reply",
@@ -5307,19 +4966,19 @@ def levelsWithFeatures(package_name):
             },
             {
                 "feature_name": "Alerts",
-                "units": -1,
-                "price": 0,
-                "customized_feature": "No",
-                "added_units":0,
-                "base_units":-1
-            },
-            {
-                "feature_name": "Messages",
                 "units": 25,
-                "price": 7,
+                "price": 6,
                 "customized_feature": "No",
                 "added_units":0,
                 "base_units":25
+            },
+            {
+                "feature_name": "Messages",
+                "units": 15,
+                "price": 7,
+                "customized_feature": "No",
+                "added_units":0,
+                "base_units":15
             },
             {
                 "feature_name": "Autofill Proposal",
@@ -5328,14 +4987,6 @@ def levelsWithFeatures(package_name):
                 "customized_feature": "No",
                 "added_units":0,
                 "base_units":5
-            },
-            {
-                "feature_name": "Team Members",
-                "units": -1,
-                "price": 0,
-                "customized_feature": "No",
-                "added_units":0,
-                "base_units":-1
             }
             ]
         }
@@ -5344,19 +4995,19 @@ def levelsWithFeatures(package_name):
             "data":[
             {
                 "feature_name": "Create Campaign",
-                "units": 25,
+                "units": 20,
                 "price": 20,
                 "customized_feature": "No",
                 "added_units":0,
-                "base_units":25
+                "base_units":20
             },
             {
                 "feature_name": "Export Lists",
-                "units": 50,
+                "units": 100,
                 "price": 40,
                 "customized_feature": "No",
                 "added_units":0,
-                "base_units":50
+                "base_units":100
             },
             {
                 "feature_name": "Add to favorites",
@@ -5364,7 +5015,7 @@ def levelsWithFeatures(package_name):
                 "price": 12,
                 "customized_feature": "No",
                 "added_units":0,
-                "base_units":50
+                "base_units":12
             },
             {
                 "feature_name": "Classified Ads Posting",
@@ -5400,19 +5051,11 @@ def levelsWithFeatures(package_name):
             },
             {
                 "feature_name": "Autofill Proposal",
-                "units": 50,
+                "units": 20,
                 "price": 40,
                 "customized_feature": "No",
                 "added_units":0,
-                "base_units":50
-            },
-            {
-                "feature_name": "Team Members",
-                "units": 5,
-                "price": 40,
-                "customized_feature": "No",
-                "added_units":0,
-                "base_units":5
+                "base_units":20
             }
             ]
         }
@@ -5482,29 +5125,11 @@ def levelsWithFeatures(package_name):
                 "customized_feature": "No",
                 "added_units":0,
                 "base_units":1000000
-            },
-            {
-                "feature_name": "Team Members",
-                "units": 10,
-                "price": 50,
-                "customized_feature": "No",
-                "added_units":0,
-                "base_units":10
             }
             ]
         }
     return package_features
-
-
-
-
-
-############################################################################################################
-
-
-
-
-
+#----------------------subscription methods-------------------------------------------------------
 
 
 def getSubscriptionValues(u_id):
@@ -5664,11 +5289,12 @@ def enterpriseSubscription(u_id):
     return response4.json()
 # -------ashish----------------subscription routes------------------------------------------------
 
-
-def updateBrandSubscriptionPackageDetails(values):
+@connecsiApp.route('/updateBrandSubscriptionPackageDetails',methods=['POST'])
+@is_logged_in
+def updateBrandSubscriptionPackageDetails():
        try:
            url = base_url + 'Brand/updatePackageDetails/' + str(session["user_id"])
-           payload = values
+           payload = request.form.to_dict()
            payloadNew={}
            startTime = str(int(time.time()))
            newDate = datetime.datetime.now() + datetime.timedelta(30)
@@ -5682,31 +5308,29 @@ def updateBrandSubscriptionPackageDetails(values):
                print("inside custom")
                allValue=getSubscriptionValues(str(session["user_id"]))
                features=[]
+               valueLen=(len(payload)-1)/2
+               value=int(valueLen)+1
 
-
-               for j in payload:
+               for j in range(1,value):
                    print(j)
                    for i in allValue['data']:
                        payloadNew['base_package'] =i['base_package']
-                       if (i['feature_name'] == payload[j]):
-                           print("match", i)
-                           print()
-                           k=j[-1:]
-
-                           units = i['units'] + int(payload['count' + k])
-                           # enter price value here for each module
-                           added = i['added_units'] + int(payload['count' + k])
+                       if(i['feature_name']==payload['feature'+str(j)]):
+                           print("match",i)
+                           units=i['units']+int(payload['count'+str(j)])
+                           #enter price value here for each module
+                           price=i['price']+(int(payload['count'+str(j)])*1)
+                           added=i['added_units']+int(payload['count'+str(j)])
                            dat = {
-                               'feature_name': payload['feature' + k],
+                               'feature_name': payload['feature' + str(j)],
                                'units': units,
-                               'price': i['price'],
-                               'customized_feature': "Yes",
-                               'added_units': added,
-                               'base_units': i['base_units']
+                               'price':price,
+                               'customized_feature':"Yes",
+                               'added_units':added,
+                               'base_units':i['base_units']
                            }
                            features.append(dat)
                            print("yo", features)
-                           break
                check = customSubscription(features, str(session["user_id"]))
 
                response1 = requests.post(url=url, json=payloadNew)
@@ -5843,10 +5467,8 @@ def saveClassifiedAds():
             print("done subscription Classified Ads Posting")
     response_json = response.json()
     return jsonify(response_json)
+
 #################################################################################################################
-
-
-
 
 
 

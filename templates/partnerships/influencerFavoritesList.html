@@ -69,10 +69,11 @@
                             {% else %}
                                 <a class="btn btn-primary" id="export-list-button" style="color:white;">Export CSV</a>
                                 <script>
-                                    var exportMessage='{{messageSubscription['Export Lists']}}';
+                                    var exportMessage='{{messageSubscription['Export Lists']['text']}}';
+                                    var exportMessageHead='{{messageSubscription['Export Lists']['heading']}}'
                                     $('#export-list-button').click(function(){
                                         document.getElementById('addMessageSubscription').innerHTML=exportMessage;
-
+                                        document.getElementById('subscription-message-header').innerHTML=exportMessageHead;
                                         document.getElementsByClassName('subscription-message')[0].style.display="block";
                                         document.getElementById('subscription-message-close').style.display="block";
                                     })
@@ -476,8 +477,8 @@
                                         <div class="tab-content-item-list-container">
                                             <ul class="tab-content-item-list">
                                             {% if item['channel_id'] in
-                                            data['data']|map(attribute="channel_id") %}
-                                            {% for favitem in data['data'] %}
+                                            favInfList_data_alerts['data']|map(attribute="channel_id") %}
+                                            {% for favitem in favInfList_data_alerts['data'] %}
                                             {% if item['channel_id'] == favitem['channel_id'] %}
                                             <li>Followers <span class="color1">{{ favitem['alert_followers'] }}</span>
                                             </li>
@@ -487,7 +488,9 @@
                                             </li>
                                             <li>Avg Comments <span class="color1">{{ favitem['alert_comments'] }}</span>
                                             </li>
+
                                             {% endif %}
+
                                             {% endfor %}
                                             {% else %}
                                             <li>No Alerts Set</li>
@@ -562,8 +565,16 @@
                             var countAlerts=Number('{{countAlerts}}');
                             var messageAlert='{{messageSubscription['Alerts']}}';
                             var packageName='{{packageName}}';
+                            var maxAlerts='{{maxAlerts}}'
                             function openAlert(){
-
+                                if(countAlerts==0){
+                                    document.getElementById('addMessageSubscription').innerHTML="You have reached the limit of Alerts. (Allowed: "+maxAlerts+" ) Please customize your plan to add more or upgrade to unlock more features and add-ons";
+                                    document.getElementById('subscription-message-header').innerHTML='Limit Reached';
+                                    document.getElementById('create_alert_modal').style.filter='blur(3px)';
+                                    document.getElementById('create_alert_modal').style.pointerEvents='none';
+                                    document.getElementsByClassName('subscription-message')[0].style.display="block";
+                                    document.getElementById('subscription-message-close').style.display="block";
+                                }
                             }
                             $('#subscription-message-close').click(function(){
                                  document.getElementById('create_alert_modal').style.filter='none';
@@ -574,11 +585,12 @@
                     {% else %}
                         <script>
                             var countAlerts=Number('{{countAlerts}}');
-                            var messageAlert='{{messageSubscription['Alerts']}}';
+                            var messageAlert='{{messageSubscription['Alerts']['text']}}';
+                            var messageAlertHead='{{messageSubscription['Alerts']['heading']}}'
                             var packageName='{{packageName}}';
                             function openAlert(){
                                 document.getElementById('addMessageSubscription').innerHTML=messageAlert;
-
+                                document.getElementById('subscription-message-header').innerHTML=messageAlertHead;
                                 document.getElementById('create_alert_modal').style.filter='blur(3px)';
                                 document.getElementById('create_alert_modal').style.pointerEvents='none';
                                 document.getElementsByClassName('subscription-message')[0].style.display="block";
@@ -731,9 +743,11 @@
                     <script>
                         var countMessages=Number('{{countMessages}}');
                         var package_name='{{package_name}}';
+                        var maxMessages='{{maxMessages}}';
                         function openMessage(){
                             if(countMessages==0){
-                                document.getElementById('addMessageSubscription').innerHTML="You ran out of Custom Offers Reply Units of your " + package_name + " package. Add more units in custom or upgrade your package.";
+                                document.getElementById('subscription-message-header').innerHTML='Limit Reached';
+                                document.getElementById('addMessageSubscription').innerHTML="You have reached the limit of Messages. (Allowed: "+maxMessages+" ) Please customize your plan to add more or upgrade to unlock more features and add-ons.";
                                 document.getElementById('sendMessage').style.filter='blur(3px)';
                                 document.getElementById('sendMessage').style.pointerEvents='none';
                                 document.getElementsByClassName('subscription-message')[0].style.display="block";
@@ -749,10 +763,12 @@
                 {% else%}
                     <script>
                         var countMessages=Number('{{countMessages}}');
-                        var messageMessage='{{messageSubscription['Messages']}}'
+                        var messageMessage='{{messageSubscription['Messages']['text']}}';
+                        var messageMessageHead='{{messageSubscription['Messages']['heading']}}';
                         var package_name='{{package_name}}';
                         function openMessage(){
                             document.getElementById('addMessageSubscription').innerHTML=messageMessage;
+                            document.getElementById('subscription-message-header').innerHTML=messageMessageHead;
                             document.getElementById('sendMessage').style.filter='blur(3px)';
                             document.getElementById('sendMessage').style.pointerEvents='none';
                             document.getElementsByClassName('subscription-message')[0].style.display="block";
@@ -786,7 +802,8 @@
 {% if countAddToFavorites==0 %}
     <script>
         var countAddToFavorites=Number('{{countAddToFavorites}}');
-        var messageAddToFavorites='{{messageSubscription['Add To Favorites']}}';
+        var messageAddToFavorites='{{messageSubscription['Add to Favorites']['text']}}';
+
         var packageName='{{packageName}}';
         $('#subscription-message-close').click(function(){
             document.getElementsByClassName('subscription-message')[0].style.display="none";
@@ -796,7 +813,7 @@
 {% else %}
     <script>
         var countAddToFavorites=Number('{{countAddToFavorites}}');
-        var messageAddToFavorites='{{messageSubscription['Add To Favorites']}}';
+        var messageAddToFavorites='{{messageSubscription['Add to Favorites']['text']}}';
         var packageName='{{packageName}}';
         $('#subscription-message-close').click(function(){
              document.getElementsByClassName('subscription-message')[0].style.display="none";
@@ -1123,8 +1140,10 @@ function getCampaign_ids(channel_id){
 
     function add_to_fav_inf_list(channel_id,channel_name){
         var valueFav=countAddToFavorites;
+        var maxAddToFavorites='{{maxAddToFavorites}}';
         if(valueFav==0){
-                document.getElementById('addMessageSubscription').innerHTML="You ran out of Add to Favorites feature of "+packageName+" package. PLease add more in custom or upgrade your subscription.";
+                document.getElementById('subscription-message-header').innerHTML='Limit Reached';
+                document.getElementById('addMessageSubscription').innerHTML="You have reached the limit of Add to Favorites. (Allowed: "+maxAddToFavorites+" ) Please customize your plan to add more or upgrade to unlock more features and add-ons.";
                 document.getElementsByClassName('subscription-message')[0].style.display="block";
                 document.getElementById('subscription-message-close').style.display="block";
 
@@ -1152,12 +1171,12 @@ function getCampaign_ids(channel_id){
                 if (data.results.length != 0){
                    jQuery.each(data.results, function(i, val) {
                         <!--alert(val.channel_id);-->
-                        $('#alert'+val.channel_id).find('.tab-content-item-list').empty();
-                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Followers</br>'+val.alert_followers+'</li></hr>');
-                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Views</br>'+val.alert_views+'</li></hr>');
-                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Likes</br>'+val.alert_likes+'</li></hr>');
-                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Comments</br>'+val.alert_comments+'</li>');
-                        $("#favList"+val.channel_id).attr("onclick","remove_from_fav_list('"+val.channel_id+"','"+{{session['user_id']}}+"'); return false;");
+<!--                        $('#alert'+val.channel_id).find('.tab-content-item-list').empty();-->
+<!--                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Followers</br>'+val.alert_followers+'</li></hr>');-->
+<!--                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Views</br>'+val.alert_views+'</li></hr>');-->
+<!--                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Likes</br>'+val.alert_likes+'</li></hr>');-->
+<!--                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Comments</br>'+val.alert_comments+'</li>');-->
+<!--                        $("#favList"+val.channel_id).attr("onclick","remove_from_fav_list('"+val.channel_id+"','"+{{session['user_id']}}+"'); return false;");-->
                             var svg = '<span data-toggle="tooltip" title="Remove from Favorites" ><svg  width="24"'+
                                                          'height="23" viewBox="0 0 24 23" fill="none"'+
                                                          'xmlns="http://www.w3.org/2000/svg">'+
@@ -1170,6 +1189,33 @@ function getCampaign_ids(channel_id){
                                                               'fill="#D0021B"/>'+
                                                     '</svg></span>';
                         $("#favList"+val.channel_id).html(svg);
+                    });
+                    }
+                 <!--$('#campaignList').modal('toggle');-->
+                 <!--updateChannelStatusForCampaign(channel_id);-->
+                 <!--$( 'div[id*=status]').empty();-->
+                 <!--window.location.reload();-->
+            }
+        });
+    }
+
+
+    function getFavInfListAlert(){
+        $.ajax({
+            type: "GET",
+            url: '/getFavInfListOne',
+            <!--data: form.serialize(), // serializes the form's elements.-->
+            success: function (data) {
+                <!--alert(data);-->
+                if (data.results.length != 0){
+                   jQuery.each(data.results, function(i, val) {
+                        <!--alert(val.channel_id);-->
+                        $('#alert'+val.channel_id).find('.tab-content-item-list').empty();
+                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Followers</br>'+val.alert_followers+'</li></hr>');
+                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Views</br>'+val.alert_views+'</li></hr>');
+                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Likes</br>'+val.alert_likes+'</li></hr>');
+                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Comments</br>'+val.alert_comments+'</li>');
+
                     });
                     }
                  <!--$('#campaignList').modal('toggle');-->
@@ -1199,8 +1245,8 @@ function getCampaign_ids(channel_id){
                                                               'fill="#7ED321"/>'+
                                                     '</svg>';
                  $("#favList"+channel_id).html(svg);
-                 $('#alert'+channel_id).find('.tab-content-item-list').empty();
-                 $('#alert'+channel_id).find('.tab-content-item-list').append('<li>No Alerts Set</li></hr>');
+<!--                 $('#alert'+channel_id).find('.tab-content-item-list').empty();-->
+<!--                 $('#alert'+channel_id).find('.tab-content-item-list').append('<li>No Alerts Set</li></hr>');-->
                  $.ajax({
                     type:'POST',
                     url:'/addingBackFeatureValue/'+'Add to favorites',
@@ -1208,13 +1254,7 @@ function getCampaign_ids(channel_id){
                         console.log("done adding back favorites units",data);
                         countAddToFavorites=countAddToFavorites+1;
                         $('#favList'+channel_id)[0].parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.remove();
-                        $.ajax({
-                            type:'POST',
-                            url:'/addingBackFeatureValue/'+'Alerts',
-                            success:function(data){
-                                countAlerts=countAlerts+1;
-                            }
-                        })
+
                     }
 
                 })

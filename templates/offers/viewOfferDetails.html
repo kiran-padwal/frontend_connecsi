@@ -222,9 +222,11 @@
                     <script>
                         var custom_offers_reply_count=Number('{{custom_offers_reply_count}}');
                         var package_name='{{package_name}}';
+                        var maxCustom='{{maxCustom}}'
                         function openMessage(){
                             if(custom_offers_reply_count<=0){
-                                document.getElementById('addMessageSubscription').innerHTML="You ran out of Custom Offers Reply Units of your " + package_name + " package. Add more units in custom or upgrade your package.";
+                                document.getElementById('addMessageSubscription').innerHTML="You have reached the limit of Custom Offers Reply. (Allowed: "+maxCustom+" ) Please customize your plan to add more or upgrade to unlock more features and add-ons.";
+                                document.getElementById('subscription-message-header').innerHTML="Limit Reached";
                                 document.getElementById('sendMessage').style.filter='blur(3px)';
                                 document.getElementById('sendMessage').style.pointerEvents='none';
                                 document.getElementsByClassName('subscription-message')[0].style.display="block";
@@ -240,7 +242,9 @@
                 {% else%}
                     <script>
                         var custom_offers_reply_count=Number('{{custom_offers_reply_count}}');
-                        document.getElementById('addMessageSubscription').innerHTML='{{messageSubscription['Custom Offers Reply']}}'
+                        document.getElementById('addMessageSubscription').innerHTML='{{messageSubscription['Custom Offers Reply']['text']}}';
+                        document.getElementById('subscription-message-header').innerHTML='{{messageSubscription['Custom Offers Reply']['heading']}}';
+
                         var package_name='{{package_name}}';
                         function openMessage(){
                             document.getElementById('sendMessage').style.filter='blur(3px)';

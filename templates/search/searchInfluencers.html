@@ -162,8 +162,10 @@
                             {% else %}
                                 <a class="btn btn-primary" id="export-list-button" style="color:white;">Export CSV</a>
                                 <script>
-                                    var exportListMessage='{{messageSubscription['Export Lists']}}';
+                                    var exportListMessageHead='{{messageSubscription['Export Lists']['heading']}}'
+                                    var exportListMessage='{{messageSubscription['Export Lists']['text']}}';
                                     $('#export-list-button').click(function(){
+                                        document.getElementById('subscription-message-header').innerHTML=exportListMessageHead;
                                         document.getElementById('addMessageSubscription').innerHTML=exportListMessage;
                                         document.getElementsByClassName('subscription-message')[0].style.display="block";
                                         document.getElementById('subscription-message-close').style.display="block";
@@ -606,8 +608,8 @@
                                         <div class="tab-content-item-list-container">
                                             <ul class="tab-content-item-list">
                                             {% if item['channel_id'] in
-                                            favInfList_data['data']|map(attribute="channel_id") %}
-                                            {% for favitem in favInfList_data['data'] %}
+                                            favInfList_data_alerts['data']|map(attribute="channel_id") %}
+                                            {% for favitem in favInfList_data_alerts['data'] %}
                                             {% if item['channel_id'] == favitem['channel_id'] %}
                                             <li>Followers <span class="color1">{{ favitem['alert_followers'] }}</span>
                                             </li>
@@ -746,10 +748,19 @@
                     </div>
                     <script>
                         var countAlerts=Number('{{countAlerts}}');
-                        var messageSubscription='{{messageSubscription['Alerts']}}';
+                        var messageAlertHead='{{messageSubscription['Alerts']['heading']}}'
+                        var messageAlert='{{messageSubscription['Alerts']['text']}}';
                         var packageName='{{packageName}}';
+                        var maxAlerts='{{maxAlerts}}';
                         function openAlert(){
-
+                            if(countAlerts==0){
+                                document.getElementById('subscription-message-header').innerHTML='Limit Reached';
+                                document.getElementById('addMessageSubscription').innerHTML="You have reached the limit of Alerts. (Allowed: "+maxAlerts+" ) Please customize your plan to add more or upgrade to unlock more features and add-ons.";
+                                document.getElementById('create_alert_modal').style.filter='blur(3px)';
+                                document.getElementById('create_alert_modal').style.pointerEvents='none';
+                                document.getElementsByClassName('subscription-message')[0].style.display="block";
+                                document.getElementById('subscription-message-close').style.display="block";
+                            }
                         }
                         $('#subscription-message-close').click(function(){
                              document.getElementById('create_alert_modal').style.filter='none';
@@ -760,10 +771,11 @@
                 {% else %}
                     <script>
                         var countAlerts=Number('{{countAlerts}}');
-                        var messageSubscription='{{messageSubscription['Alerts']}}';
+                        var messageSubscription='{{messageSubscription['Alerts']['text']}}';
                         var packageName='{{packageName}}';
                         function openAlert(){
-                            document.getElementById('addMessageSubscription').innerHTML='{{messageSubscription['Alerts']}}'
+                            document.getElementById('subscription-message-header').innerHTML='{{messageSubscription['Alerts']['heading']}}'
+                            document.getElementById('addMessageSubscription').innerHTML='{{messageSubscription['Alerts']['text']}}'
 
                             document.getElementById('create_alert_modal').style.filter='blur(3px)';
                             document.getElementById('create_alert_modal').style.pointerEvents='none';
@@ -927,9 +939,11 @@
                     <script>
                         var countMessages=Number('{{countMessages}}');
                         var package_name='{{packageName}}';
+                        var maxMessages='{{maxMessages}}'
                         function openMessage(){
                             if(countMessages==0){
-                                document.getElementById('addMessageSubscription').innerHTML="You ran out of Messages Units of your " + package_name + " package. Add more units in custom or upgrade your package.";
+                                document.getElementById('subscription-message-header').innerHTML='Limit Reached';
+                                document.getElementById('addMessageSubscription').innerHTML="You have reached the limit of Messages. (Allowed: "+maxMessages+" ) Please customize your plan to add more or upgrade to unlock more features and add-ons.";
                                 document.getElementById('sendMessage').style.filter='blur(3px)';
                                 document.getElementById('sendMessage').style.pointerEvents='none';
                                 document.getElementsByClassName('subscription-message')[0].style.display="block";
@@ -945,9 +959,12 @@
                 {% else%}
                     <script>
                         var countMessages=Number('{{countMessages}}');
-                        document.getElementById('addMessageSubscription').innerHTML='{{messageSubscription['Messages']}}'
+                        var messageMessage='{{messageSubscription['Messages']['text']}}';
+                        var messagesHead='{{messageSubscription['Messages']['heading']}}';
                         var package_name='{{package_name}}';
                         function openMessage(){
+                            document.getElementById('subscription-message-header').innerHTML=messagesHead;
+                            document.getElementById('addMessageSubscription').innerHTML=messageMessage;
                             document.getElementById('sendMessage').style.filter='blur(3px)';
                             document.getElementById('sendMessage').style.pointerEvents='none';
                             document.getElementsByClassName('subscription-message')[0].style.display="block";
@@ -982,7 +999,7 @@
 {% if countAddToFavorites==0 %}
     <script>
         var countAddToFavorites=Number('{{countAddToFavorites}}');
-        var messageSubscription='{{messageSubscription['Add To Favorites']}}';
+        var messageSubscription='{{messageSubscription['Add to Favorites']['text']}}';
         var packageName='{{packageName}}';
         $('#subscription-message-close').click(function(){
             document.getElementsByClassName('subscription-message')[0].style.display="none";
@@ -992,7 +1009,7 @@
 {% else %}
     <script>
         var countAddToFavorites=Number('{{countAddToFavorites}}');
-        var messageSubscription='{{messageSubscription['Add To Favorites']}}';
+        var messageSubscription='{{messageSubscription['Add to Favorites']['text']}}';
         var packageName='{{packageName}}';
         $('#subscription-message-close').click(function(){
              document.getElementsByClassName('subscription-message')[0].style.display="none";
@@ -1327,8 +1344,11 @@ function getCampaign_ids(channel_id){
     }
     function add_to_fav_inf_list(channel_id,channel_name){
         var valueFav=countAddToFavorites;
+        var maxAddToFavorites='{{maxAddToFavorites}}'
         if(valueFav==0){
-                document.getElementById('addMessageSubscription').innerHTML="You ran out of Add to Favorites feature of "+packageName+" package. PLease add more in custom or upgrade your subscription.";
+
+                document.getElementById('subscription-message-header').innerHTML="Limit Reached"
+                document.getElementById('addMessageSubscription').innerHTML="You have reached the limit of Add to Favorites. (Allowed: "+maxAddToFavorites+" ) Please customize your plan to add more or upgrade to unlock more features and add-ons.";
                 document.getElementsByClassName('subscription-message')[0].style.display="block";
                 document.getElementById('subscription-message-close').style.display="block";
 
@@ -1350,15 +1370,6 @@ function getCampaign_ids(channel_id){
                             console.log("done updating favorites units",data);
                             countAddToFavorites--;
                             document.getElementById('loader-div').style.display="block";
-                            $.ajax({
-                                type:'POST',
-                                url:'/updatingFeatureValue/'+'Alerts',
-                                success:function(){
-                                    countAlerts--;
-
-                                    document.getElementById('loader-div').style.display="none";
-                                }
-                            })
 
                         }
                     })
@@ -1366,10 +1377,12 @@ function getCampaign_ids(channel_id){
             });
         }
     }
-    function getFavInfList(){
+
+
+    function getFavInfListAlert(){
         $.ajax({
             type: "GET",
-            url: '/getFavInfList',
+            url: '/getFavInfListOne',
             <!--data: form.serialize(), // serializes the form's elements.-->
             success: function (data) {
                 <!--alert(data);-->
@@ -1381,7 +1394,34 @@ function getCampaign_ids(channel_id){
                         $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Views</br>'+val.alert_views+'</li></hr>');
                         $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Likes</br>'+val.alert_likes+'</li></hr>');
                         $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Comments</br>'+val.alert_comments+'</li>');
-                        $("#favList"+val.channel_id).attr("onclick","remove_from_fav_list('"+val.channel_id+"','"+{{session['user_id']}}+"'); return false;");
+
+                    });
+                    }
+                 <!--$('#campaignList').modal('toggle');-->
+                 <!--updateChannelStatusForCampaign(channel_id);-->
+                 <!--$( 'div[id*=status]').empty();-->
+                 <!--window.location.reload();-->
+            }
+        });
+    }
+
+
+    function getFavInfList(){
+        $.ajax({
+            type: "GET",
+            url: '/getFavInfList',
+            <!--data: form.serialize(), // serializes the form's elements.-->
+            success: function (data) {
+                <!--alert(data);-->
+                if (data.results.length != 0){
+                   jQuery.each(data.results, function(i, val) {
+                        <!--alert(val.channel_id);-->
+<!--                        $('#alert'+val.channel_id).find('.tab-content-item-list').empty();-->
+<!--                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Followers</br>'+val.alert_followers+'</li></hr>');-->
+<!--                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Views</br>'+val.alert_views+'</li></hr>');-->
+<!--                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Likes</br>'+val.alert_likes+'</li></hr>');-->
+<!--                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Comments</br>'+val.alert_comments+'</li>');-->
+<!--                        $("#favList"+val.channel_id).attr("onclick","remove_from_fav_list('"+val.channel_id+"','"+{{session['user_id']}}+"'); return false;");-->
                             var svg = '<span data-toggle="tooltip" title="Remove from Favorites" ><svg  width="24"'+
                                                          'height="23" viewBox="0 0 24 23" fill="none"'+
                                                          'xmlns="http://www.w3.org/2000/svg">'+
@@ -1423,8 +1463,8 @@ function getCampaign_ids(channel_id){
                                                               'fill="#7ED321"/>'+
                                                     '</svg>';
                  $("#favList"+channel_id).html(svg);
-                 $('#alert'+channel_id).find('.tab-content-item-list').empty();
-                 $('#alert'+channel_id).find('.tab-content-item-list').append('<li>No Alerts Set</li></hr>');
+<!--                 $('#alert'+channel_id).find('.tab-content-item-list').empty();-->
+<!--                 $('#alert'+channel_id).find('.tab-content-item-list').append('<li>No Alerts Set</li></hr>');-->
                  document.getElementById('loader-div').style.display="block";
                  $.ajax({
                     type:'POST',
@@ -1433,15 +1473,6 @@ function getCampaign_ids(channel_id){
                         console.log("done adding back favorites units",data);
                         countAddToFavorites=countAddToFavorites+1;
                         document.getElementById('loader-div').style.display="block";
-                        $.ajax({
-                            type:'POST',
-                            url:'/addingBackFeatureValue/'+'Alerts',
-                            success:function(data){
-                                console.log("done adding back favorites units",data);
-                                countAlerts=countAlerts+1;
-                                document.getElementById('loader-div').style.display="none";
-                            }
-                        })
                     }
                 })
             }

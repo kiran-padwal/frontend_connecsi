@@ -2,102 +2,1685 @@
 {{ super() }}
 {% block body %}
 
+
 <div class="container">
-    <div  class="section">
         <div class="row">
             <div class="subscription-popup">
-                <div class="container-fluid">
-                    <div class="row" >
-                        <button id="subscription-close" type="button" style="margin-left:95%;">X</button>
+                <div class="container-fluid text-center">
+                    <div class="row">
+                        <div class="col-sm-3"></div>
+                        <div class="col-sm-8">
+                            <h2 style="font-weight: 400;color:#9370DB;"><b>Choose Your Plan</b></h2>
+                        </div>
+                        <div class="col-sm-1"></div>
                     </div>
                     <div class="row">
-                        <table>
-                            <tr>
-                                <th>FEATURES</th>
-                                <td colspan="2">Create Campaign</td>
-                                <td>Price</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <form action="/payment" method="post">
-                                    <th>Custom
-                                        <input type="text" name="package_name" value="Custom" style="display:none;">
-                                    </th>
-                                    <td>
-                                        <input type="text" name="feature1" value="Create Campaign" style="display:none;">
-                                        <input id="count1" type="number"  name="count1" min="0" max="1000" value="0" step="5">
-                                    </td>
-                                    <td>5</td>
-                                    <td>
-                                        <input  id="price1" type="hidden"  name="price1"  value="">
-                                        <p id="totalPrice" style="margin:0;">0</p>
-                                    </td>
-                                    <td>
-                                        <button type="submit">BUY</button>
-                                    </td>
-                                </form>
-                            </tr>
-                            <tr>
-                                <form action="/payment" method="post">
-                                    <th>Basic
-                                        <input type="text" name="package_name" value="Basic" style="display:none;">
-                                    </th>
-                                    <td>10
-                                        <input  id="count2" type="hidden"  name="count2"  value="10">
-                                    </td>
-                                    <td>10</td>
-                                    <td>10
-                                        <input  id="price2" type="hidden"  name="price2"  value="10">
-                                    </td>
-                                    <td>
-                                        <button type="submit">BUY</button>
-                                    </td>
-                                </form>
-                            </tr>
-                            <tr>
-                                <form action="/payment" method="post">
-                                    <th>Professional
-                                        <input type="text" name="package_name" value="Professional" style="display:none;">
-                                    </th>
-                                    <td>20
-                                        <input  id="count3" type="hidden"  name="count3"  value="20">
-                                    </td>
-                                    <td>20</td>
-                                    <td>20
-                                        <input  id="price3" type="hidden"  name="price3"  value="20">
-                                    </td>
-                                    <td>
-                                        <button type="submit">BUY</button>
-                                    </td>
-                                </form>
-                            </tr>
-                            <tr>
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-2">
 
-                                <form action="/payment" method="post">
-                                    <th>Enterprise
-                                        <input type="text" name="package_name" value="Enterprise" style="display:none;">
-                                    </th>
-                                    <td>Unlimited
-                                        <input  id="count4" type="hidden"  name="count4"  value="1000000">
-                                    </td>
-                                    <td>-</td>
-                                    <td>100
-                                        <input  id="price4" type="hidden"  name="price4"  value="100">
-                                    </td>
-                                    <td>
-                                        <button type="submit">BUY</button>
-                                    </td>
-                                </form>
-                            </tr>
-                        </table>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>FREE</h6>
+                            <h6 style="color:#9370DB;"><b>€ 0</b></h6>
+                            <p style="font-size:0.65rem;">Monthly</p>
+                            {% if subscriptionName=='Free' %}
+                                <button id="free-button-2" class="active-plan-button"> ✓ Active</button>
+                                <button id="free-button-3" class="add-on-button" onclick="addOns()">+Add Ons</button>
+                            {% else %}
+                            <form action="/checkout" method="POST" class="upgrade_plan_form">
+                                <input type="hidden" name="package_name" value="Free">
+                                <input  id="price0" type="hidden"  name="price0"  value="0">
+                                <input type="hidden" name="current_subscription" value="{{subscriptionName}}">
+                                <button id="free-button-1" class="upgrade-plan-button">Upgrade</button>
+                            </form>
 
+                            {% endif %}
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>STARTER</h6>
+                            <h6 style="color:#9370DB;"><b>€ 99</b></h6>
+                            <p style="font-size:0.65rem;">Monthly</p>
+                            {% if subscriptionName=='Basic' %}
+                                <button id="starter-button-2" class="active-plan-button"> ✓ Active</button>
+                                <button id="starter-button-3" class="add-on-button" onclick="addOns()">+Add Ons</button>
+                            {% else %}
+                            <form action="/checkout" method="POST" class="upgrade_plan_form">
+                                <input type="hidden" name="package_name" value="Basic">
+                                <input  id="price2" type="hidden"  name="price2"  value="99">
+                                <input type="hidden" name="current_subscription" value="{{subscriptionName}}">
+                                <button id="starter-button-1" class="upgrade-plan-button">Upgrade</button>
+                            </form>
+                            {% endif %}
+
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>PROFESSIONAL</h6>
+                            <h6 style="color:#9370DB;"><b>€ 249</b></h6>
+                            <p style="font-size:0.65rem;">Monthly</p>
+
+                            {% if subscriptionName=='Professional' %}
+                                <button id="professional-button-2" class="active-plan-button"> ✓ Active</button>
+                                <button id="professional-button-3" class="add-on-button" onclick="addOns()">+Add Ons</button>
+                            {% else %}
+                            <form action="/checkout" method="POST" class="upgrade_plan_form">
+                                <input type="hidden" name="package_name" value="Professional">
+                                <input  id="price3" type="hidden"  name="price3"  value="249">
+                                <input type="hidden" name="current_subscription" value="{{subscriptionName}}">
+                                <button id="professional-button-1" class="upgrade-plan-button">Upgrade</button>
+                            </form>
+                            {% endif %}
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>ENTERPRISE</h6>
+                            <h6 style="color:#9370DB;"><b>Contact Sales</b></h6>
+                            <p style="font-size:0.65rem;">Monthly</p>
+
+
+                            {% if subscriptionName=='Enterprise' %}
+                                <button id="enterprise-button-2" class="active-plan-button"> ✓ Active</button>
+                                <button id="enterprise-button-3" class="add-on-button" onclick="addOns()">+Add Ons</button>
+                            {% else %}
+                            <form action="/checkout" method="POST" class="upgrade_plan_form">
+                                <input type="hidden" name="package_name" value="Enterprise">
+                                <input  id="price4" type="hidden"  name="price4"  value="999">
+                                <input type="hidden" name="current_subscription" value="{{subscriptionName}}">
+                                <button id="enterprise-button-1" class="upgrade-plan-button">Upgrade</button>
+                            </form>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-sm-1"></div>
                     </div>
+                </div>
+                    <div class="container-fluid text-center top-start">
+                    <div class="row search-influencer">
+
+                        <div class="col-sm-3 text-left">
+                            <h6>
+                                <b>Search Influencers</b>
+                                <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                            </h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>Unlimited</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>Unlimited</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>Unlimited</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>Unlimited</h6>
+                        </div>
+                        <div class="col-sm-1"></div>
+                    </div>
+
+                    <div class="row search-offers">
+
+                        <div class="col-sm-3 text-left">
+                            <h6>
+                                <b>Search Offers</b>
+                                <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                            </h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>Unlimited</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>Unlimited</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>Unlimited</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>Unlimited</h6>
+                        </div>
+                        <div class="col-sm-1"></div>
+                    </div>
+
+                    <div class="row add-favorites">
+
+                        <div class="col-sm-3 text-left">
+                            <h6>
+                                <b>Add Favorites</b>
+                                <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                            </h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>5</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>25</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>50</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>You Choose</h6>
+                        </div>
+                        <div class="col-sm-1"></div>
+                    </div>
+
+                    <div class="row export-lists">
+
+                        <div class="col-sm-3 text-left">
+                            <h6>
+                                <b>Export Lists</b>
+                                <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                            </h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>-</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>25</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>50</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>You Choose</h6>
+                        </div>
+                        <div class="col-sm-1"></div>
+                    </div>
+
+                    <div class="row post-classified-ads">
+
+                        <div class="col-sm-3 text-left">
+                            <h6>
+                                <b>Post Classified Ads</b>
+                                <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                            </h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>-</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>5</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>20</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>You Choose</h6>
+                        </div>
+                        <div class="col-sm-1"></div>
+                    </div>
+
+                    <div class="row set-alerts">
+
+                        <div class="col-sm-3 text-left">
+                            <h6>
+                                <b>Set Alerts</b>
+                                <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                            </h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>-</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>-</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>50</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>Unlimited</h6>
+                        </div>
+                        <div class="col-sm-1"></div>
+                    </div>
+
+                    <div class="row offers-reply">
+
+                        <div class="col-sm-3 text-left">
+                            <h6>
+                                <b>Offers Reply</b>
+                                <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                            </h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>5</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>20</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>50</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>You Choose</h6>
+                        </div>
+                        <div class="col-sm-1"></div>
+                    </div>
+
+                    <div class="row messages">
+
+                        <div class="col-sm-3 text-left">
+                            <h6>
+                                <b>Messages</b>
+                                <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                            </h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>5</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>25</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>50</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>Unlimited</h6>
+                        </div>
+                        <div class="col-sm-1"></div>
+                    </div>
+
+                    <div class="row campaigns">
+
+                        <div class="col-sm-3 text-left">
+                            <h6>
+                                <b>Campaigns</b>
+                                <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                            </h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>2</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>10</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>25</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>Unlimited</h6>
+                        </div>
+                        <div class="col-sm-1"></div>
+                    </div>
+
+                    <div class="row proposals">
+
+                        <div class="col-sm-3 text-left">
+                            <h6>
+                                <b>Proposals</b>
+                                <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                            </h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>Manual</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>5 Auto-Filled</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>20 Auto-Filled</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>Unlimited Auto-Filled</h6>
+                        </div>
+                        <div class="col-sm-1"></div>
+                    </div>
+
+                    <div class="row reports">
+
+                        <div class="col-sm-3 text-left">
+                            <h6>
+                                <b>Reports</b>
+                                <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                            </h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>Manual</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>Manual</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>Manual</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>Fully Automated</h6>
+                        </div>
+                        <div class="col-sm-1"></div>
+                    </div>
+
+                    <div class="row export-reports">
+
+                        <div class="col-sm-3 text-left">
+                            <h6>
+                                <b>Export Reports</b>
+                                <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                            </h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>-</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>Yes</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>Yes</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>Yes</h6>
+                        </div>
+                        <div class="col-sm-1"></div>
+                    </div>
+
+                    <div class="row team-members">
+
+                        <div class="col-sm-3 text-left">
+                            <h6>
+                                <b>Team Members</b>
+                                <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                            </h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>-</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>-</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>5</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>You Choose</h6>
+                        </div>
+                        <div class="col-sm-1"></div>
+                    </div>
+
+                    <div class="row analytics">
+
+                        <div class="col-sm-3 text-left">
+                            <h6>
+                                <b>Analytics</b>
+                                <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                            </h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>-</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>Yes</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>Yes</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>Custom</h6>
+                        </div>
+                        <div class="col-sm-1"></div>
+                    </div>
+
+
+                    <div class="row online-payment">
+
+                        <div class="col-sm-3 text-left">
+                            <h6>
+                                <b>Online Payment</b>
+                                <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                            </h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>-</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>-</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>Yes</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>Yes</h6>
+                        </div>
+                        <div class="col-sm-1"></div>
+                    </div>
+
+                    <div class="row leads-management">
+
+                        <div class="col-sm-3 text-left">
+                            <h6>
+                                <b>Leads Management</b>
+                                <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                            </h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>Fully Automated</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>Fully Automated</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>Fully Automated</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>Fully Automated</h6>
+                        </div>
+                        <div class="col-sm-1"></div>
+                    </div>
+
+                    <div class="row campaign-management">
+
+                        <div class="col-sm-3 text-left">
+                            <h6>
+                                <b>Campaign Management</b>
+                                <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                            </h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>Fully Automated</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>Fully Automated</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>Fully Automated</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>Fully Automated</h6>
+                        </div>
+                        <div class="col-sm-1"></div>
+                    </div>
+
+                    <div class="row account-manager">
+
+                        <div class="col-sm-3 text-left">
+                            <h6>
+                                <b>Account Manager</b>
+                                <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                            </h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>-</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>-</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>Yes</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <h6>Yes</h6>
+                        </div>
+                        <div class="col-sm-1"></div>
+                    </div>
+
                 </div>
             </div>
 
+
+
+
+
+
+
+<!--            molie version-->
+
+
+
+
+
+
+            <div class="subscription-popup-mobile">
+
+
+
+
+
+                <div class="container-fluid text-center">
+                    <div class="row">
+                        <div class="col-12">
+                            <h3 style="font-weight: 400;color:#9370DB;">Choose Your Plan</h3>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div id="myCarousel" class="carousel slide" data-interval="false">
+
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner">
+                        <div id="first-plan" class="item">
+                            <div class="container-fluid text-center">
+                                <div class="row">
+                                    <div class="col-6"></div>
+                                    <div class="col-6">
+                                        <h6>FREE</h6>
+                                        <h6 style="color:#9370DB;">€ 0</h6>
+                                        <p style="font-size:0.65rem;">Monthly</p>
+
+                                        {% if subscriptionName=='Free' %}
+                                            <div style="display:inline-grid;">
+                                                <button id="free-button-2" class="active-plan-button"> ✓ Active</button>
+                                            <button id="free-button-3" class="add-on-button" onclick="addOns()">+Add Ons</button>
+                                            </div>
+                                        {% else %}
+                                        <form action="/checkout" method="POST" class="upgrade_plan_form">
+                                            <input type="hidden" name="package_name" value="Free">
+                                            <input  id="price0" type="hidden"  name="price0"  value="0">
+                                            <input type="hidden" name="current_subscription" value="{{subscriptionName}}">
+                                            <button id="free-button-1" class="upgrade-plan-button">Upgrade</button>
+                                        </form>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container-fluid text-center top-start">
+
+                                <div class="row search-influencer">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Search Influencers</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>Unlimited</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row search-offers">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Search Offers</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>Unlimited</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row add-favorites">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Add Favorites</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>5</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row export-lists">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Export Lists</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>-</h6>
+                                    </div>
+
+                                </div>
+
+                                <div class="row post-classified-ads">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Post Classified Ads</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>-</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row set-alerts">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Set Alerts</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </diV>
+                                    <div class="col-6">
+                                        <h6>-</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row offers-reply">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Offers Reply</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>5</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row messages">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Messages</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>5</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row campaigns">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Campaigns</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>2</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row proposals">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Proposals</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>Manual</h6>
+                                    </div>
+
+                                </div>
+
+                                <div class="row reports">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Reports</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>Manual</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row export-reports">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Export Reports</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>-</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row team-members">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Team Members</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>-</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row analytics">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Analytics</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>-</h6>
+                                    </div>
+
+                                </div>
+
+
+                                <div class="row online-payment">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Online Payment</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>-</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row leads-management">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Leads Management</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>Fully Automated</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row campaign-management">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Campaign Management</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>Fully Automated</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row account-manager">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Account Manager</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>-</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="second-plan" class="item">
+                            <div class="container-fluid text-center">
+                                <div class="row">
+                                    <div class="col-6"></div>
+                                    <div class="col-6">
+                                        <h6>STARTER</h6>
+                                        <h6 style="color:#9370DB;"><b>€ 99</b></h6>
+                                        <p style="font-size:0.65rem;">Monthly</p>
+
+                                        {% if subscriptionName=='Basic' %}
+                                        <div style="display:inline-grid;">
+                                            <button id="starter-button-2" class="active-plan-button"> ✓ Active</button>
+                                            <button id="starter-button-3" class="add-on-button" onclick="addOns()">+Add Ons</button>
+                                        </div>
+                                        {% else %}
+                                        <form action="/checkout" method="POST" class="upgrade_plan_form">
+                                            <input type="hidden" name="package_name" value="Basic">
+                                            <input  id="price2" type="hidden"  name="price2"  value="99">
+                                            <input type="hidden" name="current_subscription" value="{{subscriptionName}}">
+                                            <button id="starter-button-1" class="upgrade-plan-button">Upgrade</button>
+                                        </form>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container-fluid text-center top-start">
+
+                                <div class="row search-influencer">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Search Influencers</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>Unlimited</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row search-offers">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Search Offers</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>Unlimited</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row add-favorites">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Add Favorites</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>25</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row export-lists">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Export Lists</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>25</h6>
+                                    </div>
+
+                                </div>
+
+                                <div class="row post-classified-ads">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Post Classified Ads</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>5</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row set-alerts">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Set Alerts</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </diV>
+                                    <div class="col-6">
+                                        <h6>-</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row offers-reply">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Offers Reply</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>20</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row messages">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Messages</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>25</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row campaigns">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Campaigns</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>10</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row proposals">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Proposals</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>5 Auto-Filled</h6>
+                                    </div>
+
+                                </div>
+
+                                <div class="row reports">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Reports</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>Manual</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row export-reports">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Export Reports</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>Yes</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row team-members">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Team Members</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>-</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row analytics">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Analytics</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>Yes</h6>
+                                    </div>
+
+                                </div>
+
+
+                                <div class="row online-payment">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Online Payment</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>-</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row leads-management">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Leads Management</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>Fully Automated</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row campaign-management">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Campaign Management</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>Fully Automated</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row account-manager">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Account Manager</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>-</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="third-plan" class="item">
+                            <div class="container-fluid text-center">
+                                <div class="row">
+                                    <div class="col-6"></div>
+                                    <div class="col-6">
+                                        <h6>PROFESSIONAL</h6>
+                                        <h6 style="color:#9370DB;"><b>€ 249</b></h6>
+                                        <p style="font-size:0.65rem;">Monthly</p>
+
+                                        {% if subscriptionName=='Professional' %}
+                                        <div style="display:inline-grid;">
+                                            <button id="professional-button-2" class="active-plan-button"> ✓ Active</button>
+                                            <button id="professional-button-3" class="add-on-button" onclick="addOns()">+Add Ons</button>
+                                        </div>
+                                        {% else %}
+                                        <form action="/checkout" method="POST" class="upgrade_plan_form">
+                                            <input type="hidden" name="package_name" value="Professional">
+                                            <input  id="price3" type="hidden"  name="price3"  value="249">
+                                            <input type="hidden" name="current_subscription" value="{{subscriptionName}}">
+                                            <button id="professional-button-1" class="upgrade-plan-button">Upgrade</button>
+                                        </form>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container-fluid text-center top-start">
+
+                                <div class="row search-influencer">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Search Influencers</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>Unlimited</h6>
+                                    </div>
+                                </div>
+
+                            <div class="row search-offers">
+
+                                <div class="col-6 text-left">
+                                    <h6>
+                                        <b>Search Offers</b>
+                                        <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                    </h6>
+                                </div>
+                                <div class="col-6">
+                                    <h6>Unlimited</h6>
+                                </div>
+                            </div>
+
+                            <div class="row add-favorites">
+
+                                <div class="col-6 text-left">
+                                    <h6>
+                                        <b>Add Favorites</b>
+                                        <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                    </h6>
+                                </div>
+                                <div class="col-6">
+                                    <h6>50</h6>
+                                </div>
+                            </div>
+
+                            <div class="row export-lists">
+
+                                <div class="col-6 text-left">
+                                    <h6>
+                                        <b>Export Lists</b>
+                                        <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                    </h6>
+                                </div>
+                                <div class="col-6">
+                                    <h6>50</h6>
+                                </div>
+
+                            </div>
+
+                            <div class="row post-classified-ads">
+
+                                <div class="col-6 text-left">
+                                    <h6>
+                                        <b>Post Classified Ads</b>
+                                        <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                    </h6>
+                                </div>
+                                <div class="col-6">
+                                    <h6>20</h6>
+                                </div>
+                            </div>
+
+                            <div class="row set-alerts">
+
+                                <div class="col-6 text-left">
+                                    <h6>
+                                        <b>Set Alerts</b>
+                                        <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                    </h6>
+                                </diV>
+                                <div class="col-6">
+                                    <h6>50</h6>
+                                </div>
+                            </div>
+
+                            <div class="row offers-reply">
+
+                                <div class="col-6 text-left">
+                                    <h6>
+                                        <b>Offers Reply</b>
+                                        <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                    </h6>
+                                </div>
+                                <div class="col-6">
+                                    <h6>50</h6>
+                                </div>
+                            </div>
+
+                            <div class="row messages">
+
+                                <div class="col-6 text-left">
+                                    <h6>
+                                        <b>Messages</b>
+                                        <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                    </h6>
+                                </div>
+                                <div class="col-6">
+                                    <h6>50</h6>
+                                </div>
+                            </div>
+
+                            <div class="row campaigns">
+
+                                <div class="col-6 text-left">
+                                    <h6>
+                                        <b>Campaigns</b>
+                                        <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                    </h6>
+                                </div>
+                                <div class="col-6">
+                                    <h6>25</h6>
+                                </div>
+                            </div>
+
+                            <div class="row proposals">
+
+                                <div class="col-6 text-left">
+                                    <h6>
+                                        <b>Proposals</b>
+                                        <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                    </h6>
+                                </div>
+                                <div class="col-6">
+                                    <h6>20 Auto-Filled</h6>
+                                </div>
+
+                            </div>
+
+                            <div class="row reports">
+
+                                <div class="col-6 text-left">
+                                    <h6>
+                                        <b>Reports</b>
+                                        <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                    </h6>
+                                </div>
+                                <div class="col-6">
+                                    <h6>Manual</h6>
+                                </div>
+                            </div>
+
+                            <div class="row export-reports">
+
+                                <div class="col-6 text-left">
+                                    <h6>
+                                        <b>Export Reports</b>
+                                        <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                    </h6>
+                                </div>
+                                <div class="col-6">
+                                    <h6>Yes</h6>
+                                </div>
+                            </div>
+
+                            <div class="row team-members">
+
+                                <div class="col-6 text-left">
+                                    <h6>
+                                        <b>Team Members</b>
+                                        <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                    </h6>
+                                </div>
+                                <div class="col-6">
+                                    <h6>5</h6>
+                                </div>
+                            </div>
+
+                            <div class="row analytics">
+
+                                <div class="col-6 text-left">
+                                    <h6>
+                                        <b>Analytics</b>
+                                        <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                    </h6>
+                                </div>
+                                <div class="col-6">
+                                    <h6>Yes</h6>
+                                </div>
+
+                            </div>
+
+
+                            <div class="row online-payment">
+
+                                <div class="col-6 text-left">
+                                    <h6>
+                                        <b>Online Payment</b>
+                                        <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                    </h6>
+                                </div>
+                                <div class="col-6">
+                                    <h6>Yes</h6>
+                                </div>
+                            </div>
+
+                            <div class="row leads-management">
+
+                                <div class="col-6 text-left">
+                                    <h6>
+                                        <b>Leads Management</b>
+                                        <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                    </h6>
+                                </div>
+                                <div class="col-6">
+                                    <h6>Fully Automated</h6>
+                                </div>
+                            </div>
+
+                            <div class="row campaign-management">
+
+                                <div class="col-6 text-left">
+                                    <h6>
+                                        <b>Campaign Management</b>
+                                        <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                    </h6>
+                                </div>
+                                <div class="col-6">
+                                    <h6>Fully Automated</h6>
+                                </div>
+                            </div>
+
+                            <div class="row account-manager">
+
+                                <div class="col-6 text-left">
+                                    <h6>
+                                        <b>Account Manager</b>
+                                        <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                    </h6>
+                                </div>
+                                <div class="col-6">
+                                    <h6>Yes</h6>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                        <div id="fourth-plan" class="item">
+                            <div class="container-fluid text-center">
+                                <div class="row">
+                                    <div class="col-6"></div>
+                                    <div class="col-6">
+                                        <h6>ENTERPRISE</h6>
+                                        <h6 style="color:#9370DB;"><b>Contact Sales</b></h6>
+                                        <p style="font-size:0.65rem;">Monthly</p>
+
+                                        {% if subscriptionName=='Enterprise' %}
+                                        <div style="display:inline-grid;">
+                                            <button id="enterprise-button-2" class="active-plan-button"> ✓ Active</button>
+                                            <button id="enterprise-button-3" class="add-on-button" onclick="addOns()">+Add Ons</button>
+                                        </div>
+                                        {% else %}
+                                        <form action="/checkout" method="POST" class="upgrade_plan_form">
+                                            <input type="hidden" name="package_name" value="Enterprise">
+                                            <input  id="price4" type="hidden"  name="price4"  value="999">
+                                            <input type="hidden" name="current_subscription" value="{{subscriptionName}}">
+                                            <button id="enterprise-button-1" class="upgrade-plan-button">Upgrade</button>
+                                        </form>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container-fluid text-center top-start">
+
+                                <div class="row search-influencer">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Search Influencers</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>Unlimited</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row search-offers">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Search Offers</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>Unlimited</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row add-favorites">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Add Favorites</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>You Choose</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row export-lists">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Export Lists</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>You Choose</h6>
+                                    </div>
+
+                                </div>
+
+                                <div class="row post-classified-ads">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Post Classified Ads</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>You Choose</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row set-alerts">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Set Alerts</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </diV>
+                                    <div class="col-6">
+                                        <h6>Unlimited</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row offers-reply">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Offers Reply</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>You Choose</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row messages">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Messages</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>Unlimited</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row campaigns">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Campaigns</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>Unlimited</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row proposals">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Proposals</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>Unlimited Auto-Filled</h6>
+                                    </div>
+
+                                </div>
+
+                                <div class="row reports">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Reports</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>Fully Automated</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row export-reports">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Export Reports</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>Yes</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row team-members">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Team Members</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>You Choose</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row analytics">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Analytics</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>Custom</h6>
+                                    </div>
+
+                                </div>
+
+
+                                <div class="row online-payment">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Online Payment</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>Yes</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row leads-management">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Leads Management</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>Fully Automated</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row campaign-management">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Campaign Management</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>Fully Automated</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row account-manager">
+
+                                    <div class="col-6 text-left">
+                                        <h6>
+                                            <b>Account Manager</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>Yes</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Left and right controls -->
+
+                </div>
+            </div>
+            <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="right carousel-control" href="#myCarousel" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right"></span>
+                <span class="sr-only">Next</span>
+            </a>
         </div>
-    </div>
+
 </div>
 
+<script>
 
+$(document).ready(function()
+{
+    var t = $('.add-main-class')[0];
+    t.href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css";
+    var s = $('.first-script')[0];
+    s.src = "https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js";
+    var p = $('.second-script')[0];
+    p.src = "https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js";
+});
+    function convertTimeStamp(timestamp) {
+      var date = new Date(
+        parseInt(
+          timestamp
+        )
+      );
+      console.log(date)
+      return [
+        ("0" + date.getDate()).slice(-2),           // Get day and pad it with zeroes
+        ("0" + (date.getMonth()+1)).slice(-2),      // Get month and pad it with zeroes
+        date.getFullYear()                          // Get full year
+      ].join('/');                                  // Glue the pieces together
+    }
+
+    var expiryDateOfPackage={{expiryDateOfPackage}};
+    console.log("expiryDateOfPackage",expiryDateOfPackage);
+    expiryDateOfPackage=convertTimeStamp(expiryDateOfPackage*1000)
+    function addOns(){
+        console.log("add ons clicked");
+        window.location='/checkout';
+        $.ajax({
+            method:'POST',
+            url:'/checkout',
+            data:{},
+            success:function(data){
+                window.location='/checkout';
+            }
+        })
+
+    }
+    var subName='{{subscriptionName}}';
+    if(subName=='Free'){
+        $('#first-plan').addClass('active');
+    }
+    else if(subName=='Basic'){
+        $('#second-plan').addClass('active');
+    }
+    else if(subName=='Professional'){
+        $('#third-plan').addClass('active');
+    }
+    else if(subName=='Enterprise'){
+        $('#fourth-plan').addClass('active');
+    }
+</script>
 {% endblock %}

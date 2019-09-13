@@ -3,6 +3,63 @@ $(window).bind('beforeunload',function(){
 
 });
 
+jQuery('<div class="quantity-nav"><div class="quantity-button quantity-up">+</div><div class="quantity-button quantity-down">-</div></div>').insertAfter('.quantity input');
+$('.quantity-button').click(function() {
+    var quant={
+        'Custom Offers Reply': 10,
+        'Classified Ads Posting': 10,
+        'Add to favorites': 10,
+        'Alerts': 5,
+        'Export Lists': 10,
+        'Create Campaign': 5,
+        'Autofill Proposal': 10,
+        'Messages': 5,
+        'Team Members': 10
+    }
+    var el=$(this)[0].parentElement.parentElement.childNodes[4];
+    var input2=$(this)[0].parentElement.parentElement.childNodes[1];
+    var input = el;
+    if(el!=undefined){
+        var min = input.min;
+        var max = input.max;
+        var step=input.step;
+    }
+    if(input && $(this)[0].classList[1]=='quantity-up'){
+            var oldValue = parseInt(input.value);
+
+            if (oldValue >= max) {
+              var newVal = oldValue;
+              el.value=newVal;
+            } else {
+              var newVal = oldValue + parseInt(step);
+                el.value=newVal;
+                oldSum=$('#totalPrice')[0].innerHTML;
+                sum=parseInt(oldSum.split(' ')[1])+quant[input2.value];
+
+                $('#totalPrice')[0].innerHTML='€'+' '+sum;
+                $('#addOn-price')[0].innerHTML='€'+' '+sum;
+                calculateVat();
+            }
+
+
+    }
+    if(input && $(this)[0].classList[1]=='quantity-down'){
+            var oldValue = parseInt(input.value);
+            if (oldValue <= min) {
+              var newVal = oldValue;
+              el.value=newVal;
+            } else {
+                var newVal = oldValue - parseInt(step);
+                el.value=newVal;
+                oldSum=$('#totalPrice')[0].innerHTML;
+                sum=parseInt(oldSum.split(' ')[1])-quant[input2.value];
+
+                $('#totalPrice')[0].innerHTML='€'+' '+sum;
+                $('#addOn-price')[0].innerHTML='€'+' '+sum;
+                calculateVat();
+            }
+    }
+});
 
 
 function submitNewClassifiedAdd(val){
@@ -670,6 +727,62 @@ $('#upgradeSubButton').click(function(){
         e.preventDefault(); // avoid to execute the actual submit of the form.
     });
 
+
+
+    $(".upgrade_plan_form").submit(function(e) {
+        var form = $(this);
+        var url = form.attr('action');
+        var subscriptionName=form[0][2].value;
+        var clickName=form[0][0].value;
+        var subArray={
+            'Free':1,
+            'Basic':2,
+            'Professional':3,
+            'Enterprise':4
+        }
+        if(subArray[clickName]>subArray[subscriptionName]){
+            // do upgrade
+            console.log("up");
+            document.getElementsByClassName('upgradeSub-buttom')[0].style.display='block';
+            if(clickName=='Enterprise'){
+                window.location='https://www.connecsi.com/contact/';
+            }
+            else{
+                var form = $(this);
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: form.serialize(), // serializes the form's elements.
+                    success: function(data)
+                    {
+                        console.log(data)
+                        if(data['response']==1){
+                            console.log("continue");
+                            window.location='/checkout'
+                        }
+                        else{
+                            console.log("error");
+                        }
+                    }
+                });
+            }
+            e.preventDefault();
+        }
+        else{
+            // error degrading package not allowed.
+            console.log("down");
+
+            $('.subscription-message').fadeIn();
+            document.getElementById('subscription-message-header').innerHTML='';
+            document.getElementById('addMessageSubscription').innerHTML='You are currently subscribed to a higher plan. You may switch to a lower plan at the time of next renewal.<h4 style="color:#9370DB;text-align:center;margin-top:1rem;font-weight:500;"> Renewal is due on </h4><h4 style="color:#9370DB;text-align:center;margin-top:1rem;font-weight:500;">'+expiryDateOfPackage+'</h4>';
+            document.getElementsByClassName('upgradeSub-buttom')[0].style.display='none';
+            e.preventDefault();
+        }
+
+
+        e.preventDefault(); // avoid to execute the actual submit of the form.
+    });
+
     $("#message_files_form").submit(function(e) {
         var form = $(this);
         var url = form.attr('action');
@@ -796,6 +909,7 @@ $('#upgradeSubButton').click(function(){
 
 
 //        alert('i m after');
+
         var form = $(this);
         var url = form.attr('action');
         $.ajax({
@@ -804,10 +918,42 @@ $('#upgradeSubButton').click(function(){
                data: form.serialize(), // serializes the form's elements.
                success: function(data)
                {
-                   alert(data); // show response from the python script.
-                   $('#proposal').modal('toggle');
-                   <!--getCampaignsAddedToMessage();-->
-                   window.location.reload();
+                   if(data['response']==1){
+                        var proposal_id=data['proposal_id']
+                        alert('proposal sent');
+                       $('#proposal').modal('toggle');
+                       $.ajax({
+                            type:'POST',
+                            url:'/updatingFeatureValue/'+'Autofill Proposal',
+                            success:function(data){
+                                countAutoProposal=countAutoProposal-1;
+                                console.log("proposal id",proposal_id);
+                                if(proposalManual==false){
+                                    $.ajax({
+                                        type:'POST',
+                                        url:'/auto_or_manual/'+proposal_id,
+                                        data:{'auto_or_manual':'auto'},
+                                        success:function(data){
+                                            console.log(data);
+                                        }
+                                    })
+                                }
+                                else{
+                                    $.ajax({
+                                        type:'POST',
+                                        url:'/auto_or_manual/'+proposal_id,
+                                        data:{'auto_or_manual':'manual'},
+                                        success:function(data){
+                                            console.log(data);
+                                        }
+                                    })
+                                }
+                            }
+                        })
+                       <!--getCampaignsAddedToMessage();-->
+                       window.location.reload();
+                       }
+
                }
              });
         e.preventDefault(); // avoid to execute the actual submit of the form.
@@ -866,53 +1012,108 @@ $('#upgradeSubButton').click(function(){
 // backup code //
 
 // ashish code proposal channel onchange //
-
+var proposalManual=true;
 $("#proposal_campaign_name").on("change",function(){
-//        alert('first here');
-        getAllMappedChannel_ids($(this).attr('data-channel-id'));
-        $("#proposal_description").empty();
-        $("#proposal_from_date").empty();
-        $("#proposal_to_date").empty();
-        $("#proposal_target_url").empty();
-        $("#proposal_arrangements").empty();
-        $("#proposal_kpis").empty();
-        var campaign_id = $("#proposal_campaign_name").val();
-        var $var = '';
-        var $uniqid = Date.now();
+        var changeValue=$('#proposal_campaign_name')[0].value;
 
-        $.ajax({
-            type: "GET",
-            url: '/getCampaignDetails/'+campaign_id,
-            success: function(data)
-            {
-                jQuery.each(data.results, function(i, val) {
+        if(changeValue!=''){
+            if(countAutoProposal==0){
 
-                    $("#proposal_description").val(val.campaign_description);
-
-                    $("#proposal_from_date").val(val.from_date);
-
-                    $("#proposal_to_date").val(val.to_date);
-                    $("#proposal_target_url").val(val.target_url);
-
-                    var arrangements = val.arrangements.split(",");
-                    for(i=0;i<arrangements.length;i++){
-                        $uniqid = $uniqid + 1;
+                getAllMappedChannel_ids_unchecked($('#proposal_campaign_name').attr('data-channel-id'));
+                $("#proposal_description").empty();
+                $("#proposal_from_date").empty();
+                $("#proposal_to_date").empty();
+                $("#proposal_target_url").empty();
+                $("#proposal_arrangements").empty();
+                $("#proposal_kpis").empty();
+                var val={
+                    arrangements:'Reviews,Unboxing/Gameplay,Shoutout/Mention,Giveaway,Video Intro/Outro,Tutorials,Banner placement/ URL placement,Sponsorship,Others(Explain in description)',
+                    kpis:'No of Clicks,New Users,Revenue Generated'
+                }
+                var arrangements = val.arrangements.split(",");
+                for(i=0;i<arrangements.length;i++){
+                    $uniqid = $uniqid + 1;
 //                        $var = '<div class="custom-control custom-control-inline-block custom-checkbox custom-control-inline text-left"><input checked type="checkbox" class="filled-in custom-control-input custom-control-input" multiple value="'+arrangements[i]+'" name="proposal_arrangements" id="arrangements_id_'+$uniqid+'"><label class="custom-control-label campaignCheckbox" for="arrangements_id_'+$uniqid+'">'+arrangements[i]+'</label></div>';
 //                        $("#proposal_arrangements").append($var);
-                        $("#proposal_arrangements").append('<div class="custom-control custom-checkbox custom-control-inline"><input type="checkbox" checked id="proposal-arrangements-box-'+i+'" class="proposal_arrangements_checkbox filled-in custom-control-input custom-control-input"  multiple name="proposal_arrangements" value="'+arrangements[i]+'"><label class="custom-control-label campaignCheckbox" for="proposal-arrangements-box-'+i+'"></label><span>'+arrangements[i]+'</span></div>');
-                    }
-                    var kpis = val.kpis.split(",");
-                    for(i=0;i<kpis.length;i++){
-                        $uniqid = $uniqid + 1;
+                    $("#proposal_arrangements").append('<div class="custom-control custom-checkbox custom-control-inline"><input  type="checkbox" id="proposal-arrangements-box-'+i+'" class="proposal_arrangements_checkbox filled-in custom-control-input custom-control-input"  multiple name="proposal_arrangements" value="'+arrangements[i]+'"><label class="custom-control-label campaignCheckbox" for="proposal-arrangements-box-'+i+'"></label><span>'+arrangements[i]+'</span></div>');
+                }
+                var kpis = val.kpis.split(",");
+                for(i=0;i<kpis.length;i++){
+                    $uniqid = $uniqid + 1;
 //                        $var = '<div class="custom-control custom-control-inline-block custom-checkbox custom-control-inline text-left"><input checked type="checkbox" class="filled-in custom-control-input custom-control-input" multiple value="'+kpis[i]+'" name="proposal_kpis" id="kpis_id_'+$uniqid+'"><label class="custom-control-label campaignCheckbox" for="kpis_id_'+$uniqid+'">'+kpis[i]+'</label></div>';
 //                        $("#proposal_kpis").append($var);
-                           $("#proposal_kpis").append('<div class="custom-control custom-checkbox custom-control-inline"><input type="checkbox" checked id="proposal-kpis-box-'+i+'" class="proposal_kpis_checkbox filled-in custom-control-input custom-control-input" multiple name="proposal_kpis" value="'+kpis[i]+'"><label class="custom-control-label campaignCheckbox" for="proposal-kpis-box-'+i+'"></label><span>'+kpis[i]+'</span></div>');
-                    }
+                       $("#proposal_kpis").append('<div class="custom-control custom-checkbox custom-control-inline"><input  type="checkbox" id="proposal-kpis-box-'+i+'" class="proposal_kpis_checkbox filled-in custom-control-input custom-control-input" multiple name="proposal_kpis" value="'+kpis[i]+'"><label class="custom-control-label campaignCheckbox" for="proposal-kpis-box-'+i+'"></label><span>'+kpis[i]+'</span></div>');
+                }
+                openMessage();
+            }
+            else{
+                    getAllMappedChannel_ids($('#proposal_campaign_name').attr('data-channel-id'));
+                    $("#proposal_description").empty();
+                    $("#proposal_from_date").empty();
+                    $("#proposal_to_date").empty();
+                    $("#proposal_target_url").empty();
+                    $("#proposal_arrangements").empty();
+                    $("#proposal_kpis").empty();
+                    var campaign_id = $("#proposal_campaign_name").val();
+                    var $var = '';
+                    var $uniqid = Date.now();
 
-                });
+                    $.ajax({
+                        type: "GET",
+                        url: '/getCampaignDetails/'+campaign_id,
+                        success: function(data)
+                        {
+                            jQuery.each(data.results, function(i, val) {
+
+                                $("#proposal_description").val(val.campaign_description);
+                                $("#proposal_from_date")[0].type='text';
+                                $("#proposal_from_date").val(val.from_date);
+                                $("#proposal_to_date")[0].type='text';
+                                $("#proposal_to_date").val(val.to_date);
+                                $("#proposal_target_url").val(val.target_url);
+                                $('#proposal_from_date').attr('readonly', true);
+                                $('#proposal_to_date').attr('readonly', true);
+
+                                var arrangements = val.arrangements.split(",");
+                                for(i=0;i<arrangements.length;i++){
+                                    $uniqid = $uniqid + 1;
+            //                        $var = '<div class="custom-control custom-control-inline-block custom-checkbox custom-control-inline text-left"><input checked type="checkbox" class="filled-in custom-control-input custom-control-input" multiple value="'+arrangements[i]+'" name="proposal_arrangements" id="arrangements_id_'+$uniqid+'"><label class="custom-control-label campaignCheckbox" for="arrangements_id_'+$uniqid+'">'+arrangements[i]+'</label></div>';
+            //                        $("#proposal_arrangements").append($var);
+                                    $("#proposal_arrangements").append('<div class="custom-control custom-checkbox custom-control-inline"><input checked type="checkbox" id="proposal-arrangements-box-'+i+'" class="proposal_arrangements_checkbox filled-in custom-control-input custom-control-input"  multiple name="proposal_arrangements" value="'+arrangements[i]+'"><label class="custom-control-label campaignCheckbox" for="proposal-arrangements-box-'+i+'"></label><span>'+arrangements[i]+'</span></div>');
+                                }
+                                var kpis = val.kpis.split(",");
+                                for(i=0;i<kpis.length;i++){
+                                    $uniqid = $uniqid + 1;
+            //                        $var = '<div class="custom-control custom-control-inline-block custom-checkbox custom-control-inline text-left"><input checked type="checkbox" class="filled-in custom-control-input custom-control-input" multiple value="'+kpis[i]+'" name="proposal_kpis" id="kpis_id_'+$uniqid+'"><label class="custom-control-label campaignCheckbox" for="kpis_id_'+$uniqid+'">'+kpis[i]+'</label></div>';
+            //                        $("#proposal_kpis").append($var);
+                                       $("#proposal_kpis").append('<div class="custom-control custom-checkbox custom-control-inline"><input checked type="checkbox" id="proposal-kpis-box-'+i+'" class="proposal_kpis_checkbox filled-in custom-control-input custom-control-input" multiple name="proposal_kpis" value="'+kpis[i]+'"><label class="custom-control-label campaignCheckbox" for="proposal-kpis-box-'+i+'"></label><span>'+kpis[i]+'</span></div>');
+                                }
+
+                            });
+                            proposalManual=false;
+
+
+                        }
+                    });
 
             }
-        });
+
+        }
+        else{
+            $('#proposal_from_date').attr('readonly', false);
+            $('#proposal_to_date').attr('readonly', false);
+            $("#proposal_description")[0].value='';
+
+            $("#proposal_channels").empty();
+            $("#proposal_from_date")[0].type='date';
+            $("#proposal_from_date").empty();
+            $("#proposal_to_date")[0].type='date';
+            $("#proposal_to_date").empty();
+            $("#proposal_target_url").empty();
+            $("#proposal_arrangements").empty();
+            $("#proposal_kpis").empty();
+        }
+
     });
 // ashish code end //
 
@@ -1002,11 +1203,7 @@ $("#create_alert_form").submit(function (e) {
         var form = $(this);
         var url = form.attr('action');
         var channel_id = $('#create_alert_channel_id').val();
-        var checkIf=$( '#alert'+channel_id)[0].childNodes[1].childNodes[1].childNodes[1].innerHTML;
-//        alert(checkIf);
-        if(checkIf=="No Alerts Set"){
-//            alert('inside if');
-//            alert(url);
+
             $.ajax({
                 type: "POST",
                 url: url,
@@ -1015,30 +1212,12 @@ $("#create_alert_form").submit(function (e) {
 //                    alert(data); // show response from the python script.
 //                    alert(countAlerts);
                     countAlerts=countAlerts-1;
-                    countAddToFavorites=countAddToFavorites-1;
-                    $('#create_alert_modal').modal('toggle');
-                    getFavInfList();
-                }
-            });
-            e.preventDefault(); // avoid to execute the actual submit of the form.
-        }
-        else{
-            console.log("nothing ji")
-            $.ajax({
-                type: "POST",
-                url: '/createAlerts1',
-                data: form.serialize(), // serializes the form's elements.
-                success: function (data) {
-                    alert(data); // show response from the python script.
-                    $('#create_alert_modal').modal('toggle');
-                    getFavInfList();
-                    <!--$( '#status'+channel_id).empty();-->
-    //                $( 'div[id*=alert]').empty();
 
+                    getFavInfListAlert();
+                    $('#create_alert_modal').modal('toggle');
                 }
             });
             e.preventDefault(); // avoid to execute the actual submit of the form.
-        }
 
 
     });
@@ -2211,6 +2390,4 @@ function loadingTop10Influencers(){
                }
          });
 }
-
-
 

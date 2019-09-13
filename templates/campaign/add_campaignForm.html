@@ -160,7 +160,8 @@
                                                 <input type="checkbox" class="form-check-input" id="classifiedAds" name="is_classified_post" style="margin-left: 0rem">
                                                 <label class="form-check-label" for="classifiedAds" style="margin-left: 1.25rem">Post as classified ads</label>
                                                 <script>
-                                                    document.getElementById('addMessageSubscription').innerHTML='{{messageSubscription['Classified Ads Posting']}}'
+                                                    document.getElementById('addMessageSubscription').innerHTML='{{messageSubscription['Classified Ads Posting']['text']}}';
+                                                    document.getElementById('subscription-message-header').innerHTML='{{messageSubscription['Classified Ads Posting']['heading']}}'
                                                     $('#classifiedAds').click(function(){
                                                         document.getElementById('create-campaign').style.filter='blur(3px)';
                                                         document.getElementById('create-campaign').style.pointerEvents='none';
@@ -196,9 +197,12 @@
                                 </div>
                                 {% if campaign_count==0 %}
                                 <script>
-                                    document.getElementById('addMessageSubscription').innerHTML='{{messageSubscription['Create Campaign']}}'
+                                    document.getElementById('addMessageSubscription').innerHTML='{{messageSubscription['Create Campaign']['text']}}';
+                                    document.getElementById('subscription-message-header').innerHTML='{{messageSubscription['Create Campaign']['heading']}}';
+
                                     document.getElementById('create-campaign').style.filter='blur(3px)';
                                     document.getElementById('create-campaign').style.pointerEvents='none';
+                                    document.getElementById('subscription-message-close').style.display="none";
                                     document.getElementsByClassName('subscription-message')[0].style.display="block";
                                 </script>
                                 {% else %}

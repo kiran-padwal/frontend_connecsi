@@ -434,13 +434,13 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="proposal_from_date">From Date:</label>
-                                            <input type="text" class="form-control" name="proposal_from_date" id="proposal_from_date" readonly>
+                                            <input type="date" class="form-control" name="proposal_from_date" id="proposal_from_date">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="proposal_to_date">To Date:</label>
-                                            <input type="text" class="form-control" name="proposal_to_date" id="proposal_to_date" readonly>
+                                            <input type="date" class="form-control" name="proposal_to_date" id="proposal_to_date">
                                         </div>
                                     </div>
                                 </div>
@@ -623,13 +623,13 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="edit_proposal_from_date">From Date:</label>
-                                            <input type="text" class="form-control" name="edit_proposal_from_date" id="edit_proposal_from_date" readonly>
+                                            <input type="date" class="form-control" name="edit_proposal_from_date" id="edit_proposal_from_date">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="edit_proposal_to_date">To Date:</label>
-                                            <input type="text" class="form-control" name="edit_proposal_to_date" id="edit_proposal_to_date" readonly>
+                                            <input type="date" class="form-control" name="edit_proposal_to_date" id="edit_proposal_to_date">
                                         </div>
                                     </div>
                                 </div>
@@ -714,6 +714,48 @@
 
 </div>
 
+{% if countAutoProposal>0 %}
+    <script>
+        var countAutoProposal=Number('{{countAutoProposal}}');
+        var package_name='{{package_name}}';
+        var maxAuto='{{maxAuto}}'
+        function openMessage(){
+            if(countAutoProposal==0){
+                document.getElementById('addMessageSubscription').innerHTML="You have reached the limit of Autofill Proposal. (Allowed: "+maxAuto+" ) Please customize your plan to add more or upgrade to unlock more features and add-ons.";
+                document.getElementById('subscription-message-header').innerHTML="Limit Reached";
+                document.getElementById('proposal').style.filter='blur(3px)';
+                document.getElementById('proposal').style.pointerEvents='none';
+                document.getElementsByClassName('subscription-message')[0].style.display="block";
+                document.getElementById('subscription-message-close').style.display="block";
+            }
+        }
+        $('#subscription-message-close').click(function(){
+             document.getElementById('sendMessage').style.filter='none';
+             document.getElementById('sendMessage').style.pointerEvents='';
+             $('#sendMessage').modal('toggle');
+        })
+    </script>
+{% else%}
+    <script>
+        var countAutoProposal=Number('{{countAutoProposal}}');
+        document.getElementById('addMessageSubscription').innerHTML='{{messageSubscription['Autofill Proposal']['text']}}';
+        document.getElementById('subscription-message-header').innerHTML='{{messageSubscription['Autofill Proposal']['heading']}}';
+        var package_name='{{package_name}}';
+        function openMessage(){
+            document.getElementById('proposal').style.filter='blur(3px)';
+            document.getElementById('proposal').style.pointerEvents='none';
+            document.getElementsByClassName('subscription-message')[0].style.display="block";
+            document.getElementById('subscription-message-close').style.display="block";
+
+        }
+        $('#subscription-message-close').click(function(){
+             document.getElementById('proposal').style.filter='none';
+             document.getElementById('proposal').style.pointerEvents='';
+<!--             $('#proposal').modal('toggle');-->
+        })
+    </script>
+{% endif %}
+
 
 
 <script>
@@ -770,100 +812,200 @@ function accept_decline(message_id,campaign_id,status){
 // edit proposal
 function editProposal(message_id,campaign_id){
         if(confirm("Are you sure you want to EDIT this Proposal?")){
-            $( '#edit_proposal_channels').empty();
-            getAllMappedChannel_ids1('{{ glob.channel_id }}');
-            $('#edit_proposal_arrangements').empty();
-            $('#edit_proposal_kpis').empty();
-            $.ajax({
-                   type: "GET",
-                   url: '/getCampaignDetails/'+campaign_id,
-                   async:false,
-                   success: function(data)
-                   {
-                       <!--alert(data); // show response from the python script.-->
-                       jQuery.each(data.results, function(i, val) {
-                           var arrangements = val.arrangements.split(",");
-                           for(i=0;i<arrangements.length;i++){
-                               $("#edit_proposal_arrangements").append('<div class="custom-control custom-checkbox custom-control-inline"><input type="checkbox" id="'+arrangements[i]+'" class="edit_proposal_arrangements_checkbox filled-in custom-control-input custom-control-input" multiple name="edit_proposal_arrangements" value="'+arrangements[i]+'"><label class="custom-control-label campaignCheckbox" for="'+arrangements[i]+'"></label><span>'+arrangements[i]+'</span></div>');
-                           }
-                           var kpis = val.kpis.split(",");
-                           for(i=0;i<kpis.length;i++){
-                               $("#edit_proposal_kpis").append('<div class="custom-control custom-checkbox custom-control-inline"><input type="checkbox" id="'+kpis[i]+'" class="edit_proposal_kpis_checkbox filled-in custom-control-input custom-control-input"  multiple name="edit_proposal_kpis" value="'+kpis[i]+'"><label class="custom-control-label campaignCheckbox" for="'+kpis[i]+'"></label><span>'+kpis[i]+'</span></div>');
-                           }
-
-                       });
-
-                   }
-                 });
             $.ajax({
                    type: "GET",
                    url: '/getProposal/'+message_id+'/'+campaign_id,
-                   async:false,
                    success: function(data)
                    {
-                       <!--alert(data); // show response from the python script.-->
-                       jQuery.each(data.results, function(i, val) {
-                            <!--alert(val.campaign_name);-->
-                            $('#edit_proposal_id').val(val.proposal_id);
-                            $('#edit_proposal_campaign_name').empty();
-                            $('#edit_proposal_campaign_name').val(val.campaign_name);
-                            $('#edit_proposal_description').empty();
-                            $('#edit_proposal_description').val(val.proposal_description);
-                            $('#edit_proposal_from_date').empty();
-                            $('#edit_proposal_from_date').val(val.proposal_from_date);
-                            $('#edit_proposal_to_date').empty();
-                            $('#edit_proposal_to_date').val(val.proposal_to_date);
-                            <!--$('#edit_proposal_channels').empty();-->
-                            <!--$('#edit_proposal_channels').append(val.proposal_channels);-->
-                            <!--alert(val.proposal_channels);-->
-                            var channels = val.proposal_channels.split(',');
-                            for(i=0;i<channels.length;i++){
-                                $(".edit_proposal_channels_checkbox[name='edit_proposal_channels']").each(function(){
-                                    var proposal_channel_id = $(this).attr('id');
-                                    if(channels[i]==proposal_channel_id){
-                                        $(this).attr('checked',true);
-                                    }
-                                });
+                       var proposal_id=data.results[0].proposal_id;
+                       var finalData=data;
+                       $.ajax({
+                            type:'GET',
+                            url:'/get_auto_or_manual/'+proposal_id,
+                            success:function(data){
+                                var auto_or_manual=data['data'][0]['auto_or_manual'];
+                                if(auto_or_manual=='auto'){
+                                    console.log("auto")
+                                        $( '#edit_proposal_channels').empty();
+                                        getAllMappedChannel_ids1('{{ glob.channel_id }}');
+                                        $('#edit_proposal_arrangements').empty();
+                                        $('#edit_proposal_kpis').empty();
+                                        $.ajax({
+                                               type: "GET",
+                                               url: '/getCampaignDetails/'+campaign_id,
+                                               success: function(data)
+                                               {
+                                                   jQuery.each(data.results, function(i, val) {
+                                                       var arrangements = val.arrangements.split(",");
+                                                       for(i=0;i<arrangements.length;i++){
+                                                           $("#edit_proposal_arrangements").append('<div class="custom-control custom-checkbox custom-control-inline"><input type="checkbox" id="'+arrangements[i]+'" class="edit_proposal_arrangements_checkbox filled-in custom-control-input custom-control-input" multiple name="edit_proposal_arrangements" value="'+arrangements[i]+'"><label class="custom-control-label campaignCheckbox" for="'+arrangements[i]+'"></label><span>'+arrangements[i]+'</span></div>');
+                                                       }
+                                                       var kpis = val.kpis.split(",");
+                                                       for(i=0;i<kpis.length;i++){
+                                                           $("#edit_proposal_kpis").append('<div class="custom-control custom-checkbox custom-control-inline"><input type="checkbox" id="'+kpis[i]+'" class="edit_proposal_kpis_checkbox filled-in custom-control-input custom-control-input"  multiple name="edit_proposal_kpis" value="'+kpis[i]+'"><label class="custom-control-label campaignCheckbox" for="'+kpis[i]+'"></label><span>'+kpis[i]+'</span></div>');
+                                                       }
 
+                                                   });
+                                                   jQuery.each(finalData.results, function(i, val) {
+                                                    $('#edit_proposal_id').val(val.proposal_id);
+                                                    $('#edit_proposal_campaign_name').empty();
+                                                    $('#edit_proposal_campaign_name').val(val.campaign_name);
+                                                    $('#edit_proposal_description').empty();
+                                                    $('#edit_proposal_description').val(val.proposal_description);
+                                                    $('#edit_proposal_from_date').empty();
+                                                    $('#edit_proposal_from_date').val(val.proposal_from_date);
+                                                    $('#edit_proposal_to_date').empty();
+                                                    $('#edit_proposal_to_date').val(val.proposal_to_date);
+                                                    <!--$('#edit_proposal_channels').empty();-->
+                                                    <!--$('#edit_proposal_channels').append(val.proposal_channels);-->
+                                                    <!--alert(val.proposal_channels);-->
+                                                    var channels = val.proposal_channels.split(',');
+                                                    for(i=0;i<channels.length;i++){
+                                                        $(".edit_proposal_channels_checkbox[name='edit_proposal_channels']").each(function(){
+                                                            var proposal_channel_id = $(this).attr('id');
+                                                            if(channels[i]==proposal_channel_id){
+                                                                $(this).attr('checked',true);
+                                                            }
+                                                        });
+
+                                                    }
+                                                    var arrangements = val.proposal_arrangements.split(',');
+                                                    for(i=0;i<arrangements.length;i++){
+                                                        <!--alert(arrangements[i]);-->
+                                                        $(".edit_proposal_arrangements_checkbox").each(function(){
+                                                           if(arrangements[i]==$(this).attr('id')){
+                                                                $(this).attr('checked',true);
+                                                            }
+                                                        });
+
+                                                    }
+
+
+                                                    var kpis = val.proposal_kpis.split(',');
+                                                    for(i=0;i<kpis.length;i++){
+                                                        <!--alert(kpis[i]);-->
+                                                        $(".edit_proposal_kpis_checkbox").each(function(){
+                                                           if(kpis[i]==$(this).attr('id')){
+                                                                $(this).attr('checked',true);
+                                                            }
+                                                        });
+
+                                                    }
+
+                                                    <!--$('#edit_proposal_currency').empty();-->
+                                                    <!--$('#edit_proposal_price').val(val.currency);-->
+                                                    $('#edit_proposal_price').empty();
+                                                    $('#edit_proposal_price').val(val.proposal_price);
+                                                    $('#edit_proposal_target_url').empty();
+                                                    $('#edit_proposal_target_url').val(val.target_url);
+                                                    $('#edit_proposal_ref_link').empty();
+                                                    $('#edit_proposal_ref_link').val(val.ref_link);
+
+                                                    $('#editProposal').modal('show');
+
+                                               });
+
+                                               }
+                                             });
+
+                                }
+                                else{
+                                    console.log("manual")
+
+                                    $( '#edit_proposal_channels').empty();
+                                    getAllMappedChannel_ids1('{{ glob.channel_id }}');
+                                    $('#edit_proposal_arrangements').empty();
+                                    $('#edit_proposal_kpis').empty();
+                                    $.ajax({
+                                           type: "GET",
+                                           url: '/getCampaignDetails/'+campaign_id,
+                                           success: function(data)
+                                           {
+                                               var valData={
+                                                        arrangements:'Reviews,Unboxing/Gameplay,Shoutout/Mention,Giveaway,Video Intro/Outro,Tutorials,Banner placement/ URL placement,Sponsorship,Others(Explain in description)',
+                                                        kpis:'No of Clicks,New Users,Revenue Generated'
+                                                    }
+                                                   var arrangements = valData.arrangements.split(",");
+                                                   for(i=0;i<arrangements.length;i++){
+                                                       $("#edit_proposal_arrangements").append('<div class="custom-control custom-checkbox custom-control-inline"><input type="checkbox" id="'+arrangements[i]+'" class="edit_proposal_arrangements_checkbox filled-in custom-control-input custom-control-input" multiple name="edit_proposal_arrangements" value="'+arrangements[i]+'"><label class="custom-control-label campaignCheckbox" for="'+arrangements[i]+'"></label><span>'+arrangements[i]+'</span></div>');
+                                                   }
+                                                   var kpis = valData.kpis.split(",");
+                                                   for(i=0;i<kpis.length;i++){
+                                                       $("#edit_proposal_kpis").append('<div class="custom-control custom-checkbox custom-control-inline"><input type="checkbox" id="'+kpis[i]+'" class="edit_proposal_kpis_checkbox filled-in custom-control-input custom-control-input"  multiple name="edit_proposal_kpis" value="'+kpis[i]+'"><label class="custom-control-label campaignCheckbox" for="'+kpis[i]+'"></label><span>'+kpis[i]+'</span></div>');
+                                                   }
+
+
+                                               jQuery.each(finalData.results, function(i, val) {
+                                                $('#edit_proposal_id').val(val.proposal_id);
+                                                $('#edit_proposal_campaign_name').empty();
+                                                $('#edit_proposal_campaign_name').val(val.campaign_name);
+                                                $('#edit_proposal_description').empty();
+                                                $('#edit_proposal_description').val(val.proposal_description);
+                                                $('#edit_proposal_from_date').empty();
+                                                $('#edit_proposal_from_date').val(val.proposal_from_date);
+                                                $('#edit_proposal_to_date').empty();
+                                                $('#edit_proposal_to_date').val(val.proposal_to_date);
+                                                <!--$('#edit_proposal_channels').empty();-->
+                                                <!--$('#edit_proposal_channels').append(val.proposal_channels);-->
+                                                <!--alert(val.proposal_channels);-->
+                                                var channels = val.proposal_channels.split(',');
+                                                for(i=0;i<channels.length;i++){
+                                                    $(".edit_proposal_channels_checkbox[name='edit_proposal_channels']").each(function(){
+                                                        var proposal_channel_id = $(this).attr('id');
+                                                        if(channels[i]==proposal_channel_id){
+                                                            $(this).attr('checked',true);
+                                                        }
+                                                    });
+
+                                                }
+                                                var arrangements = val.proposal_arrangements.split(',');
+                                                for(i=0;i<arrangements.length;i++){
+                                                    <!--alert(arrangements[i]);-->
+                                                    $(".edit_proposal_arrangements_checkbox").each(function(){
+                                                       if(arrangements[i]==$(this).attr('id')){
+                                                            $(this).attr('checked',true);
+                                                        }
+                                                    });
+
+                                                }
+
+
+                                                var kpis = val.proposal_kpis.split(',');
+                                                for(i=0;i<kpis.length;i++){
+                                                    <!--alert(kpis[i]);-->
+                                                    $(".edit_proposal_kpis_checkbox").each(function(){
+                                                       if(kpis[i]==$(this).attr('id')){
+                                                            $(this).attr('checked',true);
+                                                        }
+                                                    });
+
+                                                }
+
+                                                <!--$('#edit_proposal_currency').empty();-->
+                                                <!--$('#edit_proposal_price').val(val.currency);-->
+                                                $('#edit_proposal_price').empty();
+                                                $('#edit_proposal_price').val(val.proposal_price);
+                                                $('#edit_proposal_target_url').empty();
+                                                $('#edit_proposal_target_url').val(val.target_url);
+                                                $('#edit_proposal_ref_link').empty();
+                                                $('#edit_proposal_ref_link').val(val.ref_link);
+
+                                                $('#editProposal').modal('show');
+
+                                           });
+
+                                           }
+                                         });
+                                }
                             }
-                            var arrangements = val.proposal_arrangements.split(',');
-                            for(i=0;i<arrangements.length;i++){
-                                <!--alert(arrangements[i]);-->
-                                $(".edit_proposal_arrangements_checkbox").each(function(){
-                                   if(arrangements[i]==$(this).attr('id')){
-                                        $(this).attr('checked',true);
-                                    }
-                                });
-
-                            }
+                       })
 
 
-                            var kpis = val.proposal_kpis.split(',');
-                            for(i=0;i<kpis.length;i++){
-                                <!--alert(kpis[i]);-->
-                                $(".edit_proposal_kpis_checkbox").each(function(){
-                                   if(kpis[i]==$(this).attr('id')){
-                                        $(this).attr('checked',true);
-                                    }
-                                });
 
-                            }
-
-                            <!--$('#edit_proposal_currency').empty();-->
-                            <!--$('#edit_proposal_price').val(val.currency);-->
-                            $('#edit_proposal_price').empty();
-                            $('#edit_proposal_price').val(val.proposal_price);
-                            $('#edit_proposal_target_url').empty();
-                            $('#edit_proposal_target_url').val(val.target_url);
-                            $('#edit_proposal_ref_link').empty();
-                            $('#edit_proposal_ref_link').val(val.ref_link);
-
-                            $('#editProposal').modal('show');
-
-                       });
 
                    }
                  });
+
         }
         else {
             return false;
@@ -938,6 +1080,45 @@ function getAllMappedChannel_ids(channel_id){
                             if(val.mapped_insta_channel_id){
 
                                 $("#proposal_channels").append('<div class="custom-control custom-checkbox custom-control-inline"><input type="checkbox" checked id="instagram@'+val.mapped_insta_channel_id+'" class="proposal_channels_checkbox filled-in custom-control-input custom-control-input" multiple name="proposal_channels" value="instagram@'+val.mapped_insta_channel_id+'"><label class="custom-control-label campaignCheckbox" for="instagram@'+val.mapped_insta_channel_id+'"></label><span data-toggle="tooltip" title="'+val.insta_url+'"><a target="_blank" href="'+val.insta_url+'" class="fa fa-instagram"></a></span></div>');
+
+                            }
+
+                    });
+                    }
+                    else{
+                        alert('no channels mapped');
+                    }
+               }
+             });
+
+}
+
+function getAllMappedChannel_ids_unchecked(channel_id){
+    $.ajax({
+               type: "GET",
+               url: '/getMappedChannels/'+channel_id,
+               contentType: 'application/json;charset=UTF-8',
+               success: function(data)
+               {
+                   $( '#proposal_channels').empty();
+                   if (data.results.length != 0){
+                   jQuery.each(data.results, function(i, val) {
+                        <!--alert(val.mapped_youtube_channel_id);-->
+                        <!--alert(val.mapped_twitter_channel_id);-->
+                        <!--alert(val.mapped_insta_channel_id);-->
+                            if(val.mapped_youtube_channel_id){
+
+                                $("#proposal_channels").append('<div class="custom-control custom-checkbox custom-control-inline"><input type="checkbox"  id="youtube@'+val.mapped_youtube_channel_id+'" class="proposal_channels_checkbox filled-in custom-control-input custom-control-input" multiple name="proposal_channels" value="youtube@'+val.mapped_youtube_channel_id+'"><label class="custom-control-label campaignCheckbox" for="youtube@'+val.mapped_youtube_channel_id+'"></label><span data-toggle="tooltip" title="'+val.channel_id+'"><a target="_blank" href="https://www.youtube.com/channel/'+val.mapped_youtube_channel_id+'" class="fa fa-youtube red"></a></span></div>');
+
+                            }
+                            if(val.mapped_twitter_channel_id){
+
+                                $("#proposal_channels").append('<div class="custom-control custom-checkbox custom-control-inline"><input type="checkbox"  id="twitter@'+val.mapped_twitter_channel_id+'" class="proposal_channels_checkbox filled-in custom-control-input custom-control-input" multiple name="proposal_channels" value="twitter@'+val.mapped_twitter_channel_id+'"><label class="custom-control-label campaignCheckbox" for="twitter@'+val.mapped_twitter_channel_id+'"></label><span data-toggle="tooltip" title="'+val.twitter_url+'"><a target="_blank" href="'+val.twitter_url+'" class="fa fa-twitter"></a></span></div>');
+
+                            }
+                            if(val.mapped_insta_channel_id){
+
+                                $("#proposal_channels").append('<div class="custom-control custom-checkbox custom-control-inline"><input type="checkbox"  id="instagram@'+val.mapped_insta_channel_id+'" class="proposal_channels_checkbox filled-in custom-control-input custom-control-input" multiple name="proposal_channels" value="instagram@'+val.mapped_insta_channel_id+'"><label class="custom-control-label campaignCheckbox" for="instagram@'+val.mapped_insta_channel_id+'"></label><span data-toggle="tooltip" title="'+val.insta_url+'"><a target="_blank" href="'+val.insta_url+'" class="fa fa-instagram"></a></span></div>');
 
                             }
 

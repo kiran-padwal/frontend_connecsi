@@ -1,0 +1,632 @@
+{% extends 'admin_layout.html' %}
+{{ super() }}
+{% block body %}
+
+<div class="container" style="padding:0;">
+    <div class="row">
+        <div id="section-1" class="col-md-6 order-md-1 col-xs-12 order-2">
+            <div class="card">
+                <div class="card-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                <h4 class="order-heading">Your Order</h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="billing-area">
+                                    <div class="container">
+                                        {% if data['package_name'] %}
+                                        <div class="row">
+                                            <div class="col-12" id="plan-area">
+                                                <div class="row">
+                                                    <div class="col-6 text-left">
+                                                        <h6 id="plan-name">{{data['package_name']}} Plan</h6>
+                                                    </div>
+                                                    <div class="col-6 text-right">
+                                                        <h6 id="plan-price">€ {{'%0.2f'| format(amount/100|float)}}</h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        <div class="row">
+                                            <div class="col-12" id="addOn-area">
+                                                <div class="row">
+                                                    <div class="col-6 text-left">
+                                                        <h6 id="addOn-name">Add-ons</h6>
+                                                    </div>
+                                                    <div class="col-6 text-right">
+                                                        <h6 id="addOn-price">€ 0</h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12" id="vat-area">
+                                                <div class="row">
+                                                    <div class="col-6 text-left">
+                                                        <h6 id="vat-name">Taxes(VAT)</h6>
+                                                    </div>
+                                                    <div class="col-6 text-right">
+                                                        <h6 id="vat-price">€ 0</h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12" id="total-area" style="border-top:1px solid lightgray;border-bottom:1px solid lightgray;">
+                                                <div class="row">
+                                                    <div class="col-6 text-left">
+                                                        <h4 id="total-name">TOTAL</h4>
+                                                    </div>
+                                                    <div class="col-6 text-right">
+                                                        <h4 id="total-price">€ 0</h4>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="accept-terms custom-control custom-checkbox custom-control-inline text-left">
+                                                <input type="checkbox" id="loginCheckbox" class="filled-in custom-control-input" required="">
+                                                <label class="custom-control-label loginCheckboxLabel" for="loginCheckbox">
+                                                    I have read and agreed to the <a href="https://www.connecsi.com/termsconditions/" target="_blank" class="color1 break">Terms &amp; Conditions</a>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12 text-right" id="buy-now-button">
+                                                <script src="https://checkout.stripe.com/checkout.js"></script>
+                                                    <form id="myForm" action="/pay" method="POST">
+                                                        <input type="hidden" id="stripeToken" name="stripeToken" />
+                                                        <input type="hidden" id="stripeEmail" name="stripeEmail" />
+                                                        <input id="send-amount" type="hidden" name="amount" value="{{amount}}">
+                                                        <input id="send-data" type="hidden" name="data" value="{{data}}">
+                                                        <input type="hidden" id="add-on-data" name="data2" value="{}">
+                                                        <button class="upgrade-plan-button" id="buy-button" disabled>BUY NOW</button>
+                                                    </form>
+
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-top:2rem;">
+                                            <div class="col-12 text-left">
+                                                <div style="float:left;margin-top: -5px;margin-right: 3px;">
+                                                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                                </div>
+                                                <div>
+                                                    <h6 id="message-1" style="word-wrap:break-word;">Your current plan will end on {{date}}, we will send you a reminder for renewal.</h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-top:1rem;margin-bottom:2rem;">
+                                            <div class="col-12 text-left" >
+                                                <div style="float:left;margin-top: -5px;margin-right: 3px;">
+                                                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                                </div>
+                                                <div>
+                                                    <h6 id="message-2" style="word-wrap:break-word;">You may cancel or switch to another plan at the time of renewal.</h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="section-2" class="col-md-6 order-md-2 col-xs-12 order-1">
+            <div class="card">
+                <div class="card-body">
+                    <div class="container" id="add-on-popup" style="">
+                        <div class="container" style="padding:0;">
+                            <div class="row heading-addons" data-toggle="collapse" href="#addOn-collapse" role="button" aria-expanded="true" aria-controls="addOn-collapse" onclick="changeArrow()">
+                                <div class="col-12 text-center" style="display:inline-flex;">
+                                    <div style="width:100%">
+                                        <h4 style="margin:0;"><b>Add Ons</b><span style="font-size:1rem;margin-left: 5px;">(Optional)</span></h4>
+                                    </div>
+                                    <div>
+                                        <i id="open-close-add-on" class="fa fa-angle-down" style="font-size:2rem;"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="collapse in" id="addOn-collapse">
+                                <form action="/payment" method="POST" name="addOns_take" id="addOnsForm">
+                                    <input type="hidden" name="package_name" value="Custom">
+                                <div class="row">
+                                    <div class="col-4">
+                                        <h6>
+                                            <b>Add Favorites</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    {% if subValue['Add to favorites']==1 %}
+                                        <div class="col-3">
+
+                                            <div class="quantity">
+                                                <input type="hidden" name="feature1" value="Add to favorites">
+                                                <input name="count1" id="count1" type="number" min="0" max="1000" step="25" value="0">
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+
+                                        </div>
+                                    {% else %}
+                                        <div class="col-3">
+
+                                            <div class="quantity">
+                                                <input name="count1" id="count1" type="number" min="0" max="1000" step="25" value="0" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+                                            <h6>Not Available in this Package</h6>
+                                        </div>
+                                    {% endif %}
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-4">
+                                        <h6>
+                                            <b>Export Lists</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+
+
+                                    {% if subValue['Export Lists']==1 %}
+                                        <div class="col-3">
+
+                                            <div class="quantity">
+                                                <input type="hidden" name="feature1" value="Export Lists">
+                                                <input name="count2" id="count2" type="number" min="0" max="1000" step="25" value="0">
+                                            </div>
+                                        </div>
+                                        <div class="col-5"></div>
+                                    {% else %}
+                                        <div class="col-3">
+                                            <div class="quantity">
+                                                <input name="count2" id="count2" type="number" min="0" max="1000" step="25" value="0" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+                                            <h6>Not Available in this Package</h6>
+                                        </div>
+                                    {% endif %}
+
+
+
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-4">
+                                        <h6>
+                                            <b>Post Classified Ads</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    {% if subValue['Classified Ads Posting']==1 %}
+                                        <div class="col-3">
+                                            <div class="quantity">
+                                                <input type="hidden" name="feature3" value="Classified Ads Posting">
+                                                <input name="count3" id="count3" type="number" min="0" max="1000" step="5" value="0">
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+
+                                        </div>
+                                    {% else %}
+                                        <div class="col-3">
+                                            <div class="quantity">
+                                                <input name="count3" id="count3" type="number" min="0" max="1000" step="5" value="0" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+                                            <h6>Not Available in this Package</h6>
+                                        </div>
+                                    {% endif %}
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-4">
+                                        <h6>
+                                            <b>Set Alerts</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    {% if subValue['Alerts']==1 %}
+                                        <div class="col-3">
+                                            <div class="quantity">
+                                                <input type="hidden" name="feature4" value="Alerts">
+                                                <input name="count4"id="count4" type="number" min="0" max="1000" step="10" value="0">
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+
+                                        </div>
+                                    {% else %}
+                                        <div class="col-3">
+                                            <div class="quantity">
+                                                <input name="count4" id="count4" type="number" min="0" max="1000" step="10" value="0" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+                                            <h6>Not Available in this Package</h6>
+                                        </div>
+                                    {% endif %}
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-4">
+                                        <h6>
+                                            <b>Offers Reply</b>
+
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+
+
+                                    {% if subValue['Custom Offers Reply']==1 %}
+                                        <div class="col-3">
+                                            <div class="quantity">
+                                                <input type="hidden" name="feature5" value="Custom Offers Reply">
+                                                <input  name="count5" id="count5" type="number" min="0" max="1000" step="10" value="0">
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+
+                                        </div>
+                                    {% else %}
+                                        <div class="col-3">
+                                            <div class="quantity">
+                                                <input  name="count5" id="count5" type="number" min="0" max="1000" step="10" value="0" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+                                            <h6>Not Available in this Package</h6>
+                                        </div>
+                                    {% endif %}
+
+
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-4">
+                                        <h6>
+                                            <b>Messages</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+                                    {% if subValue['Messages']==1 %}
+                                        <div class="col-3">
+                                            <div class="quantity">
+                                                <input type="hidden" name="feature6" value="Messages">
+                                                <input name="count6" id="count6" type="number" min="0" max="1000" step="10" value="0">
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+
+                                        </div>
+                                    {% else %}
+                                        <div class="col-3">
+                                            <div class="quantity">
+                                                <input name="count6" id="count6" type="number" min="0" max="1000" step="10" value="0" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+                                            <h6>Not Available in this Package</h6>
+                                        </div>
+                                    {% endif %}
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-4">
+                                        <h6>
+                                            <b>Campaigns</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+
+                                    {% if subValue['Create Campaign']==1 %}
+                                        <div class="col-3">
+                                            <div class="quantity">
+                                                <input type="hidden" name="feature7" value="Create Campaign">
+                                                <input name="count7" id="count7" type="number" min="0" max="1000" step="5" value="0">
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+
+                                        </div>
+                                    {% else %}
+                                        <div class="col-3">
+                                            <div class="quantity">
+                                                <input name="count7" id="count7" type="number" min="0" max="1000" step="5" value="0" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+                                            <h6>Not Available in this Package</h6>
+                                        </div>
+                                    {% endif %}
+
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-4">
+                                        <h6>
+                                            <b>Proposals</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+
+                                    {% if subValue['Autofill Proposal']==1 %}
+                                        <div class="col-3">
+                                            <div class="quantity">
+                                                <input type="hidden" name="feature8" value="Autofill Proposal">
+                                                <input name="count8" id="count8" type="number" min="0" max="1000" step="5" value="0">
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+
+                                        </div>
+                                    {% else %}
+                                        <div class="col-3">
+                                            <div class="quantity">
+                                                <input name="count8" id="count8" type="number" min="0" max="1000" step="5" value="0" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+                                            <h6>Not Available in this Package</h6>
+                                        </div>
+                                    {% endif %}
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-4">
+                                        <h6>
+                                            <b>Team Members</b>
+                                            <i class="my-question-mark fa fa-question-circle" aria-hidden="true"></i>
+                                        </h6>
+                                    </div>
+
+                                    {% if subValue['Team Members']==1 %}
+                                        <div class="col-3">
+                                            <div class="quantity">
+                                                <input type="hidden" name="feature9" value="Team Members">
+                                                <input name="count9" id="count9" type="number" min="0" max="1000" step="1" value="0">
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+
+                                        </div>
+                                    {% else %}
+                                        <div class="col-3">
+                                            <div class="quantity">
+                                                <input name="count9" id="count9" type="number" min="0" max="1000" step="1" value="0" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+                                            <h6>Not Available in this Package</h6>
+                                        </div>
+                                    {% endif %}
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-4">
+                                        <h6 style="font-size:1.2rem;font-weight:300;">
+                                            <b>Total</b>
+                                        </h6>
+                                    </div>
+                                    <div class="col-3">
+                                        <input  id="price1" type="hidden"  name="price1"  value="0">
+                                        <h6 id="totalPrice" style="margin:0;font-size:1rem;">€ 0</h6>
+                                        <h6 style="font-size:0.6rem;">Monthly</h6>
+                                    </div>
+                                    <div class="col-5">
+
+                                    </div>
+                                </div>
+                            </form>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--    <form action="{{ url_for('pay') }}" method="POST">-->
+<!--                        <input id="amount-paid" type="hidden" name="amount" value="{{amount}}">-->
+<!--                        <input type="hidden" name="data" value="{{data}}">-->
+<!--                        <script-->
+<!--                                src="https://checkout.stripe.com/checkout.js" class="stripe-button"-->
+<!--                                data-key="{{ pub_key }}"-->
+<!--                                data-amount={{amount}}-->
+<!--                                data-name="Connecsi"-->
+<!--                                data-description="Widget"-->
+<!--                                data-image="./static/img/logo_Only_1024x768_color.png"-->
+<!--                                data-locale="auto">-->
+<!--                        </script>-->
+<!--                    </form>-->
+<script>
+if(window.screen.width<400){
+    console.log("do it")
+    $('#open-close-add-on').removeClass('fa-angle-down');
+    $('#open-close-add-on').addClass('fa-angle-right');
+    $('#addOn-collapse').removeClass('in');
+}
+var addOnsData={
+    data2:[]
+}
+var handler = StripeCheckout.configure({
+    key: '{{pub_key}}',
+    image: './static/img/logo_Only_1024x768_color.png',
+    locale: 'auto',
+    token: function (token) {
+        // Use the token to create the charge with a server-side script.
+        // You can access the token ID with `token.id`
+        $("#stripeToken").val(token.id);
+        $("#stripeEmail").val(token.email);
+        $("#myForm").submit();
+    }
+});
+var newAmount=0;
+$('#buy-button').on('click', function (e) {
+    // Open Checkout with further options
+    if(newAmount=="0"){
+
+    }
+    else{
+        addOnPrice=$('#addOn-price')[0].innerHTML;
+        addOnPrice=parseFloat(addOnPrice.split(' ')[1]);
+        if(addOnPrice>0){
+            var elements = document.getElementById("addOnsForm").elements;
+            var obj ={};
+            for(var i = 0 ; i < elements.length ; i++){
+                console.log(elements.item(i).name,elements.item(i).value)
+                if(elements.item(i).name.includes('feature')||elements.item(i).value>0){
+                    var item = elements.item(i);
+                    obj[item.name] = item.value;
+                }
+
+            }
+            console.log(obj);
+            var size=0;
+            for(var i=1;i<=9;i++){
+                if(obj['count'+i]){
+                    if(obj['feature'+i]){
+                        size++;
+                    }
+                    else{
+                        delete obj['count'+i];
+                    }
+                }
+                if(obj['feature'+i]){
+                    if(obj['count'+i]){
+                    }
+                    else{
+                        delete obj['feature'+i];
+                    }
+                }
+
+            }
+            obj['size']=size;
+            obj['package_name']='Custom';
+            console.log(obj);
+            $('#add-on-data')[0].value=JSON.stringify(obj);
+            console.log($('#add-on-data')[0].value)
+            handler.open({
+                name: 'Connecsi',
+                description: 'Payment',
+                amount: newAmount
+            });
+            e.preventDefault();
+
+        }
+        else{
+
+            handler.open({
+                name: 'Connecsi',
+                description: 'Payment',
+                amount: newAmount
+            });
+            e.preventDefault();
+
+        }
+
+    }
+});
+
+// Close Checkout on page navigation
+$(window).on('popstate', function () {
+    handler.close();
+});
+</script>
+<script>
+    function changeStripe(v){
+        newAmount=v;
+        $('#send-amount')[0].value=v;
+    }
+    function calculateVat(){
+        console.log("times");
+        if($('#plan-price')[0]!=undefined){
+            planPrice=$('#plan-price')[0].innerHTML;
+            planPrice=parseFloat(planPrice.split(' ')[1])
+        }
+        else{
+            planPrice=0;
+        }
+        if($('#addOn-price')[0]!=undefined){
+            addOnPrice=$('#addOn-price')[0].innerHTML;
+            addOnPrice=parseFloat(addOnPrice.split(' ')[1])
+        }
+        else{
+            addOnPrice=0;
+        }
+        if($('#vat-price')[0]!=undefined){
+            vatPrice=$('#vat-price')[0].innerHTML;
+            vatPrice=parseFloat(vatPrice.split(' ')[1])
+        }
+        else{
+            vatPrice=0;
+        }
+
+        sum=addOnPrice+planPrice;
+        vatcal=(sum*18)/100;
+        console.log(vatcal);
+        totalSum=vatcal+addOnPrice+planPrice;
+        totalSum=totalSum.toFixed(2);
+        vatcal=vatcal.toFixed(2);
+        $('#vat-price')[0].innerHTML='€'+' '+vatcal;
+        $('#total-price')[0].innerHTML='€'+' '+totalSum;
+        $('#price1')[0].value=addOnPrice;
+        changeStripe(totalSum*100);
+    }
+    calculateVat();
+    function changeArrow(){
+
+
+        var dat=$('#addOn-collapse')[0].classList.value;
+        if(dat=="collapse in"){
+            $('#open-close-add-on').removeClass('fa-angle-down');
+            $('#open-close-add-on').addClass('fa-angle-right');
+        }
+        else if(dat=="collapse"){
+            $('#open-close-add-on').removeClass('fa-angle-right');
+            $('#open-close-add-on').addClass('fa-angle-down');
+        }
+
+
+    }
+    $(document).ready(function(){
+        $(document).on('change', 'input[type="checkbox"]', function(e){
+            totalPrice=$('#total-price')[0].innerHTML;
+            totalPrice=parseFloat(totalPrice.split(' ')[1]);
+            console.log("change",e.target.checked);
+            if(e.target.checked){
+                if(totalPrice>0){
+                    $('#buy-button')[0].disabled=false;
+                }
+                else{
+                    e.target.checked=false;
+                }
+
+
+            }
+            else{
+                $('#buy-button')[0].disabled=true;
+            }
+
+        });
+
+    });
+</script>
+{% endblock %}

@@ -2,30 +2,64 @@
 {{ super() }}
 {% block body %}
 
-<div class="container">
-      <div class="jumbotron">
-        <h1 class="display-3">Thank You</h1>
-        <p class="lead">You will receive a link to The Product in your email.</p>
+<div class="container text-center">
+      <div class="card">
+          <div class="card-body">
+              <div class="row">
+                  <div class="col-12">
+                      <h4 style="color:#9370DB;text-align:center;margin-top:1rem;font-weight:500;">Congratulations!</h4>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-12">
+                      <h6>Your Order is successfully completed. You are now subscribed to the {{package_buy}} Plan (Ending on {{expiryDateOfPackage}}).</h6>
+                  </div>
+              </div>
+          </div>
       </div>
 
-      <footer class="footer">
-        <p>&copy; Connecsi 2019</p>
+</div>
+<!--<script>-->
+<!--    var value='{{data}}';-->
+<!--    var value2='{{data2}}';-->
+<!--    var readyString=value.replace(/&#39;/g,'"');-->
+<!--    var readyString2=value2.replace(/&#34;/g,'"');-->
+<!--    var subscriptionData=JSON.parse(readyString);-->
+<!--    var subscriptionData2=JSON.parse(readyString2);-->
+<!--    if(subscriptionData['package_name']!=undefined){-->
+<!--        $.ajax({-->
+<!--            type:'POST',-->
+<!--            url:'/updateBrandSubscriptionPackageDetails',-->
+<!--            data:subscriptionData,-->
+<!--            success:function(data){-->
+<!--                console.log("added plan")-->
+<!--                if(subscriptionData2['package_name']!=undefined){-->
+<!--                    console.log("second")-->
+<!--                    $.ajax({-->
+<!--                        type:'POST',-->
+<!--                        url:'/updateBrandSubscriptionPackageDetails',-->
+<!--                        data:subscriptionData2,-->
+<!--                        success:function(data){-->
+<!--                            console.log("added custom")-->
+<!--                        }-->
+<!--                    })-->
+<!--                }-->
+<!--            }-->
+<!--        })-->
+<!--    }-->
+<!--    else{-->
+<!--        if(subscriptionData2['package_name']!=undefined){-->
+<!--            console.log("second")-->
+<!--            $.ajax({-->
+<!--                type:'POST',-->
+<!--                url:'/updateBrandSubscriptionPackageDetails',-->
+<!--                data:subscriptionData2,-->
+<!--                success:function(data){-->
+<!--                    console.log("added custom")-->
+<!--                }-->
+<!--            })-->
+<!--        }-->
+<!--    }-->
 
-      </footer>
-
-    </div> <!-- /container -->
-
-    <script>
-        var value='{{data}}';
-        var readyString=value.replace(/&#39;/g,'"');
-        var subscriptionData=JSON.parse(readyString);
-        $.ajax({
-            type:'POST',
-            url:'/updateBrandSubscriptionPackageDetails',
-            data:subscriptionData,
-            success:function(data){
-                console.log(data)
-            }
-        })
-    </script>
+<!--</script>-->
 {% endblock %}
