@@ -2390,3 +2390,19 @@ input[type=number]
     background-color:lightgray;
     color:black;
 }
+
+.button1 {
+  border: none;
+  color: white;
+  padding: 0.5rem 1rem ;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 0.9rem;
+  margin: 4px 2px;
+  cursor: pointer;
+  background-color: white;
+  color: black;
+  border: 2px solid #9370DB;
+  border-radius:4px;
+}

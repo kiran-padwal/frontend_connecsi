@@ -392,9 +392,18 @@ def admin():
         # campaignObj = templates.campaign.campaign.Campaign(user_id=user_id)
         view_campaign_data = campaignObj.get_all_campaigns()
         view_campaign_data_list = []
+        active_campaigns = 0
+        completed_campaigns = 0
+        new_campaigns = 0
         for item in view_campaign_data['data']:
             if item['deleted'] != 'true':
                 view_campaign_data_list.append(item)
+            if item['campaign_status']=='Finished':
+                completed_campaigns = completed_campaigns+1
+            if item['campaign_status']=='Active':
+                active_campaigns = active_campaigns+1
+            if item['campaign_status']=='New':
+                new_campaigns = new_campaigns+1
         # print(view_campaign_data_list)
         for item1 in view_campaign_data_list:
             campaign_id = item1['campaign_id']
@@ -408,7 +417,8 @@ def admin():
                 item1.update({'status': ''})
                 pass
         print('final campaign list with status = ',view_campaign_data_list)
-        return render_template('index.html', title=title, top10Inf=top10Inf)
+        return render_template('index.html', title=title, top10Inf=top10Inf,new_campaigns=new_campaigns,
+                               completed_campaigns=completed_campaigns,active_campaigns=active_campaigns)
     except Exception as e:
         print(e)
 
@@ -1252,6 +1262,8 @@ def pay():
               package_buy = subValue1['data'][0]['package_name']
               expiryDateOfPackage = subValue1['data'][0]['p_expiry_date']
               expiryDateOfPackage = datetime.datetime.utcfromtimestamp(int(expiryDateOfPackage)).strftime('%d/%m/%Y')
+              if(package_buy=='Basic'):
+                  package_buy='Starter'
               return render_template('payment/thanks.html',package_buy=package_buy,expiryDateOfPackage=expiryDateOfPackage)
        except Exception as e:
            return render_template('payment/error.html')
@@ -1260,7 +1272,6 @@ def pay():
     else:
 
         return render_template('payment/error.html')
-
 
 @connecsiApp.route('/viewMyPayments')
 @is_logged_in
@@ -4304,14 +4315,36 @@ def admin_inf():
     # print('channel details = ', channel_data)
     return render_template('index_inf.html',title=title)
 
+# @connecsiApp.route('/inf_profile')
+# @is_logged_in
+# def inf_profile():
+#     user_id = session['user_id']
+#     response = requests.get(url=base_url+'Influencer/getDetailsByUserId/'+str(user_id))
+#     profile_data = response.json()
+#     print(profile_data)
+#     return render_template('user/inf_profile.html',data=profile_data)
+
+
 @connecsiApp.route('/inf_profile')
 @is_logged_in
 def inf_profile():
     user_id = session['user_id']
+    print(user_id)
+    form_filter={}
     response = requests.get(url=base_url+'Influencer/getDetailsByUserId/'+str(user_id))
+    response2 = requests.get(url=base_url + 'Youtube/getChannelDetailsByChannelId/' + str(user_id))
+    data2=response2.json()
+    print('new',data2['data'][0])
     profile_data = response.json()
+    profile_data['data'][0]['subscriberCount_gained']=data2['data'][0]['subscriberCount_gained']
+    profile_data['data'][0]['total_100video_comments'] = data2['data'][0]['total_100video_comments']
+    profile_data['data'][0]['total_100video_shares'] = data2['data'][0]['total_100video_shares']
+    profile_data['data'][0]['total_100video_likes'] = data2['data'][0]['total_100video_likes']
+    profile_data['data'][0]['total_100video_views'] = data2['data'][0]['total_100video_views']
+    profile_data['data'][0]['total_videos'] = 100
+    form_filter['channel']='Youtube'
     print(profile_data)
-    return render_template('user/inf_profile.html',data=profile_data)
+    return render_template('user/inf_profile.html',data=profile_data,form_filters=form_filter)
 
 @connecsiApp.route('/inf_editProfile')
 @is_logged_in
