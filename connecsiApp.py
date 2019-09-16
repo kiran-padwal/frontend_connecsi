@@ -5171,6 +5171,8 @@ def get_auto_or_manual(channel_id):
 @connecsiApp.route('/upgrade')
 @is_logged_in
 def upgrade():
+    global subData
+    subData = {}
     subValue=getSubscriptionValues(str(session['user_id']))
     subscriptionName=subValue['data'][0]['base_package']
     expiryDateOfPackage=subValue['data'][0]['p_expiry_date']
