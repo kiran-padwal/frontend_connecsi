@@ -1102,6 +1102,7 @@ def saveFundsBrands():
 @is_logged_in
 def payment():
     global subData
+    subData = {}
     print(request.form.to_dict())
     data=request.form.to_dict()
     print(data)
@@ -1129,6 +1130,7 @@ def payment():
             'data': data,
             'pub_key': pub_key
         }
+        session['subData'] = subData
     else:
         pub_key = 'pk_test_KCfQnVzaUJoSOE8Yk3B8qvGM00rakAIYnH'
         secret_key = 'sk_test_4YZbWgXJul77g819JY5REXLL005jjbeXaG'
@@ -1139,12 +1141,13 @@ def payment():
             'data': data,
             'pub_key': pub_key
         }
-
+        session['subData'] = subData
     return jsonify({'response':1})
 
 @connecsiApp.route('/checkout',methods=['GET'])
 @is_logged_in
 def payment1():
+    subData = session['subData']
     print("hello ji",subData['data'])
     subValue1 = getSubscriptionValues(str(session['user_id']))
     expiryDateOfPackage=subValue1['data'][0]['p_expiry_date']
@@ -5171,8 +5174,6 @@ def get_auto_or_manual(channel_id):
 @connecsiApp.route('/upgrade')
 @is_logged_in
 def upgrade():
-    global subData
-    subData = {}
     subValue=getSubscriptionValues(str(session['user_id']))
     subscriptionName=subValue['data'][0]['base_package']
     expiryDateOfPackage=subValue['data'][0]['p_expiry_date']
