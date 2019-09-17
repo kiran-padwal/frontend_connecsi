@@ -417,8 +417,16 @@ def admin():
                 item1.update({'status': ''})
                 pass
         print('final campaign list with status = ',view_campaign_data_list)
+
+        try:
+            res_fav_list = requests.get(url=base_url+'Brand/getInfluencerFavListNew/'+str(user_id))
+            favListJson = res_fav_list.json()
+            favListCount = len(favListJson['data'])
+        except:
+            pass
+            favListCount = 0
         return render_template('index.html', title=title, top10Inf=top10Inf,new_campaigns=new_campaigns,
-                               completed_campaigns=completed_campaigns,active_campaigns=active_campaigns)
+                               completed_campaigns=completed_campaigns,active_campaigns=active_campaigns,favListCount=favListCount)
     except Exception as e:
         print(e)
 
@@ -5022,6 +5030,7 @@ def getInstgramUserFromInstagramApi(instagram_username):
         url = base_url + 'Insta/getInstagramChannel/' + instagram_username
         response = requests.get(url=url)
         response_json = response.json()
+        print(response_json)
         return jsonify(results=response_json)
     except Exception as e:
         print(e)

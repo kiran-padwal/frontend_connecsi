@@ -1,6 +1,8 @@
 /**
  * Created by ashishtyagi9622 on 17/6/19.
  */
+document.getElementsByClassName('message')[0].style.display='block';
+document.getElementsByClassName('errorMessage')[0].childNodes[1].innerText='Under Maintenance';
 
 function abbrNum(number, decPlaces) {
     // 2 decimal places => 100, 3 => 1000, etc
@@ -130,8 +132,8 @@ $('#channel_name').on('change',function(){
         document.getElementsByClassName('errorMessage')[0].childNodes[1].innerText='Coming Soon!';
     }
     else{
-        document.getElementsByClassName('message')[0].style.display='none';
-        document.getElementsByClassName('errorMessage')[0].childNodes[1].innerText='';
+        document.getElementsByClassName('message')[0].style.display='block';
+        document.getElementsByClassName('errorMessage')[0].childNodes[1].innerText='Under Maintenance';
     }
 });
 
