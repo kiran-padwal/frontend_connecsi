@@ -5889,7 +5889,15 @@ def saveClassifiedAds():
     response_json = response.json()
     return jsonify(response_json)
 #################################################################################################################
-
+@connecsiApp.route('/gettingGraphData/<string:channel_id>',methods=['GET'])
+@is_logged_in
+def gettingGraphData(channel_id):
+    data=request.form.to_dict()
+    print(data)
+    url = base_url + 'Youtube/getAllVideoDetailsByChannelId/'+channel_id
+    response=requests.get(url=url,json=data)
+    response_json = response.json()
+    return jsonify(response_json)
 
 
 
