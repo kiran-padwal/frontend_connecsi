@@ -1,9 +1,6 @@
 /**
  * Created by ashishtyagi9622 on 17/6/19.
  */
-document.getElementsByClassName('message')[0].style.display='block';
-document.getElementsByClassName('errorMessage')[0].childNodes[1].innerText='Under Maintenance';
-
 function abbrNum(number, decPlaces) {
     // 2 decimal places => 100, 3 => 1000, etc
     decPlaces = Math.pow(10,decPlaces);
@@ -126,12 +123,13 @@ $(document).ready(function(){
 //})(jQuery);
 $('#channel_name').on('change',function(){
     var value=$('#channel_name')[0].value;
-    if(value=='youtube'||value=='twitter'){
+    if(value=='twitter'){
         document.getElementsByClassName('data-display')[0].style.display='none';
         document.getElementsByClassName('message')[0].style.display='block';
         document.getElementsByClassName('errorMessage')[0].childNodes[1].innerText='Coming Soon!';
     }
-    else{
+    else if(value=='instagram'){
+        document.getElementsByClassName('data-display')[0].style.display='none';
         document.getElementsByClassName('message')[0].style.display='block';
         document.getElementsByClassName('errorMessage')[0].childNodes[1].innerText='Under Maintenance';
     }
@@ -148,18 +146,18 @@ function onInput(){
         var channel_type=document.getElementById('channel_name').value;
         if(channel_type=='youtube'&&searchName!=''){
 
-//            $.ajax({
-//                type:'GET',
-//                url:'/getYoutubeSearchDropDownResults/'+searchName,
-//                success:function(res){
-//                    $('#search-list').empty();
-//                    for(var i =0;i<res.results.length;i++){
-//                        var options='<li id="'+res.results[i].channel_id+'" onclick="displayThisChannel(this.id,this)"><div style="display:flex;justify-content:space-between;"><div>'+res.results[i].title+'</div><div><img src="'+res.results[i].channel_img+'" width="30px" height="30px"></div></div></li>';
-//                        $('#search-list').append(options);
-//                    }
-//
-//                }
-//            });
+            $.ajax({
+                type:'GET',
+                url:'/getYoutubeSearchDropDownResults/'+searchName,
+                success:function(res){
+                    $('#search-list').empty();
+                    for(var i =0;i<res.results.length;i++){
+                        var options='<li id="'+res.results[i].channel_id+'" onclick="displayThisChannel(this.id,this)"><div style="display:flex;justify-content:space-between;"><div>'+res.results[i].title+'</div><div><img src="'+res.results[i].channel_img+'" width="30px" height="30px"></div></div></li>';
+                        $('#search-list').append(options);
+                    }
+
+                }
+            });
         }
         else if(channel_type=='twitter'&&searchName!=''){
 
@@ -1016,211 +1014,268 @@ function displayThisChannel(x,y){
     if($('#channel_name').val()=='youtube'){
 
 
-//        $.ajax({
-//                type: 'GET',
-//                url: "/getYoutubeUserFromYoutubeApi/"+x,
-//                success:function(res){
-//                    if(res.results.data.length==0){
-//                        document.getElementById("check_button_inside").disabled = false;
-//                        document.getElementById('loader-div').style.display='none';
-//                        document.getElementsByClassName('message')[0].style.display='flex';
-//                        document.getElementsByClassName('errorMessage')[0].childNodes[1].innerText='Cannot Get Data For This User';
+        $.ajax({
+                type: 'GET',
+                url: "/getYoutubeUserFromYoutubeApi/"+x,
+                success:function(res){
+                    console.log(res);
+                    if(res.results.data.length==0){
+                        document.getElementById("check_button_inside").disabled = false;
+                        document.getElementById('loader-div').style.display='none';
+                        document.getElementsByClassName('message')[0].style.display='flex';
+                        document.getElementsByClassName('errorMessage')[0].childNodes[1].innerText='Cannot Get Data For This User';
+
+                        setTimeout(function(){
+                            document.getElementsByClassName('message')[0].style.display='none';
+                            document.getElementsByClassName('errorMessage')[0].childNodes[1].innerText='';
+                        },3000);
+                        return;
+                    }
+                    document.getElementById('loader-div').style.display='none';
+                    data=res.results.data[0];
+                    total_videos=res.totalVideos.data[0].total_videos;
+                    if(total_videos==0){
+                        total_videos=1;
+                    }
+                    if(total_videos>100){
+                        total_videos=100;
+                    }
+                    influencer_name=data.title;
+                    business_category_name=data.desc;
+                    if(business_category_name.length>20){
+                        business_category_name='';
+                    }
+                    influencer_image=data.channel_img;
+                    total_followers=data.subscriberCount_gained;
+                    // engagement rate calculation
+                    var engagementRate=(data.total_100video_comments+data.total_100video_likes+data.total_100video_shares);
+                    engagementRate=Math.round(engagementRate/total_videos)
+                    engagementRate=(((engagementRate/total_followers).toFixed(4))*100).toFixed(2);
+                    //------------------------------
+                    var score=calculateScore(total_followers,engagementRate);
+                    var loc=window.location.href;
+                    loc=loc.split('/');
+                    loc=loc[loc.length-1];
+                    if(loc=='influencer'){
+                        if(score<4){
+                        document.getElementsByClassName('score-4')[0].style.display="none";
+                        document.getElementsByClassName('score-not-4')[0].style.display="block";
+                        }
+                        else{
+                            document.getElementsByClassName('score-4')[0].style.display="block";
+                            document.getElementsByClassName('score-not-4')[0].style.display="none";
+                        }
+                    }
+                    total_followers=conversion(total_followers);
+                    average_views=conversion(Math.round(data.total_100video_views/total_videos));
+                    average_likes=conversion(Math.round(data.total_100video_likes/total_videos));
+                    average_comments=conversion(Math.round(data.total_100video_comments/total_videos));
+                    if(average_comments==0){
+                        average_comments='N/A';
+                    }
+                    if(average_likes==0){
+                        average_likes='N/A';
+                    }
+                    if(average_views==0){
+                        average_views='N/A';
+                    }
+                    document.getElementsByClassName('message')[0].style.display='none';
+                    document.getElementsByClassName('data-display')[0].style.display='block';
+                    document.getElementsByClassName('influencer-name')[0].childNodes[1].innerText=influencer_name;
+                    document.getElementsByClassName("influence-img")[0].childNodes[1].src=influencer_image;
+                    document.getElementsByClassName("influence-rating")[0].childNodes[1].innerText=engagementRate+'%';
+                    document.getElementsByClassName("influence-followers")[0].childNodes[1].innerText=total_followers;
+                    document.getElementsByClassName("influence-average-views")[0].childNodes[1].innerText=average_views;
+                    document.getElementsByClassName("influence-average-likes")[0].childNodes[1].innerText=average_likes;
+                    document.getElementsByClassName("influence-average-comments")[0].childNodes[1].innerText=average_comments;
+                    var label=[];
+                    var like=[];
+                    $('#myChart').hide();
+
+
+
+                    // graph youtube
+                    $.ajax({
+                        type:'GET',
+                        url:'/gettingGraphData/'+x,
+                        success:function(response){
+                            var leng=response['data'].length;
+                            console.log("hello res",response['data']);
+                            var label=[];
+                            var like=[];
+                            var comment=[];
+                            response['data'].sort(function(a,b){
+                                return a['publishedAt']-b['publishedAt'];
+                            })
+                            for(var j=0;j<leng&&j<5;j++){
+                                var todate=new Date(response['data'][leng-1-j]['publishedAt']*1000).getDate();
+                                var tomonth=new Date(response['data'][leng-1-j]['publishedAt']*1000).getMonth()+1;
+                                var toyear=new Date(response['data'][leng-1-j]['publishedAt']*1000).getFullYear();
+                                var original_date=todate+'/'+tomonth+'/'+toyear;
+                                label.push(original_date);
+                                like.push(response['data'][leng-1-j]['likeCount']);
+                                comment.push(response['data'][leng-1-j]['commentCount']);
+                            }
+                            console.log(label,like,comment);
+                            hashTags=[];
+                            for(var j=0;j<leng;j++){
+                                values=response['data'][j]['tags'];
+                                valuesData=values.split(',');
+                                hashTags=hashTags.concat(valuesData);
+                            }
+                            var counts = {};
+
+                            for (var i = 0; i < hashTags.length; i++) {
+                              var num = hashTags[i];
+                              if(num!=""){
+                                counts[num] = counts[num] ? counts[num] + 1 : 1;
+                              }
+
+                            }
+                            hashTags=[]
+                            for(var i in counts){
+                                hashTags.push({
+                                    tag:i,
+                                    count:counts[i]
+                                })
+                            }
+                            console.log(hashTags);
+                            label.reverse();
+                            like.reverse();
+                            comment.reverse();
+                            getChart(label,like,comment);
+                            getChart2(hashTags);
+                        }
+                    })
 //
-//                        setTimeout(function(){
-//                            document.getElementsByClassName('message')[0].style.display='none';
-//                            document.getElementsByClassName('errorMessage')[0].childNodes[1].innerText='';
-//                        },3000);
-//                        return;
-//                    }
-//                    document.getElementById('loader-div').style.display='none';
-//                    data=res.results.data[0];
-//                    total_videos=res.totalVideos.data[0].total_videos;
-//                    if(total_videos==0){
-//                        total_videos=1;
-//                    }
-//                    if(total_videos>100){
-//                        total_videos=100;
-//                    }
-//                    influencer_name=data.title;
-//                    business_category_name=data.desc;
-//                    if(business_category_name.length>20){
-//                        business_category_name='';
-//                    }
-//                    influencer_image=data.channel_img;
-//                    total_followers=data.subscriberCount_gained;
-//                    // engagement rate calculation
-//                    var engagementRate=(data.total_100video_comments+data.total_100video_likes+data.total_100video_shares);
-//                    engagementRate=Math.round(engagementRate/total_videos)
-//                    engagementRate=(((engagementRate/total_followers).toFixed(4))*100).toFixed(2);
-//                    //------------------------------
-//                    var score=calculateScore(total_followers,engagementRate);
-//                    var loc=window.location.href;
-//                    loc=loc.split('/');
-//                    loc=loc[loc.length-1];
-//                    if(loc=='influencer'){
-//                        if(score<4){
-//                        document.getElementsByClassName('score-4')[0].style.display="none";
-//                        document.getElementsByClassName('score-not-4')[0].style.display="block";
-//                        }
-//                        else{
-//                            document.getElementsByClassName('score-4')[0].style.display="block";
-//                            document.getElementsByClassName('score-not-4')[0].style.display="none";
-//                        }
-//                    }
-//                    total_followers=conversion(total_followers);
-//                    average_views=conversion(Math.round(data.total_100video_views/total_videos));
-//                    average_likes=conversion(Math.round(data.total_100video_likes/total_videos));
-//                    average_comments=conversion(Math.round(data.total_100video_comments/total_videos));
-//                    if(average_comments==0){
-//                        average_comments='N/A';
-//                    }
-//                    if(average_likes==0){
-//                        average_likes='N/A';
-//                    }
-//                    if(average_views==0){
-//                        average_views='N/A';
-//                    }
-//                    document.getElementsByClassName('message')[0].style.display='none';
-//                    document.getElementsByClassName('data-display')[0].style.display='block';
-//                    document.getElementsByClassName('influencer-name')[0].childNodes[1].innerText=influencer_name;
-//                    document.getElementsByClassName("influence-img")[0].childNodes[1].src=influencer_image;
-//                    document.getElementsByClassName("influence-rating")[0].childNodes[1].innerText=engagementRate+'%';
-//                    document.getElementsByClassName("influence-followers")[0].childNodes[1].innerText=total_followers;
-//                    document.getElementsByClassName("influence-average-views")[0].childNodes[1].innerText=average_views;
-//                    document.getElementsByClassName("influence-average-likes")[0].childNodes[1].innerText=average_likes;
-//                    document.getElementsByClassName("influence-average-comments")[0].childNodes[1].innerText=average_comments;
-//                    var label=[];
-//                    var like=[];
-//                    $('#myChart').hide();
-////                    renderYoutubeCategoryGraph(x);                 //graph youtube not needed
-//                    var influencerItem = document.getElementsByClassName("influence-rating");
-//                    var engagementBar = document.getElementsByClassName('engagement-bar');
-//                    var max=4;
-//                    var min=0.5;
-//                    var diff=(max-min)/3;
-//                    for(var i =0;i<influencerItem.length;i++){
-//                        var value = parseFloat(influencerItem[i].innerText.split(' ')[0]);
-//                        if(value>=5){
-//                            engagementBar[i].childNodes[1].style.backgroundColor="rgb(0, 133, 15)";
-//                            engagementBar[i].childNodes[3].style.backgroundColor="rgb(0, 133, 15)";
-//                            engagementBar[i].childNodes[5].style.backgroundColor="rgb(0, 133, 15)";
-//                            engagementBar[i].childNodes[7].style.backgroundColor="rgb(0, 133, 15)";
-//                            engagementBar[i].childNodes[9].style.backgroundColor="rgb(0, 133, 15)";
-//                        }
-//                        else if(value<5&&value>4){
-//                            engagementBar[i].childNodes[1].style.backgroundColor="rgb(96, 165, 55)";
-//                            engagementBar[i].childNodes[3].style.backgroundColor="rgb(96, 165, 55)";
-//                            engagementBar[i].childNodes[5].style.backgroundColor="rgb(96, 165, 55)";
-//                            engagementBar[i].childNodes[7].style.backgroundColor="rgb(96, 165, 55)";
-//                            engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
-//                        }
-//                        else if(value<=4&&value>3){
-//                            engagementBar[i].childNodes[1].style.backgroundColor="rgb(129, 212, 82)";
-//                            engagementBar[i].childNodes[3].style.backgroundColor="rgb(129, 212, 82)";
-//                            engagementBar[i].childNodes[5].style.backgroundColor="rgb(129, 212, 82)";
-//                            engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
-//                            engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
-//                        }
-//                        else if(value<=3&&value>2){
-//                            engagementBar[i].childNodes[1].style.backgroundColor="rgb(230, 169, 0)";
-//                            engagementBar[i].childNodes[3].style.backgroundColor="rgb(230, 169, 0)";
-//                            engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
-//                            engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
-//                            engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
-//                        }
-//                        else if(value<=2){
-//                            engagementBar[i].childNodes[1].style.backgroundColor="rgb(204,0,0)";
-//                            engagementBar[i].childNodes[3].style.backgroundColor="lightgrey";
-//                            engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
-//                            engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
-//                            engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
-//                        }
-//                    }
-//
-//
-//                    setTimeout(function () {
-//
-//                        document.getElementsByClassName('score-display-name')[0].childNodes[1].innerText='Your Influencer Score Is';
-//                        $('html,body').animate({
-//                                scrollTop: $(".data-display").offset().top},
-//                            'slow');
-//                        var progressbar = $('#progress_bar');
-//                        max = progressbar.attr('aria-valuemax');
-//                        time = 100;
-//                        value = 0;
-//                        numberValue=0;
-//                        var loading = function () {
-//                            value += 2;
-//                            numberValue=Math.floor((value/2)/5);
-//                            document.getElementById('progress_bar').style.width=value+'%';
-//                            document.getElementsByClassName('score-display-number')[0].childNodes[1].innerText=numberValue;
-//                            document.getElementsByClassName('score-display-name')[0].childNodes[1].innerText='Calculating Your Score';
-//                            if(value<20){
-//                                document.getElementById('progress_bar').style.backgroundColor='red';
-//                                document.getElementsByClassName('score-display-number')[0].childNodes[1].style.color='red';
-//                            }
-//                            else if(value>=20&&value<=30){
-//                                document.getElementById('progress_bar').style.backgroundColor='orange';
-//                                document.getElementsByClassName('score-display-number')[0].childNodes[1].style.color='orange';
-//                            }
-//                            else if(value>30&&value<=40){
-//                                document.getElementById('progress_bar').style.backgroundColor='yellow';
-//                                document.getElementsByClassName('score-display-number')[0].childNodes[1].style.color='yellow';
-//                            }
-//                            else if(value>40&&value<=50){
-//                                document.getElementById('progress_bar').style.backgroundColor='limegreen';
-//                                document.getElementsByClassName('score-display-number')[0].childNodes[1].style.color='limegreen';
-//                            }
-//                            else{
-//                                document.getElementById('progress_bar').style.backgroundColor='rgb(80, 181, 30)';
-//                                document.getElementsByClassName('score-display-number')[0].childNodes[1].style.color='rgb(80, 181, 30)';
-//                            }
-//                            if(value>=100){
-//                                value=0;
-//                                numberValue=0;
-//                                document.getElementById('progress_bar').style.width='0%';
-//                                document.getElementById('progress_bar').style.backgroundColor='limegreen';
-//                            }
-//                        };
-//                        var animate = setInterval(function () {
-//                            loading();
-//                        }, time);
-//                        setTimeout(function () {
-//                            clearInterval(animate);
-//                            document.getElementById('progress_bar').style.width=(score*10)+'%';
-//                            document.getElementsByClassName('score-display-number')[0].childNodes[1].innerText=score;
-//                            document.getElementsByClassName('score-display-name')[0].childNodes[1].innerText='Your Influencer Score Is';
-//                            if(score>5){
-//                                document.getElementById('progress_bar').style.backgroundColor='green';
-//                                document.getElementsByClassName('score-display-number')[0].childNodes[1].style.color='green';
-//                            }
-//                            else if(score>4){
-//                                document.getElementById('progress_bar').style.backgroundColor='limegreen';
-//                                document.getElementsByClassName('score-display-number')[0].childNodes[1].style.color='limegreen';
-//                            }
-//                            else if(score>3){
-//                                document.getElementById('progress_bar').style.backgroundColor='yellow';
-//                                document.getElementsByClassName('score-display-number')[0].childNodes[1].style.color='yellow';
-//                            }
-//                            else if(score>2){
-//                                document.getElementById('progress_bar').style.backgroundColor='orange';
-//                                document.getElementsByClassName('score-display-number')[0].childNodes[1].style.color='orange';
-//                            }
-//                            else{
-//                                document.getElementById('progress_bar').style.backgroundColor='red';
-//                                document.getElementsByClassName('score-display-number')[0].childNodes[1].style.color='red';
-//                            }
-//
-//                            document.getElementsByClassName('what-next-button')[0].style.display='block';
-//                            document.getElementById("check_button_inside").disabled = false;
-//                        },10000);
-//                    },500);
-//
-//                }
-//            });
-//            $('#mainChart2').hide();
-//        $('.graph-2').hide();
-//        $('.graph-1').hide();
+
+
+//                    renderYoutubeCategoryGraph(x);                 //graph youtube not needed
+                    var influencerItem = document.getElementsByClassName("influence-rating");
+                    var engagementBar = document.getElementsByClassName('engagement-bar');
+                    var max=4;
+                    var min=0.5;
+                    var diff=(max-min)/3;
+                    for(var i =0;i<influencerItem.length;i++){
+                        var value = parseFloat(influencerItem[i].innerText.split(' ')[0]);
+                        if(value>=5){
+                            engagementBar[i].childNodes[1].style.backgroundColor="rgb(0, 133, 15)";
+                            engagementBar[i].childNodes[3].style.backgroundColor="rgb(0, 133, 15)";
+                            engagementBar[i].childNodes[5].style.backgroundColor="rgb(0, 133, 15)";
+                            engagementBar[i].childNodes[7].style.backgroundColor="rgb(0, 133, 15)";
+                            engagementBar[i].childNodes[9].style.backgroundColor="rgb(0, 133, 15)";
+                        }
+                        else if(value<5&&value>4){
+                            engagementBar[i].childNodes[1].style.backgroundColor="rgb(96, 165, 55)";
+                            engagementBar[i].childNodes[3].style.backgroundColor="rgb(96, 165, 55)";
+                            engagementBar[i].childNodes[5].style.backgroundColor="rgb(96, 165, 55)";
+                            engagementBar[i].childNodes[7].style.backgroundColor="rgb(96, 165, 55)";
+                            engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
+                        }
+                        else if(value<=4&&value>3){
+                            engagementBar[i].childNodes[1].style.backgroundColor="rgb(129, 212, 82)";
+                            engagementBar[i].childNodes[3].style.backgroundColor="rgb(129, 212, 82)";
+                            engagementBar[i].childNodes[5].style.backgroundColor="rgb(129, 212, 82)";
+                            engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
+                            engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
+                        }
+                        else if(value<=3&&value>2){
+                            engagementBar[i].childNodes[1].style.backgroundColor="rgb(230, 169, 0)";
+                            engagementBar[i].childNodes[3].style.backgroundColor="rgb(230, 169, 0)";
+                            engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
+                            engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
+                            engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
+                        }
+                        else if(value<=2){
+                            engagementBar[i].childNodes[1].style.backgroundColor="rgb(204,0,0)";
+                            engagementBar[i].childNodes[3].style.backgroundColor="lightgrey";
+                            engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
+                            engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
+                            engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
+                        }
+                    }
+
+
+                    setTimeout(function () {
+
+                        document.getElementsByClassName('score-display-name')[0].childNodes[1].innerText='Your Influencer Score Is';
+                        $('html,body').animate({
+                                scrollTop: $(".data-display").offset().top},
+                            'slow');
+                        var progressbar = $('#progress_bar');
+                        max = progressbar.attr('aria-valuemax');
+                        time = 100;
+                        value = 0;
+                        numberValue=0;
+                        var loading = function () {
+                            value += 2;
+                            numberValue=Math.floor((value/2)/5);
+                            document.getElementById('progress_bar').style.width=value+'%';
+                            document.getElementsByClassName('score-display-number')[0].childNodes[1].innerText=numberValue;
+                            document.getElementsByClassName('score-display-name')[0].childNodes[1].innerText='Calculating Your Score';
+                            if(value<20){
+                                document.getElementById('progress_bar').style.backgroundColor='red';
+                                document.getElementsByClassName('score-display-number')[0].childNodes[1].style.color='red';
+                            }
+                            else if(value>=20&&value<=30){
+                                document.getElementById('progress_bar').style.backgroundColor='orange';
+                                document.getElementsByClassName('score-display-number')[0].childNodes[1].style.color='orange';
+                            }
+                            else if(value>30&&value<=40){
+                                document.getElementById('progress_bar').style.backgroundColor='yellow';
+                                document.getElementsByClassName('score-display-number')[0].childNodes[1].style.color='yellow';
+                            }
+                            else if(value>40&&value<=50){
+                                document.getElementById('progress_bar').style.backgroundColor='limegreen';
+                                document.getElementsByClassName('score-display-number')[0].childNodes[1].style.color='limegreen';
+                            }
+                            else{
+                                document.getElementById('progress_bar').style.backgroundColor='rgb(80, 181, 30)';
+                                document.getElementsByClassName('score-display-number')[0].childNodes[1].style.color='rgb(80, 181, 30)';
+                            }
+                            if(value>=100){
+                                value=0;
+                                numberValue=0;
+                                document.getElementById('progress_bar').style.width='0%';
+                                document.getElementById('progress_bar').style.backgroundColor='limegreen';
+                            }
+                        };
+                        var animate = setInterval(function () {
+                            loading();
+                        }, time);
+                        setTimeout(function () {
+                            clearInterval(animate);
+                            document.getElementById('progress_bar').style.width=(score*10)+'%';
+                            document.getElementsByClassName('score-display-number')[0].childNodes[1].innerText=score;
+                            document.getElementsByClassName('score-display-name')[0].childNodes[1].innerText='Your Influencer Score Is';
+                            if(score>5){
+                                document.getElementById('progress_bar').style.backgroundColor='green';
+                                document.getElementsByClassName('score-display-number')[0].childNodes[1].style.color='green';
+                            }
+                            else if(score>4){
+                                document.getElementById('progress_bar').style.backgroundColor='limegreen';
+                                document.getElementsByClassName('score-display-number')[0].childNodes[1].style.color='limegreen';
+                            }
+                            else if(score>3){
+                                document.getElementById('progress_bar').style.backgroundColor='yellow';
+                                document.getElementsByClassName('score-display-number')[0].childNodes[1].style.color='yellow';
+                            }
+                            else if(score>2){
+                                document.getElementById('progress_bar').style.backgroundColor='orange';
+                                document.getElementsByClassName('score-display-number')[0].childNodes[1].style.color='orange';
+                            }
+                            else{
+                                document.getElementById('progress_bar').style.backgroundColor='red';
+                                document.getElementsByClassName('score-display-number')[0].childNodes[1].style.color='red';
+                            }
+
+                            document.getElementsByClassName('what-next-button')[0].style.display='block';
+                            document.getElementById("check_button_inside").disabled = false;
+                        },10000);
+                    },500);
+
+                }
+            });
     }
     else if($('#channel_name').val()=='twitter'){
 
@@ -1463,7 +1518,7 @@ function searchChannel(channelId) {
 
 
     }
-    else if(channel_type=='instagram'){
+    else if(channel_type==''){
         // ready all code after if else is for instagram
         var channelName = document.getElementById('search_name').value;
         if(channelName.includes(" ")){

@@ -32,11 +32,12 @@
             </div>
         </div>
         <div class="row padding">
-            <form class="form-inline"  style="align-items:baseline;">
+            <form class="form-inline" onsubmit="return searchChannel()" style="align-items:baseline;">
                 <select class="form-control" name="channel_name" id="channel_name">
-                    <option value="instagram">Instagram</option>
+
                     <option value="youtube">Youtube</option>
                     <option value="twitter">Twitter</option>
+                    <option value="instagram">Instagram</option>
                 </select>
                 <div class="parentBox">
                     <div class="firstBox">
@@ -47,7 +48,7 @@
                     </div>
                 </div>
                 <div id="check_button">
-                    <button id="check_button_inside" class="btn btn-outline-success my-2 my-sm-0" type="submit" disabled>Check</button>
+                    <button id="check_button_inside" class="btn btn-outline-success my-2 my-sm-0" type="submit">Check</button>
                 </div>
             </form>
         </div>
