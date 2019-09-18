@@ -4,6 +4,14 @@
 
 <div class="container" style="padding:0;">
     <div class="row">
+        <div class="col-md-6 col-xs-12"></div>
+        <div class="col-md-6 col-xs-12">
+            <a href="/upgrade">
+                <button class="upgrade-plan-button" style="font-size: 1rem!important;width: 7.2rem;float:right;">Back to Plans</button>
+            </a>
+        </div>
+    </div>
+    <div class="row">
         <div id="section-1" class="col-md-6 order-md-1 col-xs-12 order-2">
             <div class="card">
                 <div class="card-body">
@@ -132,7 +140,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="collapse in" id="addOn-collapse">
+                            <div class="collapse show" id="addOn-collapse">
                                 <form action="/payment" method="POST" name="addOns_take" id="addOnsForm">
                                     <input type="hidden" name="package_name" value="Custom">
                                 <div class="row">
@@ -457,11 +465,11 @@
 <!--                        </script>-->
 <!--                    </form>-->
 <script>
-if(window.screen.width<400){
+if(window.screen.width<700){
     console.log("do it")
     $('#open-close-add-on').removeClass('fa-angle-down');
     $('#open-close-add-on').addClass('fa-angle-right');
-    $('#addOn-collapse').removeClass('in');
+    $('#addOn-collapse').removeClass('show');
 }
 var addOnsData={
     data2:[]
@@ -595,7 +603,7 @@ $(window).on('popstate', function () {
 
 
         var dat=$('#addOn-collapse')[0].classList.value;
-        if(dat=="collapse in"){
+        if(dat=="collapse show"){
             $('#open-close-add-on').removeClass('fa-angle-down');
             $('#open-close-add-on').addClass('fa-angle-right');
         }

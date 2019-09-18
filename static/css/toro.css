@@ -2403,6 +2403,23 @@ input[type=number]
   cursor: pointer;
   background-color: white;
   color: black;
-  border: 2px solid #9370DB;
+  border: 3px solid #9370DB;
   border-radius:4px;
+  transition:border 0.5s;
+}
+.button1:focus{
+    outline: none;
+}
+.multiple-chat-option{
+    position:relative;
+    color:#599ae9;
+    top:5px;
+    font-size:15px;
+}
+#chat-option{
+    display:none;color:#599ae9;margin-right: 7px;top: 3px;position: relative;
+
+}
+#remove-drop:after{
+    content:none!important;
 }
