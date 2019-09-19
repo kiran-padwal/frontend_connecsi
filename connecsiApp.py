@@ -1022,9 +1022,9 @@ def searchInfluencers():
                         print(item)
                     except:
                         pass
-            if form_filters['channel']=='Instagram':
-                for item in data['data']:
-                    item.update({'total_videos':100})
+            # if form_filters['channel']=='Instagram':
+                # for item in data['data']:
+                #     item.update({'total_videos':100})
                     # total_videos_url = base_url + 'Youtube/totalVideos/' + str(item['channel_id'])
                     # try:
                     #     response = requests.get(total_videos_url)

@@ -47,26 +47,26 @@
                             <div class="social-media">
                                 {% if item['facebook_url'] %}
                                 <a href="#facebook_url" class="social-media_icon fa fa-facebook-square"
-                                   title="facebook"></a>
+                                   title="facebook" target="_blank"></a>
                                 {% else %}
                                 <a href="#facebook_url" class="social-media_icon none-active fa fa-facebook-square"
-                                   title="facebook"></a>
+                                   title="facebook" target="_blank"></a>
                                 {% endif %}
                                 {% if item['twitter_url'] %}
                                 <a href="{{item['twitter_url']}}" class="social-media_icon fa fa-twitter"
-                                   title="twitter"></a>
+                                   title="twitter" target="_blank"></a>
                                 {% else %}
-                                <a href="#twitter_url" class="social-media_icon none-active fa fa-twitter"
+                                <a href="#twitter_url"  target="_blank" class="social-media_icon none-active fa fa-twitter"
                                    title="twitter"></a>
                                 {% endif %}
                                 {% if item['insta_url'] %}
-                                <a href="{{item['insta_url']}}" class="social-media_icon fa fa-instagram" title="instagram"></a>
+                                <a href="{{item['insta_url']}}" target="_blank" class="social-media_icon fa fa-instagram" title="instagram"></a>
                                 {% else %}
-                                <a href="#insta_url" class="social-media_icon none-active fa fa-instagram "
+                                <a href="#insta_url" target="_blank" class="social-media_icon none-active fa fa-instagram "
                                    title="instagram"></a>
                                 {% endif %}
                                 {% if item['channel_id'] %}
-                                <a href="https://www.youtube.com/channel/{{item['channel_id']}}" class="social-media_icon fa fa-youtube"
+                                <a href="https://www.youtube.com/channel/{{item['channel_id']}}" target="_blank" class="social-media_icon fa fa-youtube"
                                    title="youtube"></a>
                                 {% else %}
                                 <a href="#youtube_url" class="social-media_icon none-active fa fa-youtube"
@@ -454,25 +454,23 @@
 
     </div>
 </section>
-
 <script>
-var clickToggle=false;
+    var clickToggle=false;
     function toggleBrandView(){
-        if(clickToggle==false){
-            $('.button1')[0].style.border='3px solid green';
+        if($('#viewAsAdvertisers')[0].classList.value=='row collapse'){
+            $('.button1')[0].style.border='1px solid #00FF85';
+            $('.button1')[0].style.color='#00FF85';
 
             clickToggle=true;
         }
         else{
-            $('.button1')[0].style.border='3px solid #9370DB';
+            $('.button1')[0].style.border='1px solid #9370DB';
+            $('.button1')[0].style.color='#9370DB';
             clickToggle=false;
         }
-
-
-
-
     }
     $(document).ready(function () {
+
       <!--ashish code for eng rate-->
       var influencerItem = document.getElementsByClassName('rating');
       var engagementBar = document.getElementsByClassName('engagement-bar');

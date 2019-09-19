@@ -823,6 +823,17 @@
 {% endif %}
 
 <script>
+
+function showingOption(){
+    if($('#chat-option')[0].style.display=="none"){
+            $('#chat-option').fadeToggle('100');
+        }
+        else{
+            $('#chat-option').fadeToggle('100');
+        }
+
+}
+
 function getGraphUpdated(){
     var channel_name_graph='{{ channel_name }}';
     var channel_name_graph_label=channel_name_graph;
@@ -1075,8 +1086,8 @@ function updateChannelStatusForCampaignByCampaignId(campaign_id){
                                 $('#status'+val.channel_id).append('<b style="font-weight:450; font-size:12px;">'+val.campaign_name+'<br/></b>');
                                 $('#status'+val.channel_id).append('<b style="font-weight:400; color:'+color+'; font-size:11px;">'+val.status+'</b>');
                                 <!--$('#status'+val.channel_id).append('&nbsp;<a href="/inbox/'+val.message_id+'" style = "font-size:11px;">inbox</a>');-->
-                                if(val.status !='Contacted'){
-                                    $('#status'+val.channel_id).append('&nbsp;<div style="display: inline-block;float: right;"><a data-toggle="tooltip" title="Go to conversation" href="/inbox/'+val.message_id+'" id="chat-option" style="display:none;color:#599ae9;margin-right: 7px;top: 3px;position: relative;"><i class="goto-inbox-icon far fa-comments"></i></a><a class="multiple-search" data-toggle="tooltip" title="Options" style="margin-top: -4px;font-size:1rem!important;" onclick="showingOption()"><i class="multiple-chat-option fas fa-ellipsis-v" style="top: 2px;"></i></a></div>');
+                                if(val.status!='Contacted'||val.status!='Added'){
+                                    $('#status'+val.channel_id).append('&nbsp;<div style="display: inline-block;float: right;"><a href="/inbox/'+val.message_id+'" id="chat-option" style="display:none;color:#599ae9;margin-right: 7px;top: 3px;position: relative;"><i class="goto-inbox-icon far fa-comments" style="color:#a8a8a8;"></i></a><a class="multiple-search" data-toggle="tooltip" title="Options" style="margin-top: -4px;font-size:1rem!important;" onclick="showingOption()"><i class="multiple-chat-option fas fa-ellipsis-v" style="top: 2px;color:#a8a8a8;"></i></a></div>');
                                 }
                                 $('#status'+val.channel_id).append('<hr style="height:0px; margin:auto;">');
                                 $('#no_campaigns'+val.channel_id).hide();

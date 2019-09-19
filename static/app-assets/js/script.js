@@ -128,10 +128,10 @@ $('#channel_name').on('change',function(){
         document.getElementsByClassName('message')[0].style.display='block';
         document.getElementsByClassName('errorMessage')[0].childNodes[1].innerText='Coming Soon!';
     }
-    else if(value=='instagram'){
+    else{
         document.getElementsByClassName('data-display')[0].style.display='none';
-        document.getElementsByClassName('message')[0].style.display='block';
-        document.getElementsByClassName('errorMessage')[0].childNodes[1].innerText='Under Maintenance';
+        document.getElementsByClassName('message')[0].style.display='none';
+        document.getElementsByClassName('errorMessage')[0].childNodes[1].innerText='';
     }
 });
 
@@ -785,7 +785,73 @@ function isEmpty(obj) {
 
 //--------------------------------------------------
 //function for calculating score of an influencer
+function calculateScoreInstagram(followers,Rate){
+     var pointFollowers=0;
+    var pointEngagementRate=0;
+    if(Rate>25){
+        pointEngagementRate=10;
+    }
+    else if(Rate>20){
+        pointEngagementRate=9;
+    }
+    else if(Rate>17.5){
+        pointEngagementRate=8;
+    }
+    else if(Rate>15){
+        pointEngagementRate=7;
+    }
+    else if(Rate>12.5){
+        pointEngagementRate=6;
+    }
+    else if(Rate>10){
+        pointEngagementRate=5;
+    }
+    else if(Rate>7.5){
+        pointEngagementRate=4;
+    }
+    else if(Rate>5){
+        pointEngagementRate=3;
+    }
+    else if(Rate>2.5){
+        pointEngagementRate=2;
+    }
+    else{
+        pointEngagementRate=1;
+    }
 
+    if(followers>100000000){
+        pointFollowers=10;
+    }
+    else if(followers>10000000){
+        pointFollowers=9;
+    }
+    else if(followers>5000000){
+        pointFollowers=8;
+    }
+    else if(followers>1000000){
+        pointFollowers=7;
+    }
+    else if(followers>250000){
+        pointFollowers=6;
+    }
+    else if(followers>50000){
+        pointFollowers=5;
+    }
+    else if(followers>5000){
+        pointFollowers=4;
+    }
+    else if(followers>2500){
+        pointFollowers=3;
+    }
+    else if(followers>500){
+        pointFollowers=2;
+    }
+    else{
+        pointFollowers=1;
+    }
+    return ((pointFollowers+pointEngagementRate)/2);
+
+}
 function calculateScore(followers,Rate){
 
     var pointFollowers=0;
@@ -1022,7 +1088,7 @@ function displayThisChannel(x,y){
                     if(res.results.data.length==0){
                         document.getElementById("check_button_inside").disabled = false;
                         document.getElementById('loader-div').style.display='none';
-                        document.getElementsByClassName('message')[0].style.display='flex';
+                        document.getElementsByClassName('message')[0].style.display='block';
                         document.getElementsByClassName('errorMessage')[0].childNodes[1].innerText='Cannot Get Data For This User';
 
                         setTimeout(function(){
@@ -1194,8 +1260,8 @@ function displayThisChannel(x,y){
                             engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
                         }
                     }
-
-
+                    document.getElementsByClassName('what-next-button')[0].style.display='none';
+                    $('#what-next-menu').removeClass('show');
                     setTimeout(function () {
 
                         document.getElementsByClassName('score-display-name')[0].childNodes[1].innerText='Your Influencer Score Is';
@@ -1287,7 +1353,7 @@ function displayThisChannel(x,y){
                     if(res.results.data.length==0){
                         document.getElementById("check_button_inside").disabled = false;
                         document.getElementById('loader-div').style.display='none';
-                        document.getElementsByClassName('message')[0].style.display='flex';
+                        document.getElementsByClassName('message')[0].style.display='block';
                         document.getElementsByClassName('errorMessage')[0].childNodes[1].innerText='Cannot Get Data For This User';
 
                         setTimeout(function(){
@@ -1420,8 +1486,8 @@ function displayThisChannel(x,y){
                             engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
                         }
                     }
-
-
+                    document.getElementsByClassName('what-next-button')[0].style.display='none';
+                    $('#what-next-menu').removeClass('show');
                     setTimeout(function () {
 
                         document.getElementsByClassName('score-display-name')[0].childNodes[1].innerText='Your Influencer Score Is';
@@ -1518,12 +1584,12 @@ function searchChannel(channelId) {
 
 
     }
-    else if(channel_type==''){
+    else if(channel_type=='instagram'){
         // ready all code after if else is for instagram
         var channelName = document.getElementById('search_name').value;
         if(channelName.includes(" ")){
             document.getElementsByClassName('data-display')[0].style.display='none';
-            document.getElementsByClassName('message')[0].style.display='flex';
+            document.getElementsByClassName('message')[0].style.display='block';
             document.getElementsByClassName('errorMessage')[0].childNodes[1].innerText='Username cannot contain spaces';
 
             setTimeout(function(){
@@ -1534,7 +1600,7 @@ function searchChannel(channelId) {
         }
         if(channelName==''){
             document.getElementsByClassName('data-display')[0].style.display='none';
-            document.getElementsByClassName('message')[0].style.display='flex';
+            document.getElementsByClassName('message')[0].style.display='block';
             document.getElementsByClassName('errorMessage')[0].childNodes[1].innerText='Username cannot be empty';
 
             setTimeout(function(){
@@ -1559,7 +1625,7 @@ function searchChannel(channelId) {
                     if(res.results.length==0||res.results.message=='Internal Server Error'){
                         document.getElementById("check_button_inside").disabled = false;
                         document.getElementById('loader-div').style.display='none';
-                        document.getElementsByClassName('message')[0].style.display='flex';
+                        document.getElementsByClassName('message')[0].style.display='block';
                         document.getElementsByClassName('errorMessage')[0].childNodes[1].innerText='Cannot Get Data For This User';
 
                         setTimeout(function(){
@@ -1569,6 +1635,8 @@ function searchChannel(channelId) {
                         return;
                     }
                     document.getElementById('loader-div').style.display='none';
+                    document.getElementsByClassName('what-next-button')[0].style.display='none';
+                    $('#what-next-menu').removeClass('show');
                     data=res.results;
                     influencer_name=data[0].page_data.title;
                     business_category_name=data[0].page_data.business_category_name;
@@ -1578,11 +1646,11 @@ function searchChannel(channelId) {
                     // engagement rate calculation
                     var engagementRate=0;
                     if((data[0].post_data).length!=0){
-                        engagementRate=((v.avg_comments+v.avg_likes)/(data[0].page_data.no_of_followers)).toFixed(2);
+                        engagementRate=(((v.avg_comments+v.avg_likes)/(data[0].page_data.no_of_followers))*100).toFixed(2);
                     }
 
                     //------------------------------
-                    var score=calculateScore(data[0].page_data.no_of_followers,engagementRate);
+                    var score=calculateScoreInstagram(data[0].page_data.no_of_followers,engagementRate);
                     var loc=window.location.href;
                     loc=loc.split('/');
                     loc=loc[loc.length-1];
@@ -1663,35 +1731,35 @@ function searchChannel(channelId) {
                     var diff=(max-min)/3;
                     for(var i =0;i<influencerItem.length;i++){
                         var value = parseFloat(influencerItem[i].innerText.split(' ')[0]);
-                        if(value>=5){
+                        if(value>=25){
                             engagementBar[i].childNodes[1].style.backgroundColor="rgb(0, 133, 15)";
                             engagementBar[i].childNodes[3].style.backgroundColor="rgb(0, 133, 15)";
                             engagementBar[i].childNodes[5].style.backgroundColor="rgb(0, 133, 15)";
                             engagementBar[i].childNodes[7].style.backgroundColor="rgb(0, 133, 15)";
                             engagementBar[i].childNodes[9].style.backgroundColor="rgb(0, 133, 15)";
                         }
-                        else if(value<5&&value>4){
+                        else if(value<25&&value>17.5){
                             engagementBar[i].childNodes[1].style.backgroundColor="rgb(96, 165, 55)";
                             engagementBar[i].childNodes[3].style.backgroundColor="rgb(96, 165, 55)";
                             engagementBar[i].childNodes[5].style.backgroundColor="rgb(96, 165, 55)";
                             engagementBar[i].childNodes[7].style.backgroundColor="rgb(96, 165, 55)";
                             engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
                         }
-                        else if(value<=4&&value>3){
+                        else if(value<=17.5&&value>10){
                             engagementBar[i].childNodes[1].style.backgroundColor="rgb(129, 212, 82)";
                             engagementBar[i].childNodes[3].style.backgroundColor="rgb(129, 212, 82)";
                             engagementBar[i].childNodes[5].style.backgroundColor="rgb(129, 212, 82)";
                             engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
                             engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
                         }
-                        else if(value<=3&&value>2){
+                        else if(value<=10&&value>2.5){
                             engagementBar[i].childNodes[1].style.backgroundColor="rgb(230, 169, 0)";
                             engagementBar[i].childNodes[3].style.backgroundColor="rgb(230, 169, 0)";
                             engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
                             engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
                             engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
                         }
-                        else if(value<=2){
+                        else if(value<=2.5){
                             engagementBar[i].childNodes[1].style.backgroundColor="rgb(204,0,0)";
                             engagementBar[i].childNodes[3].style.backgroundColor="lightgrey";
                             engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
@@ -1700,7 +1768,8 @@ function searchChannel(channelId) {
                         }
                     }
 
-
+                    document.getElementsByClassName('data-display')[0].style.display='block';
+                    $('#search_name').blur();
                     setTimeout(function () {
 
                         document.getElementsByClassName('score-display-name')[0].childNodes[1].innerText='Your Influencer Score Is';

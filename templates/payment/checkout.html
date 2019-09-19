@@ -30,10 +30,19 @@
                                             <div class="col-12" id="plan-area">
                                                 <div class="row">
                                                     <div class="col-6 text-left">
-                                                        <h6 id="plan-name">{{data['package_name']}} Plan</h6>
+                                                        {% if data['package_name']=='Basic'%}
+                                                            <h6 id="plan-name">Starter Plan</h6>
+                                                        {% else %}
+                                                            <h6 id="plan-name">{{data['package_name']}} Plan</h6>
+                                                        {% endif %}
                                                     </div>
-                                                    <div class="col-6 text-right">
+                                                    <div class="col-5 text-right">
                                                         <h6 id="plan-price">€ {{'%0.2f'| format(amount/100|float)}}</h6>
+                                                    </div>
+
+                                                    <div class="col-1 text-left">
+                                                        <a id="delete-option-plan" data-toggle="tooltip"
+                                           title="Delete Plan" onclick="deletePlan()"><i class="far fa-trash-alt"></i></a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -45,8 +54,12 @@
                                                     <div class="col-6 text-left">
                                                         <h6 id="addOn-name">Add-ons</h6>
                                                     </div>
-                                                    <div class="col-6 text-right">
+                                                    <div class="col-5 text-right">
                                                         <h6 id="addOn-price">€ 0</h6>
+                                                    </div>
+                                                    <div class="col-1 text-left">
+                                                        <a id="delete-option-addOn" data-toggle="tooltip"
+                                           title="Delete AddOns" onclick="deleteAddOns()"><i class="far fa-trash-alt"></i></a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -57,8 +70,11 @@
                                                     <div class="col-6 text-left">
                                                         <h6 id="vat-name">Taxes(VAT)</h6>
                                                     </div>
-                                                    <div class="col-6 text-right">
+                                                    <div class="col-5 text-right">
                                                         <h6 id="vat-price">€ 0</h6>
+                                                    </div>
+                                                    <div class="col-1 text-right">
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -69,8 +85,11 @@
                                                     <div class="col-6 text-left">
                                                         <h4 id="total-name">TOTAL</h4>
                                                     </div>
-                                                    <div class="col-6 text-right">
+                                                    <div class="col-5 text-right">
                                                         <h4 id="total-price">€ 0</h4>
+                                                    </div>
+                                                    <div class="col-1 text-right">
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -465,6 +484,31 @@
 <!--                        </script>-->
 <!--                    </form>-->
 <script>
+function deletePlan(){
+    $.ajax({
+        method:'POST',
+        url:'/checkout',
+        data:{},
+        success:function(data){
+            window.location='/checkout';
+        }
+    })
+}
+function deleteAddOns(){
+    location.reload();
+}
+total=$('#total-price')[0].innerHTML;
+total=parseFloat(total.split(' ')[1]);
+
+addPrice=$('#addOn-price')[0].innerHTML;
+addPrice=parseFloat(addPrice.split(' ')[1]);
+if(addPrice==0){
+    $('#delete-option-addOn').hide();
+}
+if(total==0){
+    $('#delete-option-plan').hide();
+}
+console.log("plan",addPrice,total);
 if(window.screen.width<700){
     console.log("do it")
     $('#open-close-add-on').removeClass('fa-angle-down');
@@ -586,7 +630,18 @@ $(window).on('popstate', function () {
         else{
             vatPrice=0;
         }
-
+        if(planPrice>0){
+            $('#delete-option-plan').show();
+        }
+        else{
+            $('#delete-option-plan').hide();
+        }
+        if(addOnPrice>0){
+            $('#delete-option-addOn').show();
+        }
+        else{
+            $('#delete-option-addOn').hide();
+        }
         sum=addOnPrice+planPrice;
         vatcal=(sum*18)/100;
         console.log(vatcal);
