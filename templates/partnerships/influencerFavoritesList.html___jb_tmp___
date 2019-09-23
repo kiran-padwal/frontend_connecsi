@@ -1,0 +1,1519 @@
+{% extends 'admin_layout.html' %}
+{{ super() }}
+{% block body %}
+{% set glob={} %}
+<!--<div class="row">-->
+    <!--<div class="col-sm-12">-->
+        <!--<div class="content-header">Favourites Infulencers list-->
+            <!--<div class="btn-wrapper">-->
+                <!--&lt;!&ndash; Single Button Dropdown &ndash;&gt;-->
+                <!--<div class="btn-group mr-1 mb-1" style="max-width: 115px">-->
+                    <!--<select class="bg-transparent" name="sort_order" placeholder="Sort">-->
+                        <!--<option value="High To Low" selected>High To Low</option>-->
+                        <!--<option value="Low To High">Low To High</option>-->
+                    <!--</select>-->
+                <!--</div>-->
+                <!--<div class="btn-group mr-1 mb-1">-->
+                    <!--<div class="input-group-btn">-->
+                        <!--{% if data['data'] %}-->
+                        <!--<a href="{{ url_for('static',filename='infList.csv')}}"-->
+                           <!--class="btn btn-primary bg-info" download>Export CSV</a>-->
+                        <!--{% else %}-->
+                        <!--&lt;!&ndash;<button type="button"  style="background-color: purple; margin-left: 2%; color:white; border-radius: 10px; font-size:15px;">Export CSV</button>&ndash;&gt;-->
+                        <!--{% endif %}-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+
+        <!--</div>-->
+        <!--<p class="content-sub-header"></p>-->
+    <!--</div>-->
+<!--</div>-->
+
+
+<!--<div class="row">-->
+    <!--<div class="col-sm-12">-->
+        <!--<a class="btn btn-primary bg-color1" href="#">Facebook</a>-->
+        <!--<a class="btn btn-primary bg-color2" href="#">Youtube</a>-->
+        <!--<a class="btn btn-primary bg-color3" href="#">Twitter</a>-->
+        <!--<a class="btn btn-primary bg-color4" href="#">Instagram</a>-->
+    <!--</div>-->
+<!--</div>-->
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="content-header">Favorites {{ channel_name }} influencers list
+            <div class="btn-wrapper">
+                <!-- Single Button Dropdown -->
+                <div class="btn-group mr-1 mb-1">
+                    <div class="input-group-btn">
+                        {% if data['data'] %}
+                            {% if export_count>=data['data']| length %}
+                                <a id="export-list-button" href="{{ url_for('static',filename='infList.csv') }}" class="btn btn-primary" download>Export CSV</a>
+                                <script>
+                                    var fileDownloaded=false;
+                                    $('#export-list-button').click(function(){
+                                        var countOfInfluencers=document.getElementsByClassName('offer-user').length;
+                                        if(fileDownloaded==false){
+                                            $.ajax({
+                                                type:'POST',
+                                                url:'/updatingFeatureValue/'+'Export Lists_'+countOfInfluencers,
+                                                success:function(data){
+                                                    console.log("done",data);
+                                                    fileDownloaded=true;
+                                                }
+                                            })
+                                        }
+                                    })
+                                </script>
+                            {% else %}
+                                <a class="btn btn-primary" id="export-list-button" style="color:white;">Export CSV</a>
+                                <script>
+                                    var exportMessage='{{messageSubscription['Export Lists']['text']}}';
+                                    var exportMessageHead='{{messageSubscription['Export Lists']['heading']}}'
+                                    $('#export-list-button').click(function(){
+                                        document.getElementById('addMessageSubscription').innerHTML=exportMessage;
+                                        document.getElementById('subscription-message-header').innerHTML=exportMessageHead;
+                                        document.getElementsByClassName('subscription-message')[0].style.display="block";
+                                        document.getElementById('subscription-message-close').style.display="block";
+                                    })
+
+                                </script>
+                            {% endif %}
+                        {% else %}
+                        <!--<button type="button"  style="background-color: purple; margin-left: 2%; color:white; border-radius: 10px; font-size:15px;">Export CSV</button>-->
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p class="content-sub-header"></p>
+    </div>
+</div>
+
+<div class="row">
+    {% for item in data['data'] %}
+    {% set _ = glob.update({'total_rows':item['total_rows']}) %}
+
+    <div class="col-md-6 col-nc-lg-6 col-lg-12">
+        <!-- influencer card -->
+        <div class="card">
+            <div class="card-body">
+                <div class="card-block padding-top-normal influencer-item" data-channel-id="{{ item['channel_id'] }}">
+                    <div class="row padding-cols-xs">
+
+                        <!-- user -->
+                        <div class="col-lg-6 col-nc-lg-12 offer-user">
+
+                            <!-- title -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <h5 class="no-padding-bottom no-margin-bottom">
+                                        {% if channel_name =='youtube' %}
+                                            <a href="https://www.youtube.com/channel/{{ item['channel_id'] }}" target="_blank">{{ item['title'] }}</a>
+                                            <i class="fa fa-youtube"></i>
+                                        {% elif channel_name =='twitter' %}
+                                            <a href="https://www.twitter.com/{{ item['screen_name'] }}" target="_blank">{{ item['title'] }}</a>
+                                            <i class="fa fa-twitter"></i>
+                                        {% elif channel_name =='instagram' %}
+                                            <a href="https://www.instagram.com/{{ item['username'] }}" target="_blank">{{ item['username'] }}</a>
+                                            <i class="fa fa-instagram"></i>
+                                        {% endif %}
+                                    </h5>
+                                    <hr class="divide">
+                                </div>
+                            </div>
+                            <!-- end of title -->
+
+                            <!-- data -->
+                            <div class="row padding-cols-xs">
+                                <!-- photo -->
+                                <div class="col-lg-4 col-nc-lg-6 col-6 txt-center">
+                                    <div class="v-block"></div>
+                                    <div class="img-wrapper">
+
+                                        <img id="channel_img-{{item['channel_id']}}" src="" class="img-responsive" height="110px" width="110px">
+
+                                        <ul class="user-actions">
+                                            <li>
+                                                <a href="#" class="send-message"
+                                                   data-channel-id="{{item['channel_id']}}@{{channel_name}}"
+                                                   data-business-email="{{ item['business_email'] }}"
+                                                   data-title="{{ item['title'] }}"
+                                                   data-backdrop="true" data-toggle="modal" data-target="#sendMessage" onclick="openMessage()">
+                                                    <svg data-toggle="tooltip" title="Messages" width="24" height="18"
+                                                         viewBox="0 0 24 18" fill="none"
+                                                         xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M23.5312 5.95312C23.625 5.85938 23.7188 5.84375 23.8125 5.90625C23.9375 5.96875 24 6.0625 24 6.1875V15.75C24 16.375 23.7812 16.9063 23.3438 17.3438C22.9063 17.7812 22.375 18 21.75 18H2.25C1.625 18 1.09375 17.7812 0.65625 17.3438C0.21875 16.9063 0 16.375 0 15.75V6.1875C0 6.0625 0.046875 5.98438 0.140625 5.95312C0.265625 5.89062 0.375 5.89062 0.46875 5.95312C1.5 6.73437 3.90625 8.5 7.6875 11.25L8.15625 11.6719C8.90625 12.2344 9.5 12.6406 9.9375 12.8906C10.6875 13.2969 11.375 13.5 12 13.5C12.625 13.5 13.3125 13.2812 14.0625 12.8438C14.5312 12.5937 15.125 12.1875 15.8438 11.625L16.3125 11.25C20 8.59375 22.4062 6.82812 23.5312 5.95312ZM12 12C12.4063 12 12.9062 11.8125 13.5 11.4375C13.8438 11.25 14.3281 10.9063 14.9531 10.4062L15.4219 10.0781C19.3594 7.23437 22 5.28125 23.3438 4.21875L23.5781 4.03125C23.8594 3.8125 24 3.51562 24 3.14062V2.25C24 1.625 23.7812 1.09375 23.3438 0.65625C22.9063 0.21875 22.375 0 21.75 0H2.25C1.625 0 1.09375 0.21875 0.65625 0.65625C0.21875 1.09375 0 1.625 0 2.25V3.14062C0 3.51562 0.140625 3.8125 0.421875 4.03125L0.75 4.26562C2.125 5.32812 4.73438 7.26562 8.57812 10.0781L9.04688 10.4062C9.67187 10.9063 10.1562 11.25 10.5 11.4375C11.0938 11.8125 11.5937 12 12 12Z"
+                                                              fill="#9370DB"/>
+                                                    </svg>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#" onclick="campaignList('{{ item['channel_id'] }}','{{channel_name}}')" data-val="a2" data-channel-id="{{ item['channel_id'] }}" data-channel-name="{{channel_name}}"
+                                                   class="add-to-campaign" data-toggle="modal" data-backdrop="true"
+                                                   data-target="#campaignList">
+                                                    <svg data-toggle="tooltip" title="Add To Campaign" width="24"
+                                                         height="23" viewBox="0 0 24 23" fill="none"
+                                                         xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M11.0018 0.25C9.02033 0.25 7.18669 0.752773 5.50092 1.75832C3.81516 2.73429 2.4695 4.06516 1.46396 5.75092C0.487985 7.43669 0 9.27033 0 11.2518C0 13.2334 0.487985 15.067 1.46396 16.7528C2.4695 18.4385 3.81516 19.7694 5.50092 20.7454C7.18669 21.7509 9.02033 22.2537 11.0018 22.2537C12.9834 22.2537 14.817 21.7509 16.5028 20.7454C18.1885 19.7694 19.5194 18.4385 20.4954 16.7528C21.5009 15.067 22.0037 13.2334 22.0037 11.2518C22.0037 9.27033 21.5009 7.43669 20.4954 5.75092C19.5194 4.06516 18.1885 2.73429 16.5028 1.75832C14.817 0.752773 12.9834 0.25 11.0018 0.25ZM11.0018 19.4145C9.52311 19.4145 8.14787 19.0596 6.87616 18.3498C5.63401 17.6104 4.64325 16.6197 3.90388 15.3775C3.19409 14.1058 2.83919 12.7306 2.83919 11.2518C2.83919 9.77311 3.19409 8.41266 3.90388 7.17052C4.64325 5.8988 5.63401 4.90804 6.87616 4.19824C8.14787 3.45887 9.52311 3.08919 11.0018 3.08919C12.4806 3.08919 13.841 3.45887 15.0832 4.19824C16.3549 4.90804 17.3457 5.8988 18.0555 7.17052C18.7948 8.41266 19.1645 9.77311 19.1645 11.2518C19.1645 12.7306 18.7948 14.1058 18.0555 15.3775C17.3457 16.6197 16.3549 17.6104 15.0832 18.3498C13.841 19.0596 12.4806 19.4145 11.0018 19.4145ZM11.0018 5.57348C9.96673 5.57348 9.00555 5.82486 8.1183 6.32763C7.26063 6.83041 6.58041 7.52542 6.07763 8.41266C5.57486 9.27033 5.32348 10.2167 5.32348 11.2518C5.32348 12.287 5.57486 13.2482 6.07763 14.1354C6.58041 14.9931 7.26063 15.6733 8.1183 16.1761C9.00555 16.6788 9.96673 16.9302 11.0018 16.9302C12.037 16.9302 12.9834 16.6788 13.841 16.1761C14.7283 15.6733 15.4233 14.9931 15.9261 14.1354C16.4288 13.2482 16.6802 12.287 16.6802 11.2518C16.6802 10.2167 16.4288 9.27033 15.9261 8.41266C15.4233 7.52542 14.7283 6.83041 13.841 6.32763C12.9834 5.82486 12.037 5.57348 11.0018 5.57348ZM11.0018 14.091C10.2329 14.091 9.56747 13.8101 9.00555 13.2482C8.44362 12.6862 8.16266 12.0208 8.16266 11.2518C8.16266 10.4829 8.44362 9.81747 9.00555 9.25555C9.56747 8.69362 10.2329 8.41266 11.0018 8.41266C11.7708 8.41266 12.4362 8.69362 12.9982 9.25555C13.5601 9.81747 13.841 10.4829 13.841 11.2518C13.841 12.0208 13.5601 12.6862 12.9982 13.2482C12.4362 13.8101 11.7708 14.091 11.0018 14.091Z"
+                                                              fill="#6495ED"/>
+                                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                                              d="M19.8743 21.189C21.4424 21.189 22.7135 19.9179 22.7135 18.3498C22.7135 16.7818 21.4424 15.5106 19.8743 15.5106C18.3063 15.5106 17.0352 16.7818 17.0352 18.3498C17.0352 19.9179 18.3063 21.189 19.8743 21.189Z"
+                                                              fill="white"/>
+                                                        <path d="M19.8742 13.8692C19.1312 13.8692 18.4435 14.0578 17.8114 14.4348C17.1792 14.8008 16.6746 15.2999 16.2975 15.9321C15.9315 16.5642 15.7485 17.2518 15.7485 17.9949C15.7485 18.738 15.9315 19.4256 16.2975 20.0578C16.6746 20.6899 17.1792 21.189 17.8114 21.555C18.4435 21.9321 19.1312 22.1206 19.8742 22.1206C20.6173 22.1206 21.3049 21.9321 21.9371 21.555C22.5692 21.189 23.0683 20.6899 23.4343 20.0578C23.8114 19.4256 23.9999 18.738 23.9999 17.9949C23.9999 17.2518 23.8114 16.5642 23.4343 15.9321C23.0683 15.2999 22.5692 14.8008 21.9371 14.4348C21.3049 14.0578 20.6173 13.8692 19.8742 13.8692ZM22.2698 18.4607C22.2698 18.5162 22.2476 18.5661 22.2032 18.6104C22.17 18.6437 22.1256 18.6603 22.0702 18.6603H20.5397V20.1908C20.5397 20.2463 20.5175 20.2962 20.4731 20.3406C20.4398 20.3738 20.3955 20.3905 20.34 20.3905H19.4084C19.353 20.3905 19.3031 20.3738 19.2587 20.3406C19.2254 20.2962 19.2088 20.2463 19.2088 20.1908V18.6603H17.6783C17.6228 18.6603 17.5729 18.6437 17.5286 18.6104C17.4953 18.5661 17.4787 18.5162 17.4787 18.4607V17.5291C17.4787 17.4737 17.4953 17.4293 17.5286 17.396C17.5729 17.3517 17.6228 17.3295 17.6783 17.3295H19.2088V15.799C19.2088 15.7435 19.2254 15.6992 19.2587 15.6659C19.3031 15.6215 19.353 15.5993 19.4084 15.5993H20.34C20.3955 15.5993 20.4398 15.6215 20.4731 15.6659C20.5175 15.6992 20.5397 15.7435 20.5397 15.799V17.3295H22.0702C22.1256 17.3295 22.17 17.3517 22.2032 17.396C22.2476 17.4293 22.2698 17.4737 22.2698 17.5291V18.4607Z"
+                                                              fill="#7ED321"/>
+                                                    </svg>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a id="favList{{item['channel_id']}}" href="#" class="delete-fav-inf" onclick="remove_from_fav_list('{{item['channel_id']}}','{{session['user_id']}}'); return false;"
+                                                   data-channel-id="{{ item['channel_id'] }}"
+                                                   data-user-id="{{ session['user_id'] }}">
+                                                    <svg data-toggle="tooltip" title="Remove from Favorites" width="24"
+                                                         height="23" viewBox="0 0 24 23" fill="none"
+                                                         xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M10.7193 0.807309L7.80399 6.72758L1.25581 7.66944C0.86711 7.72924 0.553156 7.90864 0.313954 8.20764C0.104651 8.50665 0 8.83555 0 9.19435C0.0299003 9.55316 0.179402 9.86711 0.448505 10.1362L5.20266 14.7558L4.0814 21.304C4.0216 21.6628 4.0814 21.9917 4.2608 22.2907C4.4701 22.6196 4.75415 22.8289 5.11296 22.9186C5.47176 23.0083 5.81562 22.9635 6.14452 22.7841L12.0199 19.7342L17.8954 22.7841C18.2243 22.9635 18.5681 23.0083 18.9269 22.9186C19.2857 22.8289 19.5548 22.6196 19.7342 22.2907C19.9435 21.9917 20.0183 21.6628 19.9585 21.304L18.8372 14.7558L23.5914 10.1362C23.8605 9.86711 23.995 9.55316 23.995 9.19435C24.0249 8.83555 23.9203 8.50665 23.6811 8.20764C23.4718 7.90864 23.1728 7.72924 22.7841 7.66944L16.2359 6.72758L13.3206 0.807309C13.1412 0.448505 12.8721 0.209302 12.5133 0.089701C12.1844 -0.0299003 11.8405 -0.0299003 11.4817 0.089701C11.1528 0.209302 10.8987 0.448505 10.7193 0.807309Z"
+                                                              fill="#87CEEB"/>
+                                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                                              d="M19.1961 21.5282C20.7814 21.5282 22.0665 20.2431 22.0665 18.6578C22.0665 17.0725 20.7814 15.7874 19.1961 15.7874C17.6108 15.7874 16.3257 17.0725 16.3257 18.6578C16.3257 20.2431 17.6108 21.5282 19.1961 21.5282Z"
+                                                              fill="white"/>
+                                                        <path d="M19.196 14.1279C18.4448 14.1279 17.7496 14.3185 17.1105 14.6998C16.4713 15.0698 15.9612 15.5743 15.5799 16.2135C15.2099 16.8526 15.0249 17.5478 15.0249 18.299C15.0249 19.0503 15.2099 19.7454 15.5799 20.3846C15.9612 21.0237 16.4713 21.5282 17.1105 21.8983C17.7496 22.2795 18.4448 22.4701 19.196 22.4701C19.9472 22.4701 20.6424 22.2795 21.2815 21.8983C21.9207 21.5282 22.4252 21.0237 22.7953 20.3846C23.1765 19.7454 23.3671 19.0503 23.3671 18.299C23.3671 17.5478 23.1765 16.8526 22.7953 16.2135C22.4252 15.5743 21.9207 15.0698 21.2815 14.6998C20.6424 14.3185 19.9472 14.1279 19.196 14.1279ZM16.9759 18.9718C16.9198 18.9718 16.8694 18.9549 16.8245 18.9213C16.7909 18.8765 16.7741 18.826 16.7741 18.7699V17.8281C16.7741 17.772 16.7909 17.7272 16.8245 17.6935C16.8694 17.6487 16.9198 17.6263 16.9759 17.6263H21.4161C21.4722 17.6263 21.517 17.6487 21.5506 17.6935C21.5955 17.7272 21.6179 17.772 21.6179 17.8281V18.7699C21.6179 18.826 21.5955 18.8765 21.5506 18.9213C21.517 18.9549 21.4722 18.9718 21.4161 18.9718H16.9759Z"
+                                                              fill="#D0021B"/>
+                                                    </svg>
+                                                </a>
+                                            </li>
+                                            <li><a href="#" data-toggle="modal" data-backdrop="true"
+                                                   data-target="#create_alert_modal" class="create-alert"
+                                                   data-channel-id="{{ item['channel_id'] }}"
+                                                   data-channel-name="{{channel_name}}"
+                                                   data-followers="{{ item['subscriberCount_gained'] }}"
+                                                   {% if item['total_100video_views'] %}
+                                                   data-views="{{ (item['total_100video_views']/100)|int }}"
+                                                    {% endif %}
+                                                    {% if item['total_100video_likes'] %}
+                                                   data-likes="{{ (item['total_100video_likes']/100)|int }}"
+                                                    {% endif %}
+                                                    {% if item['total_100video_comments'] %}
+                                                   data-comments="{{ (item['total_100video_comments']/100)|int }}"
+                                                    {% endif %}>
+                                                <svg data-toggle="tooltip" title="Add To Alert" width="24" height="26"
+                                                     viewBox="0 0 24 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M11.2704 25.761C12.1426 25.761 12.8973 25.4423 13.5346 24.805C14.1719 24.2013 14.4906 23.4465 14.4906 22.5409H8.05031C8.05031 23.4465 8.36897 24.2013 9.00629 24.805C9.64361 25.4423 10.3983 25.761 11.2704 25.761ZM22.088 18.2138C22.0545 18.1803 22.0042 18.1132 21.9371 18.0126C21.1656 17.2075 20.5954 16.4193 20.2264 15.6478C19.6226 14.3061 19.3208 12.5786 19.3208 10.4654C19.3208 8.51992 18.717 6.826 17.5094 5.38365C16.3019 3.9413 14.7589 3.03564 12.8805 2.66667V1.61006C12.8805 1.174 12.7128 0.805031 12.3774 0.503145C12.0755 0.167715 11.7065 0 11.2704 0C10.8344 0 10.4486 0.167715 10.1132 0.503145C9.81132 0.805031 9.66038 1.174 9.66038 1.61006V2.66667C7.78197 3.03564 6.23899 3.9413 5.03145 5.38365C3.8239 6.826 3.22013 8.51992 3.22013 10.4654C3.22013 12.5786 2.91824 14.3061 2.31447 15.6478C1.94549 16.4193 1.37526 17.2075 0.603774 18.0126L0.45283 18.2138C0.150943 18.5493 0 18.935 0 19.3711C0 19.7736 0.150943 20.1426 0.45283 20.478C0.754717 20.7799 1.14046 20.9308 1.61006 20.9308H20.9308C21.4004 20.9308 21.7862 20.7799 22.088 20.478C22.3899 20.1426 22.5409 19.7736 22.5409 19.3711C22.5409 18.935 22.3899 18.5493 22.088 18.2138Z"
+                                                          fill="#64DBDD"/>
+                                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                                          d="M19.3207 22.5409C21.0991 22.5409 22.5408 21.0992 22.5408 19.3207C22.5408 17.5423 21.0991 16.1006 19.3207 16.1006C17.5423 16.1006 16.1006 17.5423 16.1006 19.3207C16.1006 21.0992 17.5423 22.5409 19.3207 22.5409Z"
+                                                          fill="white"/>
+                                                    <path d="M19.3208 14.239C18.4781 14.239 17.6982 14.4528 16.9812 14.8805C16.2642 15.2956 15.6919 15.8616 15.2642 16.5786C14.8491 17.2956 14.6416 18.0755 14.6416 18.9182C14.6416 19.761 14.8491 20.5409 15.2642 21.2579C15.6919 21.9748 16.2642 22.5409 16.9812 22.956C17.6982 23.3836 18.4781 23.5975 19.3208 23.5975C20.1636 23.5975 20.9435 23.3836 21.6605 22.956C22.3775 22.5409 22.9435 21.9748 23.3586 21.2579C23.7863 20.5409 24.0001 19.761 24.0001 18.9182C24.0001 18.0755 23.7863 17.2956 23.3586 16.5786C22.9435 15.8616 22.3775 15.2956 21.6605 14.8805C20.9435 14.4528 20.1636 14.239 19.3208 14.239ZM22.0378 19.4465C22.0378 19.5094 22.0127 19.566 21.9624 19.6163C21.9246 19.6541 21.8743 19.6729 21.8114 19.6729H20.0756V21.4088C20.0756 21.4717 20.0504 21.5283 20.0001 21.5786C19.9624 21.6163 19.912 21.6352 19.8491 21.6352H18.7925C18.7297 21.6352 18.673 21.6163 18.6227 21.5786C18.585 21.5283 18.5661 21.4717 18.5661 21.4088V19.6729H16.8303C16.7674 19.6729 16.7108 19.6541 16.6605 19.6163C16.6227 19.566 16.6039 19.5094 16.6039 19.4465V18.3899C16.6039 18.327 16.6227 18.2767 16.6605 18.239C16.7108 18.1887 16.7674 18.1635 16.8303 18.1635H18.5661V16.4277C18.5661 16.3648 18.585 16.3145 18.6227 16.2767C18.673 16.2264 18.7297 16.2012 18.7925 16.2012H19.8491C19.912 16.2012 19.9624 16.2264 20.0001 16.2767C20.0504 16.3145 20.0756 16.3648 20.0756 16.4277V18.1635H21.8114C21.8743 18.1635 21.9246 18.1887 21.9624 18.239C22.0127 18.2767 22.0378 18.327 22.0378 18.3899V19.4465Z"
+                                                          fill="#7ED321"/>
+                                                </svg>
+                                            </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!-- engagment -->
+                                <div class="col-lg-3 col-nc-lg-6 col-6 txt-center vertically-centered">
+                                    <div class="v-block"></div>
+                                    <div class="engagement">
+                                        <div class="rating">
+
+                                            {% if item['total_videos'] %}
+                                                {% if item['total_100video_likes'] == 'None' %}
+                                                    {% set likes = 0|int %}
+                                                {% else %}
+                                                    {% set likes = item['total_100video_likes'] %}
+                                                {% endif %}
+
+                                                {% if item['total_100video_comments'] == 'None' %}
+                                                    {% set comments = 0|int %}
+                                                {% else %}
+                                                    {% set comments = item['total_100video_comments'] %}
+                                                {% endif %}
+                                                {% if item['total_100video_shares'] == 'None' %}
+                                                    {% set shares = 0|int %}
+                                                {% else %}
+                                                    {% set shares = item['total_100video_shares'] %}
+                                                {% endif %}
+                                                {% set total = (likes|int + comments|int + shares|int)%}
+                                                    <!--{{ total }} <br>-->
+                                                {# set total = (total/item['total_videos'])|round|int #}
+                                                <!--{{ total }} <br>-->
+                                                {% if total != 0 %}
+                                                    {% set total = (total/item['subscriberCount_gained']) %}
+                                                    {# set total = total|round(4, 'floor')*100 #}
+                                                    {% set total = total|round(2, 'floor') %}
+                                                {% else %}
+                                                    {% set total = total|round(2, 'floor') %}
+                                                {% endif %}
+                                            {{ total }} %
+                                            {% endif %}
+                                        </div>
+                                        <div class="rating-txt">Engagement Rate</div>
+                                        <div class="engagement-bar">
+                                            <div class="engagement-bar__block engagement-color--forestgreen"></div>
+                                            <div class="engagement-bar__block engagement-color--forestgreen"></div>
+                                            <div class="engagement-bar__block engagement-color--forestgreen"></div>
+                                            <div class="engagement-bar__block engagement-color--forestgreen"></div>
+                                            <div class="engagement-bar__block engagement-color--forestgreen"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- numbers -->
+                                <div class="col-lg-5 col-nc-lg-12 offer-analysis vertically-centered">
+                                    <div class="v-block"></div>
+                                    <ul class="analyse-list">
+                                        <!-- total followers -->
+                                        <li>
+                                            <div class="analyse-result" data-integers="{{item['subscriberCount_gained']}}">
+
+
+                                            </div>
+                                            <div>Total Followers</div>
+                                        </li>
+                                        <!-- total followers end -->
+                                        <!--views -->
+                                        {% if channel_name == 'youtube' %}
+                                        <li>
+                                            <div class="analyse-result"
+                                                 {% if item['total_100video_views'] %}
+                                                 data-integers="{{ (item['total_100video_views']/100)|int }}">
+                                                 {% else %}
+                                                 data-integers="0">
+                                                 {% endif %}
+                                            </div>
+                                            <div>Avg Views / video</div>
+                                        </li>
+                                        {% endif %}
+                                        {% if channel_name == 'twitter' %}
+
+                                        {% endif %}
+                                        {% if channel_name == 'instagram' %}
+
+                                        {% endif %}
+
+                                        <!--views end-->
+                                        <!--likes-->
+                                        {% if channel_name == 'youtube' %}
+                                        <li>
+                                            <div class="analyse-result" data-integers="{{ (item['total_100video_likes']/100)|int }}">
+                                            </div>
+                                            <div>Avg Likes / video</div>
+                                        </li>
+                                        {% endif %}
+                                        {% if channel_name == 'twitter' %}
+                                        <li>
+                                            <div class="analyse-result" data-integers="{{ (item['total_100video_likes']/100)|int }}">
+                                            </div>
+                                            <div>Avg Likes / Post</div>
+                                        </li>
+                                        {% endif %}
+                                        {% if channel_name == 'instagram' %}
+                                        <li>
+                                            <div class="analyse-result" data-integers="{{ (item['total_100video_likes']/100)|int }}">
+                                            </div>
+                                            <div>Avg Likes / Post</div>
+                                        </li>
+                                        {% endif %}
+                                        <!--likes end-->
+
+                                        <!--comments-->
+                                        {% if channel_name == 'youtube' %}
+                                        <li>
+                                            <div class="analyse-result" data-integers="{{ (item['total_100video_comments']/100)|int }}">
+                                            </div>
+                                            <div>Avg Comments / video</div>
+                                        </li>
+                                        {% endif %}
+                                        {% if channel_name == 'twitter' %}
+
+                                        {% endif %}
+                                        {% if channel_name == 'instagram' %}
+                                        <li>
+                                            <div class="analyse-result" data-integers="{{ (item['total_100video_comments']/100)|int }}">
+                                            </div>
+                                            <div>Avg Comments / Post</div>
+                                        </li>
+                                        {% endif %}
+                                        <!--comments end-->
+                                        <!--shares-->
+
+                                        {% if channel_name == 'youtube' %}
+
+                                        {% endif %}
+                                        {% if channel_name == 'twitter' %}
+                                        <li>
+                                            {% if item['total_100video_shares'] %}
+                                            <div class="analyse-result" data-integers="{{ (item['total_100video_shares']/100)|int }}">
+                                            </div>
+                                            {% else %}
+                                            <div class="analyse-result" data-integers="0">
+                                            </div>
+                                            {% endif %}
+                                            <div>Avg Retweets / Post</div>
+                                        </li>
+                                        {% endif %}
+                                        {% if channel_name == 'instagram' %}
+                                        {% endif %}
+                                        <!--shares end-->
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- end of data -->
+
+                            <!-- channel -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <hr class="divide">
+                                    <span>Other Channels:</span>
+                                    <ul class="other-channels">
+                                        {% if channel_name =='youtube' %}
+                                            {% if item['twitter_url'] %}
+                                            <li><a href="{{ item['twitter_url'] }}" target="_blank"><i
+                                                    class="fa fa-twitter"></i></a>
+                                            </li>
+                                            {% endif %}
+                                            {% if item['insta_url'] %}
+                                            <li><a href="{{ item['insta_url'] }}" target="_blank"><i
+                                                    class="fa fa-instagram"></i></a>
+                                            </li>
+                                            {% endif %}
+                                            {% if item['facebook_url'] %}
+                                            <li><a href="{{ item['facebook_url'] }}" target="_blank">
+                                                    <i class="fa fa-facebook-square"></i></a>
+                                            </li>
+                                            {% endif %}
+                                        {% endif %}
+                                        {% if channel_name =='twitter' %}
+                                            {% if item['youtube_url'] %}
+                                            <li><a href="{{ item['youtube_url'] }}" target="_blank"><i
+                                                    class="fa fa-youtube"></i></a>
+                                            </li>
+                                            {% endif %}
+                                            {% if item['insta_url'] %}
+                                            <li><a href="{{ item['insta_url'] }}" target="_blank"><i
+                                                    class="fa fa-instagram"></i></a>
+                                            </li>
+                                            {% endif %}
+                                            {% if item['facebook_url'] %}
+                                            <li><a href="{{ item['facebook_url'] }}" target="_blank">
+                                                    <i class="fa fa-facebook-square"></i></a>
+                                            </li>
+                                            {% endif %}
+                                        {% endif %}
+                                        {% if channel_name =='instagram' %}
+                                            {% if item['youtube_url'] %}
+                                            <li><a href="{{ item['youtube_url'] }}" target="_blank"><i
+                                                    class="fa fa-youtube"></i></a>
+                                            </li>
+                                            {% endif %}
+                                            {% if item['twitter_url'] %}
+                                            <li><a href="{{ item['twitter_url'] }}" target="_blank"><i
+                                                    class="fa fa-twitter"></i></a>
+                                            </li>
+                                            {% endif %}
+                                            {% if item['facebook_url'] %}
+                                            <li><a href="{{ item['facebook_url'] }}" target="_blank">
+                                                    <i class="fa fa-facebook-square"></i></a>
+                                            </li>
+                                            {% endif %}
+                                        {% endif %}
+                                        <!--<li><a href="#"><i class="fa fa-youtube-square-square color2"></i></a></li>-->
+                                    </ul>
+                                    <hr class="divide no-margin-bottom">
+                                </div>
+                            </div>
+                            <!-- end of channel -->
+                        </div>
+                        <!-- end of user -->
+
+                        <!--<div class="col-md-3 offer-analysis">-->
+                        <!--<ul class="analyse-list">-->
+                        <!--<li>Total Followers <span class="to-right analyse-result">6.2M</span></li>-->
+                        <!--<li>Avg Views / video <span class="to-right analyse-result">55M</span></li>-->
+                        <!--<li>Avg Likes / video <span class="to-right analyse-result">902.2K</span></li>-->
+                        <!--<li>Avg Comments / video <span class="to-right analyse-result">235.4K</span></li>-->
+                        <!--</ul>-->
+                        <!--</div>-->
+
+                        <!-- chart -->
+                        <!--<div class="col-lg-4 col-nc-lg-12 line-area vertically-centered">-->
+                            <!--<canvas id="lineChart{{ item['linechart_id'] }}" class="line-chart"-->
+                                    <!--data-labels="May,Jun,Jul,Aug,Sep,Oct,Nov" data-grafs="-->
+                            <!--Youtube:rgba(255,0,0,0.1):rgba(255,0,0,0.5):90,59,180,81,120,55,10,20;-->
+                            <!--Twitter:rgba(0,255,255,0.1):rgba(0,255,255,0.5):100,20,60,20,80,55,90;-->
+                            <!--Instagram:rgba(193, 53, 132,0.1):rgba(193, 53, 132,0.5):23,20,50,20,80,23,54;-->
+                            <!--Facebook:rgba(59,89,152,0.1):rgba(59,89,152,0.5):23,54,60,63,65,23,65;-->
+                            <!--" height="180px"></canvas>-->
+                        <!--</div>-->
+                        <!-- end of chart -->
+                        <div class="col-lg-4 col-nc-lg-12 line-area vertically-centered">
+                            <canvas id="lineChart{{ item['linechart_id'] }}" class="line-chart" height="180px"></canvas>
+                        </div>
+                        <!-- status -->
+                        <div class="col-lg-2 col-nc-lg-12 offer-status">
+                            <div class="tabs-container">
+                                <ul class="tabs">
+                                    <li class="tab width-1/2 active"><a class="active-border left-border-round"
+                                                                        href="#status{{ item['channel_id'] }}"><i
+                                            class="fa fa-bullseye"></i> Status</a></li>
+                                    <li class="tab width-1/2"><a class="active-border right-border-round"
+                                                                 href="#alert{{ item['channel_id'] }}"><i
+                                            class="fa fa-bell"></i> Alert</a></li>
+                                </ul>
+                                <div class="tabs-content">
+                                    <div class="tabs-content-item active" id="status{{ item['channel_id'] }}">
+                                        <div class="tab-content-item-list-container">
+                                            <ul class="tab-content-item-list">
+
+                                                <li id="no_campaigns{{ item['channel_id'] }}">No Campaigns</li>
+
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="tabs-content-item " id="alert{{ item['channel_id'] }}">
+                                        <div class="tab-content-item-list-container">
+                                            <ul class="tab-content-item-list">
+                                            {% if item['channel_id'] in
+                                            favInfList_data_alerts['data']|map(attribute="channel_id") %}
+                                            {% for favitem in favInfList_data_alerts['data'] %}
+                                            {% if item['channel_id'] == favitem['channel_id'] %}
+                                            <li>Followers <span class="color1">{{ favitem['alert_followers'] }}</span>
+                                            </li>
+                                            <li>Avg Views/video <span class="color1">{{ favitem['alert_views'] }}</span>
+                                            </li>
+                                            <li>Avg Likes/video <span class="color1">{{ favitem['alert_likes'] }}</span>
+                                            </li>
+                                            <li>Avg Comments <span class="color1">{{ favitem['alert_comments'] }}</span>
+                                            </li>
+
+                                            {% endif %}
+
+                                            {% endfor %}
+                                            {% else %}
+                                            <li>No Alerts Set</li>
+                                            {% endif %}
+                                        </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end of status -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end of influencer card -->
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
+
+{% block footer %}
+<!-- Create alert Modal form-->
+<div class="modal fade" id="create_alert_modal" role="dialog" data-backdrop="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <b class="modal-title">Create Alert</b>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <form name="create_alert_form" id="create_alert_form" action="/createAlerts" method="POST">
+                <input  class="form-control" type="hidden" value="" name="channel_id" id="create_alert_channel_id">
+                <input  class="form-control" type="hidden" value="" name="channel_name" id="create_alert_channel_name">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="total_followers">Total Followers:</label>
+                                <input class="form-control" type="number" value="" name="alert_followers"
+                                       id="total_followers" placeholder="Total Followers">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="total_views">Avg Views/Videos:</label>
+                                <input class="form-control" type="number" value="" name="alert_views" id="total_views"
+                                       placeholder="Total Views">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="total_likes">Avg Likes/Videos:</label>
+                                <input class="form-control" type="number" value="" name="alert_likes" id="total_likes"
+                                       placeholder="Total Likes">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="total_comments">Avg Comments/Videos:</label>
+                                <input class="form-control" type="number" value="" name="alert_comments"
+                                       id="total_comments" placeholder="Total Comments">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% if countAlerts>0 %}
+                        <div class="modal-footer">
+                            <button id="createAlertButton" type="submit" class="btn btn-default bg-color1 color-white">Save</button>
+                        </div>
+                        <script>
+                            var countAlerts=Number('{{countAlerts}}');
+                            var messageAlert='{{messageSubscription['Alerts']}}';
+                            var packageName='{{packageName}}';
+                            var maxAlerts='{{maxAlerts}}'
+                            function openAlert(){
+                                if(countAlerts==0){
+                                    document.getElementById('addMessageSubscription').innerHTML="You have reached the limit of Alerts. (Allowed: "+maxAlerts+" ) Please customize your plan to add more or upgrade to unlock more features and add-ons";
+                                    document.getElementById('subscription-message-header').innerHTML='Limit Reached';
+                                    document.getElementById('create_alert_modal').style.filter='blur(3px)';
+                                    document.getElementById('create_alert_modal').style.pointerEvents='none';
+                                    document.getElementsByClassName('subscription-message')[0].style.display="block";
+                                    document.getElementById('subscription-message-close').style.display="block";
+                                }
+                            }
+                            $('#subscription-message-close').click(function(){
+                                 document.getElementById('create_alert_modal').style.filter='none';
+                                 document.getElementById('create_alert_modal').style.pointerEvents='';
+                                 $('#create_alert_modal').modal('hide');
+                            })
+                        </script>
+                    {% else %}
+                        <script>
+                            var countAlerts=Number('{{countAlerts}}');
+                            var messageAlert='{{messageSubscription['Alerts']['text']}}';
+                            var messageAlertHead='{{messageSubscription['Alerts']['heading']}}'
+                            var packageName='{{packageName}}';
+                            function openAlert(){
+                                document.getElementById('addMessageSubscription').innerHTML=messageAlert;
+                                document.getElementById('subscription-message-header').innerHTML=messageAlertHead;
+                                document.getElementById('create_alert_modal').style.filter='blur(3px)';
+                                document.getElementById('create_alert_modal').style.pointerEvents='none';
+                                document.getElementsByClassName('subscription-message')[0].style.display="block";
+                                document.getElementById('subscription-message-close').style.display="block";
+
+                            }
+                            $('#subscription-message-close').click(function(){
+                                 document.getElementById('create_alert_modal').style.filter='none';
+                                 document.getElementById('create_alert_modal').style.pointerEvents='';
+                                 $('#create_alert_modal').modal('hide');
+                            })
+                        </script>
+                    {% endif %}
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Campaign List Modal-->
+<div class="modal fade" id="campaignList" role="dialog" data-backdrop="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <b class="modal-title">Campaign List</b>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <form name="add_youtube_inf_to_campaign_list_form" id="add_influencer_to_campaign"
+                  action="/addYoutubeInfToCampaignList" method="POST">
+                <div class="modal-body">
+                    <input type="hidden" name="channel_id" id="youtube_channel_id">
+                    <input type="hidden" name="channel_name" id="campaign_list_channel_name">
+                    <div id="channel_name"></div>
+                    <div>channels</div>
+                    <table class="table table-responsive-lg">
+                        <thead>
+                        <tr>
+                            <th>Select</th>
+                            <th>Campaign</th>
+                            <th>Status</th>
+                            <th>Period</th>
+                            <th>Channels</th>
+                            <!--<th scope="col"><b style="font-weight: 500; font-size:16px;">Countries</b></th>-->
+                            <th>Influencers</th>
+                            <!--<th scope="col"><b style="font-weight: 500; font-size:16px;">Budget</b></th>-->
+                            <!--<th scope="col"><b style="font-weight: 500; font-size:16px;">ROI</b></th>-->
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in view_campaign_data['data'] %}
+                        {% set channels_ids = [] %}
+                        {% for item1 in item['youtube_inf_data'] %}
+                        {{ channels_ids.append(item1['channel_id'])|default("", true) }}
+                        {% endfor %}
+                        <tr data-campaign-id="{{ channels_ids|join(',') }}">
+                            <td>
+                                <div class="custom-control custom-checkbox custom-control-inline text-left">
+                                    <input type="checkbox" id="campaignCheckbox{{ item['campaign_id'] }}"
+                                           class="filled-in custom-control-input custom-control-input campaign_id campaign_id{{ item['campaign_id'] }}"
+                                           data-campaign-channel-id="{{ channels_ids|join(',') }}" type="checkbox"
+                                           multiple value="{{ item['campaign_id'] }}" name="campaign_id">
+                                    <label class="custom-control-label campaignCheckbox"
+                                           for="campaignCheckbox{{ item['campaign_id'] }}"></label>
+                                </div>
+                            </td>
+                            <td class="max-width-150"><a href="/viewCampaignDetails/{{ item['campaign_id'] }}">{{ item['campaign_name']}}</a></td>
+                            <td>
+                                    <span class="{{ item['campaign_status'] }}" data-toggle="tooltip"
+                                          title="{{ item['campaign_status'] }}"></span>
+                                <!--{{ item['campaign_status'] }}-->
+                            </td>
+                            <td class="no-wrap">{{ item['from_date'] }}- {{ item['to_date'] }}</td>
+                            <td>
+                                {% set channels = item['channels'].split(',') %}
+                                {% for channel in channels %}
+                                {% if channel == 'youtube' %}
+                                <a href="#" class="fa fa-youtube"></a>
+                                {% elif channel == 'facebook' %}
+                                <a href="#" class="fa fa-facebook-square"></a>
+                                {% elif channel == 'twitter' %}
+                                <a href="#" class="fa fa-twitter"></a>
+                                {% elif channel == 'instagram' %}
+                                <a href="#" class="fa fa-instagram"></a>
+                                {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td>{{ item['no_of_influencers'] }}
+                                <span class="float-right text muted">
+                        </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-default bg-color1 color-white">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Send message Modal form-->
+<div class="modal fade" id="sendMessage" role="dialog" data-backdrop="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <b class="modal-title">Send Message</b>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <form name="create_alert_form" id="send_message_form" action="/sendMessage" method="POST">
+                <div class="modal-body">
+                    <input class="form-control" type="hidden" value="" name="channel_id" id="message_channel_id">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="to_email_id">*To:</label>
+                                <input type="text" class="form-control" value="" id="title" readonly>
+                                <input type="hidden" class="form-control" name="to_email_id" id="to_email_id">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="to_subject">*Subject:</label>
+                                <input required type="text" class="form-control" id="to_subject" name="subject">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="to_subject">Campaign:</label>
+                                 <select name="campaign_id" id="message_campaign_id">
+                                      <option value=""></option>
+                                      {% for item in view_campaign_data['data'] %}
+                                      <option value="{{item['campaign_id']}}">{{item['campaign_name']}}</option>
+                                      {% endfor %}
+                                 </select>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="to_message">*Message:</label>
+                                <textarea class="form-control" name="message" id="to_message"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% if countMessages>0 %}
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-default bg-color1 color-white">Save</button>
+                    </div>
+                    <script>
+                        var countMessages=Number('{{countMessages}}');
+                        var package_name='{{package_name}}';
+                        var maxMessages='{{maxMessages}}';
+                        function openMessage(){
+                            if(countMessages==0){
+                                document.getElementById('subscription-message-header').innerHTML='Limit Reached';
+                                document.getElementById('addMessageSubscription').innerHTML="You have reached the limit of Messages. (Allowed: "+maxMessages+" ) Please customize your plan to add more or upgrade to unlock more features and add-ons.";
+                                document.getElementById('sendMessage').style.filter='blur(3px)';
+                                document.getElementById('sendMessage').style.pointerEvents='none';
+                                document.getElementsByClassName('subscription-message')[0].style.display="block";
+                                document.getElementById('subscription-message-close').style.display="block";
+                            }
+                        }
+                        $('#subscription-message-close').click(function(){
+                             document.getElementById('sendMessage').style.filter='none';
+                             document.getElementById('sendMessage').style.pointerEvents='';
+                             $('#sendMessage').modal('hide');
+                        })
+                    </script>
+                {% else%}
+                    <script>
+                        var countMessages=Number('{{countMessages}}');
+                        var messageMessage='{{messageSubscription['Messages']['text']}}';
+                        var messageMessageHead='{{messageSubscription['Messages']['heading']}}';
+                        var package_name='{{package_name}}';
+                        function openMessage(){
+                            document.getElementById('addMessageSubscription').innerHTML=messageMessage;
+                            document.getElementById('subscription-message-header').innerHTML=messageMessageHead;
+                            document.getElementById('sendMessage').style.filter='blur(3px)';
+                            document.getElementById('sendMessage').style.pointerEvents='none';
+                            document.getElementsByClassName('subscription-message')[0].style.display="block";
+                            document.getElementById('subscription-message-close').style.display="block";
+
+                        }
+                        $('#subscription-message-close').click(function(){
+                             document.getElementById('sendMessage').style.filter='none';
+                             document.getElementById('sendMessage').style.pointerEvents='';
+                             $('#sendMessage').modal('hide');
+                        })
+                    </script>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- added autocomplete -->
+<!--<script src="http://code.jquery.com/jquery-1.9.1.js"></script>-->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.2.24/jquery.autocomplete.min.js"></script>-->
+<!--<script>-->
+    <!--$('#string_word').autocomplete({-->
+        <!--width: 348,-->
+        <!--delimiter: /(,|;)\s*/,-->
+        <!--lookup: '{{ lookup_string }}'.split(',')-->
+    <!--});-->
+<!--</script>-->
+<!-- end of autocomplete -->
+
+{% if countAddToFavorites==0 %}
+    <script>
+        var countAddToFavorites=Number('{{countAddToFavorites}}');
+        var messageAddToFavorites='{{messageSubscription['Add to Favorites']['text']}}';
+
+        var packageName='{{packageName}}';
+        $('#subscription-message-close').click(function(){
+            document.getElementsByClassName('subscription-message')[0].style.display="none";
+            document.getElementById('subscription-message-close').style.display="none";
+        })
+    </script>
+{% else %}
+    <script>
+        var countAddToFavorites=Number('{{countAddToFavorites}}');
+        var messageAddToFavorites='{{messageSubscription['Add to Favorites']['text']}}';
+        var packageName='{{packageName}}';
+        $('#subscription-message-close').click(function(){
+             document.getElementsByClassName('subscription-message')[0].style.display="none";
+             document.getElementById('subscription-message-close').style.display="none";
+        })
+    </script>
+{% endif %}
+
+<script>
+
+function showingOption(v){
+    var prev=v.previousSibling;
+    if(prev.style.display=="none"){
+
+        $('#'+prev.id).fadeToggle('100');
+    }
+    else{
+        $('#'+prev.id).fadeToggle('100');
+    }
+
+}
+
+function getGraphUpdated(){
+    var channel_name_graph='{{ channel_name }}';
+    var channel_name_graph_label=channel_name_graph;
+    channel_name_graph=channel_name_graph.toLowerCase();
+    var graph_color=[];
+    var graph_border=[];
+    if(channel_name_graph=='youtube'){
+        graph_color='rgba(255,0,0,0.1)'
+        graph_border='rgba(255,0,0,0.5)';
+    }
+    else if(channel_name_graph=='twitter'){
+        graph_color='rgba(0,255,255,0.1)';
+        graph_border='rgba(0,255,255,0.5)';
+    }
+    else if(channel_name_graph=='facebook'){
+        graph_color='rgba(59,89,152,0.1)';
+        graph_border='rgba(59,89,152,0.5)';
+    }
+    else if(channel_name_graph=='instagram'){
+        graph_color='rgba(193, 53, 132,0.1)';
+        graph_border='rgba(193, 53, 132,0.5)';
+    }
+    {% for item in data['data']%}
+    $.ajax({
+           type: "GET",
+           url: '/getChannelGraphData/'+channel_name_graph+'/'+'{{item['channel_id']}}',
+           contentType: 'application/json;charset=UTF-8',
+           success: function(data)
+           {
+                if(data.length!=0){
+                    var months=[];
+                     var monthsSet=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sept','Oct','Nov','Dec'];
+                     var currentDate=new Date().getMonth();
+                     var start=currentDate-3;
+                     var end=currentDate+2;
+                     var looping=6;
+                     while(looping){
+                        var dataSet1={};
+                        var followers=0;
+                        if(start<=currentDate){
+                            followers=10000000;
+                        }
+                        if(start<0){
+                            dataSet1={
+                                'month':12+start,
+                                'followers':followers
+                            }
+                        }
+                        else if(start>11){
+                            dataSet1={
+                                'month':start-12,
+                                'followers':followers
+                            }
+                        }
+                        else{
+                            dataSet1={
+                                'month':start,
+                                'followers':followers
+                            }
+                        }
+                        months.push(dataSet1);
+                        start++;
+                        looping--;
+                     }
+                     for(var i=0;i<data['results'].length;i++){
+
+                            var d= new Date(parseInt(data['results'][i]['timestamp'])*1000).getMonth();
+                            var dat={
+                                'month':d,
+                                'followers':data['results'][i]['no_of_followers']
+                            }
+                            for(var m=0;m<months.length;m++){
+                                if(months[m]['month']==d){
+                                    months[m]['followers']=data['results'][i]['no_of_followers'];
+                                    break;
+                                }
+                            }
+
+                     }
+                     var demo=[0,0,0,0,0,0];
+                     for(var n=0;n<months.length;n++){
+                            if(months[n].followers==10000000){
+                            demo[n]=1;
+                            var min=0;
+                            var max=0;
+                            if(n==0){
+                                max=months[n+1].followers;
+                            }
+                            else if(n-1==0){
+                                max=months[n+1].followers;
+                            }
+                            else if(n-1>0&&n+1<months.length){
+                                min=months[n-1].followers;
+                                max=months[n+1].followers;
+                            }
+                            else if(n+1==months.length){
+                                min=months[n].followers;
+                            }
+                            months[n].followers=max-(max*16.67)/100;
+                          }
+                          if(months[n].followers==0){
+                            demo[n]=-1;
+                          }
+                     }
+                     var labels=[];
+                     var dataSetValues=[];
+                     for(var m=0;m<months.length;m++){
+                            labels.push(monthsSet[months[m]['month']]);
+                            dataSetValues.push(months[m]['followers'])
+                     }
+                     var realDataSet=[];
+                     var futureDataSet=[];
+                     for(var m=0;m<demo.length;m++){
+                         realDataSet.push(dataSetValues[m]);
+                         futureDataSet.push(dataSetValues[m]);
+                     }
+                     for(var m=0;m<demo.length;m++){
+                            if(demo[m]==1||demo[m]==0){
+                                futureDataSet[m]=NaN;
+                            }
+                            else if(demo[m]=-1){
+                                realDataSet[m]=NaN;
+                            }
+                     }
+                     var m=0;
+                     while(m<realDataSet.length&&!Number.isNaN(realDataSet[m])){
+                        m++;
+                     }
+                     if(m-1>0){
+                        m--;
+                        futureDataSet[m]=realDataSet[m];
+                        m++;
+                     }
+                     var increasePercentage=16.67;
+                     while(m<realDataSet.length){
+                        var val=futureDataSet[m-1]+(futureDataSet[m-1]*16.67)/100;
+                        futureDataSet[m]=val;
+                        m++;
+                     }
+                      var ctx = document.getElementById("lineChart"+{{loop.index}});
+                             var myChart = new Chart(ctx, {
+                                type: 'line',
+                                data: {
+                                    labels: labels,
+                                    datasets:[
+                                    {
+                                            label: "Real",
+                                            data: realDataSet,
+                                            backgroundColor :graph_color,
+                                            borderColor: graph_border,
+                                            borderWidth : 1
+                                    },
+                                    {
+                                            label: "Projected",
+                                            data: futureDataSet,
+                                            backgroundColor :'rgba(183, 183, 183, 0.1)',
+                                            borderColor: 'rgba(183, 183, 183, 0.5)',
+                                            borderWidth : 1
+                                    }]
+                                },
+                                options: {
+<!--                                    legend: {-->
+<!--                                        onClick: (e) => e.stopPropagation()-->
+<!--                                    },-->
+                                    scales: {
+                                        yAxes: [{
+                                            ticks: {
+                                                callback: function(label,index,labels){
+                                                        if (label >= 1000000000) {
+                                                           return (label / 1000000000).toFixed(1).replace(/\.0$/, '') + 'G';
+                                                        }
+                                                        if (label >= 1000000) {
+                                                            return (label / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+                                                        }
+                                                        if (label >= 1000) {
+                                                            return (label / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+                                                        }
+                                                        return label;
+                                                },
+                                                beginAtZero:true
+                                            }
+                                        }]
+                                    },
+                                    tooltips: {
+                                             callbacks: {
+                                                          label: function(tooltipItems, data) {
+                                                                    var valueChange=tooltipItems.yLabel;
+                                                                    if (valueChange >= 1000000000) {
+                                                                       return (valueChange / 1000000000).toFixed(1).replace(/\.0$/, '') + 'G';
+                                                                    }
+                                                                    if (valueChange >= 1000000) {
+                                                                        return (valueChange / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+                                                                    }
+                                                                    if (valueChange >= 1000) {
+                                                                        return (valueChange / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+                                                                    }
+                                                                    return valueChange;
+                                                                }
+                                                          }
+                                             }
+
+                                    }
+                             });
+                }
+           }
+    });
+    {% endfor%}
+
+}
+getGraphUpdated();
+
+
+
+function updateChannelStatusForCampaignByCampaignId(campaign_id){
+    $.ajax({
+               type: "GET",
+               url: '/getChannelStatusForCampaignByCampaignId/'+campaign_id,
+               contentType: 'application/json;charset=UTF-8',
+               success: function(data)
+               {
+               console.log("values hai ji",data,data.results)
+
+                       <!--jQuery.each(data.results, function(i, val) {-->
+                                <!--$('#status'+val.channel_id).empty();-->
+                        <!--});-->
+
+                       jQuery.each(data.results, function(i, val) {
+                            console.log('data length -----',data.results.length);
+                            if (data.results.length != 0){
+                            <!--alert(val.channel_id);-->
+                            <!--alert(val.campaign_name);-->
+                            <!--alert(val.status);-->
+                                var color = '';
+                                if (val.status == 'Added'){
+                                    color = 'purple'
+                                }
+                                if (val.status == 'Contacted'){
+                                    color = 'orange'
+                                }
+                                if (val.status == 'Negotiations'){
+                                    color = 'orange'
+                                }
+                                if (val.status == 'Proposal Sent'){
+                                    color = 'light green'
+                                }
+                                if (val.status == 'Current Partner'){
+                                    color = 'dark green'
+                                }
+                                <!--$('#status'+val.channel_id).empty();-->
+                                $('#status'+val.channel_id).append('<b style="font-weight:450; font-size:12px;">'+val.campaign_name+'<br/></b>');
+                                $('#status'+val.channel_id).append('<b style="font-weight:400; color:'+color+'; font-size:11px;">'+val.status+'</b>');
+                                <!--$('#status'+val.channel_id).append('&nbsp;<a href="/inbox/'+val.message_id+'" style = "font-size:11px;">inbox</a>');-->
+                                if(val.status!='Contacted' && val.status!='Added'){
+                                    $('#status'+val.channel_id).append('&nbsp;<div style="display: inline-block;float: right;"><a data-toggle="tooltip" title="Go to conversation" href="/inbox/'+val.message_id+'" id="chat-option-'+val.campaign_id+'-'+val.channel_id+'" style="display:none;color:#599ae9;margin-right: 7px;top: 3px;position: relative;"><i class="goto-inbox-icon far fa-comments" style="color:#a8a8a8;"></i></a><a class="multiple-search" data-toggle="tooltip" title="Options" style="margin-top: -4px;font-size:1rem!important;" onclick="showingOption(this);"><i class="multiple-chat-option fas fa-ellipsis-v" style="top: 2px;color:#a8a8a8;"></i></a></div>');
+                                }
+                                $('#status'+val.channel_id).append('<hr style="height:0px; margin:auto;">');
+                                $('#no_campaigns'+val.channel_id).hide();
+                            }
+                            else{
+                                $('#status'+val.channel_id).append('<b>No Campaigns</b>');
+                            }
+                        });
+
+
+               }
+             });
+
+    }
+
+
+function getCampaign_ids(channel_id){
+  $.ajax({
+               type: "GET",
+               url: '/getChannelStatusForCampaign/'+channel_id,
+               contentType: 'application/json;charset=UTF-8',
+               success: function(data)
+               {
+
+                   if (data.results.length != 0){
+                   jQuery.each(data.results, function(i, val) {
+                        <!--alert(val.campaign_id);-->
+                        $('.campaign_id'+val.campaign_id).attr('disabled', true);
+                    });
+                    }
+               }
+  });
+
+}
+
+
+
+    function campaignList(channel_id,channel_name) {
+    <!--alert('i m called');-->
+    <!--alert(channel_name);-->
+    $( "input#campaign_id" ).prop('checked', false);
+    $( "input#campaign_id" ).prop('disabled', false)
+    $("#youtube_channel_id").val(channel_id);
+    $("#campaign_list_channel_name").val(channel_name);
+    var campaign_ids = getCampaign_ids(channel_id);
+    <!--alert(campaign_ids);-->
+    {% for item in view_campaign_data['data'] %}
+        {% for item1 in item['youtube_inf_data'] %}
+            var campaign_channel_id = "{{ item1['channel_id'] }}";
+            var campaign_id = "{{ item['campaign_id'] }}";
+
+            if (channel_id == campaign_channel_id){
+                <!--alert("equal");-->
+                $('.campaign_id'+campaign_id).attr('disabled', true);
+             }
+             else{
+                 <!--alert("not equal");-->
+                  <!--$('.campaign_id'+campaign_id).attr('disabled', false);-->
+             }
+        {% endfor %}
+    {% endfor %}
+    }
+
+
+    function add_to_fav_inf_list(channel_id,channel_name){
+        var valueFav=countAddToFavorites;
+        var maxAddToFavorites='{{maxAddToFavorites}}';
+        if(valueFav==0){
+                document.getElementById('subscription-message-header').innerHTML='Limit Reached';
+                document.getElementById('addMessageSubscription').innerHTML="You have reached the limit of Add to Favorites. (Allowed: "+maxAddToFavorites+" ) Please customize your plan to add more or upgrade to unlock more features and add-ons.";
+                document.getElementsByClassName('subscription-message')[0].style.display="block";
+                document.getElementById('subscription-message-close').style.display="block";
+
+        }
+        else{
+            $.ajax({
+                type: "GET",
+                url: '/addToFavInfList/'+channel_id+'/'+channel_name,
+                <!--data: form.serialize(), // serializes the form's elements.-->
+                success: function (data) {
+                    alert(data);
+                    countAddToFavorites=countAddToFavorites-1;
+                    getFavInfList();
+                }
+            });
+        }
+    }
+    function getFavInfList(){
+        $.ajax({
+            type: "GET",
+            url: '/getFavInfList',
+            <!--data: form.serialize(), // serializes the form's elements.-->
+            success: function (data) {
+                <!--alert(data);-->
+                if (data.results.length != 0){
+                   jQuery.each(data.results, function(i, val) {
+                        <!--alert(val.channel_id);-->
+<!--                        $('#alert'+val.channel_id).find('.tab-content-item-list').empty();-->
+<!--                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Followers</br>'+val.alert_followers+'</li></hr>');-->
+<!--                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Views</br>'+val.alert_views+'</li></hr>');-->
+<!--                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Likes</br>'+val.alert_likes+'</li></hr>');-->
+<!--                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Comments</br>'+val.alert_comments+'</li>');-->
+<!--                        $("#favList"+val.channel_id).attr("onclick","remove_from_fav_list('"+val.channel_id+"','"+{{session['user_id']}}+"'); return false;");-->
+                            var svg = '<span data-toggle="tooltip" title="Remove from Favorites" ><svg  width="24"'+
+                                                         'height="23" viewBox="0 0 24 23" fill="none"'+
+                                                         'xmlns="http://www.w3.org/2000/svg">'+
+                                                        '<path d="M10.7193 0.807309L7.80399 6.72758L1.25581 7.66944C0.86711 7.72924 0.553156 7.90864 0.313954 8.20764C0.104651 8.50665 0 8.83555 0 9.19435C0.0299003 9.55316 0.179402 9.86711 0.448505 10.1362L5.20266 14.7558L4.0814 21.304C4.0216 21.6628 4.0814 21.9917 4.2608 22.2907C4.4701 22.6196 4.75415 22.8289 5.11296 22.9186C5.47176 23.0083 5.81562 22.9635 6.14452 22.7841L12.0199 19.7342L17.8954 22.7841C18.2243 22.9635 18.5681 23.0083 18.9269 22.9186C19.2857 22.8289 19.5548 22.6196 19.7342 22.2907C19.9435 21.9917 20.0183 21.6628 19.9585 21.304L18.8372 14.7558L23.5914 10.1362C23.8605 9.86711 23.995 9.55316 23.995 9.19435C24.0249 8.83555 23.9203 8.50665 23.6811 8.20764C23.4718 7.90864 23.1728 7.72924 22.7841 7.66944L16.2359 6.72758L13.3206 0.807309C13.1412 0.448505 12.8721 0.209302 12.5133 0.089701C12.1844 -0.0299003 11.8405 -0.0299003 11.4817 0.089701C11.1528 0.209302 10.8987 0.448505 10.7193 0.807309Z"'+
+                                                              'fill="#87CEEB"/>'+
+                                                        '<path fill-rule="evenodd" clip-rule="evenodd"'+
+                                                              'd="M19.1961 21.5282C20.7814 21.5282 22.0665 20.2431 22.0665 18.6578C22.0665 17.0725 20.7814 15.7874 19.1961 15.7874C17.6108 15.7874 16.3257 17.0725 16.3257 18.6578C16.3257 20.2431 17.6108 21.5282 19.1961 21.5282Z"'+
+                                                              'fill="white"/>'+
+                                                        '<path d="M19.196 14.1279C18.4448 14.1279 17.7496 14.3185 17.1105 14.6998C16.4713 15.0698 15.9612 15.5743 15.5799 16.2135C15.2099 16.8526 15.0249 17.5478 15.0249 18.299C15.0249 19.0503 15.2099 19.7454 15.5799 20.3846C15.9612 21.0237 16.4713 21.5282 17.1105 21.8983C17.7496 22.2795 18.4448 22.4701 19.196 22.4701C19.9472 22.4701 20.6424 22.2795 21.2815 21.8983C21.9207 21.5282 22.4252 21.0237 22.7953 20.3846C23.1765 19.7454 23.3671 19.0503 23.3671 18.299C23.3671 17.5478 23.1765 16.8526 22.7953 16.2135C22.4252 15.5743 21.9207 15.0698 21.2815 14.6998C20.6424 14.3185 19.9472 14.1279 19.196 14.1279ZM16.9759 18.9718C16.9198 18.9718 16.8694 18.9549 16.8245 18.9213C16.7909 18.8765 16.7741 18.826 16.7741 18.7699V17.8281C16.7741 17.772 16.7909 17.7272 16.8245 17.6935C16.8694 17.6487 16.9198 17.6263 16.9759 17.6263H21.4161C21.4722 17.6263 21.517 17.6487 21.5506 17.6935C21.5955 17.7272 21.6179 17.772 21.6179 17.8281V18.7699C21.6179 18.826 21.5955 18.8765 21.5506 18.9213C21.517 18.9549 21.4722 18.9718 21.4161 18.9718H16.9759Z"'+
+                                                              'fill="#D0021B"/>'+
+                                                    '</svg></span>';
+                        $("#favList"+val.channel_id).html(svg);
+                    });
+                    }
+                 <!--$('#campaignList').modal('toggle');-->
+                 <!--updateChannelStatusForCampaign(channel_id);-->
+                 <!--$( 'div[id*=status]').empty();-->
+                 <!--window.location.reload();-->
+            }
+        });
+    }
+
+
+    function getFavInfListAlert(){
+        $.ajax({
+            type: "GET",
+            url: '/getFavInfListOne',
+            <!--data: form.serialize(), // serializes the form's elements.-->
+            success: function (data) {
+                <!--alert(data);-->
+                if (data.results.length != 0){
+                   jQuery.each(data.results, function(i, val) {
+                        <!--alert(val.channel_id);-->
+                        $('#alert'+val.channel_id).find('.tab-content-item-list').empty();
+                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Followers</br>'+val.alert_followers+'</li></hr>');
+                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Views</br>'+val.alert_views+'</li></hr>');
+                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Likes</br>'+val.alert_likes+'</li></hr>');
+                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Comments</br>'+val.alert_comments+'</li>');
+
+                    });
+                    }
+                 <!--$('#campaignList').modal('toggle');-->
+                 <!--updateChannelStatusForCampaign(channel_id);-->
+                 <!--$( 'div[id*=status]').empty();-->
+                 <!--window.location.reload();-->
+            }
+        });
+    }
+    function remove_from_fav_list(channel_id,user_id){
+        $.ajax({
+            type: "GET",
+            url: '/delFavInf/'+channel_id+'/'+user_id,
+            <!--data: form.serialize(), // serializes the form's elements.-->
+            success: function (data) {
+                alert(data);
+                $("#favList"+channel_id).attr("onclick","add_to_fav_inf_list('"+channel_id+"','{{channel_name}}'); return false;");
+                var svg = '<span data-toggle="tooltip" title="Add To Favorites" ><svg  width="24"'+
+                                                         'height="23" viewBox="0 0 24 23" fill="none"'+
+                                                         'xmlns="http://www.w3.org/2000/svg">'+
+                                                        '<path d="M22.7841 7.66944L16.2359 6.72758L13.3206 0.807309C13.1412 0.448505 12.8721 0.209302 12.5133 0.089701C12.1844 -0.0299003 11.8405 -0.0299003 11.4817 0.089701C11.1528 0.209302 10.8987 0.448505 10.7193 0.807309L7.80399 6.72758L1.25581 7.66944C0.86711 7.72924 0.553156 7.90864 0.313954 8.20764C0.104651 8.50665 0 8.83555 0 9.19435C0.0299003 9.55316 0.179402 9.86711 0.448505 10.1362L5.20266 14.7558L4.0814 21.304C4.0216 21.6628 4.0814 21.9917 4.2608 22.2907C4.4701 22.6196 4.75415 22.8289 5.11296 22.9186C5.47176 23.0083 5.81562 22.9635 6.14452 22.7841L12.0199 19.7342L17.8954 22.7841C18.2243 22.9635 18.5681 23.0083 18.9269 22.9186C19.2857 22.8289 19.5548 22.6196 19.7342 22.2907C19.9435 21.9917 20.0183 21.6628 19.9585 21.304L18.8372 14.7558L23.5914 10.1362C23.8605 9.86711 23.995 9.55316 23.995 9.19435C24.0249 8.83555 23.9203 8.50665 23.6811 8.20764C23.4718 7.90864 23.1728 7.72924 22.7841 7.66944ZM16.5498 13.9934L17.5814 20.2276L12.0199 17.2674L6.45847 20.2276L7.49003 13.9934L3.00498 9.59801L9.2392 8.701L12.0199 3.04983L14.8007 8.701L21.0349 9.59801L16.5498 13.9934Z"'+
+                                                              'fill="#87CEEB"/>'+
+                                                        '<path fill-rule="evenodd" clip-rule="evenodd"'+
+                                                              'd="M19.1961 21.5282C20.7814 21.5282 22.0665 20.2431 22.0665 18.6578C22.0665 17.0725 20.7814 15.7874 19.1961 15.7874C17.6108 15.7874 16.3257 17.0725 16.3257 18.6578C16.3257 20.2431 17.6108 21.5282 19.1961 21.5282Z"'+
+                                                              'fill="white"/>'+
+                                                        '<path d="M19.196 14.1279C18.4448 14.1279 17.7496 14.3185 17.1105 14.6998C16.4713 15.0698 15.9612 15.5743 15.5799 16.2135C15.2099 16.8526 15.0249 17.5478 15.0249 18.299C15.0249 19.0503 15.2099 19.7454 15.5799 20.3846C15.9612 21.0237 16.4713 21.5282 17.1105 21.8983C17.7496 22.2795 18.4448 22.4701 19.196 22.4701C19.9472 22.4701 20.6424 22.2795 21.2815 21.8983C21.9207 21.5282 22.4252 21.0237 22.7953 20.3846C23.1765 19.7454 23.3671 19.0503 23.3671 18.299C23.3671 17.5478 23.1765 16.8526 22.7953 16.2135C22.4252 15.5743 21.9207 15.0698 21.2815 14.6998C20.6424 14.3185 19.9472 14.1279 19.196 14.1279ZM21.6179 18.7699C21.6179 18.826 21.5955 18.8765 21.5506 18.9213C21.517 18.9549 21.4722 18.9718 21.4161 18.9718H19.8688V20.5191C19.8688 20.5752 19.8463 20.6256 19.8015 20.6705C19.7678 20.7041 19.723 20.7209 19.6669 20.7209H18.7251C18.669 20.7209 18.6185 20.7041 18.5737 20.6705C18.5401 20.6256 18.5232 20.5752 18.5232 20.5191V18.9718H16.9759C16.9198 18.9718 16.8694 18.9549 16.8245 18.9213C16.7909 18.8765 16.7741 18.826 16.7741 18.7699V17.8281C16.7741 17.772 16.7909 17.7272 16.8245 17.6935C16.8694 17.6487 16.9198 17.6263 16.9759 17.6263H18.5232V16.0789C18.5232 16.0228 18.5401 15.978 18.5737 15.9444C18.6185 15.8995 18.669 15.8771 18.7251 15.8771H19.6669C19.723 15.8771 19.7678 15.8995 19.8015 15.9444C19.8463 15.978 19.8688 16.0228 19.8688 16.0789V17.6263H21.4161C21.4722 17.6263 21.517 17.6487 21.5506 17.6935C21.5955 17.7272 21.6179 17.772 21.6179 17.8281V18.7699Z"'+
+                                                              'fill="#7ED321"/>'+
+                                                    '</svg>';
+                 $("#favList"+channel_id).html(svg);
+<!--                 $('#alert'+channel_id).find('.tab-content-item-list').empty();-->
+<!--                 $('#alert'+channel_id).find('.tab-content-item-list').append('<li>No Alerts Set</li></hr>');-->
+                 $.ajax({
+                    type:'POST',
+                    url:'/addingBackFeatureValue/'+'Add to favorites',
+                    success:function(data){
+                        console.log("done adding back favorites units",data);
+                        countAddToFavorites=countAddToFavorites+1;
+                        $('#favList'+channel_id)[0].parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.remove();
+
+                    }
+
+                })
+
+            }
+        });
+    }
+</script>
+<script>
+  $(document).ready(function () {
+
+      <!--ashish code for eng rate-->
+      <!--var influencerItem = document.getElementsByClassName('rating');-->
+      <!--var engagementBar = document.getElementsByClassName('engagement-bar');-->
+      <!--var max=4;-->
+      <!--var min=0.5;-->
+      <!--var diff=(max-min)/3;-->
+      <!--for(var i =0;i<influencerItem.length;i++){-->
+            <!--var value = parseFloat(influencerItem[i].innerText.split(' ')[0]);-->
+            <!--if(value>=max){-->
+                <!--engagementBar[i].childNodes[1].style.backgroundColor="rgb(0, 133, 15)";-->
+                <!--engagementBar[i].childNodes[3].style.backgroundColor="rgb(0, 133, 15)";-->
+                <!--engagementBar[i].childNodes[5].style.backgroundColor="rgb(0, 133, 15)";-->
+                <!--engagementBar[i].childNodes[7].style.backgroundColor="rgb(0, 133, 15)";-->
+                <!--engagementBar[i].childNodes[9].style.backgroundColor="rgb(0, 133, 15)";-->
+            <!--}-->
+            <!--else if(value<max&&value>max-diff){-->
+                <!--engagementBar[i].childNodes[1].style.backgroundColor="rgb(96, 165, 55)";-->
+                <!--engagementBar[i].childNodes[3].style.backgroundColor="rgb(96, 165, 55)";-->
+                <!--engagementBar[i].childNodes[5].style.backgroundColor="rgb(96, 165, 55)";-->
+                <!--engagementBar[i].childNodes[7].style.backgroundColor="rgb(96, 165, 55)";-->
+                <!--engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";-->
+            <!--}-->
+            <!--else if(value<=max-diff&&value>min+diff){-->
+                <!--engagementBar[i].childNodes[1].style.backgroundColor="rgb(129, 212, 82)";-->
+                <!--engagementBar[i].childNodes[3].style.backgroundColor="rgb(129, 212, 82)";-->
+                <!--engagementBar[i].childNodes[5].style.backgroundColor="rgb(129, 212, 82)";-->
+                <!--engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";-->
+                <!--engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";-->
+            <!--}-->
+            <!--else if(value<=min+diff&&value>min){-->
+                <!--engagementBar[i].childNodes[1].style.backgroundColor="rgb(230, 169, 0)";-->
+                <!--engagementBar[i].childNodes[3].style.backgroundColor="rgb(230, 169, 0)";-->
+                <!--engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";-->
+                <!--engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";-->
+                <!--engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";-->
+            <!--}-->
+            <!--else if(value<=min){-->
+                <!--engagementBar[i].childNodes[1].style.backgroundColor="rgb(204,0,0)";-->
+                <!--engagementBar[i].childNodes[3].style.backgroundColor="lightgrey";-->
+                <!--engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";-->
+                <!--engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";-->
+                <!--engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";-->
+            <!--}-->
+      <!--}-->
+var influencerItem = document.getElementsByClassName('rating');
+var engagementBar = document.getElementsByClassName('engagement-bar');
+var statement= '{{channel_name}}'
+if(statement=='Instagram'){
+  console.log("inside");
+  for(var i =0;i<influencerItem.length;i++){
+      var value = parseFloat(influencerItem[i].innerText.split(' ')[0]);
+      console.log(value);
+      if(value>=20){
+          engagementBar[i].childNodes[1].style.backgroundColor="rgb(0, 133, 15)";
+          engagementBar[i].childNodes[3].style.backgroundColor="rgb(0, 133, 15)";
+          engagementBar[i].childNodes[5].style.backgroundColor="rgb(0, 133, 15)";
+          engagementBar[i].childNodes[7].style.backgroundColor="rgb(0, 133, 15)";
+          engagementBar[i].childNodes[9].style.backgroundColor="rgb(0, 133, 15)";
+      }
+      else if(value<20&&value>15){
+          engagementBar[i].childNodes[1].style.backgroundColor="rgb(96, 165, 55)";
+          engagementBar[i].childNodes[3].style.backgroundColor="rgb(96, 165, 55)";
+          engagementBar[i].childNodes[5].style.backgroundColor="rgb(96, 165, 55)";
+          engagementBar[i].childNodes[7].style.backgroundColor="rgb(96, 165, 55)";
+          engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
+      }
+      else if(value<=15&&value>10){
+          engagementBar[i].childNodes[1].style.backgroundColor="rgb(129, 212, 82)";
+          engagementBar[i].childNodes[3].style.backgroundColor="rgb(129, 212, 82)";
+          engagementBar[i].childNodes[5].style.backgroundColor="rgb(129, 212, 82)";
+          engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
+          engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
+      }
+      else if(value<=10&&value>2.5){
+          engagementBar[i].childNodes[1].style.backgroundColor="rgb(230, 169, 0)";
+          engagementBar[i].childNodes[3].style.backgroundColor="rgb(230, 169, 0)";
+          engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
+          engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
+          engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
+      }
+      else if(value<=2.5){
+          engagementBar[i].childNodes[1].style.backgroundColor="rgb(204,0,0)";
+          engagementBar[i].childNodes[3].style.backgroundColor="lightgrey";
+          engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
+          engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
+          engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
+      }
+  }
+}
+else{
+          console.log("outsude");
+        var max=4;
+        var min=0.5;
+        var diff=(max-min)/3;
+        for(var i =0;i<influencerItem.length;i++){
+              var value = parseFloat(influencerItem[i].innerText.split(' ')[0]);
+              if(value>=max){
+                  engagementBar[i].childNodes[1].style.backgroundColor="rgb(0, 133, 15)";
+                  engagementBar[i].childNodes[3].style.backgroundColor="rgb(0, 133, 15)";
+                  engagementBar[i].childNodes[5].style.backgroundColor="rgb(0, 133, 15)";
+                  engagementBar[i].childNodes[7].style.backgroundColor="rgb(0, 133, 15)";
+                  engagementBar[i].childNodes[9].style.backgroundColor="rgb(0, 133, 15)";
+              }
+              else if(value<max&&value>max-diff){
+                  engagementBar[i].childNodes[1].style.backgroundColor="rgb(96, 165, 55)";
+                  engagementBar[i].childNodes[3].style.backgroundColor="rgb(96, 165, 55)";
+                  engagementBar[i].childNodes[5].style.backgroundColor="rgb(96, 165, 55)";
+                  engagementBar[i].childNodes[7].style.backgroundColor="rgb(96, 165, 55)";
+                  engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
+              }
+              else if(value<=max-diff&&value>min+diff){
+                  engagementBar[i].childNodes[1].style.backgroundColor="rgb(129, 212, 82)";
+                  engagementBar[i].childNodes[3].style.backgroundColor="rgb(129, 212, 82)";
+                  engagementBar[i].childNodes[5].style.backgroundColor="rgb(129, 212, 82)";
+                  engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
+                  engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
+              }
+              else if(value<=min+diff&&value>min){
+                  engagementBar[i].childNodes[1].style.backgroundColor="rgb(230, 169, 0)";
+                  engagementBar[i].childNodes[3].style.backgroundColor="rgb(230, 169, 0)";
+                  engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
+                  engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
+                  engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
+              }
+              else if(value<=min){
+                  engagementBar[i].childNodes[1].style.backgroundColor="rgb(204,0,0)";
+                  engagementBar[i].childNodes[3].style.backgroundColor="lightgrey";
+                  engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
+                  engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
+                  engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
+              }
+              }
+
+}
+      <!-- ashish code for eng rate ends-->
+
+
+
+      $('#sort').on('change', function() {
+            <!--alert('i m on change');-->
+            $('#btn-search-inf').click();
+      });
+
+      {% for item1 in view_campaign_data['data'] %}
+         <!--alert('{{item1['campaign_id']}}');-->
+        updateChannelStatusForCampaignByCampaignId('{{ item1['campaign_id'] }}');
+      {% endfor %}
+
+
+
+      $("#add_influencer_to_campaign").submit(function (e) {
+        <!--alert(' i m here ');-->
+        var form = $(this);
+        var url = form.attr('action');
+        var channel_id = $('#youtube_channel_id').val();
+        var channel_name = $('#campaign_list_channel_name').val();
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: form.serialize(), // serializes the form's elements.
+            success: function (data) {
+                alert(data);
+                 $('#campaignList').modal('toggle');
+                 <!--updateChannelStatusForCampaign(channel_id);-->
+                 $( 'div[id*=status]').empty();
+
+                 {% for item1 in view_campaign_data['data'] %}
+                    <!--alert('{{item1['campaign_id']}}');-->
+                    updateChannelStatusForCampaignByCampaignId('{{ item1['campaign_id'] }}');
+                 {% endfor %}
+               <!--window.location.reload();-->
+            }
+        });
+        e.preventDefault(); // avoid to execute the actual submit of the form.
+    });
+
+    $("#send_message_form").submit(function (e) {
+        var form = $(this);
+        var url = form.attr('action');
+        var channel_id = $('#message_channel_id').val();
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: form.serialize(), // serializes the form's elements.
+            success: function (data) {
+                alert(data); // show response from the python script.
+                $('#sendMessage').modal('toggle');
+                countMessages=countMessages-1;
+                <!--$( '#status'+channel_id).empty();-->
+                $( 'div[id*=status]').empty();
+
+                {% for item1 in view_campaign_data['data'] %}
+                    <!--alert('{{item1['campaign_id']}}');-->
+                    updateChannelStatusForCampaignByCampaignId('{{ item1['campaign_id'] }}');
+                 {% endfor %}
+            }
+        });
+        e.preventDefault(); // avoid to execute the actual submit of the form.
+    });
+
+
+
+
+
+   });
+
+
+</script>
+<script>
+    $(document).ready(function () {
+       var subscriberCount_gained = abbrNum(1234,2);
+        <!--alert(subscriberCount_gained);-->
+        function imageExists(image_url){
+            var http = new XMLHttpRequest();
+            http.open('HEAD', image_url, false);
+            http.send();
+            return http.status != 404 && http.status != 403 && http.status != 410;
+        }
+        function image_status(image_url,channel_id){
+            var status = imageExists(image_url);
+            if(status === true){
+                $("#channel_img-"+channel_id).attr("src",image_url);
+            }
+            else{
+                $("#channel_img-"+channel_id).attr("src","../static/img/fixed_image.png");
+            }
+        }
+        {% for item in data['data'] %}
+            image_status('{{item['channel_img']}}','{{item['channel_id']}}');
+        {% endfor %}
+    });
+</script>
+
+
+{% endblock %}
