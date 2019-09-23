@@ -878,7 +878,7 @@ $('#upgradeSubButton').click(function(){
 //    });
 
 
-    $("#sent_proposal_form").submit(function(e) {
+     $("#sent_proposal_form").submit(function(e) {
 //        alert('i m before');
 
                 var proposal_channels_boxes = $('.proposal_channels_checkbox:checkbox');
@@ -918,41 +918,56 @@ $('#upgradeSubButton').click(function(){
                data: form.serialize(), // serializes the form's elements.
                success: function(data)
                {
-                   if(data['response']==1){
-                        var proposal_id=data['proposal_id']
-                        alert('proposal sent');
-                       $('#proposal').modal('toggle');
-                       $.ajax({
-                            type:'POST',
-                            url:'/updatingFeatureValue/'+'Autofill Proposal',
-                            success:function(data){
-                                countAutoProposal=countAutoProposal-1;
-                                console.log("proposal id",proposal_id);
-                                if(proposalManual==false){
-                                    $.ajax({
+               alert('proposal sent');
+                    console.log("data",data);
+                    $('#proposal').modal('toggle');
+                    if(data['response']==1){
+
+                        if(proposalManual==false){
+                            console.log("auto");
+                                    var proposal_id=data['proposal_id']
+
+
+                                   $.ajax({
                                         type:'POST',
-                                        url:'/auto_or_manual/'+proposal_id,
-                                        data:{'auto_or_manual':'auto'},
+                                        url:'/updatingFeatureValue/'+'Autofill Proposal',
                                         success:function(data){
-                                            console.log(data);
+                                            countAutoProposal=countAutoProposal-1;
+                                            console.log("proposal id",proposal_id);
+                                            $.ajax({
+                                                type:'POST',
+                                                url:'/auto_or_manual/'+proposal_id,
+                                                data:{'auto_or_manual':'auto'},
+                                                success:function(data){
+                                                    console.log(data);
+                                                    window.location.reload();
+                                                }
+                                            })
                                         }
                                     })
+
                                 }
-                                else{
-                                    $.ajax({
-                                        type:'POST',
-                                        url:'/auto_or_manual/'+proposal_id,
-                                        data:{'auto_or_manual':'manual'},
-                                        success:function(data){
-                                            console.log(data);
-                                        }
-                                    })
+                        else{
+                            console.log("auto");
+                            $.ajax({
+                                type:'POST',
+                                url:'/auto_or_manual/'+proposal_id,
+                                data:{'auto_or_manual':'manual'},
+                                success:function(data){
+                                    console.log(data);
+                                    window.location.reload();
                                 }
-                            }
-                        })
+                            })
+                        }
+
                        <!--getCampaignsAddedToMessage();-->
-                       window.location.reload();
-                       }
+
+                    }
+                    else{
+                        alert('server error');
+                        $('#proposal').modal('toggle');
+
+                    }
 
                }
              });
@@ -1017,7 +1032,7 @@ $("#proposal_campaign_name").on("change",function(){
         var changeValue=$('#proposal_campaign_name')[0].value;
 
         if(changeValue!=''){
-            if(countAutoProposal==0){
+            if(countAutoProposal <= 0){
 
                 getAllMappedChannel_ids_unchecked($('#proposal_campaign_name').attr('data-channel-id'));
                 $("#proposal_description").empty();
@@ -2304,9 +2319,92 @@ function imageExists(image_url){
             var http = new XMLHttpRequest();
             http.open('HEAD', image_url, false);
             http.send();
-            return http.status != 404;
+            return http.status != 404 && http.status != 403 && http.status != 410;
         }
 
+//function loadingTop10Influencers(){
+//    var channel=document.getElementById('top10Influencer').value;
+//    $.ajax({
+//               type: "GET",
+//               url: '/getTop20Influencers/'+channel,
+//               success: function(data)
+//               {
+//                   value1=(data.results).slice(0,9);
+//                   var loop = $('#top10Influencertable')[0].childNodes[3].childNodes;
+//                   for( var i=1,j=0;i<loop.length;i=i+2,j++){
+//                        // calculating engagement rate
+//                        total = (value1[j]['total_100video_likes'] + value1[j]['total_100video_comments'] + value1[j]['total_100video_shares']);
+////                        total = parseInt(Math.round(total/value1[j]['totalVideos']));
+//                        total = (total/value1[j]['subscriberCount_gained']);
+////                        total = parseFloat(total.toFixed(4))*100;
+//                        total = total.toFixed(2) + ' '+'%';
+//                        if(!(value1[j].channel_img).includes('https')){
+//                            value1[j].channel_img=value1[j].channel_img.replace('http','https');
+//                        }
+//                        var status = imageExists(value1[j].channel_img);
+//                        if(status === true){
+//                            loop[i].childNodes[5].childNodes[0].src=value1[j].channel_img; // image set
+//
+//                        }
+//                        else{
+//                            alert(loop[i].childNodes[5].childNodes[0].src)
+//                            loop[i].childNodes[5].childNodes[0].src='../static/img/fixed_image.png'; // image set
+//                            alert(loop[i].childNodes[5].childNodes[0].src)
+//                        }
+//                        loop[i].childNodes[7].childNodes[5].innerText=total;          // engagement rate set
+////                        loop[i].childNodes[5].childNodes[0].src=value1[j].channel_img; // image set
+//                        loop[i].childNodes[5].childNodes[1].data=value1[j].title;      // name set
+//                        var image=loop[i].childNodes[5].childNodes[0];
+//                        var engagementRate=loop[i].childNodes[7].childNodes[5];
+//                        var name=loop[i].childNodes[5].childNodes[1].data;
+//                   }
+//                   // changing engagement bar color
+//                   var influencerItem = document.getElementsByClassName('engagement-col');
+//                        var engagementBar = document.getElementsByClassName('engagement-bar');
+//                        var max=4;
+//                        var min=0.5;
+//                        var diff=(max-min)/3;
+//                        for(var i =0;i<influencerItem.length;i++){
+//                            var value = parseFloat(influencerItem[i].childNodes[5].innerText.split(' ')[0]);
+//                            if(value>=max){
+//                                engagementBar[i].childNodes[1].style.backgroundColor="rgb(0, 133, 15)";
+//                                engagementBar[i].childNodes[3].style.backgroundColor="rgb(0, 133, 15)";
+//                                engagementBar[i].childNodes[5].style.backgroundColor="rgb(0, 133, 15)";
+//                                engagementBar[i].childNodes[7].style.backgroundColor="rgb(0, 133, 15)";
+//                                engagementBar[i].childNodes[9].style.backgroundColor="rgb(0, 133, 15)";
+//                            }
+//                            else if(value<max&&value>max-diff){
+//                                engagementBar[i].childNodes[1].style.backgroundColor="rgb(96, 165, 55)";
+//                                engagementBar[i].childNodes[3].style.backgroundColor="rgb(96, 165, 55)";
+//                                engagementBar[i].childNodes[5].style.backgroundColor="rgb(96, 165, 55)";
+//                                engagementBar[i].childNodes[7].style.backgroundColor="rgb(96, 165, 55)";
+//                                engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
+//                            }
+//                            else if(value<=max-diff&&value>min+diff){
+//                                engagementBar[i].childNodes[1].style.backgroundColor="rgb(129, 212, 82)";
+//                                engagementBar[i].childNodes[3].style.backgroundColor="rgb(129, 212, 82)";
+//                                engagementBar[i].childNodes[5].style.backgroundColor="rgb(129, 212, 82)";
+//                                engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
+//                                engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
+//                            }
+//                            else if(value<=min+diff&&value>min){
+//                                engagementBar[i].childNodes[1].style.backgroundColor="rgb(230, 169, 0)";
+//                                engagementBar[i].childNodes[3].style.backgroundColor="rgb(230, 169, 0)";
+//                                engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
+//                                engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
+//                                engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
+//                            }
+//                            else if(value<=min){
+//                                engagementBar[i].childNodes[1].style.backgroundColor="rgb(204,0,0)";
+//                                engagementBar[i].childNodes[3].style.backgroundColor="lightgrey";
+//                                engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
+//                                engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
+//                                engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
+//                            }
+//                        }
+//               }
+//         });
+//}
 function loadingTop10Influencers(){
     var channel=document.getElementById('top10Influencer').value;
     $.ajax({
@@ -2314,10 +2412,12 @@ function loadingTop10Influencers(){
                url: '/getTop20Influencers/'+channel,
                success: function(data)
                {
+                    document.getElementById('loader-div').style.display="none";
                    value1=(data.results).slice(0,9);
                    var loop = $('#top10Influencertable')[0].childNodes[3].childNodes;
                    for( var i=1,j=0;i<loop.length;i=i+2,j++){
                         // calculating engagement rate
+
                         total = (value1[j]['total_100video_likes'] + value1[j]['total_100video_comments'] + value1[j]['total_100video_shares']);
 //                        total = parseInt(Math.round(total/value1[j]['totalVideos']));
                         total = (total/value1[j]['subscriberCount_gained']);
@@ -2327,14 +2427,13 @@ function loadingTop10Influencers(){
                             value1[j].channel_img=value1[j].channel_img.replace('http','https');
                         }
                         var status = imageExists(value1[j].channel_img);
+                        console.log("come in");
                         if(status === true){
                             loop[i].childNodes[5].childNodes[0].src=value1[j].channel_img; // image set
 
                         }
                         else{
-                            alert(loop[i].childNodes[5].childNodes[0].src)
                             loop[i].childNodes[5].childNodes[0].src='../static/img/fixed_image.png'; // image set
-                            alert(loop[i].childNodes[5].childNodes[0].src)
                         }
                         loop[i].childNodes[7].childNodes[5].innerText=total;          // engagement rate set
 //                        loop[i].childNodes[5].childNodes[0].src=value1[j].channel_img; // image set
@@ -2344,12 +2443,53 @@ function loadingTop10Influencers(){
                         var name=loop[i].childNodes[5].childNodes[1].data;
                    }
                    // changing engagement bar color
-                   var influencerItem = document.getElementsByClassName('engagement-col');
+                        var influencerItem = document.getElementsByClassName('engagement-col');
                         var engagementBar = document.getElementsByClassName('engagement-bar');
                         var max=4;
                         var min=0.5;
                         var diff=(max-min)/3;
-                        for(var i =0;i<influencerItem.length;i++){
+                        if(channel=='Instagram'){
+                            for(var i =0;i<influencerItem.length;i++){
+                            var value = parseFloat(influencerItem[i].childNodes[5].innerText.split(' ')[0]);
+                            if(value>=25){
+                                engagementBar[i].childNodes[1].style.backgroundColor="rgb(0, 133, 15)";
+                                engagementBar[i].childNodes[3].style.backgroundColor="rgb(0, 133, 15)";
+                                engagementBar[i].childNodes[5].style.backgroundColor="rgb(0, 133, 15)";
+                                engagementBar[i].childNodes[7].style.backgroundColor="rgb(0, 133, 15)";
+                                engagementBar[i].childNodes[9].style.backgroundColor="rgb(0, 133, 15)";
+                            }
+                            else if(value<25&&value>17.5){
+                                engagementBar[i].childNodes[1].style.backgroundColor="rgb(96, 165, 55)";
+                                engagementBar[i].childNodes[3].style.backgroundColor="rgb(96, 165, 55)";
+                                engagementBar[i].childNodes[5].style.backgroundColor="rgb(96, 165, 55)";
+                                engagementBar[i].childNodes[7].style.backgroundColor="rgb(96, 165, 55)";
+                                engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
+                            }
+                            else if(value<=17.5&&value>10){
+                                engagementBar[i].childNodes[1].style.backgroundColor="rgb(129, 212, 82)";
+                                engagementBar[i].childNodes[3].style.backgroundColor="rgb(129, 212, 82)";
+                                engagementBar[i].childNodes[5].style.backgroundColor="rgb(129, 212, 82)";
+                                engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
+                                engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
+                            }
+                            else if(value<=10&&value>2.5){
+                                engagementBar[i].childNodes[1].style.backgroundColor="rgb(230, 169, 0)";
+                                engagementBar[i].childNodes[3].style.backgroundColor="rgb(230, 169, 0)";
+                                engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
+                                engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
+                                engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
+                            }
+                            else if(value<=2.5){
+                                engagementBar[i].childNodes[1].style.backgroundColor="rgb(204,0,0)";
+                                engagementBar[i].childNodes[3].style.backgroundColor="lightgrey";
+                                engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
+                                engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
+                                engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
+                            }
+                        }
+                        }
+                        else{
+                            for(var i =0;i<influencerItem.length;i++){
                             var value = parseFloat(influencerItem[i].childNodes[5].innerText.split(' ')[0]);
                             if(value>=max){
                                 engagementBar[i].childNodes[1].style.backgroundColor="rgb(0, 133, 15)";
@@ -2387,7 +2527,9 @@ function loadingTop10Influencers(){
                                 engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
                             }
                         }
+                        }
+
+                        document.getElementById('loader-div').style.display="none";
                }
          });
 }
-

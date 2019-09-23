@@ -2737,7 +2737,7 @@ def sendProposal():
            response = requests.post(url=url, json=payload)
            data = response.json()
            print(data)
-           return 'Proposal Sent'
+           return jsonify(data)
        except:
            pass
            return  'Server Error'

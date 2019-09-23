@@ -228,12 +228,14 @@
                                             {% if item['total_videos'] %}
                                         {% set total = (item['total_100video_likes'] + item['total_100video_comments'] + item['total_100video_shares'])%}
                                         <!--{{ total }} <br>-->
-                                        {# set total = (total/item['total_videos'])|round|int #}
+                                        {% set total = (total/item['total_videos'])|round|int %}
                                         <!--{{ total }} <br>-->
                                         {% set total = (total/item['subscriberCount_gained']) %}
-                                        {# set total = total|round(4, 'floor')*100 #}
+                                        {% set total = total|round(4, 'floor')*100 %}
                                         {% set total = total|round(2, 'floor') %}
                                             <b style="color:#9370DB">{{ total }} %</b>
+                                        {% else %}
+                                            <b style="color:#9370DB">0 %</b>
                                         {% endif %}
                                             <div class="engagement-bar">
                                                 <div class="engagement-bar__block engagement-color--forestgreen"></div>

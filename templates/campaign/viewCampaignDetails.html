@@ -227,7 +227,12 @@
                                 <td class="align-middle">
                                     {% for status in channel_status_campaign_data['data'] %}
                                     {% if youtube_inf_data['channel_id']==status['channel_id']  %}
-                                    {{ status['status'] }}&nbsp;<a href="/inbox/{{status['message_id']}}">inbox</a>
+                                    <!--{{ status['status'] }}&nbsp;<a href="/inbox/{{status['message_id']}}">inbox</a>-->
+                                    {% if status['status']!='Added' and status['status']!='Contacted' %}
+                                    {{ status['status'] }}&nbsp;<a href="/inbox/{{status['message_id']}}" style="display:block;color:#599ae9;" data-toggle="tooltip" title="Go to conversation"><i class="goto-inbox-icon far fa-comments" style="color:#a8a8a8;"></i></a>
+                                    {% else %}
+                                    {{ status['status'] }}
+                                    {% endif %}
                                     {% endif %}
                                     {% endfor %}
                                 </td>
