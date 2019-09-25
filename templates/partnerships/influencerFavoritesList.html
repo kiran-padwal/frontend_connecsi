@@ -1498,7 +1498,7 @@ else{
             var http = new XMLHttpRequest();
             http.open('HEAD', image_url, false);
             http.send();
-            return http.status != 404;
+            return http.status != 404 && http.status != 403 && http.status != 410;
         }
         function image_status(image_url,channel_id){
             var status = imageExists(image_url);
