@@ -1,3 +1,6 @@
+
+
+
 {% extends 'admin_layout.html' %}
 {{ super() }}
 {% block body %}
@@ -476,26 +479,57 @@
                                     <div class="tabs-content-item " id="alert{{ item['channel_id'] }}">
                                         <div class="tab-content-item-list-container">
                                             <ul class="tab-content-item-list">
-                                            {% if item['channel_id'] in
-                                            favInfList_data_alerts['data']|map(attribute="channel_id") %}
-                                            {% for favitem in favInfList_data_alerts['data'] %}
-                                            {% if item['channel_id'] == favitem['channel_id'] %}
-                                            <li>Followers <span class="color1">{{ favitem['alert_followers'] }}</span>
-                                            </li>
-                                            <li>Avg Views/video <span class="color1">{{ favitem['alert_views'] }}</span>
-                                            </li>
-                                            <li>Avg Likes/video <span class="color1">{{ favitem['alert_likes'] }}</span>
-                                            </li>
-                                            <li>Avg Comments <span class="color1">{{ favitem['alert_comments'] }}</span>
-                                            </li>
-
-                                            {% endif %}
-
-                                            {% endfor %}
-                                            {% else %}
-                                            <li>No Alerts Set</li>
-                                            {% endif %}
-                                        </ul>
+                                            {% if form_filters['channel']=='Youtube'%}
+                                                    {% if item['channel_id'] in favInfList_data_alerts['data']|map(attribute="channel_id") %}
+                                                    {% for favitem in favInfList_data_alerts['data'] %}
+                                                    {% if item['channel_id'] == favitem['channel_id'] %}
+                                                    <li>Followers <span class="color1">{{ favitem['alert_followers'] }}</span>
+                                                    </li>
+                                                    <li>Avg Views/video <span class="color1">{{ favitem['alert_views'] }}</span>
+                                                    </li>
+                                                    <li>Avg Likes/video <span class="color1">{{ favitem['alert_likes'] }}</span>
+                                                    </li>
+                                                    <li>Avg Comments <span class="color1">{{ favitem['alert_comments'] }}</span>
+                                                    </li>
+                                                    {% endif %}
+                                                    {% endfor %}
+                                                    {% else %}
+                                                    <li>No Alerts Set</li>
+                                                    {% endif %}
+                                                {% endif %}
+                                                {% if form_filters['channel']=='Twitter'%}
+                                                    {% if item['channel_id'] in favInfList_data_alerts['data']|map(attribute="channel_id") %}
+                                                    {% for favitem in favInfList_data_alerts['data'] %}
+                                                    {% if item['channel_id'] == favitem['channel_id'] %}
+                                                    <li>Followers <span class="color1">{{ favitem['alert_followers'] }}</span>
+                                                    </li>
+                                                    <li>Avg Likes/video <span class="color1">{{ favitem['alert_likes'] }}</span>
+                                                    </li>
+                                                    <li>Avg Retweets <span class="color1">{{ favitem['alert_comments'] }}</span>
+                                                    </li>
+                                                    {% endif %}
+                                                    {% endfor %}
+                                                    {% else %}
+                                                    <li>No Alerts Set</li>
+                                                    {% endif %}
+                                                {% endif %}
+                                                {% if form_filters['channel']=='Instagram'%}
+                                                    {% if item['channel_id'] in favInfList_data_alerts['data']|map(attribute="channel_id") %}
+                                                    {% for favitem in favInfList_data_alerts['data'] %}
+                                                    {% if item['channel_id'] == favitem['channel_id'] %}
+                                                    <li>Followers <span class="color1">{{ favitem['alert_followers'] }}</span>
+                                                    </li>
+                                                    <li>Avg Likes/video <span class="color1">{{ favitem['alert_likes'] }}</span>
+                                                    </li>
+                                                    <li>Avg Comments <span class="color1">{{ favitem['alert_comments'] }}</span>
+                                                    </li>
+                                                    {% endif %}
+                                                    {% endfor %}
+                                                    {% else %}
+                                                    <li>No Alerts Set</li>
+                                                    {% endif %}
+                                                {% endif %}
+                                            </ul>
                                         </div>
                                     </div>
                                 </div>
@@ -525,7 +559,9 @@
             <form name="create_alert_form" id="create_alert_form" action="/createAlerts" method="POST">
                 <input  class="form-control" type="hidden" value="" name="channel_id" id="create_alert_channel_id">
                 <input  class="form-control" type="hidden" value="" name="channel_name" id="create_alert_channel_name">
-                <div class="modal-body">
+                {% if form_filters['channel']=='Youtube'%}
+
+                    <div class="modal-body">
                     <div class="row">
                         <div class="col-12">
                             <div class="form-group">
@@ -534,6 +570,7 @@
                                        id="total_followers" placeholder="Total Followers">
                             </div>
                         </div>
+
                         <div class="col-12">
                             <div class="form-group">
                                 <label for="total_views">Avg Views/Videos:</label>
@@ -557,6 +594,68 @@
                         </div>
                     </div>
                 </div>
+
+                {% endif %}
+                {% if form_filters['channel']=='Twitter'%}
+
+                    <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="total_followers">Total Followers:</label>
+                                <input class="form-control" type="number" value="" name="alert_followers"
+                                       id="total_followers" placeholder="Total Followers">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="total_likes">Avg Likes/Videos:</label>
+                                <input class="form-control" type="number" value="" name="alert_likes" id="total_likes"
+                                       placeholder="Total Likes">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="total_shares">Avg Retweets/Videos:</label>
+                                <input class="form-control" type="number" value="" name="alert_shares"
+                                       id="total_shares" placeholder="Total Shares">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% endif %}
+
+
+                {% if form_filters['channel']=='Instagram'%}
+
+                    <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="total_followers">Total Followers:</label>
+                                <input class="form-control" type="number" value="" name="alert_followers"
+                                       id="total_followers" placeholder="Total Followers">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="total_likes">Avg Likes/Videos:</label>
+                                <input class="form-control" type="number" value="" name="alert_likes" id="total_likes"
+                                       placeholder="Total Likes">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="total_comments">Avg Comments/Videos:</label>
+                                <input class="form-control" type="number" value="" name="alert_comments"
+                                       id="total_comments" placeholder="Total Comments">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% endif %}
                 {% if countAlerts>0 %}
                         <div class="modal-footer">
                             <button id="createAlertButton" type="submit" class="btn btn-default bg-color1 color-white">Save</button>
@@ -823,7 +922,6 @@
 {% endif %}
 
 <script>
-
 function showingOption(v){
     var prev=v.previousSibling;
     if(prev.style.display=="none"){
@@ -835,7 +933,6 @@ function showingOption(v){
     }
 
 }
-
 function getGraphUpdated(){
     var channel_name_graph='{{ channel_name }}';
     var channel_name_graph_label=channel_name_graph;
@@ -1063,7 +1160,7 @@ function updateChannelStatusForCampaignByCampaignId(campaign_id){
                         <!--});-->
 
                        jQuery.each(data.results, function(i, val) {
-                            console.log('data length -----',data.results.length);
+                            console.log('data length -----',data.results.length,val);
                             if (data.results.length != 0){
                             <!--alert(val.channel_id);-->
                             <!--alert(val.campaign_name);-->
@@ -1087,7 +1184,6 @@ function updateChannelStatusForCampaignByCampaignId(campaign_id){
                                 <!--$('#status'+val.channel_id).empty();-->
                                 $('#status'+val.channel_id).append('<b style="font-weight:450; font-size:12px;">'+val.campaign_name+'<br/></b>');
                                 $('#status'+val.channel_id).append('<b style="font-weight:400; color:'+color+'; font-size:11px;">'+val.status+'</b>');
-                                <!--$('#status'+val.channel_id).append('&nbsp;<a href="/inbox/'+val.message_id+'" style = "font-size:11px;">inbox</a>');-->
                                 if(val.status!='Contacted' && val.status!='Added'){
                                     $('#status'+val.channel_id).append('&nbsp;<div style="display: inline-block;float: right;"><a data-toggle="tooltip" title="Go to conversation" href="/inbox/'+val.message_id+'" id="chat-option-'+val.campaign_id+'-'+val.channel_id+'" style="display:none;color:#599ae9;margin-right: 7px;top: 3px;position: relative;"><i class="goto-inbox-icon far fa-comments" style="color:#a8a8a8;"></i></a><a class="multiple-search" data-toggle="tooltip" title="Options" style="margin-top: -4px;font-size:1rem!important;" onclick="showingOption(this);"><i class="multiple-chat-option fas fa-ellipsis-v" style="top: 2px;color:#a8a8a8;"></i></a></div>');
                                 }
@@ -1226,11 +1322,31 @@ function getCampaign_ids(channel_id){
                 if (data.results.length != 0){
                    jQuery.each(data.results, function(i, val) {
                         <!--alert(val.channel_id);-->
-                        $('#alert'+val.channel_id).find('.tab-content-item-list').empty();
-                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Followers</br>'+val.alert_followers+'</li></hr>');
-                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Views</br>'+val.alert_views+'</li></hr>');
-                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Likes</br>'+val.alert_likes+'</li></hr>');
-                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Comments</br>'+val.alert_comments+'</li>');
+                        if(val.channel_name=='Twitter'){
+                            $('#alert'+val.channel_id).find('.tab-content-item-list').empty();
+                            $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Followers</br>'+val.alert_followers+'</li></hr>');
+                            $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Likes</br>'+val.alert_likes+'</li></hr>');
+                            $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Shares</br>'+val.alert_comments+'</li>');
+                        }
+                        else if(val.channel_name=='Instagram'){
+                            $('#alert'+val.channel_id).find('.tab-content-item-list').empty();
+                            $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Followers</br>'+val.alert_followers+'</li></hr>');
+                            $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Likes</br>'+val.alert_likes+'</li></hr>');
+                            $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Comments</br>'+val.alert_comments+'</li>');
+                        }
+                        else{
+                            $('#alert'+val.channel_id).find('.tab-content-item-list').empty();
+                            $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Followers</br>'+val.alert_followers+'</li></hr>');
+                            $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Views</br>'+val.alert_views+'</li></hr>');
+                            $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Likes</br>'+val.alert_likes+'</li></hr>');
+                            $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Comments</br>'+val.alert_comments+'</li>');
+
+                        }
+<!--                        $('#alert'+val.channel_id).find('.tab-content-item-list').empty();-->
+<!--                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Followers</br>'+val.alert_followers+'</li></hr>');-->
+<!--                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Views</br>'+val.alert_views+'</li></hr>');-->
+<!--                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Likes</br>'+val.alert_likes+'</li></hr>');-->
+<!--                        $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Comments</br>'+val.alert_comments+'</li>');-->
 
                     });
                     }
@@ -1283,139 +1399,97 @@ function getCampaign_ids(channel_id){
   $(document).ready(function () {
 
       <!--ashish code for eng rate-->
-      <!--var influencerItem = document.getElementsByClassName('rating');-->
-      <!--var engagementBar = document.getElementsByClassName('engagement-bar');-->
-      <!--var max=4;-->
-      <!--var min=0.5;-->
-      <!--var diff=(max-min)/3;-->
-      <!--for(var i =0;i<influencerItem.length;i++){-->
-            <!--var value = parseFloat(influencerItem[i].innerText.split(' ')[0]);-->
-            <!--if(value>=max){-->
-                <!--engagementBar[i].childNodes[1].style.backgroundColor="rgb(0, 133, 15)";-->
-                <!--engagementBar[i].childNodes[3].style.backgroundColor="rgb(0, 133, 15)";-->
-                <!--engagementBar[i].childNodes[5].style.backgroundColor="rgb(0, 133, 15)";-->
-                <!--engagementBar[i].childNodes[7].style.backgroundColor="rgb(0, 133, 15)";-->
-                <!--engagementBar[i].childNodes[9].style.backgroundColor="rgb(0, 133, 15)";-->
-            <!--}-->
-            <!--else if(value<max&&value>max-diff){-->
-                <!--engagementBar[i].childNodes[1].style.backgroundColor="rgb(96, 165, 55)";-->
-                <!--engagementBar[i].childNodes[3].style.backgroundColor="rgb(96, 165, 55)";-->
-                <!--engagementBar[i].childNodes[5].style.backgroundColor="rgb(96, 165, 55)";-->
-                <!--engagementBar[i].childNodes[7].style.backgroundColor="rgb(96, 165, 55)";-->
-                <!--engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";-->
-            <!--}-->
-            <!--else if(value<=max-diff&&value>min+diff){-->
-                <!--engagementBar[i].childNodes[1].style.backgroundColor="rgb(129, 212, 82)";-->
-                <!--engagementBar[i].childNodes[3].style.backgroundColor="rgb(129, 212, 82)";-->
-                <!--engagementBar[i].childNodes[5].style.backgroundColor="rgb(129, 212, 82)";-->
-                <!--engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";-->
-                <!--engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";-->
-            <!--}-->
-            <!--else if(value<=min+diff&&value>min){-->
-                <!--engagementBar[i].childNodes[1].style.backgroundColor="rgb(230, 169, 0)";-->
-                <!--engagementBar[i].childNodes[3].style.backgroundColor="rgb(230, 169, 0)";-->
-                <!--engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";-->
-                <!--engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";-->
-                <!--engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";-->
-            <!--}-->
-            <!--else if(value<=min){-->
-                <!--engagementBar[i].childNodes[1].style.backgroundColor="rgb(204,0,0)";-->
-                <!--engagementBar[i].childNodes[3].style.backgroundColor="lightgrey";-->
-                <!--engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";-->
-                <!--engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";-->
-                <!--engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";-->
-            <!--}-->
-      <!--}-->
-var influencerItem = document.getElementsByClassName('rating');
-var engagementBar = document.getElementsByClassName('engagement-bar');
-var statement= '{{channel_name}}'
-if(statement=='Instagram'){
-  console.log("inside");
-  for(var i =0;i<influencerItem.length;i++){
-      var value = parseFloat(influencerItem[i].innerText.split(' ')[0]);
-      console.log(value);
-      if(value>=20){
-          engagementBar[i].childNodes[1].style.backgroundColor="rgb(0, 133, 15)";
-          engagementBar[i].childNodes[3].style.backgroundColor="rgb(0, 133, 15)";
-          engagementBar[i].childNodes[5].style.backgroundColor="rgb(0, 133, 15)";
-          engagementBar[i].childNodes[7].style.backgroundColor="rgb(0, 133, 15)";
-          engagementBar[i].childNodes[9].style.backgroundColor="rgb(0, 133, 15)";
-      }
-      else if(value<20&&value>15){
-          engagementBar[i].childNodes[1].style.backgroundColor="rgb(96, 165, 55)";
-          engagementBar[i].childNodes[3].style.backgroundColor="rgb(96, 165, 55)";
-          engagementBar[i].childNodes[5].style.backgroundColor="rgb(96, 165, 55)";
-          engagementBar[i].childNodes[7].style.backgroundColor="rgb(96, 165, 55)";
-          engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
-      }
-      else if(value<=15&&value>10){
-          engagementBar[i].childNodes[1].style.backgroundColor="rgb(129, 212, 82)";
-          engagementBar[i].childNodes[3].style.backgroundColor="rgb(129, 212, 82)";
-          engagementBar[i].childNodes[5].style.backgroundColor="rgb(129, 212, 82)";
-          engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
-          engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
-      }
-      else if(value<=10&&value>2.5){
-          engagementBar[i].childNodes[1].style.backgroundColor="rgb(230, 169, 0)";
-          engagementBar[i].childNodes[3].style.backgroundColor="rgb(230, 169, 0)";
-          engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
-          engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
-          engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
-      }
-      else if(value<=2.5){
-          engagementBar[i].childNodes[1].style.backgroundColor="rgb(204,0,0)";
-          engagementBar[i].childNodes[3].style.backgroundColor="lightgrey";
-          engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
-          engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
-          engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
-      }
-  }
-}
-else{
-          console.log("outsude");
-        var max=4;
-        var min=0.5;
-        var diff=(max-min)/3;
+      var influencerItem = document.getElementsByClassName('rating');
+      var engagementBar = document.getElementsByClassName('engagement-bar');
+      var statement= '{{channel_name}}'
+      if(statement=='Instagram'){
+        console.log("inside");
         for(var i =0;i<influencerItem.length;i++){
-              var value = parseFloat(influencerItem[i].innerText.split(' ')[0]);
-              if(value>=max){
-                  engagementBar[i].childNodes[1].style.backgroundColor="rgb(0, 133, 15)";
-                  engagementBar[i].childNodes[3].style.backgroundColor="rgb(0, 133, 15)";
-                  engagementBar[i].childNodes[5].style.backgroundColor="rgb(0, 133, 15)";
-                  engagementBar[i].childNodes[7].style.backgroundColor="rgb(0, 133, 15)";
-                  engagementBar[i].childNodes[9].style.backgroundColor="rgb(0, 133, 15)";
-              }
-              else if(value<max&&value>max-diff){
-                  engagementBar[i].childNodes[1].style.backgroundColor="rgb(96, 165, 55)";
-                  engagementBar[i].childNodes[3].style.backgroundColor="rgb(96, 165, 55)";
-                  engagementBar[i].childNodes[5].style.backgroundColor="rgb(96, 165, 55)";
-                  engagementBar[i].childNodes[7].style.backgroundColor="rgb(96, 165, 55)";
-                  engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
-              }
-              else if(value<=max-diff&&value>min+diff){
-                  engagementBar[i].childNodes[1].style.backgroundColor="rgb(129, 212, 82)";
-                  engagementBar[i].childNodes[3].style.backgroundColor="rgb(129, 212, 82)";
-                  engagementBar[i].childNodes[5].style.backgroundColor="rgb(129, 212, 82)";
-                  engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
-                  engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
-              }
-              else if(value<=min+diff&&value>min){
-                  engagementBar[i].childNodes[1].style.backgroundColor="rgb(230, 169, 0)";
-                  engagementBar[i].childNodes[3].style.backgroundColor="rgb(230, 169, 0)";
-                  engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
-                  engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
-                  engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
-              }
-              else if(value<=min){
-                  engagementBar[i].childNodes[1].style.backgroundColor="rgb(204,0,0)";
-                  engagementBar[i].childNodes[3].style.backgroundColor="lightgrey";
-                  engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
-                  engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
-                  engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
-              }
-              }
+            var value = parseFloat(influencerItem[i].innerText.split(' ')[0]);
+            console.log(value);
+            if(value>=20){
+                engagementBar[i].childNodes[1].style.backgroundColor="rgb(0, 133, 15)";
+                engagementBar[i].childNodes[3].style.backgroundColor="rgb(0, 133, 15)";
+                engagementBar[i].childNodes[5].style.backgroundColor="rgb(0, 133, 15)";
+                engagementBar[i].childNodes[7].style.backgroundColor="rgb(0, 133, 15)";
+                engagementBar[i].childNodes[9].style.backgroundColor="rgb(0, 133, 15)";
+            }
+            else if(value<20&&value>15){
+                engagementBar[i].childNodes[1].style.backgroundColor="rgb(96, 165, 55)";
+                engagementBar[i].childNodes[3].style.backgroundColor="rgb(96, 165, 55)";
+                engagementBar[i].childNodes[5].style.backgroundColor="rgb(96, 165, 55)";
+                engagementBar[i].childNodes[7].style.backgroundColor="rgb(96, 165, 55)";
+                engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
+            }
+            else if(value<=15&&value>10){
+                engagementBar[i].childNodes[1].style.backgroundColor="rgb(129, 212, 82)";
+                engagementBar[i].childNodes[3].style.backgroundColor="rgb(129, 212, 82)";
+                engagementBar[i].childNodes[5].style.backgroundColor="rgb(129, 212, 82)";
+                engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
+                engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
+            }
+            else if(value<=10&&value>2.5){
+                engagementBar[i].childNodes[1].style.backgroundColor="rgb(230, 169, 0)";
+                engagementBar[i].childNodes[3].style.backgroundColor="rgb(230, 169, 0)";
+                engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
+                engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
+                engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
+            }
+            else if(value<=2.5){
+                engagementBar[i].childNodes[1].style.backgroundColor="rgb(204,0,0)";
+                engagementBar[i].childNodes[3].style.backgroundColor="lightgrey";
+                engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
+                engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
+                engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
+            }
+        }
+      }
+      else{
+                console.log("outsude");
+              var max=4;
+              var min=0.5;
+              var diff=(max-min)/3;
+              for(var i =0;i<influencerItem.length;i++){
+                    var value = parseFloat(influencerItem[i].innerText.split(' ')[0]);
+                    if(value>=max){
+                        engagementBar[i].childNodes[1].style.backgroundColor="rgb(0, 133, 15)";
+                        engagementBar[i].childNodes[3].style.backgroundColor="rgb(0, 133, 15)";
+                        engagementBar[i].childNodes[5].style.backgroundColor="rgb(0, 133, 15)";
+                        engagementBar[i].childNodes[7].style.backgroundColor="rgb(0, 133, 15)";
+                        engagementBar[i].childNodes[9].style.backgroundColor="rgb(0, 133, 15)";
+                    }
+                    else if(value<max&&value>max-diff){
+                        engagementBar[i].childNodes[1].style.backgroundColor="rgb(96, 165, 55)";
+                        engagementBar[i].childNodes[3].style.backgroundColor="rgb(96, 165, 55)";
+                        engagementBar[i].childNodes[5].style.backgroundColor="rgb(96, 165, 55)";
+                        engagementBar[i].childNodes[7].style.backgroundColor="rgb(96, 165, 55)";
+                        engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
+                    }
+                    else if(value<=max-diff&&value>min+diff){
+                        engagementBar[i].childNodes[1].style.backgroundColor="rgb(129, 212, 82)";
+                        engagementBar[i].childNodes[3].style.backgroundColor="rgb(129, 212, 82)";
+                        engagementBar[i].childNodes[5].style.backgroundColor="rgb(129, 212, 82)";
+                        engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
+                        engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
+                    }
+                    else if(value<=min+diff&&value>min){
+                        engagementBar[i].childNodes[1].style.backgroundColor="rgb(230, 169, 0)";
+                        engagementBar[i].childNodes[3].style.backgroundColor="rgb(230, 169, 0)";
+                        engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
+                        engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
+                        engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
+                    }
+                    else if(value<=min){
+                        engagementBar[i].childNodes[1].style.backgroundColor="rgb(204,0,0)";
+                        engagementBar[i].childNodes[3].style.backgroundColor="lightgrey";
+                        engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
+                        engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
+                        engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
+                    }
+                    }
 
-}
+      }
+
       <!-- ashish code for eng rate ends-->
 
 
@@ -1497,8 +1571,10 @@ else{
         function imageExists(image_url){
             var http = new XMLHttpRequest();
             http.open('HEAD', image_url, false);
+             http.setRequestHeader('Access-Control-Allow-Origin', '*');
+    http.setRequestHeader('Content-Type', 'application/xml');
             http.send();
-            return http.status != 404 && http.status != 403 && http.status != 410;
+            return http.status != 403 && http.status != 404 && http.status != 410;
         }
         function image_status(image_url,channel_id){
             var status = imageExists(image_url);

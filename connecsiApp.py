@@ -305,6 +305,59 @@ def logout():
 #             print(email_id)
 #             print(password)
 
+# @connecsiApp.route('/login',methods=['POST'])
+# def login():
+#     if request.method=='POST':
+#         if 'brand' in request.form:
+#             url = base_url + 'User/login'
+#             payload = request.form.to_dict()
+#             print(payload)
+#             del payload['brand']
+#             print(payload)
+#             title = ''
+#             try:
+#                 response = requests.post(url, json=payload)
+#                 print('user response =',response.json())
+#                 result_json = response.json()
+#                 user_id = result_json['user_id']
+#                 response2=getSubscriptionValues(str(user_id))
+#                 print('hello response',response2,response2['data'])
+#                 if(not len(response2['data'])):
+#                     #adding free subscription for first login Free
+#                     check=freeSubscription(str(user_id))
+#                     if(check['response']==1):
+#                         print("free package ADDED")
+#                     else:
+#                         print("free package NOT added")
+#                 confirmed_email = result_json['confirmed_email']
+#                 print('confirmed email = ',confirmed_email)
+#                 print(user_id)
+#                 # exit()
+#                 if user_id:
+#                     if confirmed_email =='confirmed':
+#                         flash("logged in", 'success')
+#                         session['logged_in'] = True
+#                         session['email_id']=payload.get('email')
+#                         session['type'] = 'brand'
+#                         session['user_id']=user_id
+#                         print(session['user_id'])
+#                         return redirect(url_for('admin'))
+#                     else:
+#                         flash("You have not Activated your account, To Activate your account please click on the activation link sent to your email address", 'danger')
+#                         return render_template('user/login.html', title=title)
+#
+#                 else:
+#                     flash("Internal error please try later", 'danger')
+#                     return render_template('user/login.html', title=title)
+#             except:
+#                 flash("Internal error please try later", 'danger')
+#                 return render_template('user/login.html', title='Login')
+#         elif 'influencer' in request.form:
+#             email_id = request.form.get('inf_username')
+#             password = request.form.get('inf_password')
+#             print(email_id)
+#             print(password)
+
 @connecsiApp.route('/login',methods=['POST'])
 def login():
     if request.method=='POST':
@@ -322,11 +375,21 @@ def login():
                 user_id = result_json['user_id']
                 response2=getSubscriptionValues(str(user_id))
                 print('hello response',response2,response2['data'])
-                if(not len(response2['data'])):
+                if(len(response2['data'])):
                     #adding free subscription for first login Free
                     check=freeSubscription(str(user_id))
                     if(check['response']==1):
                         print("free package ADDED")
+                        # sending welcome notification to new user
+                        notification={}
+                        url5=base_url+'Notifications/'+str(user_id)
+                        print("hello")
+                        notification['display_message']='<div onmouseout="hideReadMessage(this)" onmouseover="showReadMessage(this)" class="dropdown-item noti-container py-2 border-bottom border-bottom-blue-grey border-bottom-lighten-4"><div class="container"><div class="row"><div class="col-1" style="padding:0 5px 0 0;margin:auto;"><a href="/editProfile" onclick="return clickMarkAsRead(this)"><i class="fa fa-user info d-block font-medium-5"></i></a></div><div class="col-9" style="padding:0;"><a href="/editProfile" onclick="return clickMarkAsRead(this)"><span class="noti-wrapper" style=""><span class="noti-text" style="white-space:normal;word-wrap:break-word;line-height:2px;">Congratulations, you have successfully created your Connecsi account. Please complete your <span class="text-bold-400 info">Profile</span>.</span></span></a></div><div class="col-1" style="display:grid;text-align:center;"><div style="display:none;text-align:center;"><i class="fa fa-ellipsis-h" style="font-size:1rem;cursor:pointer;" data-toggle="tooltip" title="Remove from Notification" onclick="openDeleteOption(this)"></i><i class="fas fa-circle" style="font-size:0.5rem;cursor:pointer;" data-id="" data-toggle="tooltip" title="Mark as Read" onclick="changeMarkAsRead(this)"></i></div></div></div></div></div>'
+                        notification['read_unread']='unread'
+                        response5=requests.post(url=url5,json=notification)
+                        print("hello4")
+                        response5_json=response5.json()
+                        print(response5_json)
                     else:
                         print("free package NOT added")
                 confirmed_email = result_json['confirmed_email']
@@ -340,6 +403,7 @@ def login():
                         session['email_id']=payload.get('email')
                         session['type'] = 'brand'
                         session['user_id']=user_id
+                        session['notification']=None
                         print(session['user_id'])
                         return redirect(url_for('admin'))
                     else:
@@ -357,7 +421,6 @@ def login():
             password = request.form.get('inf_password')
             print(email_id)
             print(password)
-
 
 
 @connecsiApp.route('/admin')
@@ -1230,6 +1293,57 @@ def thanks():
     subData={}
     return render_template('payment/thanks.html')
 
+# @connecsiApp.route('/pay', methods=['POST'])
+# def pay():
+#     secret_key = 'sk_test_4YZbWgXJul77g819JY5REXLL005jjbeXaG'
+#     stripe.api_key = secret_key
+#     customer = stripe.Customer.create(email=request.form['stripeEmail'], source=request.form['stripeToken'])
+#     data=request.form.to_dict()
+#     subScriptionData=data['data']
+#     subScriptionData2=data['data2']
+#     charge = stripe.Charge.create(
+#         customer=customer.id,
+#         amount=data['amount'],
+#         currency='usd',
+#         description='Package',
+#         metadata = {'email_id': session['email_id'],'connecsi_user_id':session['user_id'],'stripe_customer_id':customer.id}
+#     )
+#     if customer.id and charge.receipt_url:
+#        try:
+#            payload={
+#                "customer_id":customer.id,
+#                "amount":data['amount'],
+#                "description":"Subscription/Package/Features added",
+#                "receipt_url":charge.receipt_url
+#            }
+#            print(payload)
+#            save_payment_url = base_url + 'Payments/' + str(session['user_id'])
+#            print(save_payment_url)
+#            res = requests.post(url=base_url+'Payments/'+str(session['user_id']),json=payload)
+#            if res.status_code==201:
+#               print("code 201",subScriptionData,subScriptionData2,type(subScriptionData),type(subScriptionData2))
+#               if (len(subScriptionData)!=2):
+#                   json_acceptable_string = subScriptionData.replace("'", "\"")
+#                   updateBrandSubscriptionPackageDetails(json.loads(json_acceptable_string))
+#
+#               if (len(subScriptionData2)!=2):
+#                   json_acceptable_string = subScriptionData2.replace("'", "\"")
+#                   updateBrandSubscriptionPackageDetails(json.loads(json_acceptable_string))
+#               subValue1 = getSubscriptionValues(str(session['user_id']))
+#               package_buy = subValue1['data'][0]['package_name']
+#               expiryDateOfPackage = subValue1['data'][0]['p_expiry_date']
+#               expiryDateOfPackage = datetime.datetime.utcfromtimestamp(int(expiryDateOfPackage)).strftime('%d/%m/%Y')
+#               if(package_buy=='Basic'):
+#                   package_buy='Starter'
+#               return render_template('payment/thanks.html',package_buy=package_buy,expiryDateOfPackage=expiryDateOfPackage)
+#        except Exception as e:
+#            return render_template('payment/error.html')
+#     # customer_list = stripe.Customer.list()
+#     # print(customer_list)
+#     else:
+#
+#         return render_template('payment/error.html')
+
 @connecsiApp.route('/pay', methods=['POST'])
 def pay():
     secret_key = 'sk_test_4YZbWgXJul77g819JY5REXLL005jjbeXaG'
@@ -1272,6 +1386,19 @@ def pay():
               expiryDateOfPackage = datetime.datetime.utcfromtimestamp(int(expiryDateOfPackage)).strftime('%d/%m/%Y')
               if(package_buy=='Basic'):
                   package_buy='Starter'
+
+              # send payment notification here.
+
+              notification = {}
+              url5 = base_url + 'Notifications/' + str(session['user_id'])
+              print("hello")
+              notification['display_message'] = '<div onmouseout="hideReadMessage(this)" onmouseover="showReadMessage(this)" class="dropdown-item noti-container py-2 border-bottom border-bottom-blue-grey border-bottom-lighten-4"><div class="container"><div class="row"><div class="col-1" style="padding:0 5px 0 0;margin:auto;"><a href="/viewMyPayments" onclick="return clickMarkAsRead(this)"><img src="../static/images/payment_blue.svg" alt="" style="height: 25px;width: 25px;"></a></div><div class="col-9" style="padding:0;"><a href="/viewMyPayments" onclick="return clickMarkAsRead(this)"><span class="noti-wrapper" style=""><span class="noti-text" style="white-space:normal;word-wrap:break-word;line-height:2px;">You have paid <span class="text-bold-400 info">$'+(data['amount']/100)+'</span> for <span class="text-bold-400 info">'+package_buy+'</span> package.</span></span></a></div><div class="col-1" style="display:grid;text-align:center;"><div style="display:none;text-align:center;"><i class="fa fa-ellipsis-h" style="font-size:1rem;cursor:pointer;" data-toggle="tooltip" title="Remove from Notification" onclick="openDeleteOption(this)"></i><i class="fas fa-circle" style="font-size:0.5rem;cursor:pointer;" data-id="" data-toggle="tooltip" title="Mark as Read" onclick="changeMarkAsRead(this)"></i></div></div></div></div></div>'
+              notification['read_unread'] = 'unread'
+              response5 = requests.post(url=url5, json=notification)
+              print("hello4")
+              response5_json = response5.json()
+              print(response5_json)
+
               return render_template('payment/thanks.html',package_buy=package_buy,expiryDateOfPackage=expiryDateOfPackage)
        except Exception as e:
            return render_template('payment/error.html')
@@ -1280,6 +1407,8 @@ def pay():
     else:
 
         return render_template('payment/error.html')
+
+
 
 @connecsiApp.route('/viewMyPayments')
 @is_logged_in
@@ -1869,6 +1998,96 @@ def getCampaignDetails(campaign_id):
 #         flash('Unauthorized', 'danger')
 
 
+# @connecsiApp.route('/saveCampaign',methods=['POST'])
+# @is_logged_in
+# def saveCampaign():
+#     if request.method == 'POST':
+#         payload = request.form.to_dict()
+#         print(payload)
+#         # exit()
+#         channels = request.form.getlist('channels')
+#         channels_string = ','.join(channels)
+#         payload.update({'channels':channels_string})
+#         regions = request.form.getlist('country')
+#         regions_string = ','.join(regions)
+#         payload.update({'regions':regions_string})
+#
+#
+#         arrangements = request.form.getlist('arrangements')
+#         arrangements_string = ','.join(arrangements)
+#         payload.update({'arrangements': arrangements_string})
+#
+#         kpis = request.form.getlist('kpis')
+#         kpis_string = ','.join(kpis)
+#         payload.update({'kpis': kpis_string})
+#
+#         is_classified_post = request.form.get('is_classified_post')
+#         print('is classified = ',is_classified_post)
+#         try:
+#             del payload['country']
+#             del payload['is_classified_post']
+#         except:pass
+#
+#         files = request.files.getlist("campaign_files")
+#         print(files)
+#         # exit()
+#         filenames=[]
+#         for file in files:
+#             if (file.filename):
+#                 filename = campaign_files.save(file)
+#                 filenames.append(filename)
+#         filenames_string = ','.join(filenames)
+#         payload.update({'files': filenames_string})
+#         print(payload)
+#         # exit()
+#         if is_classified_post == 'on':
+#             payload.update({'is_classified_post':'TRUE'})
+#             print('payload inside if =',payload)
+#             for file in files:
+#                 # brands_classified_files.save(file)
+#                 if(file.filename):
+#                     campaign_files.save(file)
+#             user_id = session['user_id']
+#             classified_url = base_url + 'Classified/' + str(user_id)
+#             print(classified_url)
+#             classified_payload = copy.deepcopy(payload)
+#             classified_payload['classified_name'] = classified_payload.pop('campaign_name')
+#             classified_payload['classified_description'] = classified_payload.pop('campaign_description')
+#             classified_payload['convert_to_campaign'] = classified_payload.pop('is_classified_post')
+#             print('classified_payload=',classified_payload)
+#             try:
+#                 requests.post(url=classified_url, json=classified_payload)
+#             except Exception as e:
+#                 print(e)
+#                 pass
+#
+#         else:
+#             payload.update({'is_classified_post':'FALSE'})
+#
+#         user_id = session['user_id']
+#         url = base_url + 'Campaign/' + str(user_id)
+#         print(url)
+#         print('campaign payload = ',payload)
+#         try:
+#             response = requests.post(url=url, json=payload)
+#             result_json = response.json()
+#             print(result_json)
+#             check = subscriptionReduction("Create Campaign")
+#             if (check['response'] == 1):
+#                 print("done subscription create campaign")
+#                 if(payload['is_classified_post']=='TRUE'):
+#                     check1 = subscriptionReduction("Classified Ads Posting")
+#                     if(check1['response']==1):
+#                         print("done subscription create campaign with classified ads posting")
+#             flash('saved Campaign', 'success')
+#             return viewCampaigns()
+#         except Exception as e:
+#             print(e)
+#             flash('campaign didnt saved Please try again later','danger')
+#             pass
+#     else:
+#         flash('Unauthorized', 'danger')
+
 @connecsiApp.route('/saveCampaign',methods=['POST'])
 @is_logged_in
 def saveCampaign():
@@ -1927,7 +2146,21 @@ def saveCampaign():
             classified_payload['convert_to_campaign'] = classified_payload.pop('is_classified_post')
             print('classified_payload=',classified_payload)
             try:
-                requests.post(url=classified_url, json=classified_payload)
+                response2=requests.post(url=classified_url, json=classified_payload)
+                response2_json=response2.json()
+                print("response campaign id",response2_json)
+                if(response2_json['campaign_id']):
+                    print("now making campaign notification")
+                    url_cam=base_url+'Campaign/campaign_status_notification/'+str(response2_json['campaign_id'])
+                    payload2={}
+                    payload3={}
+                    payload2['status_date']=payload['from_date']
+                    payload2['notification_id'] = 0
+                    payload3['status_date'] = payload['to_date']
+                    payload3['notification_id'] = 0
+                    requests.post(url=url_cam, json=payload2)
+                    requests.post(url=url_cam, json=payload3)
+
             except Exception as e:
                 print(e)
                 pass
@@ -1942,10 +2175,21 @@ def saveCampaign():
         try:
             response = requests.post(url=url, json=payload)
             result_json = response.json()
-            print(result_json)
+            print("response campaign id",result_json)
             check = subscriptionReduction("Create Campaign")
             if (check['response'] == 1):
                 print("done subscription create campaign")
+                if (result_json['campaign_id']):
+                    print("now making campaign notification")
+                    url_cam = base_url + 'Campaign/campaign_status_notification/' + str(result_json['campaign_id'])
+                    payload2 = {}
+                    payload3 = {}
+                    payload2['status_date'] = payload['from_date']
+                    payload2['notification_id'] = 0
+                    payload3['status_date'] = payload['to_date']
+                    payload3['notification_id'] = 0
+                    requests.post(url=url_cam, json=payload2)
+                    requests.post(url=url_cam, json=payload3)
                 if(payload['is_classified_post']=='TRUE'):
                     check1 = subscriptionReduction("Classified Ads Posting")
                     if(check1['response']==1):
@@ -1958,7 +2202,6 @@ def saveCampaign():
             pass
     else:
         flash('Unauthorized', 'danger')
-
 
 
 @connecsiApp.route('/calendarView',methods=['GET'])
@@ -3813,6 +4056,52 @@ def viewAllClassifiedAds():
     print(profile_data_json)
     return render_template('classifiedAds/view_all_classifiedAds.html',maxClassified=maxClassified,countClassified=countClassified,messageSubscription=messageSubscription,all_classified_data=view_classified_data_list,profile_data=profile_data_json)
 
+# @connecsiApp.route('/viewClassifiedDetails/<string:classified_id>')
+# @is_logged_in
+# def viewClassifiedDetails(classified_id):
+#     user_id=session['user_id']
+#     # user_id = ''
+#     subValues = getSubscriptionValues(str(user_id))
+#     countClassified = 0
+#     messageSubscription = {
+#         'Classified Ads Posting': {
+#             'text': '',
+#             'heading': ''
+#         }
+#     }
+#     maxClassified = 0
+#     for i in subValues['data']:
+#         print(i['feature_name'])
+#         if (i['feature_name'].lower() == 'classified ads posting'):
+#             countClassified = i['units']
+#             packageName = i['package_name']
+#             maxClassified = i['base_units'] + i['added_units']
+#             feature_name = i['feature_name']
+#
+#     if (countClassified == -1):
+#         messageSubscription['Classified Ads Posting'][
+#             'text'] = "This feature is unavailable in your current plan. Please upgrade your account to get access to additional features and add-ons."
+#         messageSubscription['Classified Ads Posting']['heading'] = "Upgrade Plan"
+#     elif (countClassified == 0):
+#         messageSubscription['Classified Ads Posting'][
+#             'text'] = "You have reached the limit of Classified Ads Posting. (Allowed: " + str(
+#             maxClassified) + " ) Please customize your plan to add more or upgrade to unlock more features and add-ons."
+#         messageSubscription['Classified Ads Posting']['heading'] = "Limit Reached"
+#     from templates.classifiedAds.classified import Classified
+#     classifiedObj = Classified(user_id=user_id,classified_id=classified_id)
+#     classified_details = classifiedObj.get_classified_details()
+#     print(classified_details)
+#     for item in classified_details['data']:
+#         print(item)
+#         user_id= item['user_id']
+#         print(user_id)
+#     view_profile_url = base_url + 'Brand/' + str(user_id)
+#     response = requests.get(view_profile_url)
+#     profile_data_json = response.json()
+#     print(profile_data_json)
+#
+#     return render_template('classifiedAds/viewClassifiedDetails.html',countClassified=countClassified,messageSubscription=messageSubscription,maxClassified=maxClassified,classified_details=classified_details,profile_data=profile_data_json)
+
 @connecsiApp.route('/viewClassifiedDetails/<string:classified_id>')
 @is_logged_in
 def viewClassifiedDetails(classified_id):
@@ -3856,9 +4145,34 @@ def viewClassifiedDetails(classified_id):
     response = requests.get(view_profile_url)
     profile_data_json = response.json()
     print(profile_data_json)
+    try:
+        no_of_views=0
+        print("try in",classified_details['data'][0]['no_of_views'])
+        if(classified_details['data'][0]['no_of_views']==None):
+            no_of_views=1
+            classified_details['data'][0]['no_of_views']=1
+        else:
+            classified_details['data'][0]['no_of_views']=classified_details['data'][0]['no_of_views']+1
+            no_of_views=classified_details['data'][0]['no_of_views']
 
-    return render_template('classifiedAds/viewClassifiedDetails.html',countClassified=countClassified,messageSubscription=messageSubscription,maxClassified=maxClassified,classified_details=classified_details,profile_data=profile_data_json)
-
+        url3=base_url + 'Classified/NumberOfViews/'+str(classified_details['data'][0]['classified_id'])+'/'+str(user_id)+'/'+str(no_of_views)
+        response3 = requests.put(url=url3)
+        response3_json=response3.json()
+        if(response3_json['response']==1):
+            print("view count increased")
+            print("now pushing classified ad view details of influencer ")
+            payload4={}
+            payload4['inf_id']=str(session['user_id'])
+            payload4['comment_message']=''
+            payload4['no_of_views']=1
+            payload4['reaction']=''
+            payload4['notification_id']=0
+            url4=base_url + 'Classified/classified_comment_view_reaction/'+str(classified_details['data'][0]['user_id'])+'/'+str(classified_details['data'][0]['classified_id'])
+            response4=requests.post(url=url4,json=payload4)
+            print(response4.json())
+            return render_template('classifiedAds/viewClassifiedDetails.html',countClassified=countClassified,messageSubscription=messageSubscription,maxClassified=maxClassified,classified_details=classified_details,profile_data=profile_data_json)
+    except Exception as e:
+        print(e)
 
 
 
@@ -4120,6 +4434,83 @@ connecsiApp.register_blueprint(google_blueprint, url_prefix="/login")
 connecsiApp.register_blueprint(twitter_blueprint, url_prefix="/login")
 
 
+# @connecsiApp.route("/google_login")
+# def google_login():
+#     print('i m here in google_login()')
+#     if not google.authorized:
+#         print('i m here always')
+#         return redirect(url_for("google.login"))
+#     resp = google.get("/oauth2/v2/userinfo")
+#     # resp = google.get("/oauth2/v2/youtube.readonly")
+#     url = 'https://www.googleapis.com/youtube/v3/channels?part=statistics,id,snippet,contentOwnerDetails,status&mine=true'
+#     channel_data = google.get(url).json()
+#     print('channel details = ',channel_data)
+#     print(resp.json())
+#     print(google.authorized)
+#     print(google_blueprint.backend)
+#     # exit()
+#     resp_json = resp.json()
+#     payload = {}
+#     channel_id=channel_data['items'][0]['id']
+#     title = channel_data['items'][0]['snippet']['title']
+#     description = channel_data['items'][0]['snippet']['description']
+#     # print(channel_id)
+#     payload.update({'channel_id':channel_id,'business_email':resp_json['email']})
+#     url = base_url+'Influencer/saveInfluencer'
+#     print(url)
+#     try:
+#         response = requests.post(url,json=payload)
+#         print(response.json())
+#         response_json = response.json()
+#         if response_json['response'] == 1:
+#
+#             youtube_url = base_url + 'Youtube/addYoutubeChannel/' + channel_id + '/' + resp_json['email']
+#             try:
+#                 requests.post(url=youtube_url)
+#             except Exception as e:
+#                 print(e)
+#                 pass
+#
+#             email_content = welcomemail_inf()
+#             payload1 = {
+#                 "from_email_id": "business@connecsi.com",
+#                 "to_email_id": resp_json['email'],
+#                 "date": datetime.datetime.now().strftime("%A, %d. %B %Y %I:%M%p"),
+#                 "subject": "Welcome To Connecsi",
+#                 "message": "'"+email_content+"'"
+#             }
+#             user_id = 1
+#             type = 'brand'
+#             url = base_url + 'Messages/sentWelcomeEmail/' + str(user_id) + '/' + type
+#             try:
+#                 response = requests.post(url=url, json=payload1)
+#                 data = response.json()
+#                 print('email sent')
+#             except:
+#                 pass
+#
+#         ##### code for OAUTH channel updates ############
+#         else:
+#             print('indluencer already present in youtube channel details get OAUTH to update the details')
+#         #################################################
+#     except Exception as e:
+#         print(e)
+#         pass
+#     # assert resp.ok, resp.text
+#     if resp.ok:
+#         user_id = channel_id
+#         print(user_id)
+#         # exit()
+#         if user_id:
+#             flash("logged in", 'success')
+#             session['logged_in'] = True
+#             session['email_id'] = resp_json['email']
+#             session['type'] = 'influencer'
+#             session['user_id'] = user_id
+#             print(session['user_id'])
+#             return redirect(url_for('admin_inf'))
+#     else:return redirect(url_for('login'))
+
 @connecsiApp.route("/google_login")
 def google_login():
     print('i m here in google_login()')
@@ -4133,7 +4524,7 @@ def google_login():
     print('channel details = ',channel_data)
     print(resp.json())
     print(google.authorized)
-    print(google_blueprint.backend)
+    #print(google_blueprint.backend)
     # exit()
     resp_json = resp.json()
     payload = {}
@@ -4165,6 +4556,15 @@ def google_login():
                 "subject": "Welcome To Connecsi",
                 "message": "'"+email_content+"'"
             }
+            notification = {}
+            url5 = base_url + 'Notifications/' + str(channel_id)
+            print("hello")
+            notification['display_message'] = '<div onmouseout="hideReadMessage(this)" onmouseover="showReadMessage(this)" class="dropdown-item noti-container py-2 border-bottom border-bottom-blue-grey border-bottom-lighten-4"><div class="container"><div class="row"><div class="col-1" style="padding:0 5px 0 0;margin:auto;"><a href="/editProfile" onclick="return clickMarkAsRead(this)"><i class="fa fa-user info d-block font-medium-5"></i></a></div><div class="col-9" style="padding:0;"><a href="/editProfile" onclick="return clickMarkAsRead(this)"><span class="noti-wrapper" style=""><span class="noti-text" style="white-space:normal;word-wrap:break-word;line-height:2px;">Congratulations, you have successfully created your Connecsi account. Please complete your <span class="text-bold-400 info">Profile</span>.</span></span></a></div><div class="col-1" style="display:grid;text-align:center;"><div style="display:none;text-align:center;"><i class="fa fa-ellipsis-h" style="font-size:1rem;cursor:pointer;" data-toggle="tooltip" title="Remove from Notification" onclick="openDeleteOption(this)"></i><i class="fas fa-circle" style="font-size:0.5rem;cursor:pointer;" data-id="" data-toggle="tooltip" title="Mark as Read" onclick="changeMarkAsRead(this)"></i></div></div></div></div></div>'
+            notification['read_unread'] = 'unread'
+            response5 = requests.post(url=url5, json=notification)
+            print("hello4")
+            response5_json = response5.json()
+            print(response5_json)
             user_id = 1
             type = 'brand'
             url = base_url + 'Messages/sentWelcomeEmail/' + str(user_id) + '/' + type
@@ -4177,6 +4577,16 @@ def google_login():
 
         ##### code for OAUTH channel updates ############
         else:
+            # notification = {}
+            # url5 = base_url + 'Notifications/' + str(channel_id)
+            # print("hello")
+            # notification[
+            #     'display_message'] = '<a class="dropdown-item noti-container py-2 border-bottom border-bottom-blue-grey border-bottom-lighten-4"><div class="container"><div class="row"><div class="col-1" style="padding:0 5px 0 0;margin:auto;"><i class="fa fa-bullseye info d-block font-medium-5"></i></div><div class="col-9" style="padding:0;"><span class="noti-wrapper" style=""><span class="noti-text" style="white-space:normal;word-wrap:break-word;line-height:2px;">Congratulations, you have successfully created your Connecsi account. Please complete your <span class="text-bold-400 info">Profile</span></span>.</span></div><div class="col-1"></div></div></div></a>'
+            # notification['read_unread'] = 'unread'
+            # response5 = requests.post(url=url5, json=notification)
+            # print("hello4")
+            # response5_json = response5.json()
+            # print(response5_json)
             print('indluencer already present in youtube channel details get OAUTH to update the details')
         #################################################
     except Exception as e:
@@ -4191,11 +4601,13 @@ def google_login():
             flash("logged in", 'success')
             session['logged_in'] = True
             session['email_id'] = resp_json['email']
+            session['notification'] = None
             session['type'] = 'influencer'
             session['user_id'] = user_id
             print(session['user_id'])
             return redirect(url_for('admin_inf'))
     else:return redirect(url_for('login'))
+
 
 
 # from twitterAnalyticsOauthKiranLib import TwitterAnalyticsOauthKiranLib
@@ -4559,6 +4971,48 @@ def viewAllOffers():
 #                            profile_data=profile_data_json)
 
 
+# @connecsiApp.route('/viewOfferDetails/<string:offer_id>')
+# @is_logged_in
+# def viewOfferDetails(offer_id):
+#     user_id = session['user_id']
+#     subscriptionValue = getSubscriptionValues(str(session["user_id"]))
+#     custom_offers_reply_count = 0
+#     feature_name = ''
+#     messageSubscription = {
+#         'Custom Offers Reply': {
+#             'text': '',
+#             'heading': ''
+#         }
+#     }
+#     maxCustom = 0
+#     for i in subscriptionValue['data']:
+#         if (i['feature_name'].lower() == 'custom offers reply'):
+#             custom_offers_reply_count = i['units']
+#             maxCustom = i['added_units'] + i['base_units']
+#             feature_name = i['feature_name']
+#             package_name = i['package_name']
+#     if (custom_offers_reply_count == 0):
+#         messageSubscription['Custom Offers Reply'][
+#             'text'] = "You have reached the limit of Custom Offers Reply. (Allowed: " + str(
+#             maxCustom) + " ) Please customize your plan to add more or upgrade to unlock more features and add-ons."
+#         messageSubscription['Custom Offers Reply']['heading'] = "Limit Reached"
+#     print(user_id)
+#     channel_id=''
+#     from templates.offers.offer import Offer
+#     offerObj = Offer(user_id=user_id, offer_id=offer_id)
+#     offer_details = offerObj.get_offer_details()
+#     print(offer_details)
+#     for item in offer_details['data']:
+#         channel_id=item['channel_id']
+#     view_profile_url = base_url + 'Influencer/getDetailsByUserId/' + str(channel_id)
+#     response = requests.get(view_profile_url)
+#     profile_data_json = response.json()
+#     print(profile_data_json)
+#
+#     return render_template('offers/viewOfferDetails.html', maxCustom=maxCustom,custom_offers_reply_count=custom_offers_reply_count,messageSubscription=messageSubscription,offer_details=offer_details,
+#                            profile_data=profile_data_json)
+
+
 @connecsiApp.route('/viewOfferDetails/<string:offer_id>')
 @is_logged_in
 def viewOfferDetails(offer_id):
@@ -4589,16 +5043,44 @@ def viewOfferDetails(offer_id):
     from templates.offers.offer import Offer
     offerObj = Offer(user_id=user_id, offer_id=offer_id)
     offer_details = offerObj.get_offer_details()
-    print(offer_details)
     for item in offer_details['data']:
         channel_id=item['channel_id']
     view_profile_url = base_url + 'Influencer/getDetailsByUserId/' + str(channel_id)
     response = requests.get(view_profile_url)
     profile_data_json = response.json()
-    print(profile_data_json)
+    print("bro",profile_data_json)
+    try:
+        no_of_views=0
+        print("try in",offer_details['data'][0]['no_of_views'])
+        if(offer_details['data'][0]['no_of_views']==None):
+            no_of_views=1
+            offer_details['data'][0]['no_of_views']=1
+        else:
+            offer_details['data'][0]['no_of_views']=offer_details['data'][0]['no_of_views']+1
+            no_of_views=offer_details['data'][0]['no_of_views']
 
-    return render_template('offers/viewOfferDetails.html', maxCustom=maxCustom,custom_offers_reply_count=custom_offers_reply_count,messageSubscription=messageSubscription,offer_details=offer_details,
-                           profile_data=profile_data_json)
+        url3=base_url + 'Offer/NumberOfViews/'+str(offer_details['data'][0]['offer_id'])+'/'+str(user_id)+'/'+str(no_of_views)
+        response3 = requests.put(url=url3)
+        response3_json=response3.json()
+        if(response3_json['response']==1):
+            print("view count increased")
+
+            payload4 = {}
+            payload4['user_id'] = str(offer_details['data'][0]['channel_id'])
+            payload4['comment_message'] = ''
+            payload4['no_of_views'] = 1
+            payload4['reaction'] = ''
+            payload4['notification_id'] = 0
+            url4 = base_url + 'Offer/offer_comment_view_reaction/' + str(
+                offer_details['data'][0]['channel_id']) + '/' + str(offer_details['data'][0]['offer_id'])
+            response4 = requests.post(url=url4, json=payload4)
+            print(response4.json())
+            return render_template('offers/viewOfferDetails.html', maxCustom=maxCustom,
+                                   custom_offers_reply_count=custom_offers_reply_count,
+                                   messageSubscription=messageSubscription, offer_details=offer_details,
+                                   profile_data=profile_data_json)
+    except Exception as e:
+        print(e)
 
 
 @connecsiApp.route('/deleteOffer/<string:offer_id>', methods=['GET'])
@@ -4851,6 +5333,29 @@ def sendCustomReply():
 
 
 
+# @connecsiApp.route('/getOffers',methods=['GET','POST'])
+# @is_logged_in
+# def getOffers():
+#     if request.method=='POST':
+#         payload = request.form.to_dict()
+#         print(payload)
+#         url = base_url+'Offer/searchOffers'
+#         response = requests.post(url=url,json=payload)
+#         print(response.json())
+#         response_json = response.json()
+#         for item in response_json['data']:
+#             channel_id = item['channel_id']
+#             user_inf_data = requests.get(url=base_url + 'Influencer/getDetailsByUserId/' + str(channel_id))
+#             user_inf_data_json = user_inf_data.json()
+#             print(user_inf_data_json)
+#             channel_img=''
+#             for item1 in user_inf_data_json['data']:
+#                 channel_img = item1['channel_img']
+#             item.update({'channel_img':channel_img})
+#             print(item)
+#         return jsonify(results=response_json['data'])
+#         # return 'ajax working'
+
 @connecsiApp.route('/getOffers',methods=['GET','POST'])
 @is_logged_in
 def getOffers():
@@ -4871,9 +5376,15 @@ def getOffers():
                 channel_img = item1['channel_img']
             item.update({'channel_img':channel_img})
             print(item)
-        return jsonify(results=response_json['data'])
-        # return 'ajax working'
-
+        results = []
+        for i, item in enumerate(response_json['data']):
+            nethih = datetime.datetime.strptime(item['posted_date'], '%Y-%m-%d')
+            differ=datetime.datetime.now()-nethih
+            print("differ",datetime.datetime.now(),nethih,differ.days)
+            if (differ.days <= 30):
+                results.append(item)
+        print(results)
+        return jsonify(results=results)
 
 
 @connecsiApp.route('/searchClassifieds', methods=['GET', 'POST'])
@@ -4898,6 +5409,19 @@ def searchClassifieds():
     return render_template('classifiedAds/search_classifieds.html', videoCategories=videoCat_json,
                            regionCodes=regionCodes_json)
 
+# @connecsiApp.route('/getClassifieds', methods=['GET', 'POST'])
+# @is_logged_in
+# def getClassifieds():
+#     if request.method == 'POST':
+#         payload = request.form.to_dict()
+#         print(payload)
+#         url = base_url + 'Classified/searchClassifieds'
+#         response = requests.post(url=url, json=payload)
+#         print(response.json())
+#         response_json = response.json()
+#         return jsonify(results=response_json['data'])
+#         # return 'ajax working'
+
 @connecsiApp.route('/getClassifieds', methods=['GET', 'POST'])
 @is_logged_in
 def getClassifieds():
@@ -4906,10 +5430,19 @@ def getClassifieds():
         print(payload)
         url = base_url + 'Classified/searchClassifieds'
         response = requests.post(url=url, json=payload)
+
         print(response.json())
         response_json = response.json()
-        return jsonify(results=response_json['data'])
-        # return 'ajax working'
+        print(response_json['data'][0]['to_date'],type (response_json['data'][0]['to_date']))
+        results=[]
+        for i,item in enumerate(response_json['data']):
+            nethih = datetime.datetime.strptime(item['posted_date'], '%Y-%m-%d')
+            differ = datetime.datetime.now() - nethih
+            print("differ",datetime.datetime.now(),nethih,differ.days)
+            if(differ.days<=30):
+                results.append(item)
+        print(results)
+        return jsonify(results=results)
 
 
 
@@ -5900,7 +6433,256 @@ def gettingGraphData(channel_id):
     return jsonify(response_json)
 
 
+# notifications
+@connecsiApp.route('/notificationSet',methods=['GET'])
+@is_logged_in
 
+def notificationSet():
+    print(session['notification'])
+    print(datetime.datetime.now().strftime("%Y/%m/%d"))
+    if(session['notification']==None):
+        session['notification']=datetime.datetime.now().strftime("%Y/%m/%d")
+        return jsonify({'ans': 'true','type':session['type']})
+    elif (session['notification']==datetime.datetime.now().strftime("%Y/%m/%d")):
+        print("value not there")
+        return jsonify({'ans': 'false','type':session['type']})
+    else:
+        session['notification'] = datetime.datetime.now().strftime("%Y/%m/%d")
+        return jsonify({'ans': 'true','type':session['type']})
+
+
+@connecsiApp.route('/getAllFollowersViewsLikesComments/<string:channel_id>/<string:channel_name>',methods=['GET'])
+@is_logged_in
+
+def getAllFollowersViewsLikesComments(channel_id,channel_name):
+    data={}
+    if(channel_name=='Youtube' or channel_name=='youtube'):
+
+        print("get youtube here")
+        url=base_url+'Youtube/getChannelDetailsByChannelId/'+str(channel_id)
+        response=requests.get(url=url)
+        response_json = response.json()
+        data['alert_followers']=response_json['data'][0]['subscriberCount_gained']
+        data['alert_likes']=response_json['data'][0]['total_100video_likes']
+        data['alert_views'] = response_json['data'][0]['total_100video_views']
+        data['alert_comments'] = response_json['data'][0]['total_100video_comments']
+
+
+    elif(channel_name=='Twitter' or channel_name=='twitter'):
+        print("get twitter here")
+        url = base_url + 'Influencer/getChannelDetails/'+str(channel_id)+'/twitter'
+        response = requests.get(url=url)
+        response_json = response.json()
+        screen_name=response_json['data'][0]['screen_name']
+        url = base_url + '/Twitter/getTwitterChannelsDetailsFromConnecsi/' + str(screen_name)
+        response = requests.get(url=url)
+        response_json = response.json()
+        data['alert_views']=response_json['data'][0]['total_100video_views']
+        data['alert_comments']=response_json['data'][0]['total_100video_comments']
+        data['alert_followers']=response_json['data'][0]['subscriberCount_gained']
+        data['alert_likes']=response_json['data'][0]['total_100video_likes']
+
+    else:
+        print("get instagram here")
+        url = base_url + 'Influencer/getChannelDetails/' + str(channel_id) + '/instagram'
+        response = requests.get(url=url)
+        response_json = response.json()
+        screen_name = response_json['data'][0]['username']
+        url = base_url + 'Insta/getInstagramChannel/'+str(screen_name)
+        response = requests.get(url=url)
+        response_json = response.json()
+        data['alert_views'] = response_json['data'][0]['total_100video_views']
+        data['alert_comments'] = response_json['data'][0]['total_100video_comments']
+        data['alert_followers'] = response_json['data'][0]['subscriberCount_gained']
+        data['alert_likes'] = response_json['data'][0]['total_100video_likes']
+
+    print("sending data",data)
+    return jsonify(data)
+
+
+@connecsiApp.route('/getAllAlerts',methods=['GET'])
+@is_logged_in
+
+def getAllAlerts():
+    url=base_url+'Brand/getInfluencerFavList/'+str(session['user_id'])
+    response=requests.get(url=url)
+    response_json=response.json()
+    return jsonify(response_json)
+
+
+@connecsiApp.route('/getAllInfluencerAlerts/<string:channel_id>',methods=['GET'])
+@is_logged_in
+
+def getAllInfluencerAlerts(channel_id):
+    url2 = base_url + 'Influencer/influencer_alert_milestone/' + str(session['user_id']) + '/' + str(channel_id)
+    response2 = requests.get(url=url2)
+    response2_json = response2.json()
+    return jsonify(response2_json)
+
+@connecsiApp.route('/getAllNotificationForUser',methods=['GET'])
+@is_logged_in
+
+def getAllNotificationForUser():
+    url=base_url+'Notifications/'+str(session['user_id'])
+    response=requests.get(url=url)
+    response_json=response.json()
+    return jsonify(response_json)
+
+
+
+@connecsiApp.route('/getAllClassifiedAds',methods=['GET'])
+@is_logged_in
+
+def getAllClassifiedAds():
+    url=base_url+'Classified/'+str(session['user_id'])
+    response=requests.get(url=url)
+    response_json=response.json()
+    return jsonify(response_json)
+
+@connecsiApp.route('/AddingNotificationToTable',methods=['POST'])
+@is_logged_in
+
+def AddingNotificationToTable():
+    print("nthing2")
+    url=base_url+'Notifications/'+str(session['user_id'])
+    payload=request.form.to_dict()
+    print("nthing4")
+    response=requests.post(url=url,json=payload)
+    print("nthing5")
+    response_json=response.json()
+    print("nthing3")
+    return jsonify(response_json)
+
+@connecsiApp.route('/AddingInfluencersToNotificationToTable',methods=['POST'])
+@is_logged_in
+
+def AddingInfluencersToNotificationToTable():
+    payload = request.form.to_dict()
+    payload_send={}
+    inf_id=payload['inf_id']
+    payload_send['display_message']=payload['notificationData']['display_message']
+    payload_send['unread']=payload['notificationData']['unread']
+    url=base_url+'Notifications/'+str(inf_id)
+
+    response=requests.post(url=url,json=payload_send)
+    response_json=response.json()
+    return jsonify(response_json)
+
+
+@connecsiApp.route('/getAllInfluencersForCampaign/<string:campaign_id>',methods=['GET'])
+@is_logged_in
+
+def getAllInfluencersForCampaign(campaign_id):
+    url=base_url+'Campaign/channel_status_for_campaign_by_campaign_id/'+str(campaign_id)
+    response=requests.get(url=url)
+    response_json=response.json()
+    return jsonify(response_json)
+
+
+@connecsiApp.route('/getClassifiedViewDetails/<string:user_id>/<string:classified_id>',methods=['GET'])
+@is_logged_in
+
+def getClassifiedViewDetails(user_id,classified_id):
+    url=base_url+'Classified/classified_comment_view_reaction/'+str(user_id)+'/'+str(classified_id)
+    response=requests.get(url=url)
+    response_json=response.json()
+    return jsonify(response_json)
+
+
+@connecsiApp.route('/getOfferViewDetails/<string:channel_id>/<string:offer_id>',methods=['GET'])
+@is_logged_in
+
+def getOfferViewDetails(channel_id,offer_id):
+    url=base_url+'Offer/offer_comment_view_reaction/'+str(channel_id)+'/'+str(offer_id)
+    response=requests.get(url=url)
+    response_json=response.json()
+    return jsonify(response_json)
+
+@connecsiApp.route('/changingCampaignNotificationId',methods=['PUT'])
+@is_logged_in
+
+def changingCampaignNotificationId():
+    payload = request.form.to_dict()
+    print("hello2")
+    url=base_url+'Campaign/campaign_status_notification/'+str(payload['campaign_id'])+'/'+str(payload['csn_id'])+'/'+str(payload['notification_id'])
+    print("hello")
+    response=requests.put(url=url,json=payload)
+    response_json=response.json()
+    return jsonify(response_json)
+
+
+@connecsiApp.route('/changingOfferNotificationId',methods=['PUT'])
+@is_logged_in
+
+def changingOfferNotificationId():
+    payload = request.form.to_dict()
+    print("hello2")
+    url=base_url+'Classified/'+str(session['user_id'])+'/'+str(payload['ocvr_id'])+'/'+str(payload['notification_id'])
+    print("hello")
+    response=requests.put(url=url,json=payload)
+    response_json=response.json()
+    return jsonify(response_json)
+
+
+@connecsiApp.route('/markNotificationRead',methods=['PUT'])
+@is_logged_in
+
+def markNotificationRead():
+    payload = request.form.to_dict()
+    print("hello2")
+    url=base_url+'Notifications/'+str(session['user_id'])+'/'+str(payload['notification_id'])
+    print("hello change read unread")
+    response=requests.put(url=url,json=payload)
+    response_json=response.json()
+    print("done ",response_json)
+    return jsonify(response_json)
+
+@connecsiApp.route('/changingClassifiedNotificationId',methods=['PUT'])
+@is_logged_in
+
+def changingClassifiedNotificationId():
+    payload = request.form.to_dict()
+    print("hello2")
+    url=base_url+'Classified/'+str(session['user_id'])+'/'+str(payload['ccvr_id'])+'/'+str(payload['notification_id'])
+    print("hello")
+    response=requests.put(url=url,json=payload)
+    response_json=response.json()
+    return jsonify(response_json)
+
+
+
+@connecsiApp.route('/getAllCampaigns',methods=['GET'])
+@is_logged_in
+def getAllCampaigns():
+    session['notification_campaign']=1
+    print("will give data from here")
+    url = base_url+'Campaign/'+str(session['user_id'])
+    response=requests.get(url=url)
+    response_json=response.json()
+    print(response_json)
+    return jsonify(response_json)
+
+@connecsiApp.route('/getAllOffers',methods=['GET'])
+@is_logged_in
+def getAllOffers():
+    session['notification_campaign']=1
+    print("will give data from here")
+    url = base_url+'Offer/'+str(session['user_id'])
+    response=requests.get(url=url)
+    response_json=response.json()
+    print(response_json)
+    return jsonify(response_json)
+
+@connecsiApp.route('/getCampaignNotification/<string:campaign_id>',methods=['GET'])
+@is_logged_in
+def getCampaignNotification(campaign_id):
+    print( type (campaign_id),campaign_id)
+    url=base_url+'Campaign/campaign_status_notification/'+str(campaign_id)
+    response = requests.get(url=url)
+    response_json = response.json()
+    print(response_json)
+    print("getting all campaigns")
+    return jsonify(response_json)
 
 
 if __name__ == '__main__':

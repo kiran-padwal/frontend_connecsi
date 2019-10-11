@@ -1,3 +1,1008 @@
+function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2)
+        month = '0' + month;
+    if (day.length < 2)
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+
+// a and b are javascript Date objects
+
+
+function notificationForAlerts(callback,callback2){
+    console.log("get all alerts");
+    $.ajax({
+        type:'GET',
+        async:false,
+        url:'/getAllAlerts',
+        success:function(data){
+            console.log(data);
+            var value=data.data;
+            for(var i=0;i<value.length;i++){
+                var channel_id=value[i]['channel_id'];
+                var alertFollowers=value[i]['alert_followers'];
+                var alertViews=value[i]['alert_views'];
+                var alertLikes=value[i]['alert_likes'];
+                var alertComments=value[i]['alert_comments'];
+                var channel_name=value[i]['channel_name'];
+                $.ajax({
+                    type:'GET',
+                    url:'/getAllInfluencerAlerts/'+String(data.data[i]['channel_id']),
+                    success:function(data1){
+
+                        var value2=data1.data;
+                        var notification_id=value2['notification_id'];
+                        if(channel_name=="Youtube"){
+                            if(notification_id=="1111"){
+                                // no need for single check
+                            }
+
+                            else{
+                                // checks required
+                                console.log("getting all views followers and all from table");
+                                $.ajax({
+                                    type:'GET',
+                                    url:'/getAllFollowersViewsLikesComments/'+String(channel_id)+'/'+String(channel_name),
+                                    success:function(data2){
+                                        console.log(data2);
+                                        var targetFollowers=data2.data[0]['alert_followers']
+                                        var targetViews=data2.data[0]['alert_views']
+                                        var targetLikes=data2.data[0]['alert_likes']
+                                        var targetComments=data2.data[0]['alert_comments']
+                                        // compare all followers views comments likes
+                                        if(notification_id[0]=="1"){
+                                            // no need for followers alerts
+                                        }
+                                        else{
+                                            if(alert_followers<=targetFollowers){
+
+                                            }
+                                        }
+                                        if(notification_id[1]=="1"){
+
+                                        }
+                                        else{
+
+                                        }
+                                        if(notification_id[2]=="1"){
+
+                                        }
+                                        else{
+
+                                        }
+                                        if(notification_id[3]=="1"){
+
+                                        }
+                                        else{
+
+                                        }
+                                            callback(callback2);
+
+                                    }
+                                })
+
+                            }
+                        }
+                        else{
+
+                        }
+
+
+                    }
+                })
+            }
+
+        }
+    })
+}
+function notificationViewsCountOffers(callback,callback2){
+    console.log("for offers count thing");
+    $.ajax({
+        type:'GET',
+        url:'/getAllOffers',
+        success:function(data){
+            console.log(data);
+            var allOffers=data.data;
+            var list1=[0,1,2];
+            var list2=[3,4,5,6,7,8,9];
+            var list3=[10,11,12,13,14,15,16];
+            var list4=[17,18,19,20,21,22,23];
+            var list5=[24,25,26,27,28,29,30];
+            for (var i =0;i<allOffers.length;i++){
+                console.log("entry 1",allOffers[i]['no_of_views'])
+                var offer_name=allOffers[i]['offer_name'];
+                if(allOffers[i]['no_of_views']!=null){
+                console.log("entry 1")
+                    var offer_id=allOffers[i]['offer_id'];
+                    var currentDate=new Date();
+
+                    var posted_date=allOffers[i]['posted_date'];
+                    console.log(posted_date,currentDate,typeof posted_date,typeof currentDate);
+                    var channel_id=allOffers[i]['channel_id'];
+                    var firstLast=formatDate(currentDate);
+                    console.log(posted_date,firstLast,typeof posted_date,typeof firstLast);
+                    firstLast=new Date(firstLast)
+                    var last=new Date(posted_date);
+                    console.log(firstLast,last)
+                    var currentDateDifference=(firstLast-last)/(1000 * 60 * 60 * 24);
+                    $.ajax({
+                        type:'GET',
+                        url:'/getOfferViewDetails/'+String(channel_id)+'/'+String(offer_id),
+                        success:function(res){
+                            var allViewsDetails=res.data;
+                            console.log(allViewsDetails,allViewsDetails[allViewsDetails.length-1]['notification_id']!=0,allViewsDetails[allViewsDetails.length-1]['notification_id']);
+                            if(allViewsDetails[allViewsDetails.length-1]['notification_id']==0){
+                                console.log("entry 2")
+                                var count2=0;
+                                var count9=0;
+                                var count16=0;
+                                var count23=0;
+                                var count30=0;
+                                var difference=0;
+                                var ocvrList=[];
+                                for(var j=0;j<allViewsDetails.length;j++){
+                                    var ocvr=allViewsDetails[j]['ocvr_id'];
+                                    var inserted_date=allViewsDetails[j]['inserted_date'];
+                                    inserted_date=formatDate(inserted_date*1000);
+                                    console.log(inserted_date,posted_date);
+                                    if(allViewsDetails[j]['notification_id']!=0){
+                                        count=0;
+                                        continue;
+                                    }
+                                    else{
+//                                        var dd=dateDiffInDays(Date(inserted_date),Date(posted_date))
+                                        var first=new Date(inserted_date);
+                                        var second=new Date(posted_date);
+                                        var dd=(first-second)/(1000 * 60 * 60 * 24);
+                                        console.log(dd,currentDateDifference);
+//                                        currentDateDifference=currentDateDifference;
+                                        if(0<=currentDateDifference && currentDateDifference<=2){
+                                            // do nothing
+                                        }
+                                        else if(2<currentDateDifference && currentDateDifference<=9){
+                                            // list1 only
+                                            if(0<=dd && dd<=2){
+                                                count2++;
+                                                ocvrList.push(ocvr);
+                                            }
+                                        }
+                                        else if(9<currentDateDifference && currentDateDifference<=16){
+                                            // list1 and list2
+                                            if(0<=dd && dd<=2){
+                                                count2++;
+                                                ocvrList.push(ocvr);
+                                            }
+                                            else if(2<dd && dd<=9){
+                                                count9++;
+                                                ocvrList.push(ocvr);
+                                            }
+                                        }
+                                        else if(16<currentDateDifference && currentDateDifference<=23){
+                                            // list1 list2 list3
+                                            if(0<=dd && dd<=2){
+                                                count2++;
+                                                ocvrList.push(ocvr);
+                                            }
+                                            else if(2<dd && dd<=9){
+                                                count9++;
+                                                ocvrList.push(ocvr);
+                                            }
+                                            else if(9<dd && dd<=16){
+                                                count16++;
+                                                ocvrList.push(ocvr);
+                                            }
+
+
+                                        }
+                                        else if(23<currentDateDifference && currentDateDifference<=30){
+                                            //list1 list2 list3 list4
+                                            if(0<=dd && dd<=2){
+                                                count2++;
+                                                ocvrList.push(ocvr);
+                                            }
+                                            else if(2<dd && dd<=9){
+                                                count9++;
+                                                ocvrList.push(ocvr);
+                                            }
+                                            else if(9<dd && dd<=16){
+                                                count16++;
+                                                ocvrList.push(ocvr);
+                                            }
+                                            else if(16<dd && dd<=23){
+                                                count23++;
+                                                ocvrList.push(ocvr);
+                                            }
+
+                                        }
+                                        else{
+                                            if(0<=dd && dd<=2){
+                                                count2++;
+                                                ocvrList.push(ocvr);
+                                            }
+                                            else if(2<dd && dd<=9){
+                                                count9++;
+                                                ocvrList.push(ocvr);
+                                            }
+                                            else if(9<dd && dd<=16){
+                                                count16++;
+                                                ocvrList.push(ocvr);
+                                            }
+                                            else if(16<dd && dd<=23){
+                                                count23++;
+                                                ocvrList.push(ocvr);
+                                            }
+                                            else if(23<dd && dd<=30){
+                                                count30++;
+                                                ocvrList.push(ocvr);
+                                            }
+                                        }
+                                    }
+                                }
+                                console.log(count2,count9,count16,count23,count30);
+                                if(count2!=0){
+                                    //send 2 days notification
+                                    notificationData={
+                                        'display_message':'<div onmouseout="hideReadMessage(this)" onmouseover="showReadMessage(this)" class="dropdown-item noti-container py-2 border-bottom border-bottom-blue-grey border-bottom-lighten-4"><div class="container"><div class="row"><div class="col-1" style="padding:0 5px 0 0;margin:auto;"><a href="/viewOfferDetails/'+String(offer_id)+'" onclick="return clickMarkAsRead(this)"><i class="fa fa-cubes info d-block font-medium-5"></i></a></div><div class="col-9" style="padding:0;"><a href="/viewOfferDetails/'+String(offer_id)+'" onclick="return clickMarkAsRead(this)"><span class="noti-wrapper" style=""><span class="noti-text" style="white-space:normal;word-wrap:break-word;line-height:2px;">Your Offer - <span class="text-bold-400 info">'+offer_name+'</span> has been viewed <span class="text-bold-400 info">'+count2+'</span> times.</span></span></a></div><div class="col-1" style="display:grid;text-align:center;"><div style="display:none;text-align:center;"><i class="fa fa-ellipsis-h" style="font-size:1rem;cursor:pointer;" data-toggle="tooltip" title="Remove from Notification" onclick="openDeleteOption(this)"></i><i class="fas fa-circle" style="font-size:0.5rem;cursor:pointer;" data-id="" data-toggle="tooltip" title="Mark as Read" onclick="changeMarkAsRead(this)"></i></div></div></div></div></div>',
+                                        'read_unread':'unread'
+                                    }
+                                    $.ajax({
+                                        type:'POST',
+                                        url:'/AddingNotificationToTable',
+                                        data:notificationData,
+                                        success:function(data){
+                                            var id=data.notification_id;
+                                            if(ocvrList.length){
+                                                // do it put for all in array
+                                                console.log("2 day notification sent",ocvrList);
+                                                for(var n=0;n<ocvrList.length;n++){
+                                                    $.ajax({
+                                                        type:'PUT',
+                                                        url:'/changingOfferNotificationId',
+                                                        data:{
+                                                            'notification_id':id,
+                                                            'ocvr_id':ocvrList[n]
+                                                        },
+                                                        success:function(data){
+                                                            console.log("done updating",data);
+                                                        }
+                                                    });
+                                                }
+
+                                            }
+                                        }
+                                    });
+                                }
+                                if(count9!=0){
+                                    //send 9 days notification
+                                    notificationData={
+                                        'display_message':'<div onmouseout="hideReadMessage(this)" onmouseover="showReadMessage(this)" class="dropdown-item noti-container py-2 border-bottom border-bottom-blue-grey border-bottom-lighten-4"><div class="container"><div class="row"><div class="col-1" style="padding:0 5px 0 0;margin:auto;"><a href="/viewOfferDetails/'+String(offer_id)+'" onclick="return clickMarkAsRead(this)"><i class="fa fa-cubes info d-block font-medium-5"></i></a></div><div class="col-9" style="padding:0;"><a href="/viewOfferDetails/'+String(offer_id)+'" onclick="return clickMarkAsRead(this)"><span class="noti-wrapper" style=""><span class="noti-text" style="white-space:normal;word-wrap:break-word;line-height:2px;">Your Offer - <span class="text-bold-400 info">'+offer_name+'</span> has been viewed <span class="text-bold-400 info">'+count9+'</span> times.</span></span></a></div><div class="col-1" style="display:grid;text-align:center;"><div style="display:none;text-align:center;"><i class="fa fa-ellipsis-h" style="font-size:1rem;cursor:pointer;" data-toggle="tooltip" title="Remove from Notification" onclick="openDeleteOption(this)"></i><i class="fas fa-circle" style="font-size:0.5rem;cursor:pointer;" data-id="" data-toggle="tooltip" title="Mark as Read" onclick="changeMarkAsRead(this)"></i></div></div></div></div></div>',
+                                        'read_unread':'unread'
+                                    }
+                                    $.ajax({
+                                        type:'POST',
+                                        url:'/AddingNotificationToTable',
+                                        data:notificationData,
+                                        success:function(data){
+                                            var id=data.notification_id;
+                                            if(ocvrList.length){
+                                                // do it put for all in array
+                                                console.log("2 day notification sent",ocvrList);
+                                                for(var n=0;n<ocvrList.length;n++){
+                                                    $.ajax({
+                                                        type:'PUT',
+                                                        url:'/changingOfferNotificationId',
+                                                        data:{
+                                                            'notification_id':id,
+                                                            'ocvr_id':ocvrList[n]
+                                                        },
+                                                        success:function(data){
+                                                            console.log("done updating",data);
+                                                        }
+                                                    });
+                                                }
+
+                                            }
+                                        }
+                                    });
+                                }
+                                if(count16!=0){
+                                    //send 16 days notification
+                                    notificationData={
+                                        'display_message':'<div onmouseout="hideReadMessage(this)" onmouseover="showReadMessage(this)" class="dropdown-item noti-container py-2 border-bottom border-bottom-blue-grey border-bottom-lighten-4"><div class="container"><div class="row"><div class="col-1" style="padding:0 5px 0 0;margin:auto;"><a href="/viewOfferDetails/'+String(offer_id)+'" onclick="return clickMarkAsRead(this)"><i class="fa fa-cubes info d-block font-medium-5"></i></a></div><div class="col-9" style="padding:0;"><a href="/viewOfferDetails/'+String(offer_id)+'" onclick="return clickMarkAsRead(this)"><span class="noti-wrapper" style=""><span class="noti-text" style="white-space:normal;word-wrap:break-word;line-height:2px;">Your Offer - <span class="text-bold-400 info">'+offer_name+'</span> has been viewed <span class="text-bold-400 info">'+count16+'</span> times.</span></span></a></div><div class="col-1" style="display:grid;text-align:center;"><div style="display:none;text-align:center;"><i class="fa fa-ellipsis-h" style="font-size:1rem;cursor:pointer;" data-toggle="tooltip" title="Remove from Notification" onclick="openDeleteOption(this)"></i><i class="fas fa-circle" style="font-size:0.5rem;cursor:pointer;" data-id="" data-toggle="tooltip" title="Mark as Read" onclick="changeMarkAsRead(this)"></i></div></div></div></div></div>',
+                                        'read_unread':'unread'
+                                    }
+                                    $.ajax({
+                                        type:'POST',
+                                        url:'/AddingNotificationToTable',
+                                        data:notificationData,
+                                        success:function(data){
+                                            var id=data.notification_id;
+                                            if(ocvrList.length){
+                                                // do it put for all in array
+                                                console.log("2 day notification sent",ocvrList);
+                                                for(var n=0;n<ocvrList.length;n++){
+                                                    $.ajax({
+                                                        type:'PUT',
+                                                        url:'/changingOfferNotificationId',
+                                                        data:{
+                                                            'notification_id':id,
+                                                            'ocvr_id':ocvrList[n]
+                                                        },
+                                                        success:function(data){
+                                                            console.log("done updating",data);
+                                                        }
+                                                    });
+                                                }
+
+                                            }
+                                        }
+                                    });
+                                }
+                                if(count23!=0){
+                                    //send 23 days notification
+                                    notificationData={
+                                        'display_message':'<div onmouseout="hideReadMessage(this)" onmouseover="showReadMessage(this)" class="dropdown-item noti-container py-2 border-bottom border-bottom-blue-grey border-bottom-lighten-4"><div class="container"><div class="row"><div class="col-1" style="padding:0 5px 0 0;margin:auto;"><a href="/viewOfferDetails/'+String(offer_id)+'" onclick="return clickMarkAsRead(this)"><i class="fa fa-cubes info d-block font-medium-5"></i></a></div><div class="col-9" style="padding:0;"><a href="/viewOfferDetails/'+String(offer_id)+'" onclick="return clickMarkAsRead(this)"><span class="noti-wrapper" style=""><span class="noti-text" style="white-space:normal;word-wrap:break-word;line-height:2px;">Your Offer - <span class="text-bold-400 info">'+offer_name+'</span> has been viewed <span class="text-bold-400 info">'+count23+'</span> times.</span></span></a></div><div class="col-1" style="display:grid;text-align:center;"><div style="display:none;text-align:center;"><i class="fa fa-ellipsis-h" style="font-size:1rem;cursor:pointer;" data-toggle="tooltip" title="Remove from Notification" onclick="openDeleteOption(this)"></i><i class="fas fa-circle" style="font-size:0.5rem;cursor:pointer;" data-id="" data-toggle="tooltip" title="Mark as Read" onclick="changeMarkAsRead(this)"></i></div></div></div></div></div>',
+                                        'read_unread':'unread'
+                                    }
+                                    $.ajax({
+                                        type:'POST',
+                                        url:'/AddingNotificationToTable',
+                                        data:notificationData,
+                                        success:function(data){
+                                            var id=data.notification_id;
+                                            if(ocvrList.length){
+                                                // do it put for all in array
+                                                console.log("2 day notification sent",ocvrList);
+                                                for(var n=0;n<ocvrList.length;n++){
+                                                    $.ajax({
+                                                        type:'PUT',
+                                                        url:'/changingOfferNotificationId',
+                                                        data:{
+                                                            'notification_id':id,
+                                                            'ocvr_id':ocvrList[n]
+                                                        },
+                                                        success:function(data){
+                                                            console.log("done updating",data);
+                                                        }
+                                                    });
+                                                }
+
+                                            }
+                                        }
+                                    });
+
+                                }
+                                if(count30!=0){
+                                    //send 30 days notification
+                                    notificationData={
+                                        'display_message':'<div onmouseout="hideReadMessage(this)" onmouseover="showReadMessage(this)" class="dropdown-item noti-container py-2 border-bottom border-bottom-blue-grey border-bottom-lighten-4"><div class="container"><div class="row"><div class="col-1" style="padding:0 5px 0 0;margin:auto;"><a href="/viewOfferDetails/'+String(offer_id)+'" onclick="return clickMarkAsRead(this)"><i class="fa fa-cubes info d-block font-medium-5"></i></a></div><div class="col-9" style="padding:0;"><a href="/viewOfferDetails/'+String(offer_id)+'" onclick="return clickMarkAsRead(this)"><span class="noti-wrapper" style=""><span class="noti-text" style="white-space:normal;word-wrap:break-word;line-height:2px;">Your Offer - <span class="text-bold-400 info">'+offer_name+'</span> has been viewed <span class="text-bold-400 info">'+count30+'</span> times.</span></span></a></div><div class="col-1" style="display:grid;text-align:center;"><div style="display:none;text-align:center;"><i class="fa fa-ellipsis-h" style="font-size:1rem;cursor:pointer;" data-toggle="tooltip" title="Remove from Notification" onclick="openDeleteOption(this)"></i><i class="fas fa-circle" style="font-size:0.5rem;cursor:pointer;" data-id="" data-toggle="tooltip" title="Mark as Read" onclick="changeMarkAsRead(this)"></i></div></div></div></div></div>',
+                                        'read_unread':'unread'
+                                    }
+                                    $.ajax({
+                                        type:'POST',
+                                        url:'/AddingNotificationToTable',
+                                        data:notificationData,
+                                        success:function(data){
+                                            var id=data.notification_id;
+                                            if(ocvrList.length){
+                                                // do it put for all in array
+                                                console.log("2 day notification sent",ocvrList);
+                                                for(var n=0;n<ocvrList.length;n++){
+                                                    $.ajax({
+                                                        type:'PUT',
+                                                        url:'/changingOfferNotificationId',
+                                                        data:{
+                                                            'notification_id':id,
+                                                            'ocvr_id':ocvrList[n]
+                                                        },
+                                                        success:function(data){
+                                                            console.log("done updating",data);
+                                                            callback(callback2);
+                                                        }
+                                                    });
+                                                }
+
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    })
+                }
+            }
+        }
+    })
+
+}
+
+
+function notificationViewsCountAds(){
+    console.log("for ads count thing");
+    $.ajax({
+        type:'GET',
+        url:'/getAllClassifiedAds',
+        success:function(data){
+            console.log(data);
+            var allCampaigns=data.data;
+            var list1=[0,1,2];
+            var list2=[3,4,5,6,7,8,9];
+            var list3=[10,11,12,13,14,15,16];
+            var list4=[17,18,19,20,21,22,23];
+            var list5=[24,25,26,27,28,29,30];
+            for (var i =0;i<allCampaigns.length;i++){
+                console.log("entry 1",allCampaigns[i]['no_of_views'])
+                var classified_name=allCampaigns[i]['classified_name'];
+                if(allCampaigns[i]['no_of_views']!=null){
+                console.log("entry 1")
+                    var classified_id=allCampaigns[i]['classified_id'];
+                    var currentDate=new Date();
+
+                    var posted_date=allCampaigns[i]['posted_date'];
+
+                    var user_id=allCampaigns[i]['user_id'];
+                    var firstLast=formatDate(currentDate);
+                    firstLast=new Date(firstLast)
+                    var last=new Date(posted_date);
+                    console.log(firstLast,last)
+                    var currentDateDifference=(firstLast-last)/(1000 * 60 * 60 * 24);
+                    console.log(currentDateDifference)
+                    $.ajax({
+                        type:'GET',
+                        url:'/getClassifiedViewDetails/'+String(user_id)+'/'+String(classified_id),
+                        success:function(res){
+                            var allViewsDetails=res.data;
+                            console.log(allViewsDetails,allViewsDetails[allViewsDetails.length-1]['notification_id']!=0,allViewsDetails[allViewsDetails.length-1]['notification_id']);
+                            if(allViewsDetails[allViewsDetails.length-1]['notification_id']==0){
+                                console.log("entry 2")
+                                var count2=0;
+                                var count9=0;
+                                var count16=0;
+                                var count23=0;
+                                var count30=0;
+                                var difference=0;
+                                var ccvrList=[];
+                                for(var j=0;j<allViewsDetails.length;j++){
+                                    var ccvr=allViewsDetails[j]['ccvr_id'];
+                                    var inserted_date=allViewsDetails[j]['inserted_date'];
+                                    inserted_date=formatDate(inserted_date*1000);
+                                    console.log(inserted_date,posted_date);
+                                    if(allViewsDetails[j]['notification_id']!=0){
+                                        count=0;
+                                        continue;
+                                    }
+                                    else{
+//                                        var dd=dateDiffInDays(Date(inserted_date),Date(posted_date))
+                                        var first=new Date(inserted_date);
+                                        var second=new Date(posted_date);
+                                        var dd=(first-second)/(1000 * 60 * 60 * 24);
+                                        console.log(dd,currentDateDifference);
+//                                        currentDateDifference=currentDateDifference+3;
+                                        if(0<=currentDateDifference && currentDateDifference<=2){
+                                            // do nothing
+                                        }
+                                        else if(2<currentDateDifference && currentDateDifference<=9){
+                                            // list1 only
+                                            if(0<=dd && dd<=2){
+                                                count2++;
+                                                ccvrList.push(ccvr);
+                                            }
+                                        }
+                                        else if(9<currentDateDifference && currentDateDifference<=16){
+                                            // list1 and list2
+                                            if(0<=dd && dd<=2){
+                                                count2++;
+                                                ccvrList.push(ccvr);
+                                            }
+                                            else if(2<dd && dd<=9){
+                                                count9++;
+                                                ccvrList.push(ccvr);
+                                            }
+                                        }
+                                        else if(16<currentDateDifference && currentDateDifference<=23){
+                                            // list1 list2 list3
+                                            if(0<=dd && dd<=2){
+                                                count2++;
+                                                ccvrList.push(ccvr);
+                                            }
+                                            else if(2<dd && dd<=9){
+                                                count9++;
+                                                ccvrList.push(ccvr);
+                                            }
+                                            else if(9<dd && dd<=16){
+                                                count16++;
+                                                ccvrList.push(ccvr);
+                                            }
+
+
+                                        }
+                                        else if(23<currentDateDifference && currentDateDifference<=30){
+                                            //list1 list2 list3 list4
+                                            if(0<=dd && dd<=2){
+                                                count2++;
+                                                ccvrList.push(ccvr);
+                                            }
+                                            else if(2<dd && dd<=9){
+                                                count9++;
+                                                ccvrList.push(ccvr);
+                                            }
+                                            else if(9<dd && dd<=16){
+                                                count16++;
+                                                ccvrList.push(ccvr);
+                                            }
+                                            else if(16<dd && dd<=23){
+                                                count23++;
+                                                ccvrList.push(ccvr);
+                                            }
+
+                                        }
+                                        else{
+                                            if(0<=dd && dd<=2){
+                                                count2++;
+                                                ccvrList.push(ccvr);
+                                            }
+                                            else if(2<dd && dd<=9){
+                                                count9++;
+                                                ccvrList.push(ccvr);
+                                            }
+                                            else if(9<dd && dd<=16){
+                                                count16++;
+                                                ccvrList.push(ccvr);
+                                            }
+                                            else if(16<dd && dd<=23){
+                                                count23++;
+                                                ccvrList.push(ccvr);
+                                            }
+                                            else if(23<dd && dd<=30){
+                                                count30++;
+                                                ccvrList.push(ccvr);
+                                            }
+                                        }
+                                    }
+                                }
+                                console.log(count2,count9,count16,count23,count30);
+                                if(count2!=0){
+                                    //send 2 days notification
+                                    notificationData={
+                                        'display_message':'<div onmouseout="hideReadMessage(this)" onmouseover="showReadMessage(this)" class="dropdown-item noti-container py-2 border-bottom border-bottom-blue-grey border-bottom-lighten-4"><div class="container"><div class="row"><div class="col-1" style="padding:0 5px 0 0;margin:auto;"><a href="/viewClassifiedDetails/'+String(classified_id)+'" onclick="return clickMarkAsRead(this)"><i class="fa fa-adjust info d-block font-medium-5"></i></a></div><div class="col-9" style="padding:0;"><a href="/viewClassifiedDetails/'+String(classified_id)+'" onclick="return clickMarkAsRead(this)"><span class="noti-wrapper" style=""><span class="noti-text" style="white-space:normal;word-wrap:break-word;line-height:2px;">Your Classified - <span class="text-bold-400 info">'+classified_name+'</span> has been viewed <span class="text-bold-400 info">'+count2+'</span> times.</span></span></a></div><div class="col-1" style="display:grid;text-align:center;"><div style="display:none;text-align:center;"><i class="fa fa-ellipsis-h" style="font-size:1rem;cursor:pointer;" data-toggle="tooltip" title="Remove from Notification" onclick="openDeleteOption(this)"></i><i class="fas fa-circle" style="font-size:0.5rem;cursor:pointer;" data-id="" data-toggle="tooltip" title="Mark as Read" onclick="changeMarkAsRead(this)"></i></div></div></div></div></div>',
+                                        'read_unread':'unread'
+                                    }
+                                    $.ajax({
+                                        type:'POST',
+                                        url:'/AddingNotificationToTable',
+                                        data:notificationData,
+                                        success:function(data){
+                                            var id=data.notification_id;
+                                            if(ccvrList.length){
+                                                // do it put for all in array
+                                                console.log("2 day notification sent",ccvrList);
+                                                for(var n=0;n<ccvrList.length;n++){
+                                                    $.ajax({
+                                                        type:'PUT',
+                                                        url:'/changingClassifiedNotificationId',
+                                                        data:{
+                                                            'notification_id':id,
+                                                            'ccvr_id':ccvrList[n]
+                                                        },
+                                                        success:function(data){
+                                                            console.log("done updating",data);
+                                                        }
+                                                    });
+                                                }
+
+                                            }
+                                        }
+                                    });
+                                }
+                                if(count9!=0){
+                                    //send 9 days notification
+                                    notificationData={
+                                        'display_message':'<div onmouseout="hideReadMessage(this)" onmouseover="showReadMessage(this)" class="dropdown-item noti-container py-2 border-bottom border-bottom-blue-grey border-bottom-lighten-4"><div class="container"><div class="row"><div class="col-1" style="padding:0 5px 0 0;margin:auto;"><a href="/viewClassifiedDetails/'+String(classified_id)+'"><i class="fa fa-adjust info d-block font-medium-5"></i></a></div><div class="col-9" style="padding:0;"><a href="/viewClassifiedDetails/'+String(classified_id)+'"><span class="noti-wrapper" style=""><span class="noti-text" style="white-space:normal;word-wrap:break-word;line-height:2px;">Your Classified - <span class="text-bold-400 info">'+classified_name+'</span> has been viewed <span class="text-bold-400 info">'+count9+'</span> times.</span></span></a></div><div class="col-1" style="display:grid;text-align:center;"><div style="display:none;text-align:center;"><i class="fa fa-ellipsis-h" style="font-size:1rem;cursor:pointer;" data-toggle="tooltip" title="Remove from Notification" onclick="openDeleteOption(this)"></i><i class="fas fa-circle" style="font-size:0.5rem;cursor:pointer;" data-id="" data-toggle="tooltip" title="Mark as Read" onclick="changeMarkAsRead(this)"></i></div></div></div></div></div>',
+                                        'read_unread':'unread'
+                                    }
+                                    $.ajax({
+                                        type:'POST',
+                                        url:'/AddingNotificationToTable',
+                                        data:notificationData,
+                                        success:function(data){
+                                            var id=data.notification_id;
+                                            if(ccvrList.length){
+                                                // do it put for all in array
+                                                console.log("2 day notification sent",ccvrList)
+                                                for(var n=0;n<ccvrList.length;n++){
+                                                    $.ajax({
+                                                        type:'PUT',
+                                                        url:'/changingClassifiedNotificationId',
+                                                        data:{
+                                                            'notification_id':id,
+                                                            'ccvr_id':ccvrList[n]
+                                                        },
+                                                        success:function(data){
+                                                            console.log("done updating",data);
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        }
+                                    });
+                                }
+                                if(count16!=0){
+                                    //send 16 days notification
+                                    notificationData={
+                                        'display_message':'<div onmouseout="hideReadMessage(this)" onmouseover="showReadMessage(this)" class="dropdown-item noti-container py-2 border-bottom border-bottom-blue-grey border-bottom-lighten-4"><div class="container"><div class="row"><div class="col-1" style="padding:0 5px 0 0;margin:auto;"><a href="/viewClassifiedDetails/'+String(classified_id)+'" onclick="return clickMarkAsRead(this)"><i class="fa fa-adjust info d-block font-medium-5"></i></a></div><div class="col-9" style="padding:0;"><a href="/viewClassifiedDetails/'+String(classified_id)+'" onclick="return clickMarkAsRead(this)"><span class="noti-wrapper" style=""><span class="noti-text" style="white-space:normal;word-wrap:break-word;line-height:2px;">Your Classified - <span class="text-bold-400 info">'+classified_name+'</span> has been viewed <span class="text-bold-400 info">'+count16+'</span> times.</span></span></a></div><div class="col-1" style="display:grid;text-align:center;"><div style="display:none;text-align:center;"><i class="fa fa-ellipsis-h" style="font-size:1rem;cursor:pointer;" data-toggle="tooltip" title="Remove from Notification" onclick="openDeleteOption(this)"></i><i class="fas fa-circle" style="font-size:0.5rem;cursor:pointer;" data-id="" data-toggle="tooltip" title="Mark as Read" onclick="changeMarkAsRead(this)"></i></div></div></div></div></div>',
+                                        'read_unread':'unread'
+                                    }
+                                    $.ajax({
+                                        type:'POST',
+                                        url:'/AddingNotificationToTable',
+                                        data:notificationData,
+                                        success:function(data){
+                                            var id=data.notification_id;
+                                            if(ccvrList.length){
+                                                // do it put for all in array
+                                                console.log("2 day notification sent",ccvrList)
+                                                for(var n=0;n<ccvrList.length;n++){
+                                                    $.ajax({
+                                                        type:'PUT',
+                                                        url:'/changingClassifiedNotificationId',
+                                                        data:{
+                                                            'notification_id':id,
+                                                            'ccvr_id':ccvrList[n]
+                                                        },
+                                                        success:function(data){
+                                                            console.log("done updating",data);
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        }
+                                    });
+                                }
+                                if(count23!=0){
+                                    //send 23 days notification
+                                    notificationData={
+                                        'display_message':'<div onmouseout="hideReadMessage(this)" onmouseover="showReadMessage(this)" class="dropdown-item noti-container py-2 border-bottom border-bottom-blue-grey border-bottom-lighten-4"><div class="container"><div class="row"><div class="col-1" style="padding:0 5px 0 0;margin:auto;"><a href="/viewClassifiedDetails/'+String(classified_id)+'" onclick="return clickMarkAsRead(this)"><i class="fa fa-adjust info d-block font-medium-5"></i></a></div><div class="col-9" style="padding:0;"><a href="/viewClassifiedDetails/'+String(classified_id)+'" onclick="return clickMarkAsRead(this)"><span class="noti-wrapper" style=""><span class="noti-text" style="white-space:normal;word-wrap:break-word;line-height:2px;">Your Classified - <span class="text-bold-400 info">'+classified_name+'</span> has been viewed <span class="text-bold-400 info">'+count23+'</span> times.</span></span></a></div><div class="col-1" style="display:grid;text-align:center;"><div style="display:none;text-align:center;"><i class="fa fa-ellipsis-h" style="font-size:1rem;cursor:pointer;" data-toggle="tooltip" title="Remove from Notification" onclick="openDeleteOption(this)"></i><i class="fas fa-circle" style="font-size:0.5rem;cursor:pointer;" data-id="" data-toggle="tooltip" title="Mark as Read" onclick="changeMarkAsRead(this)"></i></div></div></div></div></div>',
+                                        'read_unread':'unread'
+                                    }
+                                    $.ajax({
+                                        type:'POST',
+                                        url:'/AddingNotificationToTable',
+                                        data:notificationData,
+                                        success:function(data){
+                                            var id=data.notification_id;
+                                            if(ccvrList.length){
+                                                // do it put for all in array
+                                                console.log("2 day notification sent",ccvrList)
+                                                for(var n=0;n<ccvrList.length;n++){
+                                                    $.ajax({
+                                                        type:'PUT',
+                                                        url:'/changingClassifiedNotificationId',
+                                                        data:{
+                                                            'notification_id':id,
+                                                            'ccvr_id':ccvrList[n]
+                                                        },
+                                                        success:function(data){
+                                                            console.log("done updating",data);
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        }
+                                    });
+
+                                }
+                                if(count30!=0){
+                                    //send 30 days notification
+                                    notificationData={
+                                        'display_message':'<div onmouseout="hideReadMessage(this)" onmouseover="showReadMessage(this)" class="dropdown-item noti-container py-2 border-bottom border-bottom-blue-grey border-bottom-lighten-4"><div class="container"><div class="row"><div class="col-1" style="padding:0 5px 0 0;margin:auto;"><a href="/viewClassifiedDetails/'+String(classified_id)+'" onclick="return clickMarkAsRead(this)"><i class="fa fa-adjust info d-block font-medium-5"></i></a></div><div class="col-9" style="padding:0;"><a href="/viewClassifiedDetails/'+String(classified_id)+'" onclick="return clickMarkAsRead(this)"><span class="noti-wrapper" style=""><span class="noti-text" style="white-space:normal;word-wrap:break-word;line-height:2px;">Your Classified - <span class="text-bold-400 info">'+classified_name+'</span> has been viewed <span class="text-bold-400 info">'+count30+'</span> times.</span></span></a></div><div class="col-1" style="display:grid;text-align:center;"><div style="display:none;text-align:center;"><i class="fa fa-ellipsis-h" style="font-size:1rem;cursor:pointer;" data-toggle="tooltip" title="Remove from Notification" onclick="openDeleteOption(this)"></i><i class="fas fa-circle" style="font-size:0.5rem;cursor:pointer;" data-id="" data-toggle="tooltip" title="Mark as Read" onclick="changeMarkAsRead(this)"></i></div></div></div></div></div>',
+                                        'read_unread':'unread'
+                                    }
+                                    $.ajax({
+                                        type:'POST',
+                                        url:'/AddingNotificationToTable',
+                                        data:notificationData,
+                                        success:function(data){
+                                            var id=data.notification_id;
+                                            if(ccvrList.length){
+                                                // do it put for all in array
+                                                console.log("2 day notification sent",ccvrList)
+                                                for(var n=0;n<ccvrList.length;n++){
+                                                    $.ajax({
+                                                        type:'PUT',
+                                                        url:'/changingClassifiedNotificationId',
+                                                        data:{
+                                                            'notification_id':id,
+                                                            'ccvr_id':ccvrList[n]
+                                                        },
+                                                        success:function(data){
+                                                            console.log("done updating",data);
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    })
+                }
+            }
+        }
+    })
+
+}
+
+function notificationCampaignStatusBrand(){
+    console.log("hello check")
+    $.ajax({
+        url:'/getAllCampaigns',
+        type:'GET',
+        success:function(data){
+            console.log("data from campaign status",data.data);
+            var campaign=data.data;
+            var currentDate=new Date();
+            currentDate=formatDate(currentDate);
+            currentDate=Date.parse(currentDate);
+            for(var i=0;i<campaign.length;i++){
+                var start=Date.parse(campaign[i].from_date);
+                var startAct=campaign[i].from_date;
+                var endAct=campaign[i].to_date;
+                var ending=Date.parse(campaign[i].to_date);
+                var campaign_name=campaign[i].campaign_name;
+                var campaign_id=campaign[i].campaign_id;
+                if(currentDate>=start && currentDate<=ending){
+                    console.log("active now");
+                    $.ajax({
+                        type:'GET',
+                        async:false,
+                        url:'/getCampaignNotification/'+String(campaign_id),
+                        success:function(data){
+                            console.log("hello ji",data);
+                            for(var j=0;j<data.data.length;j++){
+                                if(data.data[j]['notification_id']==0 && (data.data[j]['status_date']==endAct||data.data[j]['status_date']==startAct)){
+                                    // now send notification to table for campaign active
+                                    notificationData={
+                                        'display_message':'<div onmouseout="hideReadMessage(this)" onmouseover="showReadMessage(this)" class="dropdown-item noti-container py-2 border-bottom border-bottom-blue-grey border-bottom-lighten-4"><div class="container"><div class="row"><div class="col-1" style="padding:0 5px 0 0;margin:auto;"><a href="/viewCampaignDetails/'+String(campaign_id)+'" onclick="return clickMarkAsRead(this)"><i class="fa fa-bullseye info d-block font-medium-5"></i></a></div><div class="col-9" style="padding:0;"><a href="/viewCampaignDetails/'+String(campaign_id)+'" onclick="return clickMarkAsRead(this)"><span class="noti-wrapper" style=""><span class="noti-text" style="white-space:normal;word-wrap:break-word;line-height:2px;">Your Campaign - <span class="text-bold-400 info">'+campaign_name+'</span> is <span class="text-bold-400 info" style="color:lightgreen;">Active</span>.</span></span></a></div><div class="col-1" style="display:grid;text-align:center;"><div style="display:none;text-align:center;"><i class="fa fa-ellipsis-h" style="font-size:1rem;cursor:pointer;" data-toggle="tooltip" title="Remove from Notification" onclick="openDeleteOption(this)"></i><i class="fas fa-circle" style="font-size:0.5rem;cursor:pointer;" data-id="" data-toggle="tooltip" title="Mark as Read" onclick="changeMarkAsRead(this)"></i></div></div></div></div></div>',
+                                        'read_unread':'unread'
+                                    }
+                                    var csn_id=data.data[j]['csn_id']
+                                    $.ajax({
+                                        type:'POST',
+                                        async:false,
+                                        url:'/AddingNotificationToTable',
+                                        data:notificationData,
+                                        success:function(data){
+                                            var id=data.notification_id;
+
+                                            // sent back notification id in campaign notification table
+                                            $.ajax({
+                                                type:'PUT',
+                                                url:'/changingCampaignNotificationId',
+                                                data:{
+                                                    'notification_id':id,
+                                                    'csn_id':csn_id,
+                                                    'campaign_id':campaign_id
+                                                },
+                                                success:function(data){
+                                                    console.log("setting",data);
+
+
+                                                    console.log("setting notificxation for influencers related to it");
+                                                    $.ajax({
+                                                        type:'GET',
+                                                        url:'/getAllInfluencersForCampaign/'+String(campaign_id),
+                                                        success:function(res){
+                                                            console.log(res.data);
+                                                            var influencers=res.data;
+                                                            for (var m=0;m<influencers.length;m++){
+                                                                $.ajax({
+                                                                    type:'POST',
+                                                                    url:'/AddingInfluencersToNotificationToTable',
+                                                                    data:{
+                                                                        inf_id:influencers[m][channel_id],
+                                                                        notificationData:notificationData
+                                                                    },
+                                                                    success:function(val){
+                                                                        console.log(val);
+                                                                    }
+                                                                });
+                                                            }
+                                                        }
+                                                    })
+
+
+                                                }
+
+                                            })
+                                            console.log("data added",data)
+                                        }
+                                    })
+
+                                }
+                                else{
+                                    // nothing to do
+                                }
+                            }
+                        }
+                    })
+                }
+                else if(currentDate>ending){
+                    console.log("expired now",campaign_id);
+                    $.ajax({
+                        type:'GET',
+                        async:false,
+                        url:'/getCampaignNotification/'+String(campaign_id),
+                        success:function(data){
+                            console.log('hello jiiii',data)
+                            for(var j=0;j<data.data.length;j++){
+                                if(data.data[j]['notification_id']==0  && (data.data[j]['status_date']==endAct||data.data[j]['status_date']==startAct)){
+                                    // now send notification to table for campaign expired
+
+                                    notificationData={
+                                        'display_message':'<div onmouseout="hideReadMessage(this)" onmouseover="showReadMessage(this)" class="dropdown-item noti-container py-2 border-bottom border-bottom-blue-grey border-bottom-lighten-4"><div class="container"><div class="row"><div class="col-1" style="padding:0 5px 0 0;margin:auto;"><a href="/viewCampaignDetails/'+String(campaign_id)+'" onclick="return clickMarkAsRead(this)"><i class="fa fa-bullseye info d-block font-medium-5"></i></a></div><div class="col-9" style="padding:0;"><a href="/viewCampaignDetails/'+String(campaign_id)+'" onclick="return clickMarkAsRead(this)"><span class="noti-wrapper" style=""><span class="noti-text" style="white-space:normal;word-wrap:break-word;line-height:2px;">Your Campaign - <span class="text-bold-400 info">'+campaign_name+'</span> has <span class="text-bold-400 info" style="color:red;">Ended</span>.</span></span></a></div><div class="col-1" style="display:grid;text-align:center;"><div style="display:none;text-align:center;"><i class="fa fa-ellipsis-h" style="font-size:1rem;cursor:pointer;" data-toggle="tooltip" title="Remove from Notification" onclick="openDeleteOption(this)"></i><i class="fas fa-circle" style="font-size:0.5rem;cursor:pointer;" data-id="" data-toggle="tooltip" title="Mark as Read" onclick="changeMarkAsRead(this)"></i></div></div></div></div></div>',
+                                        'read_unread':'unread'
+                                    }
+                                    var csn_id=data.data[j]['csn_id']
+                                    $.ajax({
+                                        type:'POST',
+                                        async:false,
+                                        url:'/AddingNotificationToTable',
+                                        data:notificationData,
+                                        success:function(data){
+                                            var id=data.notification_id;
+                                            // sent back notification id in campaign notification table
+                                            console.log(id,"value",csn_id,campaign_id);
+                                            $.ajax({
+                                                type:'PUT',
+                                                url:'/changingCampaignNotificationId',
+                                                data:{
+                                                    'notification_id':id,
+                                                    'csn_id':csn_id,
+                                                    'campaign_id':campaign_id
+                                                },
+                                                success:function(data){
+                                                    console.log("setting",data);
+
+                                                    console.log("setting notificxation for influencers related to it");
+                                                    $.ajax({
+                                                        type:'GET',
+                                                        url:'/getAllInfluencersForCampaign/'+String(campaign_id),
+                                                        success:function(res){
+                                                            console.log(res.data);
+                                                            var influencers=res.data;
+                                                            for (var m=0;m<influencers.length;m++){
+                                                                $.ajax({
+                                                                    type:'POST',
+                                                                    url:'/AddingInfluencersToNotificationToTable',
+                                                                    data:{
+                                                                        inf_id:influencers[m][channel_id],
+                                                                        notificationData:notificationData
+                                                                    },
+                                                                    success:function(val){
+                                                                        console.log(val);
+                                                                    }
+                                                                });
+                                                            }
+                                                        }
+                                                    })
+
+
+
+                                                }
+
+                                            })
+                                            console.log("data added",data)
+                                        }
+                                    })
+
+                                    // sent back notification id in campaign notification table
+                                }
+                                else{
+                                    // nothing to do
+                                }
+                            }
+                        }
+                    })
+
+                }
+                else{
+                    console.log("Inactive");
+                }
+            }
+        }
+    })
+}
+var doneMenuFill=false;
+function getAllNotificationsInMenu(callback){
+    console.log("getting all notifications rendered");
+    if(doneMenuFill==false){
+
+        $.ajax({
+        type:'GET',
+        url:'/getAllNotificationForUser',
+        success:function(data){
+            if(data.data){
+                return;
+            }
+            console.log(data);
+            var value=data.data;
+            var id=[];
+            var read=[];
+            for(var i=value.length-1;i>=0;i--){
+                 if(value[i]['read_unread']=='unread'){
+                    $('#notificationBlock').append(value[i]['display_message']);
+                    id.push(value[i]['notification_id'])
+                    read.push(0);
+                    console.log(i);
+                 }
+                 else{
+                    $('#notificationBlock').append(value[i]['display_message']);
+                    id.push(value[i]['notification_id'])
+                    read.push(1);
+                    console.log(i);
+                 }
+
+
+            }
+            $("#notificationBlock")[0].children[2].childNodes["0"].childNodes["0"].childNodes[2].childNodes["0"].childNodes[1].dataset.id=0;
+            // change menu length here...........................
+            for(var i=1;i<2;i++){
+                $("#notificationBlock")[0].children[i+2].childNodes["0"].childNodes["0"].childNodes[2].childNodes["0"].childNodes[1].dataset.id=id[i-1];
+                console.log($("#notificationBlock")[0].children[i+2].childNodes["0"].childNodes["0"].childNodes[2].childNodes["0"].childNodes);
+                if(read[i-1]==1){
+                    $("#notificationBlock")[0].children[i+2].style.backgroundColor="rgba(244, 244, 244,0.8)";
+                    $("#notificationBlock")[0].children[i+2].childNodes["0"].childNodes["0"].childNodes[2].childNodes["0"].childNodes[1].className='far fa-circle';
+                }
+            }
+            doneMenuFill=true;
+            callback();
+        }
+    })
+    }
+}
+function countNotificationValue(){
+    var lengthOfNotification=$('#notificationBlock')[0].childElementCount-2;
+    console.log(lengthOfNotification);
+    $('#countNotification')[0].innerText=lengthOfNotification;
+}
+function getNotificationReady(){
+    $.ajax({
+        type:'GET',
+        url:'/notificationSet',
+        success:function(data){
+            console.log("status",data);
+            if(data.ans=='true'){
+                console.log("doing first for campaign status");
+                if(data.type=='brand'){
+                    notificationCampaignStatusBrand();
+                    notificationViewsCountAds();
+//                    notificationForAlerts(getAllNotificationsInMenu,countNotificationValue);
+                }
+                else if(data.type=='influencer'){
+                    notificationViewsCountOffers(getAllNotificationsInMenu,countNotificationValue);
+                }
+            }
+            else{
+                console.log("updated notification");
+                getAllNotificationsInMenu(countNotificationValue);
+            }
+            countNotificationValue();
+        }
+    })
+
+
+
+}
+
+
 $(window).bind('beforeunload',function(){
      document.getElementById('loader-div').style.display="block";
 
