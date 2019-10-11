@@ -375,7 +375,7 @@ def login():
                 user_id = result_json['user_id']
                 response2=getSubscriptionValues(str(user_id))
                 print('hello response',response2,response2['data'])
-                if(len(response2['data'])):
+                if(not len(response2['data'])):
                     #adding free subscription for first login Free
                     check=freeSubscription(str(user_id))
                     if(check['response']==1):
