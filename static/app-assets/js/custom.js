@@ -3295,6 +3295,24 @@ function abbrNum(number, decPlaces) {
 
 
 
+//function getAllUnreadMessagesCount(){
+//         $.ajax({
+//               type: "GET",
+//               url: '/get_all_unread_messages',
+//               success: function(data)
+//               {
+////                   alert(data); // show response from the python script.
+////                   $('#myinbox').append('<span class="badge badge-pill badge-danger">{{glob.total_unread_messages}}</span>');
+//                   jQuery.each(data.results, function (i, val) {
+////                        alert(i);
+//                        $('#myinbox').append('<span class="badge badge-pill badge-danger">'+val+'</span>');
+//                        $('#myinbox_left_side_nav').append('<span class="badge badge-pill badge-danger">'+val+'</span>');
+//                    });
+//               }
+//         });
+//
+//}
+
 function getAllUnreadMessagesCount(){
          $.ajax({
                type: "GET",
@@ -3307,11 +3325,83 @@ function getAllUnreadMessagesCount(){
 //                        alert(i);
                         $('#myinbox').append('<span class="badge badge-pill badge-danger">'+val+'</span>');
                         $('#myinbox_left_side_nav').append('<span class="badge badge-pill badge-danger">'+val+'</span>');
+                        $('#notificationBlock').append('<div onmouseout="hideReadMessage(this)" onmouseover="showReadMessage(this)" class="dropdown-item noti-container py-2 border-bottom border-bottom-blue-grey border-bottom-lighten-4"><div class="container"><div class="row"><div class="col-1" style="padding:0 5px 0 0;margin:auto;"><a  href="/inbox/0" onclick="return clickMarkAsRead(this)"><i class="ft-mail info d-block font-medium-5"></i></a></div><div class="col-9" style="padding:0;"><a  href="/inbox/0" onclick="return clickMarkAsRead(this)"><span class="noti-wrapper" style=""><span class="noti-text" style="white-space:normal;word-wrap:break-word;line-height:2px;">You have <span class="text-bold-400 info">'+val+'</span> new messages.</span></span></a></div><div class="col-1" style="display:grid;text-align:center;"><div style="display:none;text-align:center;"><i class="fa fa-ellipsis-h" style="font-size:1rem;cursor:pointer;" data-toggle="tooltip" title="Remove from Notification" onclick="openDeleteOption(this)"></i><i class="fas fa-circle" style="font-size:0.5rem;cursor:pointer;" data-id="" data-toggle="tooltip" title="Mark as Read" onclick="changeMarkAsRead(this)"></i></div></div></div></div></div>');
+
                     });
+                    getNotificationReady();
                }
          });
 
 }
+
+
+function clickMarkAsRead(x){
+    var id=x.parentElement.parentElement.childNodes[2].childNodes["0"].childNodes[1].dataset.id;
+    console.log(x.parentElement.parentElement.childNodes[2].childNodes["0"].childNodes);
+    if(x.parentElement.parentElement.childNodes[2].childNodes["0"].childNodes[1].title=="Mark as Read"){
+        if(id==0){
+            x.parentElement.parentElement.childNodes[2].childNodes["0"].childNodes[1].className="far fa-circle";
+            x.parentElement.parentElement.childNodes[2].childNodes["0"].childNodes[1].title="Mark as Unread";
+            return true;
+        }
+        else{
+            x.parentElement.parentElement.childNodes[2].childNodes["0"].childNodes[1].className="far fa-circle";
+            x.parentElement.parentElement.childNodes[2].childNodes["0"].childNodes[1].title="Mark as Unread";
+            $.ajax({
+                type:'PUT',
+                url:'/markNotificationRead',
+                data:{
+                    notification_id:id
+                },
+                success:function(){
+                    console.log("marked as read");
+                    return true;
+                }
+            })
+
+        }
+    }
+    return false;
+}
+function changeMarkAsRead(x){
+    if(x.title=="Mark as Read"){
+        if(x.dataset.id==0){
+            x.className="far fa-circle";
+            x.title="Mark as Unread";
+        }
+        else{
+            x.className="far fa-circle";
+            x.title="Mark as Unread";
+            $.ajax({
+                type:'PUT',
+                url:'/markNotificationRead',
+                data:{
+                    notification_id:x.dataset.id
+                },
+                success:function(data){
+                    console.log("marked as read",data);
+                }
+            })
+
+        }
+    }
+}
+//function changeColor(x){
+//    console.log(x.childNodes);
+//}
+//function changeBackColor(x){
+//    console.log(x.childNodes);
+//}
+function hideReadMessage(x){
+    x.childNodes["0"].childNodes["0"].childNodes[2].childNodes["0"].style.display="none"
+}
+function showReadMessage(x){
+
+    x.childNodes["0"].childNodes["0"].childNodes[2].childNodes["0"].style.display="grid"
+};
+
+
+
 
 $(document).ajaxStart(function(){
     document.getElementById('loader-div').style.display="block";
