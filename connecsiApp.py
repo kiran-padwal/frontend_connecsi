@@ -6453,7 +6453,6 @@ def notificationSet():
 
 @connecsiApp.route('/getAllFollowersViewsLikesComments/<string:channel_id>/<string:channel_name>',methods=['GET'])
 @is_logged_in
-
 def getAllFollowersViewsLikesComments(channel_id,channel_name):
     data={}
     if(channel_name=='Youtube' or channel_name=='youtube'):
@@ -6462,10 +6461,12 @@ def getAllFollowersViewsLikesComments(channel_id,channel_name):
         url=base_url+'Youtube/getChannelDetailsByChannelId/'+str(channel_id)
         response=requests.get(url=url)
         response_json = response.json()
+        print("youtube data", response_json)
         data['alert_followers']=response_json['data'][0]['subscriberCount_gained']
         data['alert_likes']=response_json['data'][0]['total_100video_likes']
         data['alert_views'] = response_json['data'][0]['total_100video_views']
         data['alert_comments'] = response_json['data'][0]['total_100video_comments']
+        data['title'] = response_json['data'][0]['title']
 
 
     elif(channel_name=='Twitter' or channel_name=='twitter'):
@@ -6477,10 +6478,12 @@ def getAllFollowersViewsLikesComments(channel_id,channel_name):
         url = base_url + '/Twitter/getTwitterChannelsDetailsFromConnecsi/' + str(screen_name)
         response = requests.get(url=url)
         response_json = response.json()
+        print("twitter data", response_json)
         data['alert_views']=response_json['data'][0]['total_100video_views']
-        data['alert_comments']=response_json['data'][0]['total_100video_comments']
+        data['alert_comments']=response_json['data'][0]['total_100video_shares']
         data['alert_followers']=response_json['data'][0]['subscriberCount_gained']
         data['alert_likes']=response_json['data'][0]['total_100video_likes']
+        data['title']=response_json['data'][0]['title']
 
     else:
         print("get instagram here")
@@ -6491,10 +6494,22 @@ def getAllFollowersViewsLikesComments(channel_id,channel_name):
         url = base_url + 'Insta/getInstagramChannel/'+str(screen_name)
         response = requests.get(url=url)
         response_json = response.json()
-        data['alert_views'] = response_json['data'][0]['total_100video_views']
-        data['alert_comments'] = response_json['data'][0]['total_100video_comments']
-        data['alert_followers'] = response_json['data'][0]['subscriberCount_gained']
-        data['alert_likes'] = response_json['data'][0]['total_100video_likes']
+        print(response_json[0]['post_data'])
+        print(response_json[0]['page_data']['no_of_followers'])
+        print("insta data",response_json)
+        likes=0
+        comments=0
+        for item in response_json[0]['post_data']:
+            likes=item['no_of_post_likes']+likes
+            comments=item['no_of_post_comments']
+        likes=int(likes/len(response_json[0]['post_data']))
+        comments=int(comments/len(response_json[0]['post_data']))
+        print("insta data", likes,comments)
+        data['alert_views'] = 0
+        data['alert_comments'] = comments
+        data['alert_followers'] = response_json[0]['page_data']['no_of_followers']
+        data['alert_likes'] = likes
+        data['title']=response_json[0]['page_data']['title']
 
     print("sending data",data)
     return jsonify(data)
@@ -6684,6 +6699,17 @@ def getCampaignNotification(campaign_id):
     print("getting all campaigns")
     return jsonify(response_json)
 
+
+@connecsiApp.route('/changingAlertNotification',methods=['PUT'])
+@is_logged_in
+def changingAlertNotification():
+    payload = request.form.to_dict()
+    print("hello2")
+    url=base_url+'Influencer/'+str(session['user_id'])+'/'+str(payload['iam_id'])+'/'+str(payload['notification_id'])
+    print("hello")
+    response=requests.put(url=url,json=payload)
+    response_json=response.json()
+    return jsonify(response_json)
 
 if __name__ == '__main__':
     # connecsiApp.secret_key = 'connecsiSecretKey'
