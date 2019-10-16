@@ -48,8 +48,10 @@
                                             {{ 'Nothing To Show...' }}
                                             {% endif %}
                                             {% for item in sent['data'] %}
-                                            <div id="headingCollapse{{ item['collapse_id'] }}" class="card-header p-0">
-                                                <a data-toggle="collapse" href="#collapse{{ item['collapse_id'] }}" aria-expanded="false"
+                                                {%if item['deleted']==''%}
+                                                    <div id="headingCollapse{{ item['collapse_id'] }}" class="card-header p-0" style="display:flex;">
+                                                <div style="width:90%;">
+                                                    <a data-toggle="collapse" href="#collapse{{ item['collapse_id'] }}" aria-expanded="false"
                                                    aria-controls="collapse{{ item['collapse_id'] }}"
                                                    class="email-app-sender list-group-item list-group-item-action no-border collapsed">
 
@@ -81,9 +83,7 @@
                                                 {% if item['to_email_id'] == session['email_id'] %}
                                                 <button class="reply-message-sent transparent-btn color2" data-location="/reply/{{ item['message_id'] }}/{{ item['from_email_id'] }}/{{ item['subject'] }}" data-from-email-id="{{ item['from_email_id'] }}" data-subject="{{ item['subject'] }}"><i class="fa fa-reply mr-1"></i></button>
                                                 {% endif %}
-                                                <button class="delete-message transparent-btn" data-location="/delete/{{ item['message_id'] }}/{% if item['conv_id'] %}{{ item['conv_id'] }}{% else %}{% set number = 0 | int %}{{ number }}{% endif %}/{{ session['user_id'] }}'" class="#">
-                                                    <img src="/static/icons/delete.png" class="img-icon" alt="">
-                                                </button>
+
                                             </span>
                                                             </p>
                                                             <span class="float-left text muted text-bold-300">{{ item['date'] }}</span>
@@ -91,6 +91,12 @@
                                                     </div>
 
                                                 </a>
+                                                </div>
+                                                <div style="margin-top: 3rem;position: relative;">
+                                                    <button onclick="deleteMessage(this)" class="delete-message transparent-btn" data-location="/delete/{{ item['message_id'] }}/{% if item['conv_id'] %}{{ item['conv_id'] }}{% else %}{% set number = 0 | int %}{{ number }}{% endif %}/{{ session['user_id'] }}'" class="#">
+                                                        <img src="/static/icons/delete.png" class="img-icon" alt="">
+                                                    </button>
+                                                </div>
                                             </div>
                                             <div id="collapse{{ item['collapse_id'] }}" role="tabpanel" aria-labelledby="headingCollapse{{ item['collapse_id'] }}"
                                                  class="card-collapse collapse" aria-expanded="false">
@@ -100,6 +106,7 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                                {%endif%}
                                             {% endfor %}
                                         </div>
                                     </div>
@@ -117,6 +124,16 @@
     $(document).ready(function(){
         getAllUnreadMessagesCount();
     });
+    function deleteMessage(x){
+        console.log("hello",x.dataset.location);
+        $.ajax({
+            type:'GET',
+            url:x.dataset.location,
+            success:function(data){
+                console.log("done delete",data);
+                location.reload();
+            }
+        })
+    }
 </script>
 {% endblock %}
-

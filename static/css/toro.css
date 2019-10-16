@@ -2435,3 +2435,20 @@ input[type=number]
     position:absolute;
     margin-left:-15px;
 }
+.channel-image-circle{          /* class for making image of channel circle with height and width 50px */
+    height:50px;
+    width:50px;
+    border-radius:50%;
+}
+.alert-tab-heading{
+    color:black;
+    font-size:12px;
+    font-weight:450;
+    padding:0!important;
+}
+.alert-tab-sub-heading{
+    font-size:11px;
+    font-weight:400;
+    margin:8px 0 2px 0;
+    border:none;
+}

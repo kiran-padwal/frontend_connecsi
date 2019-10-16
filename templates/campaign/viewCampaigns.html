@@ -75,9 +75,7 @@
                         {% endfor %}
                     </td>
                     <td>
-                        {% for region_name in item['region_name_list'] %}
-                        {{ region_name }},
-                        {% endfor %}
+                        {{ ", ".join(item['region_name_list']) }}
                     </td>
                     <td>{{ item['no_of_influencers'] }}
                         <span class="text muted">

@@ -161,9 +161,23 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="country">*Country</label>
-                                            <input type="text" id="country" required name="country" class="form-control"
-                                                   value="{{data['data']['country']}}" placeholder="Country">
+
+
+
+                                            <label for="country">Country</label>
+
+                                            <select id="country" class="form-control" name="country" data-live-search="true" data-live-search-style="begins">
+                                                <!--<select class="form-control" name="country">-->
+                                                <option  value="{{data['data']['country']}}" selected>{{data['data']['country']}}</option>
+                                                {% for item in regionCodes['data'] %}
+                                                {% if item['country_name']==data['data']['country']%}
+                                                {% else %}
+                                                <option  value="{{ item['country_name'] }}">{{ item['country_name'] }}</option>
+                                                {% endif %}
+
+                                                {% endfor %}
+
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -482,4 +496,3 @@
         </div>
     </div>
 </div>
-{% endblock %}

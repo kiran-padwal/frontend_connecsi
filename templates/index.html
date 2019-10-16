@@ -48,7 +48,7 @@
                                     <div class="media quotes">
                                         <div class="quote-item" style="display: none">
                                             <div class="media-body white text-left">
-                                                <h3>{{active_campaigns}}</h3>
+                                                <h3>5</h3>
                                                 <span>Active Campaigns</span>
                                                 <br>
                                             </div>
@@ -58,7 +58,7 @@
                                         </div>
                                         <div class="quote-item" style="display: none">
                                             <div class="media-body white text-left">
-                                                <h3>{{new_campaigns}}</h3>
+                                                <h3>10</h3>
                                                 <span>New Campaigns</span>
                                             </div>
                                             <div class="media-right align-self-center">
@@ -67,7 +67,7 @@
                                         </div>
                                         <div class="quote-item" style="display: none">
                                             <div class="media-body white text-left">
-                                                <h3>{{completed_campaigns}}</h3>
+                                                <h3>4</h3>
                                                 <span>Completed Campaigns</span>
                                             </div>
                                             <div class="media-right align-self-center">
@@ -97,7 +97,7 @@
                                         </div>
                                         <div class="quote-item" style="display: none">
                                             <div class="media-body white text-left">
-                                                <h3>{{favListCount}}</h3>
+                                                <h3>50</h3>
                                                 <span>Favorites</span>
                                             </div>
                                             <div class="media-right align-self-center">
@@ -222,7 +222,7 @@
                                     <tr>
                                         <th scope="row">{{loop.index}}</th>
                                         <!--<td><img class="media-object height-50 img-border gradient-summer" src="static/app-assets/img/portrait/avatars/avatar-08.png" alt="" />Pew Dew Pie</td>-->
-                                        <td><img src="{{item['channel_img']}}" class="rounded-circle img-border gradient-summer" height="42" width="42" >{{item['title']}}</td>
+                                        <td><img src="{{item['channel_img']}}" class="rounded-circle img-border gradient-summer channel-image-circle">{{item['title']}}</td>
 
                                         <td class="engagement-col">
                                             {% if item['total_videos'] %}
@@ -234,8 +234,6 @@
                                         {% set total = total|round(4, 'floor')*100 %}
                                         {% set total = total|round(2, 'floor') %}
                                             <b style="color:#9370DB">{{ total }} %</b>
-                                        {% else %}
-                                            <b style="color:#9370DB">0 %</b>
                                         {% endif %}
                                             <div class="engagement-bar">
                                                 <div class="engagement-bar__block engagement-color--forestgreen"></div>

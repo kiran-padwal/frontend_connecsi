@@ -1,6 +1,3 @@
-
-
-
 {% extends 'admin_layout.html' %}
 {{ super() }}
 {% block body %}
@@ -125,7 +122,7 @@
         <div class="content-header">Influencers on {{ form_filters['channel'] }}
             <div class="btn-wrapper">
                 <!-- Single Button Dropdown -->
-                <div class="btn-group mr-1 mb-1" style="max-width: 115px">
+                <div class="btn-group mr-1 mb-1" style="max-width: 132px">
                     <select class="bg-transparent"  id="sort" style="font-size:12px;">
                         {% if form_filters['sort_order'] %}
                         <option value="{{ form_filters['sort_order'] }}">{{ form_filters['sort_order'] }}
@@ -145,7 +142,7 @@
                     <div class="input-group-btn">
                         {% if data['data'] %}
                             {% if countExportList>=data['data']| length %}
-                                <a id="export-list-button" href="{{ url_for('static',filename='infList.csv') }}" class="btn btn-primary" download>Export CSV</a>
+                                <a id="export-list-button" href="{{ url_for('static',filename='infList.csv') }}" class="btn btn-primary" style="min-width:132px; download>Export CSV</a>
                                 <script>
                                     var fileDownloaded=false;
                                     $('#export-list-button').click(function(){
@@ -163,7 +160,7 @@
                                     })
                                 </script>
                             {% else %}
-                                <a class="btn btn-primary" id="export-list-button" style="color:white;">Export CSV</a>
+                                <a class="btn btn-primary" id="export-list-button" style="color:white;min-width:132px;">Export CSV</a>
                                 <script>
                                     var exportListMessageHead='{{messageSubscription['Export Lists']['heading']}}'
                                     var exportListMessage='{{messageSubscription['Export Lists']['text']}}';
@@ -586,6 +583,7 @@
                         <!--</div>-->
                         <!-- end of chart -->
                         <div class="col-lg-4 col-nc-lg-12 line-area vertically-centered">
+                            <h4 style="position: absolute;margin: 0 auto;right: 37%;font-size: .8rem;top: 0px;font-weight:400;">Followers</h4>
                             <canvas id="lineChart{{ item['linechart_id'] }}" class="line-chart" height="180px"></canvas>
                         </div>
                         <!-- status -->
@@ -594,10 +592,10 @@
                                 <ul class="tabs">
                                     <li class="tab width-1/2 active"><a class="active-border left-border-round"
                                                                         href="#status{{ item['channel_id'] }}"><i
-                                            class="fa fa-bullseye"></i> Status</a></li>
+                                            class="fa fa-bullseye" style="position:relative;top:4px;"></i> <span>Status</span></a></li>
                                     <li class="tab width-1/2"><a class="active-border right-border-round"
                                                                  href="#alert{{ item['channel_id'] }}"><i
-                                            class="fa fa-bell"></i> Alert</a></li>
+                                            class="fa fa-bell" style="position:relative;top:4px;"></i> <span>Alert</span></a></li>
                                 </ul>
                                 <div class="tabs-content">
                                     <div class="tabs-content-item active" id="status{{ item['channel_id'] }}">
@@ -609,57 +607,91 @@
                                             </ul>
                                         </div>
                                     </div>
-                                    <div class="tabs-content-item" id="alert{{ item['channel_id'] }}">
+                                    <div class="tabs-content-item" id="alert{{ item['channel_id']}}">
                                         <div class="tab-content-item-list-container">
                                             <ul class="tab-content-item-list">
                                                 {% if form_filters['channel']=='Youtube'%}
                                                     {% if item['channel_id'] in favInfList_data_alerts['data']|map(attribute="channel_id") %}
-                                                    {% for favitem in favInfList_data_alerts['data'] %}
-                                                    {% if item['channel_id'] == favitem['channel_id'] %}
-                                                    <li>Followers <span class="color1">{{ favitem['alert_followers'] }}</span>
-                                                    </li>
-                                                    <li>Avg Views/video <span class="color1">{{ favitem['alert_views'] }}</span>
-                                                    </li>
-                                                    <li>Avg Likes/video <span class="color1">{{ favitem['alert_likes'] }}</span>
-                                                    </li>
-                                                    <li>Avg Comments <span class="color1">{{ favitem['alert_comments'] }}</span>
-                                                    </li>
-                                                    {% endif %}
-                                                    {% endfor %}
+                                                        {% for favitem in favInfList_data_alerts['data'] %}
+                                                            {% if item['channel_id'] == favitem['channel_id'] %}
+                                                                {% if favitem['alert_followers']==0 %}
+                                                                    <li class="alert-tab-heading">Followers <span class="color1 alert-tab-sub-heading" data-alert-followers="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
+                                                                {% else %}
+                                                                    <li class="alert-tab-heading">Followers <span class="color1 alert-tab-sub-heading" data-alert-followers="{{ favitem['alert_followers'] }}">{{ favitem['alert_followers'] }}</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
+                                                                {% endif %}
+                                                                {% if favitem['alert_views']==0 %}
+                                                                    <li class="alert-tab-heading">Avg Views/Video <span class="color1 alert-tab-sub-heading" data-alert-views="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
+                                                                {% else %}
+                                                                    <li class="alert-tab-heading">Avg Views/Video <span class="color1 alert-tab-sub-heading" data-alert-views="{{ favitem['alert_views'] }}">{{ favitem['alert_views'] }}</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
+                                                                {% endif %}
+                                                                {% if favitem['alert_likes']==0%}
+                                                                    <li class="alert-tab-heading">Avg Likes/Video <span class="color1 alert-tab-sub-heading" data-alert-likes="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
+                                                                {% else %}
+                                                                    <li class="alert-tab-heading">Avg Likes/Video <span class="color1 alert-tab-sub-heading" data-alert-likes="{{ favitem['alert_likes'] }}">{{ favitem['alert_likes'] }}</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
+                                                                {% endif %}
+                                                                {% if favitem['alert_comments']==0 %}
+                                                                    <li class="alert-tab-heading">Avg Comments <span class="color1 alert-tab-sub-heading" data-alert-comments="-">-</span></li><hr style="height:0px; margin:auto;">
+                                                                {% else %}
+                                                                    <li class="alert-tab-heading">Avg Comments <span class="color1 alert-tab-sub-heading" data-alert-comments="{{ favitem['alert_comments'] }}">{{ favitem['alert_comments'] }}</span></li><hr style="height:0px; margin:auto;">
+                                                                {% endif %}
+
+                                                            {% endif %}
+                                                        {% endfor %}
                                                     {% else %}
-                                                    <li>No Alerts Set</li>
+                                                        <li>No Alerts Set</li>
                                                     {% endif %}
                                                 {% endif %}
                                                 {% if form_filters['channel']=='Twitter'%}
                                                     {% if item['channel_id'] in favInfList_data_alerts['data']|map(attribute="channel_id") %}
-                                                    {% for favitem in favInfList_data_alerts['data'] %}
-                                                    {% if item['channel_id'] == favitem['channel_id'] %}
-                                                    <li>Followers <span class="color1">{{ favitem['alert_followers'] }}</span>
-                                                    </li>
-                                                    <li>Avg Likes/video <span class="color1">{{ favitem['alert_likes'] }}</span>
-                                                    </li>
-                                                    <li>Avg Retweets <span class="color1">{{ favitem['alert_comments'] }}</span>
-                                                    </li>
-                                                    {% endif %}
-                                                    {% endfor %}
+                                                        {% for favitem in favInfList_data_alerts['data'] %}
+                                                            {% if item['channel_id'] == favitem['channel_id'] %}
+                                                                {% if favitem['alert_followers']==0 %}
+                                                                    <li class="alert-tab-heading">Followers <span class="color1 alert-tab-sub-heading" data-alert-followers="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
+                                                                {% else %}
+                                                                    <li class="alert-tab-heading">Followers <span class="color1 alert-tab-sub-heading" data-alert-followers="{{ favitem['alert_followers'] }}">{{ favitem['alert_followers'] }}</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
+                                                                {% endif %}
+                                                                {% if favitem['alert_likes']==0%}
+                                                                    <li class="alert-tab-heading">Avg Likes/Post <span class="color1 alert-tab-sub-heading" data-alert-likes="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
+                                                                {% else %}
+                                                                    <li class="alert-tab-heading">Avg Likes/Post <span class="color1 alert-tab-sub-heading" data-alert-likes="{{ favitem['alert_likes'] }}">{{ favitem['alert_likes'] }}</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
+                                                                {% endif %}
+                                                                {% if favitem['alert_comments']==0 %}
+                                                                    <li class="alert-tab-heading">Avg Comments <span class="color1 alert-tab-sub-heading" data-alert-comments="-">-</span></li><hr style="height:0px; margin:auto;">
+                                                                {% else %}
+                                                                    <li class="alert-tab-heading">Avg Comments <span class="color1 alert-tab-sub-heading" data-alert-comments="{{ favitem['alert_comments'] }}">{{ favitem['alert_comments'] }}</span></li><hr style="height:0px; margin:auto;">
+                                                                {% endif %}
+
+                                                            {% endif %}
+                                                        {% endfor %}
                                                     {% else %}
-                                                    <li>No Alerts Set</li>
+                                                        <li>No Alerts Set</li>
                                                     {% endif %}
                                                 {% endif %}
                                                 {% if form_filters['channel']=='Instagram'%}
                                                     {% if item['channel_id'] in favInfList_data_alerts['data']|map(attribute="channel_id") %}
-                                                    {% for favitem in favInfList_data_alerts['data'] %}
-                                                    {% if item['channel_id'] == favitem['channel_id'] %}
-                                                    <li>Followers <span class="color1">{{ favitem['alert_followers'] }}</span>
-                                                    </li>
-                                                    <li>Avg Likes/video <span class="color1">{{ favitem['alert_likes'] }}</span>
-                                                    </li>
-                                                    <li>Avg Comments <span class="color1">{{ favitem['alert_comments'] }}</span>
-                                                    </li>
-                                                    {% endif %}
-                                                    {% endfor %}
+                                                        {% for favitem in favInfList_data_alerts['data'] %}
+                                                            {% if item['channel_id'] == favitem['channel_id'] %}
+                                                                {% if favitem['alert_followers']==0 %}
+                                                                    <li class="alert-tab-heading">Followers <span class="color1 alert-tab-sub-heading" data-alert-followers="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
+                                                                {% else %}
+                                                                    <li class="alert-tab-heading">Followers <span class="color1 alert-tab-sub-heading" data-alert-followers="{{ favitem['alert_followers'] }}">{{ favitem['alert_followers'] }}</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
+                                                                {% endif %}
+                                                                {% if favitem['alert_likes']==0%}
+                                                                    <li class="alert-tab-heading">Avg Likes/Post <span class="color1 alert-tab-sub-heading" data-alert-likes="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
+                                                                {% else %}
+                                                                    <li class="alert-tab-heading">Avg Likes/Post <span class="color1 alert-tab-sub-heading" data-alert-likes="{{ favitem['alert_likes'] }}">{{ favitem['alert_likes'] }}</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
+                                                                {% endif %}
+                                                                {% if favitem['alert_comments']==0 %}
+                                                                    <li class="alert-tab-heading">Avg Comments <span class="color1 alert-tab-sub-heading" data-alert-comments="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
+                                                                {% else %}
+                                                                    <li class="alert-tab-heading">Avg Comments <span class="color1 alert-tab-sub-heading" data-alert-comments="{{ favitem['alert_comments'] }}">{{ favitem['alert_comments'] }}</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
+                                                                {% endif %}
+
+                                                            {% endif %}
+                                                        {% endfor %}
                                                     {% else %}
-                                                    <li>No Alerts Set</li>
+                                                        <li>No Alerts Set</li>
+
                                                     {% endif %}
                                                 {% endif %}
                                             </ul>
@@ -740,7 +772,7 @@
 <!-- Create alert Modal form-->
 <div class="modal fade" id="create_alert_modal" role="dialog" data-backdrop="true">
     <div class="modal-dialog modal-sm">
-        <div class="modal-content">
+        <div class="modal-content" style="width:150%;left:-25%;">
             <div class="modal-header">
                 <b class="modal-title">Create Alert</b>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -749,70 +781,70 @@
                 <input  class="form-control" type="hidden" value="" name="channel_id" id="create_alert_channel_id">
                 <input  class="form-control" type="hidden" value="" name="channel_name" id="create_alert_channel_name">
                 {% if form_filters['channel']=='Youtube'%}
-
                     <div class="modal-body">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label for="total_followers">Total Followers:</label>
-                                <input class="form-control" type="number" value="" name="alert_followers"
-                                       id="total_followers" placeholder="Total Followers">
-                            </div>
-                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="total_followers">Total Followers:</label>
 
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label for="total_views">Avg Views/Videos:</label>
-                                <input class="form-control" type="number" value="" name="alert_views" id="total_views"
-                                       placeholder="Total Views">
+                                    <input class="form-control" type="number" value="" name="alert_followers"
+                                           id="total_followers" placeholder="-">
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label for="total_likes">Avg Likes/Videos:</label>
-                                <input class="form-control" type="number" value="" name="alert_likes" id="total_likes"
-                                       placeholder="Total Likes">
+
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="total_views">Avg Views/Videos:</label>
+                                    <input class="form-control" type="number" value="" name="alert_views" id="total_views"
+                                           placeholder="-">
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label for="total_comments">Avg Comments/Videos:</label>
-                                <input class="form-control" type="number" value="" name="alert_comments"
-                                       id="total_comments" placeholder="Total Comments">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="total_likes">Avg Likes/Videos:</label>
+                                    <input class="form-control" type="number" value="" name="alert_likes" id="total_likes"
+                                           placeholder="-">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="total_comments">Avg Comments/Videos:</label>
+                                    <input class="form-control" type="number" value="" name="alert_comments"
+                                           id="total_comments" placeholder="-">
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
                 {% endif %}
                 {% if form_filters['channel']=='Twitter'%}
 
                     <div class="modal-body">
                     <div class="row">
-                        <div class="col-12">
+                        <div class="col-6">
                             <div class="form-group">
                                 <label for="total_followers">Total Followers:</label>
                                 <input class="form-control" type="number" value="" name="alert_followers"
-                                       id="total_followers" placeholder="Total Followers">
+                                       id="total_followers" placeholder="-">
                             </div>
                         </div>
-                        <div class="col-12">
+                        <div class="col-6">
                             <div class="form-group">
                                 <label for="total_likes">Avg Likes/Videos:</label>
                                 <input class="form-control" type="number" value="" name="alert_likes" id="total_likes"
-                                       placeholder="Total Likes">
+                                       placeholder="-">
                             </div>
                         </div>
 
                                 <input class="form-control" type="hidden" value="0" name="alert_views" id="total_views"
-                                       placeholder="Total Views">
+                                       placeholder="-">
 
 
-                        <div class="col-12">
+                        <div class="col-6">
                             <div class="form-group">
                                 <label for="total_comments">Avg Retweets/Videos:</label>
                                 <input class="form-control" type="number" value="" name="alert_comments"
-                                       id="total_comments" placeholder="Total Shares">
+                                       id="total_comments" placeholder="-">
                             </div>
                         </div>
                     </div>
@@ -825,27 +857,27 @@
 
                     <div class="modal-body">
                     <div class="row">
-                        <div class="col-12">
+                        <div class="col-6">
                             <div class="form-group">
                                 <label for="total_followers">Total Followers:</label>
                                 <input class="form-control" type="number" value="" name="alert_followers"
-                                       id="total_followers" placeholder="Total Followers">
+                                       id="total_followers" placeholder="-">
                             </div>
                         </div>
-                        <div class="col-12">
+                        <div class="col-6">
                             <div class="form-group">
                                 <label for="total_likes">Avg Likes/Videos:</label>
                                 <input class="form-control" type="number" value="" name="alert_likes" id="total_likes"
-                                       placeholder="Total Likes">
+                                       placeholder="-">
                             </div>
                         </div>
                         <input class="form-control" type="hidden" value="0" name="alert_views" id="total_views"
-                                       placeholder="Total Views">
-                        <div class="col-12">
+                                       placeholder="-">
+                        <div class="col-6">
                             <div class="form-group">
                                 <label for="total_comments">Avg Comments/Videos:</label>
                                 <input class="form-control" type="number" value="" name="alert_comments"
-                                       id="total_comments" placeholder="Total Comments">
+                                       id="total_comments" placeholder="-">
                             </div>
                         </div>
                     </div>
@@ -999,9 +1031,9 @@
 </div>
 
 <!-- Send message Modal form-->
-<div class="modal fade" id="sendMessage" role="dialog" data-backdrop="true">
+<div class="modal fade" id="sendMessage" role="dialog" data-backdrop="true" >
     <div class="modal-dialog modal-sm">
-        <div class="modal-content">
+        <div class="modal-content" style="width:150%;left:-25%;">
             <div class="modal-header">
                 <b class="modal-title">Send Message</b>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -1026,18 +1058,20 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label for="to_subject">Campaign:</label>
-                                 <select name="campaign_id" id="message_campaign_id">
-                                      <option value=""></option>
-                                      {% for item in view_campaign_data['data'] %}
-                                      <option id="message_campaign_id{{item['campaign_id']}}" value="{{item['campaign_id']}}">{{item['campaign_name']}}</option>
-                                      {% endfor %}
-                                 </select>
+                                 <div style="width:100%;">
+                                     <select name="campaign_id" id="message_campaign_id">
+                                          <option value=""></option>
+                                          {% for item in view_campaign_data['data'] %}
+                                          <option id="message_campaign_id{{item['campaign_id']}}" value="{{item['campaign_id']}}">{{item['campaign_name']}}</option>
+                                          {% endfor %}
+                                     </select>
+                                 </div>
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="form-group">
                                 <label for="to_message">*Message:</label>
-                                <textarea class="form-control" name="message" id="to_message"></textarea>
+                                <textarea class="form-control" name="message" id="to_message" rows="6"></textarea>
                             </div>
                         </div>
                     </div>
@@ -1282,6 +1316,7 @@ function getGraphUpdated(){
                              var myChart = new Chart(ctx, {
                                 type: 'line',
                                 data: {
+
                                     labels: labels,
                                     datasets:[
                                     {
@@ -1300,6 +1335,7 @@ function getGraphUpdated(){
                                     }]
                                 },
                                 options: {
+
 <!--                                    legend: {-->
 <!--                                        onClick: (e) => e.stopPropagation()-->
 <!--                                    },-->
@@ -1513,22 +1549,77 @@ function getCampaign_ids(channel_id){
                         <!--alert(val.channel_id);-->
                         if(val.channel_name=='Twitter'){
                             $('#alert'+val.channel_id).find('.tab-content-item-list').empty();
-                            $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Followers</br>'+val.alert_followers+'</li></hr>');
-                            $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Likes</br>'+val.alert_likes+'</li></hr>');
-                            $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Shares</br>'+val.alert_comments+'</li>');
+                            if(val.alert_followers==0){
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Followers <span class="color1 alert-tab-sub-heading" data-alert-followers="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
+                            }
+                            else{
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Followers <span class="color1 alert-tab-sub-heading" data-alert-followers="'+val.alert_followers+'">'+val.alert_followers+'</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
+                            }
+                            if(val.alert_likes==0){
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Avg Likes/Post <span class="color1 alert-tab-sub-heading" data-alert-likes="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
+                            }
+                            else{
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Avg Likes/Post <span class="color1 alert-tab-sub-heading" data-alert-likes="-">'+val.alert_likes+'</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
+                            }
+                            if(val.alert_comments==0){
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Avg Shares <span class="color1 alert-tab-sub-heading" data-alert-likes="-">-</span></li><hr style="height:0px; margin:auto;">');
+                            }
+                            else{
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Avg Shares <span class="color1 alert-tab-sub-heading" data-alert-likes="-">'+val.alert_comments+'</span></li><hr style="height:0px; margin:auto;">');
+                            }
+
                         }
                         else if(val.channel_name=='Instagram'){
                             $('#alert'+val.channel_id).find('.tab-content-item-list').empty();
-                            $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Followers</br>'+val.alert_followers+'</li></hr>');
-                            $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Likes</br>'+val.alert_likes+'</li></hr>');
-                            $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Comments</br>'+val.alert_comments+'</li>');
+                            if(val.alert_followers==0){
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Followers <span class="color1 alert-tab-sub-heading" data-alert-likes="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
+                            }
+                            else{
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Followers <span class="color1 alert-tab-sub-heading" data-alert-likes="-">'+val.alert_followers+'</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
+                            }
+                            if(val.alert_likes==0){
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Avg Likes/Post <span class="color1 alert-tab-sub-heading" data-alert-likes="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
+                            }
+                            else{
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Avg Likes/Post <span class="color1 alert-tab-sub-heading" data-alert-likes="-">'+val.alert_likes+'</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
+                            }
+                            if(val.alert_comments==0){
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Avg Comments <span class="color1 alert-tab-sub-heading" data-alert-likes="-">-</span></li><hr style="height:0px; margin:auto;">');
+                            }
+                            else{
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Avg Comments <span class="color1 alert-tab-sub-heading" data-alert-likes="-">'+val.alert_comments+'</span></li><hr style="height:0px; margin:auto;">');
+                            }
+
                         }
                         else{
                             $('#alert'+val.channel_id).find('.tab-content-item-list').empty();
-                            $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Followers</br>'+val.alert_followers+'</li></hr>');
-                            $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Views</br>'+val.alert_views+'</li></hr>');
-                            $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Likes</br>'+val.alert_likes+'</li></hr>');
-                            $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li>Avg Comments</br>'+val.alert_comments+'</li>');
+                            if(val.alert_followers==0){
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Followers <span class="color1 alert-tab-sub-heading" data-alert-likes="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
+                            }
+                            else{
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Followers <span class="color1 alert-tab-sub-heading" data-alert-likes="-">'+val.alert_followers+'</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
+                            }
+                            if(val.alert_views==0){
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Avg Views/Post <span class="color1 alert-tab-sub-heading" data-alert-likes="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
+                            }
+                            else{
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Avg Views/Post <span class="color1 alert-tab-sub-heading" data-alert-likes="-">'+val.alert_views+'</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
+                            }
+                            if(val.alert_likes==0){
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Avg Likes/Post <span class="color1 alert-tab-sub-heading" data-alert-likes="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
+                            }
+                            else{
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Avg Likes/Post <span class="color1 alert-tab-sub-heading" data-alert-likes="-">'+val.alert_likes+'</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
+                            }
+                            if(val.alert_comments==0){
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Avg Comments <span class="color1 alert-tab-sub-heading" data-alert-likes="-">-</span></li><hr style="height:0px; margin:auto;">');
+                            }
+                            else{
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Avg Comments<span class="color1 alert-tab-sub-heading" data-alert-likes="-">'+val.alert_comments+'</span></li><hr style="height:0px; margin:auto;">');
+                            }
+
+
+
 
                         }
 
@@ -1619,6 +1710,7 @@ function getCampaign_ids(channel_id){
 </script>
 <script>
   $(document).ready(function () {
+
       <!--ashish code for eng rate-->
       var influencerItem = document.getElementsByClassName('rating');
       var engagementBar = document.getElementsByClassName('engagement-bar');
@@ -1636,22 +1728,22 @@ function getCampaign_ids(channel_id){
                 engagementBar[i].childNodes[9].style.backgroundColor="rgb(0, 133, 15)";
             }
             else if(value<20&&value>15){
-                engagementBar[i].childNodes[1].style.backgroundColor="rgb(96, 165, 55)";
-                engagementBar[i].childNodes[3].style.backgroundColor="rgb(96, 165, 55)";
-                engagementBar[i].childNodes[5].style.backgroundColor="rgb(96, 165, 55)";
-                engagementBar[i].childNodes[7].style.backgroundColor="rgb(96, 165, 55)";
-                engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
-            }
-            else if(value<=15&&value>10){
                 engagementBar[i].childNodes[1].style.backgroundColor="rgb(129, 212, 82)";
                 engagementBar[i].childNodes[3].style.backgroundColor="rgb(129, 212, 82)";
                 engagementBar[i].childNodes[5].style.backgroundColor="rgb(129, 212, 82)";
+                engagementBar[i].childNodes[7].style.backgroundColor="rgb(129, 212, 82)";
+                engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
+            }
+            else if(value<=15&&value>10){
+                engagementBar[i].childNodes[1].style.backgroundColor="rgb(230, 169, 0)";
+                engagementBar[i].childNodes[3].style.backgroundColor="rgb(230, 169, 0)";
+                engagementBar[i].childNodes[5].style.backgroundColor="rgb(230, 169, 0)";
                 engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
                 engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
             }
             else if(value<=10&&value>2.5){
-                engagementBar[i].childNodes[1].style.backgroundColor="rgb(230, 169, 0)";
-                engagementBar[i].childNodes[3].style.backgroundColor="rgb(230, 169, 0)";
+                engagementBar[i].childNodes[1].style.backgroundColor="rgb(255, 154, 53)";
+                engagementBar[i].childNodes[3].style.backgroundColor="rgb(255, 154, 53)";
                 engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
                 engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
                 engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
@@ -1680,22 +1772,22 @@ function getCampaign_ids(channel_id){
                         engagementBar[i].childNodes[9].style.backgroundColor="rgb(0, 133, 15)";
                     }
                     else if(value<max&&value>max-diff){
-                        engagementBar[i].childNodes[1].style.backgroundColor="rgb(96, 165, 55)";
-                        engagementBar[i].childNodes[3].style.backgroundColor="rgb(96, 165, 55)";
-                        engagementBar[i].childNodes[5].style.backgroundColor="rgb(96, 165, 55)";
-                        engagementBar[i].childNodes[7].style.backgroundColor="rgb(96, 165, 55)";
-                        engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
-                    }
-                    else if(value<=max-diff&&value>min+diff){
                         engagementBar[i].childNodes[1].style.backgroundColor="rgb(129, 212, 82)";
                         engagementBar[i].childNodes[3].style.backgroundColor="rgb(129, 212, 82)";
                         engagementBar[i].childNodes[5].style.backgroundColor="rgb(129, 212, 82)";
+                        engagementBar[i].childNodes[7].style.backgroundColor="rgb(129, 212, 82)";
+                        engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
+                    }
+                    else if(value<=max-diff&&value>min+diff){
+                        engagementBar[i].childNodes[1].style.backgroundColor="rgb(230, 169, 0)";
+                        engagementBar[i].childNodes[3].style.backgroundColor="rgb(230, 169, 0)";
+                        engagementBar[i].childNodes[5].style.backgroundColor="rgb(230, 169, 0)";
                         engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
                         engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
                     }
                     else if(value<=min+diff&&value>min){
-                        engagementBar[i].childNodes[1].style.backgroundColor="rgb(230, 169, 0)";
-                        engagementBar[i].childNodes[3].style.backgroundColor="rgb(230, 169, 0)";
+                        engagementBar[i].childNodes[1].style.backgroundColor="rgb(255, 154, 53)";
+                        engagementBar[i].childNodes[3].style.backgroundColor="rgb(255, 154, 53)";
                         engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
                         engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
                         engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";

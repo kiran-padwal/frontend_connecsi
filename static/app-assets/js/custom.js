@@ -3428,15 +3428,43 @@ $("#proposal_campaign_name").on("change",function(){
 //    });
 
 
-    $('.create-alert').on('click', function(e){
+//    $('.create-alert').on('click', function(e){
+////        alert($(this).attr('data-channel-id'));
+//        $("#create_alert_channel_id").val($(this).attr('data-channel-id'));
+//        $("#create_alert_channel_name").val($(this).attr('data-channel-name'));
+//        $("#total_followers").val($(this).attr('data-followers'));
+//        $("#total_views").val(0);
+//        $("#total_likes").val(0);
+//        $("#total_comments").val(0);
+//    });
+$('.create-alert').on('click', function(e){
 //        alert($(this).attr('data-channel-id'));
         $("#create_alert_channel_id").val($(this).attr('data-channel-id'));
-        $("#create_alert_channel_name").val($(this).attr('data-channel-name'));
-        $("#total_followers").val($(this).attr('data-followers'));
-        $("#total_views").val(0);
-        $("#total_likes").val(0);
-        $("#total_comments").val(0);
+        var channel_id_temp=$(this).attr('data-channel-id');
+        var lengthChild=$("#alert"+channel_id_temp)["0"].children["0"].children["0"].children;
+        lengthChild=lengthChild.length;
+        if(lengthChild==1){
+            $("#total_followers").val("-");
+            $("#total_views").val("-");
+            $("#total_likes").val("-");
+            $("#total_comments").val("-");
+        }
+        else if(lengthChild==6){
+            $("#total_followers").val($("#alert"+channel_id_temp)["0"].children["0"].children["0"].children["0"].children["0"].innerHTML);
+            $("#total_likes").val($("#alert"+channel_id_temp)["0"].children["0"].children["0"].children["2"].children["0"].innerHTML);
+            $("#total_comments").val($("#alert"+channel_id_temp)["0"].children["0"].children["0"].children["4"].children["0"].innerHTML);
+        }
+        else{
+            console.log("alert value",$("#alert"+channel_id_temp)["0"].children["0"].children["0"].children)
+            $("#total_followers").val($("#alert"+channel_id_temp)["0"].children["0"].children["0"].children["0"].children["0"].innerHTML);
+            $("#total_views").val($("#alert"+channel_id_temp)["0"].children["0"].children["0"].children["2"].children["0"].innerHTML);
+            $("#total_likes").val($("#alert"+channel_id_temp)["0"].children["0"].children["0"].children["4"].children["0"].innerHTML);
+            $("#total_comments").val($("#alert"+channel_id_temp)["0"].children["0"].children["0"].children["6"].children["0"].innerHTML);
+        }
+
+
     });
+
 
 //    $("#create_alert_form").submit(function (e) {
 //        var form = $(this);
@@ -4396,6 +4424,9 @@ $("#create_alert_form").submit(function (e) {
     if($('.categories').length > 0){
         $('.categories').perfectScrollbar();
     }
+    if($('.tabs-content').length > 0){
+    $('.tabs-content').perfectScrollbar();
+    }
 
     $('.reset-button').on('click', function(e){
         e.preventDefault();
@@ -4868,3 +4899,20 @@ function loadingTop10Influencers(){
                }
          });
 }
+$(document).mouseup(function(e)
+{
+    var container = $("#notification-sidebar");
+    // if the target of the click isn't the container nor a descendant of the container
+    if (!container.is(e.target) && container.has(e.target).length === 0)
+    {
+        if(e.target.className=="fa fa-question-circle"){
+
+        }
+        else{
+            $("#notification-sidebar").removeClass("open");
+        }
+    }
+});
+$(document).ready(function(){
+    $("body").tooltip({selector:'[datatoggle=tooltip]'})
+})
