@@ -750,11 +750,11 @@
                                     </div>
                                     {% else %}
                                     <div class="text-center">
-                                        <button type="submit" class="btn btn-info btn-sm" name="search_inf">{{loop.index}}</button>
+                                        <button type="submit" class="btn btn-info btn-sm pagination-button" name="search_inf">{{loop.index}}</button>
                                     </div>
                                     {% endif %}
                                     {% elif glob.offset == current_offset-60 or glob.offset == current_offset+60 %}
-                                    <div class="text-center" data-toggle="tooltip" title="Next">
+                                    <div class="text-center">
                                         <button type="submit" class="btn btn-info btn-sm" name="search_inf">...</button>
                                     </div>
                                     {% endif %}
