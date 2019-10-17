@@ -583,7 +583,7 @@
                         <!--</div>-->
                         <!-- end of chart -->
                         <div class="col-lg-4 col-nc-lg-12 line-area vertically-centered">
-                            <h4 style="position: absolute;margin: 0 auto;right: 37%;font-size: .8rem;top: 0px;font-weight:400;">Followers</h4>
+                            <h4 style="position: absolute;margin: 0 auto;right: 37%;font-size: .8rem;top: 0px;font-weight:500;">Followers</h4>
                             <canvas id="lineChart{{ item['linechart_id'] }}" class="line-chart" height="180px"></canvas>
                         </div>
                         <!-- status -->
@@ -716,8 +716,8 @@
         <div class="card">
             <div class="card-body">
                 <div class="card-block text-center pagination_block">
-                    <div class="row">
-                        <div class="col-sm-12" id="pagination">
+                    <div class="row" style="display:inline;">
+                        <div class="col-sm-12" id="pagination" style="left:45%;">
                             <!--{{ glob.total_rows }}-->
                             <!--{{ payload_form_filter }}-->
                             {% if glob.total_rows %}
@@ -727,33 +727,40 @@
                             {% set current_offset = payload_form_filter['offset'] %}
 
                             {% for pages in range(pages) %}
-                            <form id="" method="POST" action="/searchInfluencers">
-                                <input type="hidden" name="channel" value="{{payload_form_filter['channel']}}">
-                                <input type="hidden" name="string_word" value="{{payload_form_filter['string_word']}}">
-                                <input type="hidden" name="country" value="{{payload_form_filter['country']}}">
-                                <input type="hidden" name="min_lower" value="{{payload_form_filter['min_lower']}}">
-                                <input type="hidden" name="max_upper" value="{{payload_form_filter['max_upper']}}">
-                                <input type="hidden" name="sort_order" value="{{payload_form_filter['sort_order']}}">
-                                <input type="hidden" name="category_id" value="{{payload_form_filter['category_id']}}">
-                                <input type="hidden" name="offset" value="{{glob.offset}}">
-                                {% if glob.offset == current_offset-40 or glob.offset == current_offset-20 or
-                                glob.offset == 0 or glob.offset == current_offset or glob.offset==current_offset+20 or
-                                glob.offset==current_offset+40 %}
-                                {% if current_offset == glob.offset %}
 
-                                {% set _ = glob.update({'current_page':loop.index}) %}
-                                <button type="submit" disabled class="btn btn-info btn-sm" name="search_inf">
-                                    {{loop.index}}
-                                </button>
-                                {% else %}
-                                <button type="submit" class="btn btn-info btn-sm" name="search_inf">{{loop.index}}
-                                </button>
-                                {% endif %}
-                                {% elif glob.offset == current_offset-60 or glob.offset == current_offset+60 %}
-                                <button type="submit" class="btn btn-info btn-sm" name="search_inf">...</button>
-                                {% endif %}
+                                <form id="" method="POST" action="/searchInfluencers">
+                                    <input type="hidden" name="channel" value="{{payload_form_filter['channel']}}">
+                                    <input type="hidden" name="string_word" value="{{payload_form_filter['string_word']}}">
+                                    <input type="hidden" name="country" value="{{payload_form_filter['country']}}">
+                                    <input type="hidden" name="min_lower" value="{{payload_form_filter['min_lower']}}">
+                                    <input type="hidden" name="max_upper" value="{{payload_form_filter['max_upper']}}">
+                                    <input type="hidden" name="sort_order" value="{{payload_form_filter['sort_order']}}">
+                                    <input type="hidden" name="category_id" value="{{payload_form_filter['category_id']}}">
+                                    <input type="hidden" name="offset" value="{{glob.offset}}">
+                                    {% if glob.offset == current_offset-40 or glob.offset == current_offset-20 or
+                                    glob.offset == 0 or glob.offset == current_offset or glob.offset==current_offset+20 or
+                                    glob.offset==current_offset+40 %}
+                                    {% if current_offset == glob.offset %}
 
-                            </form>
+                                    {% set _ = glob.update({'current_page':loop.index}) %}
+                                    <div class="text-center">
+                                        <button type="submit" disabled class="btn btn-info btn-sm" name="search_inf">
+                                            {{loop.index}}
+                                        </button>
+                                    </div>
+                                    {% else %}
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-info btn-sm" name="search_inf">{{loop.index}}</button>
+                                    </div>
+                                    {% endif %}
+                                    {% elif glob.offset == current_offset-60 or glob.offset == current_offset+60 %}
+                                    <div class="text-center" data-toggle="tooltip" title="Next">
+                                        <button type="submit" class="btn btn-info btn-sm" name="search_inf">...</button>
+                                    </div>
+                                    {% endif %}
+
+                                </form>
+
                             {% set _ = glob.update({'offset':(glob.offset+20)|int}) %}
                             <!--{{glob.offset}}-->
                             {% endfor %}

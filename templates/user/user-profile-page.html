@@ -90,11 +90,15 @@
                     <div class="card-block">
                         <div class="row px-3 py-3">
                             <div class="col-xl-6 col-lg-6 col-md-6 mb-6">
-                                <div class="row" style="margin-bottom: 5px;">
-                                    <b style="font-weight:450; margin-right: 1rem">Username:</b> &nbsp;
-                                    <span class="display-block overflow-hidden">{{data['data']['first_name'] }} {{data['data']['last_name'] }} </span>
+                                <div class="row" style="margin-bottom: 10px;">
+                                    <div class="col-5">
+                                        <b >Username:</b>
+                                    </div>
+                                    <div class="col-7">
+                                        <span class="display-block overflow-hidden">{{data['data']['first_name'] }} {{data['data']['last_name'] }} </span>
+                                    </div>
                                 </div>
-                                <!--<div class="row" style="margin-bottom: 5px;">-->
+                                <!--<div class="row" style="margin-bottom: 10px;">-->
                                 <!--<b style="font-weight:450;">Role:</b> &nbsp;-->
                                 <!--<span class="display-block overflow-hidden">{% if data['data']['role'] == '' %}-->
                                 <!--Admin-->
@@ -102,69 +106,105 @@
                                 <!--{{ data['data']['role'] }}-->
                                 <!--{% endif %} </span>-->
                                 <!--</div>-->
-                                <div class="row" style="margin-bottom: 5px;">
-                                    <b style="font-weight:450; margin-right: 1rem">Position:</b> &nbsp;
-                                    <span class="display-block overflow-hidden">
-                                        {{ data['data']['position'] }}
-                                    </span>
+                                <div class="row" style="margin-bottom: 10px;">
+                                    <div class="col-5">
+                                        <b >Position:</b>
+                                    </div>
+                                    <div class="col-7">
+                                        <span class="display-block overflow-hidden">
+                                            {{ data['data']['position'] }}
+                                        </span>
+                                    </div>
                                 </div>
-                                <div class="row" style="margin-bottom: 5px;">
-                                    <b style="font-weight:450; margin-right: 1rem">Telephone:</b> &nbsp;
-                                    <span class="display-block overflow-hidden">
-                               {% if data['data']['phone'] == '' %}
+                                <div class="row" style="margin-bottom: 10px;">
+                                    <div class="col-5">
+                                        <b >Telephone:</b>
+                                    </div>
+                                    <div class="col-7">
+                                        <span class="display-block overflow-hidden">
+                                           {% if data['data']['phone'] == '' %}
 
-                                            {% else %}
-                                            {{ data['data']['phone'] }}
-                                            {% endif %}
-                           </span>
+                                                        {% else %}
+                                                        {{ data['data']['phone'] }}
+                                                        {% endif %}
+                                        </span>
+                                    </div>
                                 </div>
-                                <div class="row" style="margin-bottom: 5px;">
-                                    <b style="font-weight:450; margin-right: 1rem">Email:</b> &nbsp;
-                                    <span class="display-block overflow-hidden">{{data['data']['email_id'] }}</span>
+                                <div class="row" style="margin-bottom: 10px;">
+                                    <div class="col-5">
+                                        <b >Email:</b>
+                                    </div>
+                                    <div class="col-7">
+                                        <span class="display-block overflow-hidden">{{data['data']['email_id'] }}</span>
+                                    </div>
                                 </div>
-                                <div class="row" style="margin-bottom: 5px;">
-                                    <b style="font-weight:450; margin-right: 1rem">Country:</b> &nbsp;
-                                    <span class="display-block overflow-hidden">{% if data['data']['country'] == '' %}
+                                <div class="row" style="margin-bottom: 10px;">
+                                    <div class="col-5">
+                                        <b >Country:</b>
+                                    </div>
+                                    <div class="col-7">
+                                        <span class="display-block overflow-hidden">{% if data['data']['country'] == '' %}
 
                                                                                     {% else %}
                                                                                     {{ data['data']['country'] }}
-                                                                                    {% endif %} </span>
+                                                                                    {% endif %}
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-6 mb-1">
-                                <div class="row" style="margin-bottom: 5px;">
-                                    <b style="font-weight:450; margin-right: 1rem">Business Sector:</b> &nbsp;
-                                    <span class="display-block overflow-hidden">{% if data['data']['business_sector'] == '' %}
+                                <div class="row" style="margin-bottom: 10px;">
+                                    <div class="col-5">
+                                        <b >Business Sector:</b>
+                                    </div>
+                                    <div class="col-7">
+                                        <span class="display-block overflow-hidden">{% if data['data']['business_sector'] == '' %}
 
                                                                                     {% else %}
                                                                                     {{ data['data']['business_sector'] }}
-                                                                                    {% endif %} </span>
+                                                                                    {% endif %}
+                                        </span>
+                                    </div>
                                 </div>
-                                <div class="row" style="margin-bottom: 5px;">
-                                    <b style="font-weight:450; margin-right: 1rem">Company Website:</b> &nbsp;
-                                    <span class="display-block overflow-hidden">{%  if data['data']['url'] == '' %}
+                                <div class="row" style="margin-bottom: 10px;">
+                                    <div class="col-5">
+                                        <b >Company Website:</b>
+                                    </div>
+                                    <div class="col-7">
+                                        <span class="display-block overflow-hidden">{%  if data['data']['url'] == '' %}
 
                                             {% else %}
                                             {{ data['data']['url'] }}
-                                            {% endif %}</span>
-                                </div>
-                                <div class="row" style="margin-bottom: 5px;">
-                                    <b style="font-weight:450; margin-right: 1rem">Company Size:</b> &nbsp;
-                                    <span class="display-block overflow-hidden">
-                               {% if data['data']['no_of_employees'] == '' %}
-
-                                            {% else %}
-                                            {{ data['data']['no_of_employees'] }}
                                             {% endif %}
-                           </span>
+                                        </span>
+                                    </div>
                                 </div>
-                                <div class="row" style="margin-bottom: 5px;">
-                                    <b style="font-weight:450; margin-right: 1rem">City:</b> &nbsp;
-                                    <span class="display-block overflow-hidden">{% if data['data']['city'] == '' %}
+                                <div class="row" style="margin-bottom: 10px;">
+                                    <div class="col-5">
+                                        <b >Company Size:</b>
+                                    </div>
+                                    <div class="col-7">
+                                        <span class="display-block overflow-hidden">
+                                                {% if data['data']['no_of_employees'] == '' %}
+
+                                                {% else %}
+                                                {{ data['data']['no_of_employees'] }}
+                                                {% endif %}
+                                       </span>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-bottom: 10px;">
+                                    <div class="col-5">
+                                        <b >City:</b>
+                                    </div>
+                                    <div class="col-7">
+                                        <span class="display-block overflow-hidden">{% if data['data']['city'] == '' %}
 
                                                                                     {% else %}
                                                                                     {{ data['data']['city'] }}
-                                                                                    {% endif %}</span>
+                                                                                    {% endif %}
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>

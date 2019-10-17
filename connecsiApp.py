@@ -1575,13 +1575,14 @@ def updateCampaign():
         #     payload.update({'is_classified_post':'TRUE'})
         # else:
         #     payload.update({'is_classified_post':'FALSE'})
-        files = request.files.getlist("campaign_files")
-        # print(files)
+        files = request.files.getlist("brands_classified_files")
+        print("all files coming",files)
         # exit()
         filenames=[]
         for file in files:
-            filename = campaign_files.save(file)
-            filenames.append(filename)
+            if (file.filename):
+                filename = campaign_files.save(file)
+                filenames.append(filename)
 
 
         user_id = session['user_id']
@@ -1641,7 +1642,6 @@ def updateCampaign():
             pass
     else:
         flash('Unauthorized', 'danger')
-
 
 @connecsiApp.route('/deleteCampaign/<string:campaign_id>',methods=['GET'])
 @is_logged_in
