@@ -578,13 +578,17 @@ def editProfile():
     type = session['type']
     user_id = session['user_id']
     if type == 'brand':
+        url_regionCodes = base_url + 'Youtube/regionCodes'
+        regionCodes_json = ''
+        response_regionCodes = requests.get(url=url_regionCodes)
+        regionCodes_json = response_regionCodes.json()
         url = base_url + 'Brand/'+str(user_id)
         try:
             response = requests.get(url)
             # print(response.json())
             data_json = response.json()
             print(data_json)
-            return render_template('user/edit-profile-page.html', data=data_json, title=title)
+            return render_template('user/edit-profile-page.html', data=data_json, title=title,regionCodes=regionCodes_json)
         except Exception as e:
             print(e)
     else:
