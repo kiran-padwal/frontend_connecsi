@@ -583,7 +583,7 @@
                         <!--</div>-->
                         <!-- end of chart -->
                         <div class="col-lg-4 col-nc-lg-12 line-area vertically-centered">
-                            <h4 style="position: absolute;margin: 0 auto;right: 37%;font-size: .8rem;top: 0px;font-weight:500;">Followers</h4>
+                            <h4 style="position: absolute;margin: 0 auto;right: 37%;font-size: .8rem;top: 0px;font-weight:400;">Followers</h4>
                             <canvas id="lineChart{{ item['linechart_id'] }}" class="line-chart" height="180px"></canvas>
                         </div>
                         <!-- status -->
@@ -750,11 +750,11 @@
                                     </div>
                                     {% else %}
                                     <div class="text-center">
-                                        <button type="submit" class="btn btn-info btn-sm pagination-button" name="search_inf">{{loop.index}}</button>
+                                        <button type="submit" class="btn btn-info btn-sm" name="search_inf">{{loop.index}}</button>
                                     </div>
                                     {% endif %}
                                     {% elif glob.offset == current_offset-60 or glob.offset == current_offset+60 %}
-                                    <div class="text-center">
+                                    <div class="text-center" data-toggle="tooltip" title="Next">
                                         <button type="submit" class="btn btn-info btn-sm" name="search_inf">...</button>
                                     </div>
                                     {% endif %}
@@ -1247,16 +1247,19 @@ function getGraphUpdated(){
                      for(var i=0;i<data['results'].length;i++){
 
                             var d= new Date(parseInt(data['results'][i]['timestamp'])*1000).getMonth();
-                            var dat={
-                                'month':d,
-                                'followers':data['results'][i]['no_of_followers']
+                            if(currentDate!=d){
+                                    var dat={
+                                        'month':d,
+                                        'followers':data['results'][i]['no_of_followers']
+                                    }
+                                    for(var m=0;m<months.length;m++){
+                                        if(months[m]['month']==d){
+                                            months[m]['followers']=data['results'][i]['no_of_followers'];
+                                            break;
+                                        }
+                                    }
                             }
-                            for(var m=0;m<months.length;m++){
-                                if(months[m]['month']==d){
-                                    months[m]['followers']=data['results'][i]['no_of_followers'];
-                                    break;
-                                }
-                            }
+
 
                      }
                      var demo=[0,0,0,0,0,0];
@@ -1899,7 +1902,7 @@ function getCampaign_ids(channel_id){
             var http = new XMLHttpRequest();
             http.open('HEAD', image_url, false);
              http.setRequestHeader('Access-Control-Allow-Origin', '*');
-            http.setRequestHeader('Content-Type', 'application/xml');
+            http.setRequestHeader('Content-Type', 'image/');
             http.send();
             return http.status != 403 && http.status != 404 && http.status != 410;
         }

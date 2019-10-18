@@ -118,8 +118,8 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="position">Phone</label>
-                                            <input type="text" id="phone" class="form-control" name="phone"
-                                                   value="{{data['data']['phone']}}">
+                                            <input id="phone-number" type="tel" id="phone" class="form-control" name="phone"
+                                                   value="{{data['data']['phone']}}" pattern="[(]{1}[+]{1}[0-9]{1,3}[)]{1} [0-9]{3} [0-9]{3} [0-9]{4}" placeholder="(+XX) XXX XXX XXXX" autocomplete="false">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -150,7 +150,6 @@
                                 </div>
 
                                 <h4 class="form-section"><i class="ft-file-text"></i> Company Information </h4>
-
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -161,23 +160,14 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-
-
-
-                                            <label for="country">Country</label>
-
-                                            <select id="country" class="form-control" name="country" data-live-search="true" data-live-search-style="begins">
-                                                <!--<select class="form-control" name="country">-->
-                                                <option  value="{{data['data']['country']}}" selected>{{data['data']['country']}}</option>
-                                                {% for item in regionCodes['data'] %}
-                                                {% if item['country_name']==data['data']['country']%}
-                                                {% else %}
-                                                <option  value="{{ item['country_name'] }}">{{ item['country_name'] }}</option>
-                                                {% endif %}
-
-                                                {% endfor %}
-
-                                            </select>
+                                            <label for="address_line">Address:</label>
+                                            {% if data['data']['address_line']==None%}
+                                                <input type="text" id="address_line"  name="address_line" class="form-control"
+                                                   value="" placeholder="Address">
+                                            {% else %}
+                                                <input type="text" id="address_line"  name="address_line" class="form-control"
+                                                   value="{{data['data']['address_line']}}" placeholder="Address"> </a>
+                                            {% endif%}
                                         </div>
                                     </div>
                                 </div>
@@ -185,10 +175,57 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="city">City:</label>
-                                            <input type="text" id="city" name="city" class="form-control"
+                                            {% if data['data']['city']==None%}
+                                                <input type="text" id="city" name="city" class="form-control"
+                                                   value="" placeholder="City">
+                                            {% else %}
+                                                <input type="text" id="city" name="city" class="form-control"
                                                    value="{{data['data']['city']}}" placeholder="City">
+                                            {% endif%}
+
                                         </div>
                                     </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="country">Country</label>
+                                            <select id="country" class="form-control" name="country" data-live-search="true" data-live-search-style="begins">
+                                                <option  value="{{data['data']['country']}}" selected>{{data['data']['country']}}</option>
+                                                {% for item in regionCodes['data'] %}
+                                                {% if item['country_name']==data['data']['country']%}
+                                                {% else %}
+                                                <option  value="{{ item['country_name'] }}">{{ item['country_name'] }}</option>
+                                                {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="postal_code">Postal Code:</label>
+                                            {% if data['data']['postal_code']==None%}
+                                                <input type="text" id="postal_code" name="postal_code" class="form-control" value="">
+                                            {% else %}
+                                                <input type="text" id="postal_code" name="postal_code" class="form-control" value="{{data['data']['postal_code']}}">
+                                            {% endif%}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="tax_no">Tax Number:</label>
+                                            {% if data['data']['tax_no']==None%}
+                                                <input type="url" id="tax_no" name="tax_no" class="form-control" value="">
+                                            {% else %}
+                                                <input type="url" id="tax_no" name="tax_no" class="form-control" value="{{data['data']['tax_no']}}">
+                                            {% endif%}
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="business_sector">*Business Sector:</label>
@@ -217,8 +254,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row">
+
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="no_of_employees">*No. of Employees:</label>
@@ -243,52 +279,20 @@
                                             </select>
                                         </div>
                                     </div>
+
+                                </div>
+                                <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="monthly_budget">Budget(monthly):</label>
-                                            <input type="text" id="monthly_budget" name="monthly_budget"
+                                            {% if data['data']['tax_no']==None%}
+                                                <input type="text" id="monthly_budget" name="monthly_budget"
+                                                   class="form-control" value="">
+                                            {% else %}
+                                                <input type="text" id="monthly_budget" name="monthly_budget"
                                                    class="form-control" value="{{data['data']['monthly_budget']}}">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="url">URL:</label>
-                                            <input type="url" id="url" required name="url" class="form-control"
-                                                   value="{{data['data']['url']}}" placeholder="Title"> </a>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="facebook_url">Facebook Url:</label>
-                                            <input type="url" id="facebook_url" name="facebook_url" class="form-control"
-                                                   value="{{data['data']['facebook_url']}}">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="twitter_url">Twitter Url:</label>
-                                            <input type="url" id="twitter_url" name="twitter_url" class="form-control"
-                                                   value="{{data['data']['twitter_url']}}">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="insta_url">Instragram Url:</label>
-                                            <input type="url" id="insta_url" name="insta_url" class="form-control"
-                                                   value="{{data['data']['insta_url']}}">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="youtube_url">Youtube Url:</label>
-                                            <input type="url" id="youtube_url" name="youtube_url" class="form-control"
-                                                   value="{{data['data']['youtube_url']}}">
+                                            {% endif%}
+
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -303,6 +307,48 @@
                                             </select>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="url">URL:</label>
+                                            <input type="url" id="url" required name="url" class="form-control"
+                                                   value="{{data['data']['url']}}" placeholder="Title">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="facebook_url">Facebook Url:</label>
+                                            <input type="url" id="facebook_url" name="facebook_url" class="form-control"
+                                                   value="{{data['data']['facebook_url']}}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="insta_url">Instragram Url:</label>
+                                            <input type="url" id="insta_url" name="insta_url" class="form-control"
+                                                   value="{{data['data']['insta_url']}}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="youtube_url">Youtube Url:</label>
+                                            <input type="url" id="youtube_url" name="youtube_url" class="form-control"
+                                                   value="{{data['data']['youtube_url']}}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="twitter_url">Twitter Url:</label>
+                                            <input type="url" id="twitter_url" name="twitter_url" class="form-control"
+                                                   value="{{data['data']['twitter_url']}}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6"></div>
                                 </div>
                                 <hr>
                                 <div id="team-members" data-tooltip="true" title="This Section is under Developement">
@@ -388,6 +434,25 @@
 </section>
 <!--Basic User Details Ends-->
 <script>
+
+    function phonenumber(inputtxt)
+    {
+        console.log("change")
+        var phoneno = /^\+?([0-9]{2})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/;
+        if((inputtxt.match(phoneno)))
+        {
+            return true;
+        }
+        else
+        {
+            alert("message");
+            return false;
+        }
+    }
+
+
+
+
     (function (document, history, location) {
         var HISTORY_SUPPORT = !!(history && history.pushState);
 
