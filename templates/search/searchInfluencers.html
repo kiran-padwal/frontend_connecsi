@@ -142,7 +142,7 @@
                     <div class="input-group-btn">
                         {% if data['data'] %}
                             {% if countExportList>=data['data']| length %}
-                                <a id="export-list-button" href="{{ url_for('static',filename='infList.csv') }}" class="btn btn-primary" style="min-width:132px; download>Export CSV</a>
+                                <a id="export-list-button" href="{{ url_for('static',filename='infList.csv') }}" class="btn btn-primary" style="min-width:132px;" download>Export CSV</a>
                                 <script>
                                     var fileDownloaded=false;
                                     $('#export-list-button').click(function(){
