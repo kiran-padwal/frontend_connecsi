@@ -2438,7 +2438,7 @@ input[type=number]
 .channel-image-circle{          /* class for making image of channel circle with height and width 50px */
     height:50px;
     width:50px;
-    border-radius:50%;
+    border-radius:50%!important;
 }
 .alert-tab-heading{
     color:black;

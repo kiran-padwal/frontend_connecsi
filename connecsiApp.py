@@ -3317,6 +3317,8 @@ def getFavInfListOne():
 @connecsiApp.route('/influencerFavoritesList/<string:channel_name>',methods=['GET','POST'])
 @is_logged_in
 def influencerFavoritesList(channel_name):
+    formValue={}
+    formValue['channel']=channel_name
     data=''
     view_campaign_data=''
     subscriptionValue = getSubscriptionValues(str(session["user_id"]))
@@ -3446,6 +3448,7 @@ def influencerFavoritesList(channel_name):
                 item.update({'total_videos': 100})
 
         try:
+
             url3 = base_url + '/Brand/getInfluencerFavList/' + str(user_id)
             response3 = requests.get(url=url3)
             favInfList_data_alerts = response3.json()
@@ -3458,12 +3461,11 @@ def influencerFavoritesList(channel_name):
         except Exception as e:
             print(e)
             pass
-        return render_template('partnerships/influencerFavoritesList.html',favInfList_data_alerts=favInfList_data_alerts,maxAlerts=maxAlerts,maxAddToFavorites=maxAddToFavorites,maxExportLists=maxExportLists,maxMessages=maxMessages,countAddToFavorites=countAddToFavorites,countAlerts=countAlerts,packageName=packageName,countMessages=countMessages,export_count=export_count,messageSubscription=messageSubscription,data=data,view_campaign_data=view_campaign_data,channel_name=channel_name)
+        return render_template('partnerships/influencerFavoritesList.html',form_filters=formValue,favInfList_data_alerts=favInfList_data_alerts,maxAlerts=maxAlerts,maxAddToFavorites=maxAddToFavorites,maxExportLists=maxExportLists,maxMessages=maxMessages,countAddToFavorites=countAddToFavorites,countAlerts=countAlerts,packageName=packageName,countMessages=countMessages,export_count=export_count,messageSubscription=messageSubscription,data=data,view_campaign_data=view_campaign_data,channel_name=channel_name)
     except Exception as e:
         print(e)
         pass
-        return render_template('partnerships/influencerFavoritesList.html',favInfList_data_alerts=favInfList_data_alerts,maxAlerts=maxAlerts,maxAddToFavorites=maxAddToFavorites,maxExportLists=maxExportLists,maxMessages=maxMessages,countAddToFavorites=countAddToFavorites,countAlerts=countAlerts,packageName=packageName,countMessages=countMessages,export_count=export_count,messageSubscription=messageSubscription,data=data,view_campaign_data=view_campaign_data,channel_name=channel_name)
-
+        return render_template('partnerships/influencerFavoritesList.html',form_filters=formValue,favInfList_data_alerts=favInfList_data_alerts,maxAlerts=maxAlerts,maxAddToFavorites=maxAddToFavorites,maxExportLists=maxExportLists,maxMessages=maxMessages,countAddToFavorites=countAddToFavorites,countAlerts=countAlerts,packageName=packageName,countMessages=countMessages,export_count=export_count,messageSubscription=messageSubscription,data=data,view_campaign_data=view_campaign_data,channel_name=channel_name)
 
 
 # @connecsiApp.route('/createAlerts', methods=['POST','GET'])

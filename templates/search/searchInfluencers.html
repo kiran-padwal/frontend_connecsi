@@ -583,7 +583,7 @@
                         <!--</div>-->
                         <!-- end of chart -->
                         <div class="col-lg-4 col-nc-lg-12 line-area vertically-centered">
-                            <h4 style="position: absolute;margin: 0 auto;right: 37%;font-size: .8rem;top: 0px;font-weight:500;">Followers</h4>
+                            <h4 style="position: absolute;margin: 0 auto;right: 37%;font-size: .8rem;top: 0px;font-weight:550;">Followers</h4>
                             <canvas id="lineChart{{ item['linechart_id'] }}" class="line-chart" height="180px"></canvas>
                         </div>
                         <!-- status -->
@@ -615,24 +615,24 @@
                                                         {% for favitem in favInfList_data_alerts['data'] %}
                                                             {% if item['channel_id'] == favitem['channel_id'] %}
                                                                 {% if favitem['alert_followers']==0 %}
-                                                                    <li class="alert-tab-heading">Followers <span class="color1 alert-tab-sub-heading" data-alert-followers="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
+                                                                    <li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Followers</b><span class="color1 alert-tab-sub-heading" data-alert-followers="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
                                                                 {% else %}
-                                                                    <li class="alert-tab-heading">Followers <span class="color1 alert-tab-sub-heading" data-alert-followers="{{ favitem['alert_followers'] }}">{{ favitem['alert_followers'] }}</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
+                                                                    <li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Followers</b><span class="color1 alert-tab-sub-heading" data-alert-followers="{{ favitem['alert_followers'] }}">{{ favitem['alert_followers'] }}</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
                                                                 {% endif %}
                                                                 {% if favitem['alert_views']==0 %}
-                                                                    <li class="alert-tab-heading">Avg Views/Video <span class="color1 alert-tab-sub-heading" data-alert-views="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
+                                                                    <li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Avg Views/Video</b><span class="color1 alert-tab-sub-heading" data-alert-views="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
                                                                 {% else %}
-                                                                    <li class="alert-tab-heading">Avg Views/Video <span class="color1 alert-tab-sub-heading" data-alert-views="{{ favitem['alert_views'] }}">{{ favitem['alert_views'] }}</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
+                                                                    <li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Avg Views/Video</b><span class="color1 alert-tab-sub-heading" data-alert-views="{{ favitem['alert_views'] }}">{{ favitem['alert_views'] }}</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
                                                                 {% endif %}
                                                                 {% if favitem['alert_likes']==0%}
-                                                                    <li class="alert-tab-heading">Avg Likes/Video <span class="color1 alert-tab-sub-heading" data-alert-likes="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
+                                                                    <li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Avg Likes/Video</b><span class="color1 alert-tab-sub-heading" data-alert-likes="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
                                                                 {% else %}
-                                                                    <li class="alert-tab-heading">Avg Likes/Video <span class="color1 alert-tab-sub-heading" data-alert-likes="{{ favitem['alert_likes'] }}">{{ favitem['alert_likes'] }}</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
+                                                                    <li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Avg Likes/Video</b><span class="color1 alert-tab-sub-heading" data-alert-likes="{{ favitem['alert_likes'] }}">{{ favitem['alert_likes'] }}</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
                                                                 {% endif %}
                                                                 {% if favitem['alert_comments']==0 %}
-                                                                    <li class="alert-tab-heading">Avg Comments <span class="color1 alert-tab-sub-heading" data-alert-comments="-">-</span></li><hr style="height:0px; margin:auto;">
+                                                                    <li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Avg Comments</b><span class="color1 alert-tab-sub-heading" data-alert-comments="-">-</span></li><hr style="height:0px; margin:auto;">
                                                                 {% else %}
-                                                                    <li class="alert-tab-heading">Avg Comments <span class="color1 alert-tab-sub-heading" data-alert-comments="{{ favitem['alert_comments'] }}">{{ favitem['alert_comments'] }}</span></li><hr style="height:0px; margin:auto;">
+                                                                    <li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Avg Comments</b><span class="color1 alert-tab-sub-heading" data-alert-comments="{{ favitem['alert_comments'] }}">{{ favitem['alert_comments'] }}</span></li><hr style="height:0px; margin:auto;">
                                                                 {% endif %}
 
                                                             {% endif %}
@@ -646,19 +646,19 @@
                                                         {% for favitem in favInfList_data_alerts['data'] %}
                                                             {% if item['channel_id'] == favitem['channel_id'] %}
                                                                 {% if favitem['alert_followers']==0 %}
-                                                                    <li class="alert-tab-heading">Followers <span class="color1 alert-tab-sub-heading" data-alert-followers="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
+                                                                    <li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Followers</b> <span class="color1 alert-tab-sub-heading" data-alert-followers="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
                                                                 {% else %}
-                                                                    <li class="alert-tab-heading">Followers <span class="color1 alert-tab-sub-heading" data-alert-followers="{{ favitem['alert_followers'] }}">{{ favitem['alert_followers'] }}</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
+                                                                    <li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Followers</b><span class="color1 alert-tab-sub-heading" data-alert-followers="{{ favitem['alert_followers'] }}">{{ favitem['alert_followers'] }}</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
                                                                 {% endif %}
                                                                 {% if favitem['alert_likes']==0%}
-                                                                    <li class="alert-tab-heading">Avg Likes/Post <span class="color1 alert-tab-sub-heading" data-alert-likes="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
+                                                                    <li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Avg Likes/Post</b> <span class="color1 alert-tab-sub-heading" data-alert-likes="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
                                                                 {% else %}
-                                                                    <li class="alert-tab-heading">Avg Likes/Post <span class="color1 alert-tab-sub-heading" data-alert-likes="{{ favitem['alert_likes'] }}">{{ favitem['alert_likes'] }}</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
+                                                                    <li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Avg Likes/Post</b><span class="color1 alert-tab-sub-heading" data-alert-likes="{{ favitem['alert_likes'] }}">{{ favitem['alert_likes'] }}</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
                                                                 {% endif %}
                                                                 {% if favitem['alert_comments']==0 %}
-                                                                    <li class="alert-tab-heading">Avg Comments <span class="color1 alert-tab-sub-heading" data-alert-comments="-">-</span></li><hr style="height:0px; margin:auto;">
+                                                                    <li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Avg Comments</b><span class="color1 alert-tab-sub-heading" data-alert-comments="-">-</span></li><hr style="height:0px; margin:auto;">
                                                                 {% else %}
-                                                                    <li class="alert-tab-heading">Avg Comments <span class="color1 alert-tab-sub-heading" data-alert-comments="{{ favitem['alert_comments'] }}">{{ favitem['alert_comments'] }}</span></li><hr style="height:0px; margin:auto;">
+                                                                    <li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Avg Comments</b><span class="color1 alert-tab-sub-heading" data-alert-comments="{{ favitem['alert_comments'] }}">{{ favitem['alert_comments'] }}</span></li><hr style="height:0px; margin:auto;">
                                                                 {% endif %}
 
                                                             {% endif %}
@@ -672,19 +672,19 @@
                                                         {% for favitem in favInfList_data_alerts['data'] %}
                                                             {% if item['channel_id'] == favitem['channel_id'] %}
                                                                 {% if favitem['alert_followers']==0 %}
-                                                                    <li class="alert-tab-heading">Followers <span class="color1 alert-tab-sub-heading" data-alert-followers="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
+                                                                    <li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Followers </b><span class="color1 alert-tab-sub-heading" data-alert-followers="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
                                                                 {% else %}
-                                                                    <li class="alert-tab-heading">Followers <span class="color1 alert-tab-sub-heading" data-alert-followers="{{ favitem['alert_followers'] }}">{{ favitem['alert_followers'] }}</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
+                                                                    <li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Followers </b><span class="color1 alert-tab-sub-heading" data-alert-followers="{{ favitem['alert_followers'] }}">{{ favitem['alert_followers'] }}</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
                                                                 {% endif %}
                                                                 {% if favitem['alert_likes']==0%}
-                                                                    <li class="alert-tab-heading">Avg Likes/Post <span class="color1 alert-tab-sub-heading" data-alert-likes="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
+                                                                    <li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Avg Likes/Post </b><span class="color1 alert-tab-sub-heading" data-alert-likes="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
                                                                 {% else %}
-                                                                    <li class="alert-tab-heading">Avg Likes/Post <span class="color1 alert-tab-sub-heading" data-alert-likes="{{ favitem['alert_likes'] }}">{{ favitem['alert_likes'] }}</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
+                                                                    <li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Avg Likes/Post </b><span class="color1 alert-tab-sub-heading" data-alert-likes="{{ favitem['alert_likes'] }}">{{ favitem['alert_likes'] }}</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
                                                                 {% endif %}
                                                                 {% if favitem['alert_comments']==0 %}
-                                                                    <li class="alert-tab-heading">Avg Comments <span class="color1 alert-tab-sub-heading" data-alert-comments="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
+                                                                    <li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Avg Comments</b><span class="color1 alert-tab-sub-heading" data-alert-comments="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
                                                                 {% else %}
-                                                                    <li class="alert-tab-heading">Avg Comments <span class="color1 alert-tab-sub-heading" data-alert-comments="{{ favitem['alert_comments'] }}">{{ favitem['alert_comments'] }}</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
+                                                                    <li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Avg Comments</b><span class="color1 alert-tab-sub-heading" data-alert-comments="{{ favitem['alert_comments'] }}">{{ favitem['alert_comments'] }}</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">
                                                                 {% endif %}
 
                                                             {% endif %}
@@ -1245,7 +1245,6 @@ function getGraphUpdated(){
                         looping--;
                      }
                      for(var i=0;i<data['results'].length;i++){
-
                             var d= new Date(parseInt(data['results'][i]['timestamp'])*1000).getMonth();
                             if(currentDate!=d){
                                     var dat={
@@ -1259,8 +1258,6 @@ function getGraphUpdated(){
                                         }
                                     }
                             }
-
-
                      }
                      var demo=[0,0,0,0,0,0];
                      for(var n=0;n<months.length;n++){
@@ -1326,7 +1323,6 @@ function getGraphUpdated(){
                              var myChart = new Chart(ctx, {
                                 type: 'line',
                                 data: {
-
                                     labels: labels,
                                     datasets:[
                                     {
@@ -1345,7 +1341,6 @@ function getGraphUpdated(){
                                     }]
                                 },
                                 options: {
-
 <!--                                    legend: {-->
 <!--                                        onClick: (e) => e.stopPropagation()-->
 <!--                                    },-->
@@ -1385,18 +1380,14 @@ function getGraphUpdated(){
                                                                 }
                                                           }
                                              }
-
                                     }
                              });
-
                 }
                }
     });
     {% endfor%}
-
 }
 getGraphUpdated();
-
 
 function updateChannelStatusForCampaignByCampaignId(campaign_id){
     <!--alert(channel_id);-->
@@ -1436,7 +1427,7 @@ function updateChannelStatusForCampaignByCampaignId(campaign_id){
                                     color = 'dark green'
                                 }
                                 <!--$('#status'+val.channel_id).empty();-->
-                                $('#status'+val.channel_id).append('<b style="font-weight:450; font-size:12px;">'+val.campaign_name+'<br/></b>');
+                                $('#status'+val.channel_id).append('<b style="font-weight:500; font-size:12px;">'+val.campaign_name+'<br/></b>');
                                 $('#status'+val.channel_id).append('<b style="font-weight:400; color:'+color+'; font-size:11px;">'+val.status+'</b>');
                                 if(val.status!='Contacted' && val.status!='Added'){
                                     $('#status'+val.channel_id).append('&nbsp;<div style="display: inline-block;float: right;"><a data-toggle="tooltip" title="Go to conversation" href="/inbox/'+val.message_id+'" id="chat-option-'+val.campaign_id+'-'+val.channel_id+'" style="display:none;color:#599ae9;margin-right: 7px;top: 3px;position: relative;"><i class="goto-inbox-icon far fa-comments" style="color:#a8a8a8;"></i></a><a class="multiple-search" data-toggle="tooltip" title="Options" style="margin-top: -4px;font-size:1rem!important;" onclick="showingOption(this);"><i class="multiple-chat-option fas fa-ellipsis-v" style="top: 2px;color:#a8a8a8;"></i></a></div>');
@@ -1560,72 +1551,72 @@ function getCampaign_ids(channel_id){
                         if(val.channel_name=='Twitter'){
                             $('#alert'+val.channel_id).find('.tab-content-item-list').empty();
                             if(val.alert_followers==0){
-                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Followers <span class="color1 alert-tab-sub-heading" data-alert-followers="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Followers</b><span class="color1 alert-tab-sub-heading" data-alert-followers="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
                             }
                             else{
-                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Followers <span class="color1 alert-tab-sub-heading" data-alert-followers="'+val.alert_followers+'">'+val.alert_followers+'</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Followers</b><span class="color1 alert-tab-sub-heading" data-alert-followers="'+val.alert_followers+'">'+val.alert_followers+'</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
                             }
                             if(val.alert_likes==0){
-                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Avg Likes/Post <span class="color1 alert-tab-sub-heading" data-alert-likes="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Avg Likes/Post</b> <span class="color1 alert-tab-sub-heading" data-alert-likes="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
                             }
                             else{
-                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Avg Likes/Post <span class="color1 alert-tab-sub-heading" data-alert-likes="-">'+val.alert_likes+'</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Avg Likes/Post</b> <span class="color1 alert-tab-sub-heading" data-alert-likes="-">'+val.alert_likes+'</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
                             }
                             if(val.alert_comments==0){
-                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Avg Shares <span class="color1 alert-tab-sub-heading" data-alert-likes="-">-</span></li><hr style="height:0px; margin:auto;">');
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Avg Shares</b><span class="color1 alert-tab-sub-heading" data-alert-likes="-">-</span></li><hr style="height:0px; margin:auto;">');
                             }
                             else{
-                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Avg Shares <span class="color1 alert-tab-sub-heading" data-alert-likes="-">'+val.alert_comments+'</span></li><hr style="height:0px; margin:auto;">');
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Avg Shares</b><span class="color1 alert-tab-sub-heading" data-alert-likes="-">'+val.alert_comments+'</span></li><hr style="height:0px; margin:auto;">');
                             }
 
                         }
                         else if(val.channel_name=='Instagram'){
                             $('#alert'+val.channel_id).find('.tab-content-item-list').empty();
                             if(val.alert_followers==0){
-                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Followers <span class="color1 alert-tab-sub-heading" data-alert-likes="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Followers</b><span class="color1 alert-tab-sub-heading" data-alert-likes="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
                             }
                             else{
-                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Followers <span class="color1 alert-tab-sub-heading" data-alert-likes="-">'+val.alert_followers+'</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Followers</b><span class="color1 alert-tab-sub-heading" data-alert-likes="-">'+val.alert_followers+'</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
                             }
                             if(val.alert_likes==0){
-                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Avg Likes/Post <span class="color1 alert-tab-sub-heading" data-alert-likes="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Avg Likes/Post</b><span class="color1 alert-tab-sub-heading" data-alert-likes="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
                             }
                             else{
-                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Avg Likes/Post <span class="color1 alert-tab-sub-heading" data-alert-likes="-">'+val.alert_likes+'</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Avg Likes/Post</b><span class="color1 alert-tab-sub-heading" data-alert-likes="-">'+val.alert_likes+'</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
                             }
                             if(val.alert_comments==0){
-                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Avg Comments <span class="color1 alert-tab-sub-heading" data-alert-likes="-">-</span></li><hr style="height:0px; margin:auto;">');
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Avg Comments</b><span class="color1 alert-tab-sub-heading" data-alert-likes="-">-</span></li><hr style="height:0px; margin:auto;">');
                             }
                             else{
-                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Avg Comments <span class="color1 alert-tab-sub-heading" data-alert-likes="-">'+val.alert_comments+'</span></li><hr style="height:0px; margin:auto;">');
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Avg Comments</b><span class="color1 alert-tab-sub-heading" data-alert-likes="-">'+val.alert_comments+'</span></li><hr style="height:0px; margin:auto;">');
                             }
 
                         }
                         else{
                             $('#alert'+val.channel_id).find('.tab-content-item-list').empty();
                             if(val.alert_followers==0){
-                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Followers <span class="color1 alert-tab-sub-heading" data-alert-likes="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Followers</b><span class="color1 alert-tab-sub-heading" data-alert-likes="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
                             }
                             else{
-                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Followers <span class="color1 alert-tab-sub-heading" data-alert-likes="-">'+val.alert_followers+'</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Followers</b><span class="color1 alert-tab-sub-heading" data-alert-likes="-">'+val.alert_followers+'</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
                             }
                             if(val.alert_views==0){
-                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Avg Views/Post <span class="color1 alert-tab-sub-heading" data-alert-likes="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Avg Views/Post</b><span class="color1 alert-tab-sub-heading" data-alert-likes="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
                             }
                             else{
-                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Avg Views/Post <span class="color1 alert-tab-sub-heading" data-alert-likes="-">'+val.alert_views+'</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Avg Views/Post</b><span class="color1 alert-tab-sub-heading" data-alert-likes="-">'+val.alert_views+'</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
                             }
                             if(val.alert_likes==0){
-                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Avg Likes/Post <span class="color1 alert-tab-sub-heading" data-alert-likes="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Avg Likes/Post</b><span class="color1 alert-tab-sub-heading" data-alert-likes="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
                             }
                             else{
-                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Avg Likes/Post <span class="color1 alert-tab-sub-heading" data-alert-likes="-">'+val.alert_likes+'</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Avg Likes/Post</b> <span class="color1 alert-tab-sub-heading" data-alert-likes="-">'+val.alert_likes+'</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
                             }
                             if(val.alert_comments==0){
-                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Avg Comments <span class="color1 alert-tab-sub-heading" data-alert-likes="-">-</span></li><hr style="height:0px; margin:auto;">');
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Avg Comments</b><span class="color1 alert-tab-sub-heading" data-alert-likes="-">-</span></li><hr style="height:0px; margin:auto;">');
                             }
                             else{
-                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading">Avg Comments<span class="color1 alert-tab-sub-heading" data-alert-likes="-">'+val.alert_comments+'</span></li><hr style="height:0px; margin:auto;">');
+                                $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Avg Comments</b><span class="color1 alert-tab-sub-heading" data-alert-likes="-">'+val.alert_comments+'</span></li><hr style="height:0px; margin:auto;">');
                             }
 
 
@@ -1731,35 +1722,35 @@ function getCampaign_ids(channel_id){
             var value = parseFloat(influencerItem[i].innerText.split(' ')[0]);
             console.log(value);
             if(value>=20){
-                engagementBar[i].childNodes[1].style.backgroundColor="rgb(0, 133, 15)";
-                engagementBar[i].childNodes[3].style.backgroundColor="rgb(0, 133, 15)";
-                engagementBar[i].childNodes[5].style.backgroundColor="rgb(0, 133, 15)";
-                engagementBar[i].childNodes[7].style.backgroundColor="rgb(0, 133, 15)";
-                engagementBar[i].childNodes[9].style.backgroundColor="rgb(0, 133, 15)";
+                engagementBar[i].childNodes[1].style.backgroundColor="#00FF00";
+                engagementBar[i].childNodes[3].style.backgroundColor="#00FF00";
+                engagementBar[i].childNodes[5].style.backgroundColor="#00FF00";
+                engagementBar[i].childNodes[7].style.backgroundColor="#00FF00";
+                engagementBar[i].childNodes[9].style.backgroundColor="#00FF00";
             }
             else if(value<20&&value>15){
-                engagementBar[i].childNodes[1].style.backgroundColor="rgb(129, 212, 82)";
-                engagementBar[i].childNodes[3].style.backgroundColor="rgb(129, 212, 82)";
-                engagementBar[i].childNodes[5].style.backgroundColor="rgb(129, 212, 82)";
-                engagementBar[i].childNodes[7].style.backgroundColor="rgb(129, 212, 82)";
+                engagementBar[i].childNodes[1].style.backgroundColor="#80FF00";
+                engagementBar[i].childNodes[3].style.backgroundColor="#80FF00";
+                engagementBar[i].childNodes[5].style.backgroundColor="#80FF00";
+                engagementBar[i].childNodes[7].style.backgroundColor="#80FF00";
                 engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
             }
             else if(value<=15&&value>10){
-                engagementBar[i].childNodes[1].style.backgroundColor="rgb(230, 169, 0)";
-                engagementBar[i].childNodes[3].style.backgroundColor="rgb(230, 169, 0)";
-                engagementBar[i].childNodes[5].style.backgroundColor="rgb(230, 169, 0)";
+                engagementBar[i].childNodes[1].style.backgroundColor="#FFFF00";
+                engagementBar[i].childNodes[3].style.backgroundColor="#FFFF00";
+                engagementBar[i].childNodes[5].style.backgroundColor="#FFFF00";
                 engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
                 engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
             }
             else if(value<=10&&value>2.5){
-                engagementBar[i].childNodes[1].style.backgroundColor="rgb(255, 154, 53)";
-                engagementBar[i].childNodes[3].style.backgroundColor="rgb(255, 154, 53)";
+                engagementBar[i].childNodes[1].style.backgroundColor="#FF8000";
+                engagementBar[i].childNodes[3].style.backgroundColor="#FF8000";
                 engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
                 engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
                 engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
             }
             else if(value<=2.5){
-                engagementBar[i].childNodes[1].style.backgroundColor="rgb(204,0,0)";
+                engagementBar[i].childNodes[1].style.backgroundColor="#FF0000";
                 engagementBar[i].childNodes[3].style.backgroundColor="lightgrey";
                 engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
                 engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
@@ -1775,35 +1766,35 @@ function getCampaign_ids(channel_id){
               for(var i =0;i<influencerItem.length;i++){
                     var value = parseFloat(influencerItem[i].innerText.split(' ')[0]);
                     if(value>=max){
-                        engagementBar[i].childNodes[1].style.backgroundColor="rgb(0, 133, 15)";
-                        engagementBar[i].childNodes[3].style.backgroundColor="rgb(0, 133, 15)";
-                        engagementBar[i].childNodes[5].style.backgroundColor="rgb(0, 133, 15)";
-                        engagementBar[i].childNodes[7].style.backgroundColor="rgb(0, 133, 15)";
-                        engagementBar[i].childNodes[9].style.backgroundColor="rgb(0, 133, 15)";
+                        engagementBar[i].childNodes[1].style.backgroundColor="#00FF00";
+                        engagementBar[i].childNodes[3].style.backgroundColor="#00FF00";
+                        engagementBar[i].childNodes[5].style.backgroundColor="#00FF00";
+                        engagementBar[i].childNodes[7].style.backgroundColor="#00FF00";
+                        engagementBar[i].childNodes[9].style.backgroundColor="#00FF00";
                     }
                     else if(value<max&&value>max-diff){
-                        engagementBar[i].childNodes[1].style.backgroundColor="rgb(129, 212, 82)";
-                        engagementBar[i].childNodes[3].style.backgroundColor="rgb(129, 212, 82)";
-                        engagementBar[i].childNodes[5].style.backgroundColor="rgb(129, 212, 82)";
-                        engagementBar[i].childNodes[7].style.backgroundColor="rgb(129, 212, 82)";
+                        engagementBar[i].childNodes[1].style.backgroundColor="#80FF00";
+                        engagementBar[i].childNodes[3].style.backgroundColor="#80FF00";
+                        engagementBar[i].childNodes[5].style.backgroundColor="#80FF00";
+                        engagementBar[i].childNodes[7].style.backgroundColor="#80FF00";
                         engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
                     }
                     else if(value<=max-diff&&value>min+diff){
-                        engagementBar[i].childNodes[1].style.backgroundColor="rgb(230, 169, 0)";
-                        engagementBar[i].childNodes[3].style.backgroundColor="rgb(230, 169, 0)";
-                        engagementBar[i].childNodes[5].style.backgroundColor="rgb(230, 169, 0)";
+                        engagementBar[i].childNodes[1].style.backgroundColor="#FFFF00";
+                        engagementBar[i].childNodes[3].style.backgroundColor="#FFFF00";
+                        engagementBar[i].childNodes[5].style.backgroundColor="#FFFF00";
                         engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
                         engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
                     }
                     else if(value<=min+diff&&value>min){
-                        engagementBar[i].childNodes[1].style.backgroundColor="rgb(255, 154, 53)";
-                        engagementBar[i].childNodes[3].style.backgroundColor="rgb(255, 154, 53)";
+                        engagementBar[i].childNodes[1].style.backgroundColor="#FF8000";
+                        engagementBar[i].childNodes[3].style.backgroundColor="#FF8000";
                         engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
                         engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
                         engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
                     }
                     else if(value<=min){
-                        engagementBar[i].childNodes[1].style.backgroundColor="rgb(204,0,0)";
+                        engagementBar[i].childNodes[1].style.backgroundColor="#FF0000";
                         engagementBar[i].childNodes[3].style.backgroundColor="lightgrey";
                         engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
                         engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
@@ -1905,6 +1896,7 @@ function getCampaign_ids(channel_id){
             http.setRequestHeader('Content-Type', 'image/');
             http.send();
             return http.status != 403 && http.status != 404 && http.status != 410;
+
         }
         function image_status(image_url,channel_id){
             var img='https';

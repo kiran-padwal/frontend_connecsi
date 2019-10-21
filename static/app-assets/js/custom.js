@@ -4010,7 +4010,7 @@ $("#create_alert_form").submit(function (e) {
 
                             '<div class="col-12">' +
                             '<div class="engagement">' +
-                            '<div class="rating">' + value.min_lower_followers + ' - ' + value.max_upper_followers +
+                            '<div class="rating">' + abbrNum(value.min_lower_followers,0) + ' - ' + abbrNum(value.max_upper_followers,0) +
                             '</div>' +
                             '<div class="rating-txt">' + 'Followers' +
                             '</div>' +
@@ -4019,10 +4019,9 @@ $("#create_alert_form").submit(function (e) {
 
                             '<div class="col-xl-12 col-lg-12">' +
                             '<div class="engagement">' +
-                            '<div class="rating">' + value.budget +
+                            '<div class="rating">' +currencyIndex[value.currency]+ value.budget.toFixed(2) +
                             '</div>' +
-                            '<div class="rating-txt">' + value.currency +
-                            '</div>' +
+
                             '</div>'+
                             '</div>' +
                             '</div>'+
@@ -4071,7 +4070,7 @@ $("#create_alert_form").submit(function (e) {
                             '<div class="offers_item__footer">' +
                             '<div class="row d-flex align-items-center mt-2">' +
                             ' <div class="col-md-6 d-flex flex-row align-items-center">' +
-                            (value.profile_pic != "" ? '<img src="/static/img/'+value.profile_pic+'" class="rounded offers_item__profile-thumb d-block" alt="Card image">' : '<img src="/static/img/'+fix_img+'" class="rounded offers_item__profile-thumb d-block" alt="Card image">') +
+                            (value.profile_pic != "" ? '<img src="/static/img/'+value.profile_pic+'" class="rounded offers_item__profile-thumb channel-image-circle d-block" alt="Card image">' : '<img src="/static/img/'+fix_img+'" class="rounded offers_item__profile-thumb channel-image-circle d-block" alt="Card image">') +
                             '<span>'+value.first_name + ' ' + value.last_name +'</span>'+
                             '</div>' +
                             ' <div class="col-md-6 text-right">' +
@@ -4115,6 +4114,185 @@ $("#create_alert_form").submit(function (e) {
     });
 
 
+//    $("#search_offers").submit(function (e) {
+//        var $this = $(this);
+//        var $clicked = $this.attr('data-clicked');
+//        var form = $(this);
+//        var url = form.attr('action');
+//        var min_lower = $("#lower-value").text();
+//        var max_upper = $("#upper-value").text();
+//        var min_lower_price = $("#lower-value-price").text();
+//        var max_upper_price = $("#upper-value-price").text();
+//
+//        $("#min_lower").val(min_lower);
+//        $("#max_upper").val(max_upper);
+//        $("#min_lower_price").val(min_lower_price);
+//        $("#max_upper_price").val(max_upper_price);
+//        $('#offerData').empty();
+//
+//        if($clicked == "false") {
+//        $this.attr('data-clicked', 'true');
+//
+//        $.ajax({
+//            type: "POST",
+//            url: url,
+//            data: form.serialize(),
+//            dataType: "json"
+//        }).done(function (res) {
+//            $this.attr('data-clicked', 'false');
+//            $.each(res.results, function (index, value) {
+//                    var file = value.files.split(",");
+//                    var fix_img ="fixed_img.png";
+//                    $('#offerData').append('<div class="col-sm-6">' +
+//                        '<div class="card offers_item">' +
+//                        '<div class="card-header">' +
+//                        '<div class="row offers_item__header">' +
+//                        '<div class="col-6"><i class="ft ft-eye"></i> Views:</div>' +
+//                        '<div class="col-6 text-right"><i class="ft ft-calendar"></i> posted on:</div>' +
+//                        '</div>' +
+//                        '<div class="row offers_item__header">' +
+//                        '<div class="col-6">' + value.no_of_views + '</div>' +
+//                        '<div class="col-6 text-right">' + value.posted_date + '</div>' +
+//                        '</div>' +
+//                        '<div class="row">' +
+//                        '<div class="col-12">' +
+//                        '<div class="offers_item__title">'
+//                        + value.offer_name +
+//                        '</div>' +
+//                        '</div>' +
+//                        '</div>' +
+//                        '</div>' +
+//
+//                        '<div class="card-body">' +
+//
+//                        '<div class="row">' +
+//                        '<div class="col-xl-6 col-lg-12">' +
+//                        '<div class="row photo__row">' +
+//                        '<div class="col-12">' +
+//                        '<div class="main__image" style="background-image: url(static/offer_files/' + file[0] + ')"></div>' +
+//                        '</div>' +
+//                        '</div>' +
+//                        '</div>' +
+//
+//                        '<div class="col-xl-6 col-lg-12">' +
+//                        '<div class="row">' +
+//                        '<div class="col-12">' +
+//                        '<span>General Info:</span>' +
+//                        '</div>' +
+//
+//                        '<div class="col-12">' +
+//                        '<div class="engagement">' +
+//                        '<div class="rating">' + value.min_lower_followers + ' - ' + value.max_upper_followers +
+//                        '</div>' +
+//                        '<div class="rating-txt">' + 'Followers' +
+//                        '</div>' +
+//                        '</div>' +
+//                        '</div>' +
+//
+//                        '<div class="col-xl-12 col-lg-12">' +
+//                        '<div class="engagement">' +
+//                        '<div class="rating">' + value.budget +
+//                        '</div>' +
+//                        '<div class="rating-txt">' + value.currency +
+//                        '</div>' +
+//                        '</div>' +
+//                        '</div>' +
+//                        '</div>' +
+//                        '</div>' +
+//                        '</div>' +
+//
+//                        '<div class="row">' +
+//                        '<div class="col-xl-6 col-lg-12">' +
+//                        '<div class="row">' +
+//                        '<div class="col-12">' +
+//                        '<span class="social">Channels: ' +
+//                        '<span class="facebook-' + index + '"></span>' +
+//                        '<span class="youtube-' + index + '">' +
+//                        '</span><span class="twitter-' + index + '">' +
+//                        '</span><span class="instagram-' + index + '">' +
+//                        '</span>' +
+//                        '</span>' +
+//
+//                        '<hr>' +
+//                        '</div>' +
+//
+//                        '<div class="col-12">' +
+//                        '<span>Content Type: </span>' +
+//                        '</div>' +
+//
+//                        '<div class="col-12 arrangements__container">' +
+//                        '<div id="arrangements-' + index + '"></div>' +
+//                        '</div>' +
+//                        '</div>' +
+//                        '</div>' +
+//
+//                        '<div class="col-xl-6 col-lg-12">' +
+//                        '<div class="row">' +
+//                        '<div class="col-12">' +
+//                        '<span>Categories: </span>' +
+//                        '</div>' +
+//
+//                        '<div class="col-12 categories__container">' +
+//                        '<div id="cat-' + index + '" class="cat d-flex flex-wrap"></div>' +
+//                        '</div>' +
+//                        '</div>' +
+//                        '</div>' +
+//                        '</div>' +
+//                        '</div>' +
+//
+//                        '<div class="card-footer">' +
+//                        '<div class="offers_item__footer">' +
+//                        '<div class="row d-flex align-items-center mt-2">' +
+//                        ' <div class="col-md-6 d-flex flex-row align-items-center">' +
+//                        (value.channel_img != "" ? '<img src="'+value.channel_img+'" class="rounded offers_item__profile-thumb d-block" alt="Card image">' : '<img src="/static/img/'+fix_img+'" class="rounded offers_item__profile-thumb d-block" alt="Card image">') +
+//                        '<span>' + value.first_name + ' ' + value.last_name + '</span>' +
+//                        '</div>' +
+//                        ' <div class="col-md-6 text-right">' +
+//                        '<a  href="#"   class="reply-offer btn btn-raised btn-primary bg-color2 mt-0 mr-1 mb-0"'+
+//                                                   'data-business-email="'+value.email_id+'"'+
+//                                                   'data-title="'+value.first_name+'"'+
+//                                                   'data-backdrop="true" data-toggle="modal" data-target="#sendMessage" onclick="openMessage()">Reply</a>' +
+//                        '<a href="/viewOfferDetails/' + value.offer_id + '" class="btn btn-raised btn-primary bg-color1 mt-0 mb-0">Details</a>' +
+//                        '</div>' +
+//                        '</div>' +
+//                        '</div>' +
+//                        '</div>' +
+//                        '</div>' +
+//                        '</div>' +
+//                        '</div>');
+//                    $.each(this.channels.split(','), function (key, val) {
+//                        if (val === 'youtube') {
+//                            $(".youtube-" + index).append("<a href='#' class='fa fa-youtube-square'></a>");
+//                        }
+//                        if (val === 'instagram') {
+//                            $(".instagram-" + index).append("<a href='#' class='fa fa-instagram'></a>");
+//                        }
+//                        if (val === 'facebook') {
+//                            $(".facebook-" + index).append("<a href='#' class='fa fa-facebook-square'></a>");
+//                        }
+//                        if (val === 'twitter') {
+//                            $(".twitter-" + index).append("<a href='#' class='fa fa-twitter-square'></a>");
+//                        }
+//                    });
+//                    $.each(this.video_cat_name.split(','), function (key, val) {
+//                        $("#cat-" + index).append('<span class="offers_item__categories">' + val + '</span>');
+//                    });
+//                    $.each(this.arrangements.split(','), function (key, val) {
+//                        $("#arrangements-" + index).append('<span class="arrangement color1">' + val + ', </span>');
+//                    });
+//                    $('#offerData').show("slow");
+//
+//                });
+//               });
+//        }
+//
+//        e.preventDefault(); // avoid to execute the actual submit of the form.
+//
+//    });
+
+
+
+    var currencyIndex={'INR':'₹','USD':'$','EUR':'€','GBR':'£'}
     $("#search_offers").submit(function (e) {
         var $this = $(this);
         var $clicked = $this.attr('data-clicked');
@@ -4183,7 +4361,7 @@ $("#create_alert_form").submit(function (e) {
 
                         '<div class="col-12">' +
                         '<div class="engagement">' +
-                        '<div class="rating">' + value.min_lower_followers + ' - ' + value.max_upper_followers +
+                        '<div class="rating">' + abbrNum(value.min_lower_followers,0) + ' - ' + abbrNum(value.max_upper_followers,0) +
                         '</div>' +
                         '<div class="rating-txt">' + 'Followers' +
                         '</div>' +
@@ -4192,9 +4370,7 @@ $("#create_alert_form").submit(function (e) {
 
                         '<div class="col-xl-12 col-lg-12">' +
                         '<div class="engagement">' +
-                        '<div class="rating">' + value.budget +
-                        '</div>' +
-                        '<div class="rating-txt">' + value.currency +
+                        '<div class="rating">' +currencyIndex[value.currency]+ value.budget.toFixed(2) +
                         '</div>' +
                         '</div>' +
                         '</div>' +
@@ -4245,7 +4421,7 @@ $("#create_alert_form").submit(function (e) {
                         '<div class="offers_item__footer">' +
                         '<div class="row d-flex align-items-center mt-2">' +
                         ' <div class="col-md-6 d-flex flex-row align-items-center">' +
-                        (value.channel_img != "" ? '<img src="'+value.channel_img+'" class="rounded offers_item__profile-thumb d-block" alt="Card image">' : '<img src="/static/img/'+fix_img+'" class="rounded offers_item__profile-thumb d-block" alt="Card image">') +
+                        (value.channel_img != "" ? '<img src="'+value.channel_img+'" class="rounded offers_item__profile-thumb channel-image-circle d-block" alt="Card image">' : '<img src="/static/img/'+fix_img+'" class="rounded offers_item__profile-thumb channel-image-circle d-block" alt="Card image">') +
                         '<span>' + value.first_name + ' ' + value.last_name + '</span>' +
                         '</div>' +
                         ' <div class="col-md-6 text-right">' +
@@ -4290,6 +4466,8 @@ $("#create_alert_form").submit(function (e) {
         e.preventDefault(); // avoid to execute the actual submit of the form.
 
     });
+
+
 
     $('select').selectpicker({
         dropupAuto: false
