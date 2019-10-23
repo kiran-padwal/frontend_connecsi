@@ -1184,6 +1184,22 @@ function getCampaignsAddedToMessage(){
                    $('#proposal_campaign_name').append('<option value=""></option>');
                    jQuery.each(data.results, function(i, val) {
                         <!--{# if  glob.from_email_id != session['email_id']  #}-->
+                        var color = '';
+                                if (val.status == 'Added'){
+                                    color = 'purple'
+                                }
+                                if (val.status == 'Contacted'){
+                                    color = 'orange'
+                                }
+                                if (val.status == 'Negotiations'){
+                                    color = 'orange'
+                                }
+                                if (val.status == 'Proposal Sent'){
+                                    color = 'light green'
+                                }
+                                if (val.status == 'Current Partner'){
+                                    color = 'dark green'
+                                }
                         {% if  session['type'] != 'brand'  %}
                             <!--alert(val.campaign_id);-->
                             $('#reply_campaign_id').val(val.campaign_id);
@@ -1191,15 +1207,15 @@ function getCampaignsAddedToMessage(){
                                 var status = 'Proposal Received';
                                 var accepted = 'Accept';
                                 var rejected = 'Reject';
-                                $('#campaignNameList').append('<tr><td><a href="#" class="">'+val.campaign_name+'<a/></td><td>&nbsp &nbsp'+status+'</td></tr>');
+                                $('#campaignNameList').append('<tr><td><a href="#" class="">'+val.campaign_name+'<a/></td><td style="color:'+color+'">&nbsp &nbsp'+status+'</td></tr>');
                                 $('#tab-proposal .tab-list').append('<tr><td><a href="#" onclick="getProposal('+val.message_id+','+val.campaign_id+')" class="">'+val.campaign_name+'<a/></td><td>&nbsp &nbsp<a href="#" onclick="accept_decline('+val.message_id+','+val.campaign_id+',\'' + accepted + '\')" data-toggle = "tooltip" title="Accept" class="fa fa-thumbs-up green" style="font-size:15pt;"></a></td><td>&nbsp<a href="#" onclick ="accept_decline('+val.message_id+','+val.campaign_id+',\'' + rejected + '\')" data-toggle = "tooltip" title="Decline" class="fa fa-thumbs-down red" style="font-size:15pt;"></a></td></tr>');
                             }
                             else if(val.status == 'Current Partner'){
-                                $('#campaignNameList').append('<tr><td><a href="#" class="">'+val.campaign_name+'<a/></td><td>&nbsp &nbsp'+val.status+'</td></tr>');
+                                $('#campaignNameList').append('<tr><td><a href="#" class="">'+val.campaign_name+'<a/></td><td style="color:'+color+'">&nbsp &nbsp'+val.status+'</td></tr>');
                                 $('#tab-proposal .tab-list').append('<tr><td><a href="#" onclick="getProposal('+val.message_id+','+val.campaign_id+')" class="">'+val.campaign_name+'<a/></td></tr>');
                             }
                             else{
-                                $('#campaignNameList').append('<tr><td><a href="#" class="">'+val.campaign_name+'<a/></td><td>&nbsp &nbsp'+val.status+'</td></tr>');
+                                $('#campaignNameList').append('<tr><td><a href="#" class="">'+val.campaign_name+'<a/></td><td style="color:'+color+'">&nbsp &nbsp'+val.status+'</td></tr>');
                             }
                         {% else %}
                             if(val.campaign_id){
@@ -1207,7 +1223,7 @@ function getCampaignsAddedToMessage(){
                                 $('#plus_circle').removeClass('fa fa-plus-circle');
                                 $('#reply_campaign_id').val(val.campaign_id);
                             }
-                            $('#campaignNameList').append('<tr><td><a href="#" class="">'+val.campaign_name+'<a/></td><td>&nbsp &nbsp'+val.status+'</td></tr>');
+                            $('#campaignNameList').append('<tr><td><a href="#" class="">'+val.campaign_name+'<a/></td><td style="color:'+color+'">&nbsp &nbsp'+val.status+'</td></tr>');
                             if(val.status == 'Proposal Sent'){
                                 $('#tab-proposal .tab-list').append('<tr><td><a href="#" onclick="getProposal('+val.message_id+','+val.campaign_id+')" class="">'+val.campaign_name+'<a/></td><td>&nbsp &nbsp<a href="#" onclick="editProposal('+val.message_id+','+val.campaign_id+')" data-toggle="tooltip" title="Edit Proposal"><img src="/static/icons/edit.png" height="19px" width="17px"></a></td></tr>');
                             }

@@ -606,10 +606,10 @@
                                                                  href="#alert{{ item['channel_id'] }}"><i
                                             class="fa fa-bell" style="position:relative;top:4px;"></i> <span>Alert</span></a></li>
                                 </ul>
-                                <div class="tabs-content">
+                                <div class="tabs-content" style="padding:10px 14px;">
                                     <div class="tabs-content-item active" id="status{{ item['channel_id'] }}">
                                         <div class="tab-content-item-list-container">
-                                            <ul class="tab-content-item-list">
+                                            <ul class="tab-content-item-list" >
 
                                                 <li id="no_campaigns{{ item['channel_id'] }}">No Campaigns</li>
 
@@ -1439,7 +1439,7 @@ function updateChannelStatusForCampaignByCampaignId(campaign_id){
                                 $('#status'+val.channel_id).append('<b style="font-weight:500; font-size:12px;">'+val.campaign_name+'<br/></b>');
                                 $('#status'+val.channel_id).append('<b style="font-weight:400; color:'+color+'; font-size:11px;">'+val.status+'</b>');
                                 if(val.status!='Contacted' && val.status!='Added'){
-                                    $('#status'+val.channel_id).append('&nbsp;<div style="display: inline-block;float: right;"><a data-toggle="tooltip" title="Go to conversation" href="/inbox/'+val.message_id+'" id="chat-option-'+val.campaign_id+'-'+val.channel_id+'" style="display:none;color:#599ae9;margin-right: 7px;top: 3px;position: relative;"><i class="goto-inbox-icon far fa-comments" style="color:#a8a8a8;"></i></a><a class="multiple-search" data-toggle="tooltip" title="Options" style="margin-top: -4px;font-size:1rem!important;" onclick="showingOption(this);"><i class="multiple-chat-option fas fa-ellipsis-v" style="top: 2px;color:#a8a8a8;"></i></a></div>');
+                                    $('#status'+val.channel_id).append('&nbsp;<div style="display: inline-block;float: right;"><a data-toggle="tooltip" title="Go to conversation" href="/inbox/'+val.message_id+'" id="chat-option-'+val.campaign_id+'-'+val.channel_id+'" style="display:none;color:#599ae9;margin-right: 7px;top: 3px;position: relative;"><img src="../static/images/chat-icon.jpeg" class="goto-inbox-icon far fa-comments" style="color:#a8a8a8;height:20px;margin-bottom:4px;"/></a><a class="multiple-search" data-toggle="tooltip" title="Options" style="margin-top: -4px;font-size:1rem!important;" onclick="showingOption(this);"><i class="multiple-chat-option fas fa-ellipsis-v" style="top: 2px;color:#a8a8a8;"></i></a></div>');
                                 }
                                 $('#status'+val.channel_id).append('<hr style="height:0px; margin:auto;">');
                                 $('#no_campaigns'+val.channel_id).hide();

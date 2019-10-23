@@ -66,8 +66,8 @@
                             </div>
                             <div class="col-lg-6">
                                 <div class="engagement">
-                                    <div class="rating">
-                                       {{item['min_lower_followers']}} - {{ item['max_upper_followers'] }}
+                                    <div id="min-max-followers" class="rating" data-min-followers="{{item['min_lower_followers']}}" data-max-followers="{{ item['max_upper_followers'] }}">
+
                                     </div>
                                     <div class="rating-txt">
                                         Followers
@@ -77,11 +77,11 @@
                             </div>
                             <div class="col-lg-6">
                                 <div class="engagement">
-                                    <div class="rating">
-                                        {{ item['budget'] }}
+                                    <div id="budget-currency" class="rating" data-budget="{{ item['budget'] }}" data-currency="{{ item['currency'] }}">
+
                                     </div>
                                     <div class="rating-txt">
-                                        {{ item['currency'] }}
+                                        Remuneration
                                     </div>
                                 </div>
 
@@ -265,6 +265,16 @@
     </div>
 </div>
 <script>
+
+        $(document).ready(function(){
+            var max_followers=$('#min-max-followers')[0].dataset.maxFollowers
+            var min_followers=$('#min-max-followers')[0].dataset.minFollowers
+            var budget=$('#budget-currency')[0].dataset.budget
+            var currency=$('#budget-currency')[0].dataset.currency
+            $('#min-max-followers')[0].innerText=abbrNum(min_followers,0)+" - "+abbrNum(max_followers,0);
+            var currencyIndex={'INR':'₹','USD':'$','EUR':'€','GBR':'£'}
+            $('#budget-currency')[0].innerText=currencyIndex[currency]+" "+parseInt(budget).toFixed(2)
+        })
         $("#send_message_form").submit(function (e) {
             var form = $(this);
             var url = form.attr('action');
