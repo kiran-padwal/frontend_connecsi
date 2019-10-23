@@ -582,9 +582,18 @@
                             <!--" height="180px"></canvas>-->
                         <!--</div>-->
                         <!-- end of chart -->
-                        <div class="col-lg-4 col-nc-lg-12 line-area vertically-centered">
-                            <h4 style="position: absolute;margin: 0 auto;right: 37%;font-size: .8rem;top: 0px;font-weight:550;">Followers</h4>
-                            <canvas id="lineChart{{ item['linechart_id'] }}" class="line-chart" height="180px"></canvas>
+                        <div class="col-lg-4 col-nc-lg-12 line-area vertically-centered" style="display:block;">
+                            <div class="row">
+                                <div class="col-12 text-center" id="chart-follower-heading">
+                                    <h4 style="font-size: .8rem;font-weight:550;">Followers</h4>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <canvas id="lineChart{{ item['linechart_id'] }}" class="line-chart" height="180px"></canvas>
+                                </div>
+                            </div>
+
                         </div>
                         <!-- status -->
                         <div class="col-lg-2 col-nc-lg-12 offer-status">
@@ -786,7 +795,7 @@
             </div>
             <form name="create_alert_form" id="create_alert_form" action="/createAlerts" method="POST">
                 <input  class="form-control" type="hidden" value="" name="channel_id" id="create_alert_channel_id">
-                <input  class="form-control" type="hidden" value="" name="channel_name" id="create_alert_channel_name">
+                <input  class="form-control" type="hidden" value="{{form_filters['channel']}}" name="channel_name" id="create_alert_channel_name">
                 {% if form_filters['channel']=='Youtube'%}
                     <div class="modal-body">
                         <div class="row">
@@ -1539,6 +1548,7 @@ function getCampaign_ids(channel_id){
 
 
     function getFavInfListAlert(){
+        console.log("alerts setting");
         $.ajax({
             type: "GET",
             url: '/getFavInfListOne',
@@ -1548,7 +1558,10 @@ function getCampaign_ids(channel_id){
                 if (data.results.length != 0){
                    jQuery.each(data.results, function(i, val) {
                         <!--alert(val.channel_id);-->
+                        console.log("value",val);
+
                         if(val.channel_name=='Twitter'){
+
                             $('#alert'+val.channel_id).find('.tab-content-item-list').empty();
                             if(val.alert_followers==0){
                                 $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Followers</b><span class="color1 alert-tab-sub-heading" data-alert-followers="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
@@ -1594,6 +1607,7 @@ function getCampaign_ids(channel_id){
                         }
                         else{
                             $('#alert'+val.channel_id).find('.tab-content-item-list').empty();
+                            console.log($('#alert'+val.channel_id).find('.tab-content-item-list'));
                             if(val.alert_followers==0){
                                 $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Followers</b><span class="color1 alert-tab-sub-heading" data-alert-likes="-">-</span></li><hr style="height:0px; margin:auto;margin-bottom:10px;">');
                             }
@@ -1619,7 +1633,7 @@ function getCampaign_ids(channel_id){
                                 $('#alert'+val.channel_id).find('.tab-content-item-list').append('<li class="alert-tab-heading"><b style="font-size:12px;font-weight:500;">Avg Comments</b><span class="color1 alert-tab-sub-heading" data-alert-likes="-">'+val.alert_comments+'</span></li><hr style="height:0px; margin:auto;">');
                             }
 
-
+                            console.log($('#alert'+val.channel_id).find('.tab-content-item-list'));
 
 
                         }
@@ -1722,35 +1736,35 @@ function getCampaign_ids(channel_id){
             var value = parseFloat(influencerItem[i].innerText.split(' ')[0]);
             console.log(value);
             if(value>=20){
-                engagementBar[i].childNodes[1].style.backgroundColor="#00FF00";
-                engagementBar[i].childNodes[3].style.backgroundColor="#00FF00";
-                engagementBar[i].childNodes[5].style.backgroundColor="#00FF00";
-                engagementBar[i].childNodes[7].style.backgroundColor="#00FF00";
-                engagementBar[i].childNodes[9].style.backgroundColor="#00FF00";
+                engagementBar[i].childNodes[1].style.backgroundColor="#227500";
+                engagementBar[i].childNodes[3].style.backgroundColor="#227500";
+                engagementBar[i].childNodes[5].style.backgroundColor="#227500";
+                engagementBar[i].childNodes[7].style.backgroundColor="#227500";
+                engagementBar[i].childNodes[9].style.backgroundColor="#227500";
             }
             else if(value<20&&value>15){
-                engagementBar[i].childNodes[1].style.backgroundColor="#80FF00";
-                engagementBar[i].childNodes[3].style.backgroundColor="#80FF00";
-                engagementBar[i].childNodes[5].style.backgroundColor="#80FF00";
-                engagementBar[i].childNodes[7].style.backgroundColor="#80FF00";
+                engagementBar[i].childNodes[1].style.backgroundColor="#6D9635";
+                engagementBar[i].childNodes[3].style.backgroundColor="#6D9635";
+                engagementBar[i].childNodes[5].style.backgroundColor="#6D9635";
+                engagementBar[i].childNodes[7].style.backgroundColor="#6D9635";
                 engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
             }
             else if(value<=15&&value>10){
-                engagementBar[i].childNodes[1].style.backgroundColor="#FFFF00";
-                engagementBar[i].childNodes[3].style.backgroundColor="#FFFF00";
-                engagementBar[i].childNodes[5].style.backgroundColor="#FFFF00";
+                engagementBar[i].childNodes[1].style.backgroundColor="#91C252";
+                engagementBar[i].childNodes[3].style.backgroundColor="#91C252";
+                engagementBar[i].childNodes[5].style.backgroundColor="#91C252";
                 engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
                 engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
             }
             else if(value<=10&&value>2.5){
-                engagementBar[i].childNodes[1].style.backgroundColor="#FF8000";
-                engagementBar[i].childNodes[3].style.backgroundColor="#FF8000";
+                engagementBar[i].childNodes[1].style.backgroundColor="#E6A220";
+                engagementBar[i].childNodes[3].style.backgroundColor="#E6A220";
                 engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
                 engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
                 engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
             }
             else if(value<=2.5){
-                engagementBar[i].childNodes[1].style.backgroundColor="#FF0000";
+                engagementBar[i].childNodes[1].style.backgroundColor="#C60201";
                 engagementBar[i].childNodes[3].style.backgroundColor="lightgrey";
                 engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
                 engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
@@ -1766,35 +1780,35 @@ function getCampaign_ids(channel_id){
               for(var i =0;i<influencerItem.length;i++){
                     var value = parseFloat(influencerItem[i].innerText.split(' ')[0]);
                     if(value>=max){
-                        engagementBar[i].childNodes[1].style.backgroundColor="#00FF00";
-                        engagementBar[i].childNodes[3].style.backgroundColor="#00FF00";
-                        engagementBar[i].childNodes[5].style.backgroundColor="#00FF00";
-                        engagementBar[i].childNodes[7].style.backgroundColor="#00FF00";
-                        engagementBar[i].childNodes[9].style.backgroundColor="#00FF00";
+                        engagementBar[i].childNodes[1].style.backgroundColor="#227500";
+                        engagementBar[i].childNodes[3].style.backgroundColor="#227500";
+                        engagementBar[i].childNodes[5].style.backgroundColor="#227500";
+                        engagementBar[i].childNodes[7].style.backgroundColor="#227500";
+                        engagementBar[i].childNodes[9].style.backgroundColor="#227500";
                     }
                     else if(value<max&&value>max-diff){
-                        engagementBar[i].childNodes[1].style.backgroundColor="#80FF00";
-                        engagementBar[i].childNodes[3].style.backgroundColor="#80FF00";
-                        engagementBar[i].childNodes[5].style.backgroundColor="#80FF00";
-                        engagementBar[i].childNodes[7].style.backgroundColor="#80FF00";
+                        engagementBar[i].childNodes[1].style.backgroundColor="#6D9635";
+                        engagementBar[i].childNodes[3].style.backgroundColor="#6D9635";
+                        engagementBar[i].childNodes[5].style.backgroundColor="#6D9635";
+                        engagementBar[i].childNodes[7].style.backgroundColor="#6D9635";
                         engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
                     }
                     else if(value<=max-diff&&value>min+diff){
-                        engagementBar[i].childNodes[1].style.backgroundColor="#FFFF00";
-                        engagementBar[i].childNodes[3].style.backgroundColor="#FFFF00";
-                        engagementBar[i].childNodes[5].style.backgroundColor="#FFFF00";
+                        engagementBar[i].childNodes[1].style.backgroundColor="#91C252";
+                        engagementBar[i].childNodes[3].style.backgroundColor="#91C252";
+                        engagementBar[i].childNodes[5].style.backgroundColor="#91C252";
                         engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
                         engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
                     }
                     else if(value<=min+diff&&value>min){
-                        engagementBar[i].childNodes[1].style.backgroundColor="#FF8000";
-                        engagementBar[i].childNodes[3].style.backgroundColor="#FF8000";
+                        engagementBar[i].childNodes[1].style.backgroundColor="#E6A220";
+                        engagementBar[i].childNodes[3].style.backgroundColor="#E6A220";
                         engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
                         engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
                         engagementBar[i].childNodes[9].style.backgroundColor="lightgrey";
                     }
                     else if(value<=min){
-                        engagementBar[i].childNodes[1].style.backgroundColor="#FF0000";
+                        engagementBar[i].childNodes[1].style.backgroundColor="#C60201";
                         engagementBar[i].childNodes[3].style.backgroundColor="lightgrey";
                         engagementBar[i].childNodes[5].style.backgroundColor="lightgrey";
                         engagementBar[i].childNodes[7].style.backgroundColor="lightgrey";
@@ -1892,8 +1906,7 @@ function getCampaign_ids(channel_id){
         function imageExists(image_url){
             var http = new XMLHttpRequest();
             http.open('HEAD', image_url, false);
-            <!--http.setRequestHeader('Access-Control-Allow-Origin', '*');-->
-            <!--http.setRequestHeader('Content-Type', 'image/');-->
+
             http.send();
             return http.status != 403 && http.status != 404 && http.status != 410;
 

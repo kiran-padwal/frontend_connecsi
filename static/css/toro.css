@@ -2456,3 +2456,9 @@ input[type=number]
 background-color:#9370DB;
 
 }
+
+@media screen and (max-width: 1000px) {
+  #chart-follower-heading{
+    margin-top:15px;
+  }
+}

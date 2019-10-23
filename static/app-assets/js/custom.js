@@ -3437,10 +3437,39 @@ $("#proposal_campaign_name").on("change",function(){
 //        $("#total_likes").val(0);
 //        $("#total_comments").val(0);
 //    });
+//$('.create-alert').on('click', function(e){
+////        alert($(this).attr('data-channel-id'));
+//        $("#create_alert_channel_id").val($(this).attr('data-channel-id'));
+//        var channel_id_temp=$(this).attr('data-channel-id');
+//        var lengthChild=$("#alert"+channel_id_temp)["0"].children["0"].children["0"].children;
+//        lengthChild=lengthChild.length;
+//        if(lengthChild==1){
+//            $("#total_followers").val("-");
+//            $("#total_views").val("-");
+//            $("#total_likes").val("-");
+//            $("#total_comments").val("-");
+//        }
+//        else if(lengthChild==6){
+//            $("#total_followers").val($("#alert"+channel_id_temp)["0"].children["0"].children["0"].children["0"].children["0"].innerHTML);
+//            $("#total_likes").val($("#alert"+channel_id_temp)["0"].children["0"].children["0"].children["2"].children["0"].innerHTML);
+//            $("#total_comments").val($("#alert"+channel_id_temp)["0"].children["0"].children["0"].children["4"].children["0"].innerHTML);
+//        }
+//        else{
+//            console.log("alert value",$("#alert"+channel_id_temp)["0"].children["0"].children["0"].children)
+//            $("#total_followers").val($("#alert"+channel_id_temp)["0"].children["0"].children["0"].children["0"].children["0"].innerHTML);
+//            $("#total_views").val($("#alert"+channel_id_temp)["0"].children["0"].children["0"].children["2"].children["0"].innerHTML);
+//            $("#total_likes").val($("#alert"+channel_id_temp)["0"].children["0"].children["0"].children["4"].children["0"].innerHTML);
+//            $("#total_comments").val($("#alert"+channel_id_temp)["0"].children["0"].children["0"].children["6"].children["0"].innerHTML);
+//        }
+//
+//
+//    });
 $('.create-alert').on('click', function(e){
-//        alert($(this).attr('data-channel-id'));
-        $("#create_alert_channel_id").val($(this).attr('data-channel-id'));
+//      alert($(this).attr('data-channel-id'));
+
+
         var channel_id_temp=$(this).attr('data-channel-id');
+        $('#create_alert_channel_id').val(channel_id_temp);
         var lengthChild=$("#alert"+channel_id_temp)["0"].children["0"].children["0"].children;
         lengthChild=lengthChild.length;
         if(lengthChild==1){
@@ -3450,16 +3479,15 @@ $('.create-alert').on('click', function(e){
             $("#total_comments").val("-");
         }
         else if(lengthChild==6){
-            $("#total_followers").val($("#alert"+channel_id_temp)["0"].children["0"].children["0"].children["0"].children["0"].innerHTML);
-            $("#total_likes").val($("#alert"+channel_id_temp)["0"].children["0"].children["0"].children["2"].children["0"].innerHTML);
-            $("#total_comments").val($("#alert"+channel_id_temp)["0"].children["0"].children["0"].children["4"].children["0"].innerHTML);
+            $("#total_followers").val($("#alert"+channel_id_temp)["0"].children["0"].children["0"].children["0"].children[1].innerHTML);
+            $("#total_likes").val($("#alert"+channel_id_temp)["0"].children["0"].children["0"].children[2].children[1].innerHTML);
+            $("#total_comments").val($("#alert"+channel_id_temp)["0"].children["0"].children["0"].children[4].children[1].innerHTML);
         }
         else{
-            console.log("alert value",$("#alert"+channel_id_temp)["0"].children["0"].children["0"].children)
-            $("#total_followers").val($("#alert"+channel_id_temp)["0"].children["0"].children["0"].children["0"].children["0"].innerHTML);
-            $("#total_views").val($("#alert"+channel_id_temp)["0"].children["0"].children["0"].children["2"].children["0"].innerHTML);
-            $("#total_likes").val($("#alert"+channel_id_temp)["0"].children["0"].children["0"].children["4"].children["0"].innerHTML);
-            $("#total_comments").val($("#alert"+channel_id_temp)["0"].children["0"].children["0"].children["6"].children["0"].innerHTML);
+            $("#total_followers").val($("#alert"+channel_id_temp)["0"].children["0"].children["0"].children[0].children[1].innerHTML);
+            $("#total_views").val($("#alert"+channel_id_temp)["0"].children["0"].children["0"].children[2].children[1].innerHTML);
+            $("#total_likes").val($("#alert"+channel_id_temp)["0"].children["0"].children["0"].children[4].children[1].innerHTML);
+            $("#total_comments").val($("#alert"+channel_id_temp)["0"].children["0"].children["0"].children[6].children[1].innerHTML);
         }
 
 
@@ -4371,6 +4399,8 @@ $("#create_alert_form").submit(function (e) {
                         '<div class="col-xl-12 col-lg-12">' +
                         '<div class="engagement">' +
                         '<div class="rating">' +currencyIndex[value.currency]+ value.budget.toFixed(2) +
+                        '</div>' +
+                        '<div class="rating-txt">' + 'Remuneration' +
                         '</div>' +
                         '</div>' +
                         '</div>' +

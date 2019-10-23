@@ -1405,12 +1405,13 @@ def pay():
 
               return render_template('payment/thanks.html',package_buy=package_buy,expiryDateOfPackage=expiryDateOfPackage)
        except Exception as e:
-           return render_template('payment/error.html')
+           print(e)
+           return render_template('payment/error_payment.html')
     # customer_list = stripe.Customer.list()
     # print(customer_list)
     else:
 
-        return render_template('payment/error.html')
+        return render_template('payment/error_payment.html')
 
 
 
@@ -3496,21 +3497,55 @@ def createAlerts():
         print("i m in post")
         payload = request.form.to_dict()
         print(payload)
+        notifi=None
+        if (payload['alert_followers'] == ''):
+            payload['alert_followers'] = '0'
+        if (payload['alert_likes'] == ''):
+            payload['alert_likes'] = '0'
+        if (payload['alert_comments'] == ''):
+            payload['alert_comments'] = '0'
+        if (payload['alert_views'] == ''):
+            payload['alert_views'] = '0'
+        if (payload['channel_name'] == 'Twitter'):
+            notifi = "000"
+        elif(payload['channel_name'] == 'Instagram'):
+            notifi = "000"
+        else:
+            notifi = "0000"
         try:
             url = base_url + '/Brand/createInfluencerAlerts/'+str(user_id)
             response = requests.put(url=url,json=payload)
             data = response.json()
+
             if(data['response']==1):
                 check = subscriptionReduction("Alerts")
                 if (check['response'] == 1):
                     print("done subscription ALERTS")
+
+
+                url2=base_url+'Influencer/influencer_alert_milestone/'+str(user_id)+'/'+str(payload['channel_id'])
+                response2=requests.get(url=url2)
+                response2_json=response2.json()
+                print("check before if",response2_json)
+                if(response2_json['data']):
+                    print("using put for alerts")
+                    url3=base_url+'Influencer/'+str(user_id)+'/'+str(response2_json['data'][0]['iam_id'])+'/'+str(notifi)
+                    response3 = requests.put(url=url3)
+                    print("done put alert",response3.json())
+                else:
+                    print("using post for alerts")
+                    payload3={}
+
+                    payload3['notification_id']=notifi
+                    url3 = base_url + 'Influencer/influencer_alert_milestone/'+str(user_id)+'/'+str(payload['channel_id'])
+                    response3 = requests.post(url=url3,json=payload3)
+                    print("done post alert", response3.json())
             return 'Created Alerts for Favorite Influencer'
 
         except Exception as e:
             print('i m in exception')
             print(e)
             return 'Server error'
-
 
 
 # @connecsiApp.route('/createAlerts1', methods=['POST','GET'])
