@@ -2465,3 +2465,8 @@ background-color:#9370DB;
 #export-list-button:focus,#export-list-button:active {
    color:white!important;
 }
+
+.dropdown-item.noti-container:hover{
+    background-color:transparent;
+}
+

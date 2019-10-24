@@ -206,7 +206,7 @@
                                         <div class="col-3">
 
                                             <div class="quantity">
-                                                <input type="hidden" name="feature1" value="Export Lists">
+                                                <input type="hidden" name="feature2" value="Export Lists">
                                                 <input name="count2" id="count2" type="number" min="0" max="1000" step="25" value="0">
                                             </div>
                                         </div>
@@ -508,9 +508,7 @@ if(addPrice==0){
 if(total==0){
     $('#delete-option-plan').hide();
 }
-console.log("plan",addPrice,total);
 if(window.screen.width<700){
-    console.log("do it")
     $('#open-close-add-on').removeClass('fa-angle-down');
     $('#open-close-add-on').addClass('fa-angle-right');
     $('#addOn-collapse').removeClass('show');
@@ -543,14 +541,12 @@ $('#buy-button').on('click', function (e) {
             var elements = document.getElementById("addOnsForm").elements;
             var obj ={};
             for(var i = 0 ; i < elements.length ; i++){
-                console.log(elements.item(i).name,elements.item(i).value)
                 if(elements.item(i).name.includes('feature')||elements.item(i).value>0){
                     var item = elements.item(i);
                     obj[item.name] = item.value;
                 }
 
             }
-            console.log(obj);
             var size=0;
             for(var i=1;i<=9;i++){
                 if(obj['count'+i]){
@@ -572,9 +568,7 @@ $('#buy-button').on('click', function (e) {
             }
             obj['size']=size;
             obj['package_name']='Custom';
-            console.log(obj);
             $('#add-on-data')[0].value=JSON.stringify(obj);
-            console.log($('#add-on-data')[0].value)
             handler.open({
                 name: 'Connecsi',
                 description: 'Payment',
@@ -608,7 +602,6 @@ $(window).on('popstate', function () {
         $('#send-amount')[0].value=v;
     }
     function calculateVat(){
-        console.log("times");
         if($('#plan-price')[0]!=undefined){
             planPrice=$('#plan-price')[0].innerHTML;
             planPrice=parseFloat(planPrice.split(' ')[1])
@@ -644,7 +637,6 @@ $(window).on('popstate', function () {
         }
         sum=addOnPrice+planPrice;
         vatcal=(sum*18)/100;
-        console.log(vatcal);
         totalSum=vatcal+addOnPrice+planPrice;
         totalSum=totalSum.toFixed(2);
         vatcal=vatcal.toFixed(2);
@@ -673,7 +665,6 @@ $(window).on('popstate', function () {
         $(document).on('change', 'input[type="checkbox"]', function(e){
             totalPrice=$('#total-price')[0].innerHTML;
             totalPrice=parseFloat(totalPrice.split(' ')[1]);
-            console.log("change",e.target.checked);
             if(e.target.checked){
                 if(totalPrice>0){
                     $('#buy-button')[0].disabled=false;
