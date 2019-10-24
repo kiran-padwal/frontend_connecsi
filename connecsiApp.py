@@ -1061,11 +1061,11 @@ def searchInfluencers():
                 item.update({'linechart_id':linechart_id})
                # print(item)
                 linechart_id+=1
-            # try:
-            #     exportCsv(data=data)
-            # except Exception as e:
-            #     print(e)
-            #     pass
+            try:
+                exportCsv(data=data)
+            except Exception as e:
+                print(e)
+                pass
             if form_filters['channel']=='Twitter':
                 for item in data['data']:
                     item.update({'total_videos':100})
@@ -1132,11 +1132,11 @@ def searchInfluencers():
         except:
             pass
 
-        # try:
-        #     exportCsv(data=data)
-        # except Exception as e:
-        #     print(e)
-        #     pass
+        try:
+            exportCsv(data=data)
+        except Exception as e:
+            print(e)
+            pass
         print('I M HERE BEFORE GETTING TOTAL VIDEOS')
         for item in data['data']:
             total_videos_url = base_url + 'Youtube/totalVideos/' + str(item['channel_id'])
@@ -1398,7 +1398,14 @@ def pay():
               print("hello")
               notification['display_message'] = '<div onmouseout="hideReadMessage(this)" onmouseover="showReadMessage(this)" class="dropdown-item noti-container py-2 border-bottom border-bottom-blue-grey border-bottom-lighten-4"><div class="container"><div class="row"><div class="col-1" style="padding:0 5px 0 0;margin:auto;"><a href="/viewMyPayments" onclick="return clickMarkAsRead(this)"><img src="../static/images/payment_blue.svg" alt="" style="height: 25px;width: 25px;"></a></div><div class="col-9" style="padding:0;"><a href="/viewMyPayments" onclick="return clickMarkAsRead(this)"><span class="noti-wrapper" style=""><span class="noti-text" style="white-space:normal;word-wrap:break-word;line-height:2px;">You have paid <span class="text-bold-400 info">$'+(data['amount']/100)+'</span> for <span class="text-bold-400 info">'+package_buy+'</span> package.</span></span></a></div><div class="col-1" style="display:grid;text-align:center;"><div style="display:none;text-align:center;"><i class="fa fa-ellipsis-h" style="font-size:1rem;cursor:pointer;" data-toggle="tooltip" title="Remove from Notification" onclick="openDeleteOption(this)"></i><i class="fas fa-circle" style="font-size:0.5rem;cursor:pointer;" data-id="" data-toggle="tooltip" title="Mark as Read" onclick="changeMarkAsRead(this)"></i></div></div></div></div></div>'
               notification['read_unread'] = 'unread'
-              response5 = requests.post(url=url5, json=notification)
+              print(notification)
+              try:
+                response5 = requests.post(url=url5, json=notification)
+                print(response5)
+              except Exception as e:
+                  print('i m in this exception')
+                  print(e)
+
               print("hello4")
               response5_json = response5.json()
               print(response5_json)
@@ -4021,7 +4028,7 @@ def exportCsv(data):
     print('my data = ', data)
     print(os.getcwd())
     cwd = os.getcwd()
-    with open(cwd+'/static/infList.csv', mode='w') as csv_file:
+    with open(cwd+'/static/infList.csv', mode='w',encoding='utf-8') as csv_file:
     # with open(cwd+'/infList.csv', mode='w') as csv_file:
         fieldnames = ['Channel Name', 'Total Followers', 'Avg Views/video','Avg Likes/video','Avg Comments/video']
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
