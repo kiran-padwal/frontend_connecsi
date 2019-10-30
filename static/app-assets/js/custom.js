@@ -4083,6 +4083,9 @@ $("#create_alert_form").submit(function (e) {
                     var file = value.files.split(",");
                     var channel = value.channels.split(",");
                     var fix_img = 'fixed_image.png';
+                        if(!value.no_of_views){
+                            value.no_of_views=0
+                        }
                         $('#classifiedData').append('<div class="col-sm-6">' +
                             '<div class="card offers_item">' +
                             '<div class="card-header">' +
@@ -4133,7 +4136,7 @@ $("#create_alert_form").submit(function (e) {
                             '<div class="engagement">' +
                             '<div class="rating">' +currencyIndex[value.currency]+ value.budget.toFixed(2) +
                             '</div>' +
-
+                            '<div class="rating-txt">' + 'Remuneration' +
                             '</div>'+
                             '</div>' +
                             '</div>'+
@@ -4182,7 +4185,7 @@ $("#create_alert_form").submit(function (e) {
                             '<div class="offers_item__footer">' +
                             '<div class="row d-flex align-items-center mt-2">' +
                             ' <div class="col-md-6 d-flex flex-row align-items-center">' +
-                            (value.profile_pic != "" ? '<img src="/static/img/'+value.profile_pic+'" class="rounded offers_item__profile-thumb channel-image-circle d-block" alt="Card image">' : '<img src="/static/img/'+fix_img+'" class="rounded offers_item__profile-thumb channel-image-circle d-block" alt="Card image">') +
+                            (value.profile_pic != "" ? '<img src="../static/img/'+value.profile_pic+'" class="rounded offers_item__profile-thumb channel-image-circle d-block" alt="Card image">' : '<img src="../static/img/'+fix_img+'" class="rounded offers_item__profile-thumb channel-image-circle d-block" alt="Card image">') +
                             '<span>'+value.first_name + ' ' + value.last_name +'</span>'+
                             '</div>' +
                             ' <div class="col-md-6 text-right">' +
@@ -4434,6 +4437,9 @@ $("#create_alert_form").submit(function (e) {
             $.each(res.results, function (index, value) {
                     var file = value.files.split(",");
                     var fix_img ="fixed_img.png";
+                    if(!value.no_of_views){
+                        value.no_of_views=0
+                    }
                     $('#offerData').append('<div class="col-sm-6">' +
                         '<div class="card offers_item">' +
                         '<div class="card-header">' +
@@ -4482,7 +4488,7 @@ $("#create_alert_form").submit(function (e) {
 
                         '<div class="col-xl-12 col-lg-12">' +
                         '<div class="engagement">' +
-                        '<div class="rating">' +currencyIndex[value.currency]+ value.budget.toFixed(2) +
+                        '<div class="rating">' +currencyIndex[value.currency]+ " "+value.budget.toFixed(2) +
                         '</div>' +
                         '<div class="rating-txt">' + 'Remuneration' +
                         '</div>' +

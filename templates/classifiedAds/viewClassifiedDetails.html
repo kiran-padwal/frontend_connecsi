@@ -17,11 +17,15 @@
         <div class="card offers_item">
             <div class="card-header">
                 <div class="row offers_item__header">
-                    <div class="col-6"><i class="ft ft-eye"></i> visibility:</div>
+                    <div class="col-6"><i class="ft ft-eye"></i> Views:</div>
                     <div class="col-6 text-right"><i class="ft ft-calendar"></i> posted on:</div>
                 </div>
                 <div class="row offers_item__header">
-                    <div class="col-6">{{item['no_of_views']}}</div>
+                    {% if item['no_of_views']%}
+                        <div class="col-6">{{item['no_of_views']}}</div>
+                    {% else %}
+                        <div class="col-6">0</div>
+                    {% endif %}
                     <div class="col-6 text-right">{{ item['posted_date'] }}</div>
                 </div>
                 <div class="row">
@@ -30,14 +34,34 @@
                             {{ item['classified_name'] }}
 
                             {% if session['type']=='brand' %}
-                            <div class="text-right">
-                                <a href="/editClassified/{{ item['classified_id'] }}" data-toggle="tooltip"
-                                   title="Edit Classified"><img class=" mx-1 icon-small"
-                                                                src="/static/icons/edit.png"></a>
-                                <a href="/deleteClassified/{{ item['classified_id'] }}" data-toggle="tooltip"
-                                   title="Delete Classified"><img class=" mx-1 icon-small"
-                                                                  src="/static/icons/delete.png"></a>
-                            </div>
+                            <div class="all-menu text-right">
+                                        <a id="copy-option{{loop.index}}" data-toggle="tooltip"
+                                           title="Copy Classified" style="display:none;" onclick="submitNewClassifiedAdd('{{item['classified_id']}}')">
+                                            <i class="copy-classified-ads far fa-copy"></i>
+                                        </a>
+                                        {% if countClassified<=0%}
+                                            <script>
+                                                var valueClassified=Number('{{countClassified}}');
+                                                document.getElementById('addMessageSubscription').innerHTML='{{messageSubscription['Classified Ads Posting']}}';
+                                                $('#subscription-message-close').click(function(){
+                                                    document.getElementsByClassName('content-wrapper')[0].style.filter='none';
+                                                    document.getElementsByClassName('content-wrapper')[0].style.pointerEvents='';
+                                                    document.getElementsByClassName('subscription-message')[0].style.display="none";
+                                                    document.getElementById('subscription-message-close').style.display='none';
+                                                })
+                                            </script>
+                                        {% else %}
+                                            <script>
+                                                var valueClassified=Number('{{countClassified}}');
+                                            </script>
+                                        {% endif %}
+                                        <a id="edit-option{{loop.index}}" href="/editClassified/{{ item['classified_id'] }}" data-toggle="tooltip"
+                                           title="Edit Classified" style="display:none;"><i class="edit-classified-ads far fa-edit"></i></a>
+                                        <a id="delete-option{{loop.index}}" href="/deleteClassified/{{ item['classified_id'] }}" data-toggle="tooltip"
+                                           title="Delete Classified" style="display:none;"><i class="delete-classified-ads far fa-trash-alt"></i></a>
+                                        <a class="multiple-option{{loop.index}}" data-toggle="tooltip"
+                                           title="Options"><i class="multiple-classified-ads fas fa-ellipsis-v" onclick="showMultipleMenu({{loop.index}})"></i></a>
+                                </div>
                             {% endif %}
                         </div>
                     </div>
@@ -70,22 +94,22 @@
                             </div>
                             <div class="col-lg-6">
                                 <div class="engagement">
-                                    <div class="rating">
-                                        {{ item['min_lower_followers'] }} - {{ item['max_upper_followers'] }}
+                                    <div class="rating" data-min-followers="{{item['min_lower_followers']}}" data-max-followers="{{item['max_upper_followers']}}">
+
                                     </div>
                                     <div class="rating-txt">
-                                        Total Followers
+                                        Followers
                                     </div>
                                 </div>
 
                             </div>
                             <div class="col-lg-6">
                                 <div class="engagement">
-                                    <div class="rating">
-                                        {{ item['budget'] }}
+                                    <div class="rating" data-budget="{{ item['budget'] }}" data-currency="{{item['currency']}}">
+
                                     </div>
                                     <div class="rating-txt">
-                                        {{ item['currency'] }}
+                                        Remuneration
                                     </div>
                                 </div>
 
@@ -125,9 +149,9 @@
                             </div>
                             <div class="col-12">
                                 {% set arrangements = item['arrangements'].split(',') %}
-                                {% for arrangement in arrangements %}
-                                <span class="color1">{{ arrangement }}, </span>
-                                {% endfor %}
+
+                                <span class="color1">{{", ".join(arrangements)}} </span>
+
                             </div>
                             <div class="col-12">
                                 <hr>
@@ -218,7 +242,17 @@
 <script>
 $(document).ready(function(){
     <!--alert('loaded');-->
-
+    var currencyList={"EUR":"€","GBR":"£","INR":"₹","USD":"$"}
+        var rating=$('.rating')
+        for(var i=0;i<rating.length;i=i+2){
+            min=rating[i].dataset.minFollowers;
+            max=rating[i].dataset.maxFollowers;
+            budget=rating[i+1].dataset.budget;
+            currency=rating[i+1].dataset.currency;
+            console.log(min,max,budget,currency);
+            rating[i].innerText=abbrNum(min,0)+ "-" +abbrNum(max,0)
+            rating[i+1].innerText=currencyList[currency]+" "+Number(budget).toFixed(2)
+        }
 
 });
 

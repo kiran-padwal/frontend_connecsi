@@ -1700,6 +1700,7 @@ def deletedCampaigns():
 @is_logged_in
 def viewCampaigns():
     user_id=session['user_id']
+    curreny={'INR':'₹','USD':'$','GBR':'£','EUR':'€'}
     # import templates
     from templates.campaign.campaign import Campaign
     campaignObj = Campaign(user_id=user_id)
@@ -1715,6 +1716,12 @@ def viewCampaigns():
         channel_status_campaign = requests.get(url=base_url+'Campaign/channel_status_for_campaign_by_campaign_id/'+ str(campaign_id))
         print(channel_status_campaign.json())
         channel_status_campaign_json = channel_status_campaign.json()
+        print("campaign details",item1)
+        item1['from_date'] = datetime.datetime.strptime(item1['from_date'],
+                                                         '%d-%b-%y').strftime('%d %b %Y')
+        item1['to_date'] = datetime.datetime.strptime(item1['to_date'],
+                                                        '%d-%b-%y').strftime('%d %b %Y')
+        item1['budget']=curreny[item1['currency']]+" "+str("%.2f" % item1['budget'])
         try:
             item1.update({'status':channel_status_campaign_json['data'][0]['status']})
         except:
@@ -1727,15 +1734,20 @@ def viewCampaigns():
 @connecsiApp.route('/viewInfCampaigns',methods=['GET','POST'])
 @is_logged_in
 def viewInfCampaigns():
+    curreny = {'INR': '₹', 'USD': '$', 'GBR': '£', 'EUR': '€'}
     channel_id = session['user_id']
     url = base_url+'Influencer/getMyCampaigns/'+str(channel_id)
     response = requests.get(url=url)
     response_json = response.json()
     print(response_json)
-    for item in response_json['data']:
-        print(item)
+    for item1 in response_json['data']:
+        print(item1)
+        item1['from_date'] = datetime.datetime.strptime(item1['from_date'],
+                                                        '%d-%b-%y').strftime('%d %b %Y')
+        item1['to_date'] = datetime.datetime.strptime(item1['to_date'],
+                                                      '%d-%b-%y').strftime('%d %b %Y')
+        item1['budget'] = curreny[item1['currency']] + " " + str("%.2f" % item1['budget'])
     return render_template('campaign/view_all_inf_campaigns.html',view_inf_campaigns_data=response_json)
-
 
 
 
@@ -1751,6 +1763,7 @@ def getCampaigns():
 @connecsiApp.route('/viewCampaignDetails/<string:campaign_id>',methods=['GET'])
 @is_logged_in
 def viewCampaignDetails(campaign_id):
+
     user_id = session['user_id']
     from templates.campaign.campaign import Campaign
     campaignObj = Campaign(user_id=user_id,campaign_id=campaign_id)
@@ -1762,6 +1775,8 @@ def viewCampaignDetails(campaign_id):
     # print('my data',view_campaign_details_data)
     campaign_status = 'Queued'
     for item in view_campaign_details_data['data']:
+        item['to_date'] = datetime.datetime.strptime(item['to_date'], '%d-%b-%y').strftime('%d %b %Y')
+        item['from_date'] = datetime.datetime.strptime(item['from_date'], '%d-%b-%y').strftime('%d %b %Y')
         if item['campaign_status'] == 'Active':
             print(item['campaign_status'])
         elif item['campaign_status'] == 'Finished':
@@ -1775,7 +1790,7 @@ def viewCampaignDetails(campaign_id):
 
 
     for item in view_campaign_details_data['data'][0]['youtube_inf_data']:
-        print(item)
+
         proposal_id = item['proposal_id']
         proposal_channels = item['proposal_channels']
         if proposal_channels:
@@ -1792,8 +1807,8 @@ def viewCampaignDetails(campaign_id):
             print(item)
             for item1 in item['icr_data_list']:
                 print(item1)
-    return render_template('campaign/viewCampaignDetails.html',view_campaign_details_data=view_campaign_details_data,channel_status_campaign_data=channel_status_campaign_data)
 
+    return render_template('campaign/viewCampaignDetails.html',view_campaign_details_data=view_campaign_details_data,channel_status_campaign_data=channel_status_campaign_data)
 
 @connecsiApp.route('/viewInfCampaignDetails/<string:proposal_id>',methods=['GET'])
 @is_logged_in
@@ -1809,6 +1824,8 @@ def viewInfCampaignDetails(proposal_id):
     for item in view_inf_campaign_details_data['data']:
         user_id = item['user_id']
         campaign_id=item['campaign_id']
+        item['proposal_to_date'] = datetime.datetime.strptime(item['proposal_to_date'], '%d-%b-%y').strftime('%d %b %Y')
+        item['proposal_from_date'] = datetime.datetime.strptime(item['proposal_from_date'], '%d-%b-%y').strftime('%d %b %Y')
         proposal_channels= item['proposal_channels']
         channel_id_list = proposal_channels.split(',')
         for channel in channel_id_list:
@@ -4097,6 +4114,8 @@ def viewAllClassifiedAds():
     for item in all_classified_data['data']:
         if item['deleted'] != 'true':
             view_classified_data_list.append(item)
+            item['posted_date'] = datetime.datetime.strptime(item['posted_date'],
+                                                             '%Y-%m-%d').strftime('%d %b %Y')
     print(view_classified_data_list)
 
     view_profile_url = base_url + 'Brand/' + str(user_id)
@@ -4104,7 +4123,6 @@ def viewAllClassifiedAds():
     profile_data_json = response.json()
     print(profile_data_json)
     return render_template('classifiedAds/view_all_classifiedAds.html',maxClassified=maxClassified,countClassified=countClassified,messageSubscription=messageSubscription,all_classified_data=view_classified_data_list,profile_data=profile_data_json)
-
 # @connecsiApp.route('/viewClassifiedDetails/<string:classified_id>')
 # @is_logged_in
 # def viewClassifiedDetails(classified_id):
@@ -4188,6 +4206,8 @@ def viewClassifiedDetails(classified_id):
     print(classified_details)
     for item in classified_details['data']:
         print(item)
+        item['posted_date'] = datetime.datetime.strptime(item['posted_date'],
+                                                         '%Y-%m-%d').strftime('%d %b %Y')
         user_id= item['user_id']
         print(user_id)
     view_profile_url = base_url + 'Brand/' + str(user_id)
@@ -4196,33 +4216,43 @@ def viewClassifiedDetails(classified_id):
     print(profile_data_json)
     try:
         no_of_views=0
-        print("try in",classified_details['data'][0]['no_of_views'])
-        if(classified_details['data'][0]['no_of_views']==None):
-            no_of_views=1
-            classified_details['data'][0]['no_of_views']=1
-        else:
-            classified_details['data'][0]['no_of_views']=classified_details['data'][0]['no_of_views']+1
-            no_of_views=classified_details['data'][0]['no_of_views']
 
-        url3=base_url + 'Classified/NumberOfViews/'+str(classified_details['data'][0]['classified_id'])+'/'+str(user_id)+'/'+str(no_of_views)
-        response3 = requests.put(url=url3)
-        response3_json=response3.json()
-        if(response3_json['response']==1):
-            print("view count increased")
-            print("now pushing classified ad view details of influencer ")
-            payload4={}
-            payload4['inf_id']=str(session['user_id'])
-            payload4['comment_message']=''
-            payload4['no_of_views']=1
-            payload4['reaction']=''
-            payload4['notification_id']=0
-            url4=base_url + 'Classified/classified_comment_view_reaction/'+str(classified_details['data'][0]['user_id'])+'/'+str(classified_details['data'][0]['classified_id'])
-            response4=requests.post(url=url4,json=payload4)
-            print(response4.json())
-            return render_template('classifiedAds/viewClassifiedDetails.html',countClassified=countClassified,messageSubscription=messageSubscription,maxClassified=maxClassified,classified_details=classified_details,profile_data=profile_data_json)
+
+        if(session['type']=='influencer'):
+            print("try in", classified_details['data'][0]['no_of_views'])
+            if (classified_details['data'][0]['no_of_views'] == None):
+                no_of_views = 1
+                classified_details['data'][0]['no_of_views'] = 1
+            else:
+                classified_details['data'][0]['no_of_views'] = classified_details['data'][0]['no_of_views'] + 1
+                no_of_views = classified_details['data'][0]['no_of_views']
+            url3 = base_url + 'Classified/NumberOfViews/' + str(
+                classified_details['data'][0]['classified_id']) + '/' + str(user_id) + '/' + str(no_of_views)
+            response3 = requests.put(url=url3)
+            response3_json = response3.json()
+            print("type of login is")
+            if (response3_json['response'] == 1):
+                print("view count increased")
+                print("now pushing classified ad view details of influencer ")
+                payload4 = {}
+                payload4['inf_id'] = str(session['user_id'])
+                payload4['comment_message'] = ''
+                payload4['no_of_views'] = 1
+                payload4['reaction'] = ''
+                payload4['notification_id'] = 0
+                url4 = base_url + 'Classified/classified_comment_view_reaction/' + str(
+                    classified_details['data'][0]['user_id']) + '/' + str(
+                    classified_details['data'][0]['classified_id'])
+                response4 = requests.post(url=url4, json=payload4)
+                print(response4.json())
+                return render_template('classifiedAds/viewClassifiedDetails.html', countClassified=countClassified,
+                                       messageSubscription=messageSubscription, maxClassified=maxClassified,
+                                       classified_details=classified_details, profile_data=profile_data_json)
+        return render_template('classifiedAds/viewClassifiedDetails.html', countClassified=countClassified,
+                               messageSubscription=messageSubscription, maxClassified=maxClassified,
+                               classified_details=classified_details, profile_data=profile_data_json)
     except Exception as e:
         print(e)
-
 
 
 @connecsiApp.route('/addYoutubeInfToCampaignList',methods=['POST'])
@@ -4949,9 +4979,10 @@ def saveOffer():
         # exit()
         filenames = []
         for file in files:
-            filename = offer_files.save(file)
-            print(filename)
-            filenames.append(filename)
+            if (file.filename):
+                filename = offer_files.save(file)
+                print(filename)
+                filenames.append(filename)
         filenames_string = ','.join(filenames)
         payload.update({'files': filenames_string})
         print('final offer payload = ',payload)
@@ -4977,6 +5008,8 @@ def saveOffer():
     else:
         flash('Unauthorized', 'danger')
 
+
+
 @connecsiApp.route('/viewAllOffers', methods=['GET', 'POST'])
 @is_logged_in
 def viewAllOffers():
@@ -4987,6 +5020,8 @@ def viewAllOffers():
     print('all off data = ',all_offer_data)
     view_offer_data_list = []
     for item in all_offer_data['data']:
+        item['posted_date'] = datetime.datetime.strptime(item['posted_date'],
+                                                         '%Y-%m-%d').strftime('%d %b %Y')
         if item['deleted'] != 'true':
             view_offer_data_list.append(item)
     print('list = ',view_offer_data_list)
@@ -5065,6 +5100,7 @@ def viewAllOffers():
 @connecsiApp.route('/viewOfferDetails/<string:offer_id>')
 @is_logged_in
 def viewOfferDetails(offer_id):
+    print("type ji", session['type'])
     user_id = session['user_id']
     subscriptionValue = getSubscriptionValues(str(session["user_id"]))
     custom_offers_reply_count = 0
@@ -5100,34 +5136,42 @@ def viewOfferDetails(offer_id):
     print("bro",profile_data_json)
     try:
         no_of_views=0
-        print("try in",offer_details['data'][0]['no_of_views'])
-        if(offer_details['data'][0]['no_of_views']==None):
-            no_of_views=1
-            offer_details['data'][0]['no_of_views']=1
-        else:
-            offer_details['data'][0]['no_of_views']=offer_details['data'][0]['no_of_views']+1
-            no_of_views=offer_details['data'][0]['no_of_views']
 
-        url3=base_url + 'Offer/NumberOfViews/'+str(offer_details['data'][0]['offer_id'])+'/'+str(user_id)+'/'+str(no_of_views)
-        response3 = requests.put(url=url3)
-        response3_json=response3.json()
-        if(response3_json['response']==1):
-            print("view count increased")
+        offer_details['data'][0]['posted_date']=datetime.datetime.strptime(offer_details['data'][0]['posted_date'],'%Y-%m-%d').strftime('%d %b %Y')
+        if(session['type']=='brand'):
+            print("try in", offer_details['data'][0]['no_of_views'])
+            if (offer_details['data'][0]['no_of_views'] == None):
+                no_of_views = 1
+                offer_details['data'][0]['no_of_views'] = 1
+            else:
+                offer_details['data'][0]['no_of_views'] = offer_details['data'][0]['no_of_views'] + 1
+                no_of_views = offer_details['data'][0]['no_of_views']
+            url3 = base_url + 'Offer/NumberOfViews/' + str(offer_details['data'][0]['offer_id']) + '/' + str(
+                user_id) + '/' + str(no_of_views)
+            response3 = requests.put(url=url3)
+            response3_json = response3.json()
+            if (response3_json['response'] == 1):
+                print("view count increased")
 
-            payload4 = {}
-            payload4['user_id'] = str(offer_details['data'][0]['channel_id'])
-            payload4['comment_message'] = ''
-            payload4['no_of_views'] = 1
-            payload4['reaction'] = ''
-            payload4['notification_id'] = 0
-            url4 = base_url + 'Offer/offer_comment_view_reaction/' + str(
-                offer_details['data'][0]['channel_id']) + '/' + str(offer_details['data'][0]['offer_id'])
-            response4 = requests.post(url=url4, json=payload4)
-            print(response4.json())
-            return render_template('offers/viewOfferDetails.html', maxCustom=maxCustom,
-                                   custom_offers_reply_count=custom_offers_reply_count,
-                                   messageSubscription=messageSubscription, offer_details=offer_details,
-                                   profile_data=profile_data_json)
+                payload4 = {}
+                payload4['user_id'] = str(offer_details['data'][0]['channel_id'])
+                payload4['comment_message'] = ''
+                payload4['no_of_views'] = 1
+                payload4['reaction'] = ''
+                payload4['notification_id'] = 0
+                url4 = base_url + 'Offer/offer_comment_view_reaction/' + str(
+                    offer_details['data'][0]['channel_id']) + '/' + str(offer_details['data'][0]['offer_id'])
+                response4 = requests.post(url=url4, json=payload4)
+                print(response4.json())
+                return render_template('offers/viewOfferDetails.html', maxCustom=maxCustom,
+                                       custom_offers_reply_count=custom_offers_reply_count,
+                                       messageSubscription=messageSubscription, offer_details=offer_details,
+                                       profile_data=profile_data_json)
+
+        return render_template('offers/viewOfferDetails.html', maxCustom=maxCustom,
+                               custom_offers_reply_count=custom_offers_reply_count,
+                               messageSubscription=messageSubscription, offer_details=offer_details,
+                               profile_data=profile_data_json)
     except Exception as e:
         print(e)
 
@@ -5432,6 +5476,8 @@ def getOffers():
             print("differ",datetime.datetime.now(),nethih,differ.days)
             if (differ.days <= 30):
                 results.append(item)
+                print("values date", item)
+                item['posted_date'] = datetime.datetime.strptime(item['posted_date'],'%Y-%m-%d').strftime('%d %b %Y')
         print(results)
         return jsonify(results=results)
 

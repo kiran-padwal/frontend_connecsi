@@ -13,27 +13,39 @@
         <div class="card offers_item">
             <div class="card-header">
                 <div class="row offers_item__header">
-                    <div class="col-6"><i class="ft ft-eye"></i></div>
+                    <div class="col-6"><i class="ft ft-eye"></i>
+                        Views
+                    </div>
                     <div class="col-6 text-right"><i class="ft ft-calendar"></i> posted on:</div>
                 </div>
                 <div class="row offers_item__header">
-                    <div class="col-6">{{item['no_of_views']}}</div>
+                    {% if item['no_of_views']==None %}
+                        <div class="col-6">0</div>
+                    {% else %}
+                        <div class="col-6"> {{item['no_of_views']}}</div>
+                    {% endif %}
                     <div class="col-6 text-right">{{ item['posted_date'] }}</div>
                 </div>
                 <div class="row">
                     <div class="col-12">
                         <div class="offers_item__title">
-                            {{ item['offer_name'] }}
-
                             {% if session['type']=='influencer' %}
-                            <div class="text-right">
-                                <a href="/editOffer/{{ item['offer_id'] }}" data-toggle="tooltip"
-                                   title="Edit Offer"><img class=" mx-1 icon-small"
-                                                           src="/static/icons/edit.png"></a>
-                                <a href="/deleteOffer/{{ item['offer_id'] }}" data-toggle="tooltip"
-                                   title="Delete Offer"><img class=" mx-1 icon-small"
-                                                             src="/static/icons/delete.png"></a>
-                            </div>
+                            <p style="margin:0;">{{ item['offer_name'] }}&nbsp&nbsp<i data-toggle="tooltip" data-original-title="Active" id="classified-status-button{{loop.index}}" class="fas fa-circle" style="font-size: 0.7rem;color: lightgreen;border-radius: 50%;cursor:pointer;"></i></p>
+                            <div class="all-menu text-right">
+                                        <a id="copy-option{{loop.index}}" data-toggle="tooltip"
+                                           title="Copy Offer" style="display:none;">
+                                            <i class="copy-classified-ads far fa-copy"></i>
+                                        </a>
+                                        <a id="edit-option{{loop.index}}" href="/editOffer/{{ item['offer_id'] }}" data-toggle="tooltip"
+                                           title="Edit Offer" style="display:none;"><i class="edit-classified-ads far fa-edit"></i></a>
+                                        <a id="delete-option{{loop.index}}" href="/deleteOffer/{{ item['offer_id'] }}" data-toggle="tooltip"
+                                           title="Delete Offer" style="display:none;"><i class="delete-classified-ads far fa-trash-alt"></i></a>
+                                        <a class="multiple-option{{loop.index}}" data-toggle="tooltip"
+                                           title="Options"><i class="multiple-classified-ads fas fa-ellipsis-v" onclick="showMultipleMenu({{loop.index}})"></i></a>
+                                </div>
+                            {% else %}
+                            <p style="margin:0;">{{ item['offer_name'] }}&nbsp&nbsp<i data-toggle="tooltip" data-original-title="Active" id="classified-status-button{{loop.index}}" class="fas fa-circle" style="font-size: 0.7rem;color: lightgreen;border-radius: 50%;cursor:pointer;"></i></p>
+
                             {% endif %}
                         </div>
                     </div>
@@ -121,9 +133,7 @@
                             </div>
                             <div class="col-12">
                                 {% set arrangements = item['arrangements'].split(',') %}
-                                {% for arrangement in arrangements %}
-                                <span class="color1">{{ arrangement }}, </span>
-                                {% endfor %}
+                                <span class="color1">{{ ", ".join(arrangements) }} </span>
                             </div>
 
                             <div class="col-md-12">
@@ -149,9 +159,9 @@
                                 {% for item in profile_data['data'] %}
                                 {% if item['channel_img'] %}
                                 <img src="{{ item['channel_img'] }}"
-                                     class="rounded offers_item__profile-thumb" alt="Card image">
+                                     class="rounded offers_item__profile-thumb channel-image-circle" alt="Card image">
                                 {% else %}
-                                <img src="/static/img/fixed_image.png" class="rounded offers_item__profile-thumb"
+                                <img src="/static/img/fixed_image.png" class="rounded offers_item__profile-thumb channel-image-circle"
                                      alt="Card image">
                                 {% endif %}
                                 {{ item['first_name'] }} {{ item['last_name'] }}
@@ -265,8 +275,17 @@
     </div>
 </div>
 <script>
-
         $(document).ready(function(){
+            var items=document.getElementsByClassName('classified-status-button');
+            {% for item in all_classified_data %}
+                var postedOn=new Date('{{item['posted_date']}}').getTime();
+                var todayDate=new Date();
+                var timeDate=todayDate.setDate(todayDate.getDate() - 30);
+                if(postedOn<timeDate){
+                    $('#classified-status-button'+{{loop.index}})[0].style.color='red';
+                    $('#classified-status-button'+{{loop.index}})[0].dataset.originalTitle="Expired";
+                }
+            {% endfor%}
             var max_followers=$('#min-max-followers')[0].dataset.maxFollowers
             var min_followers=$('#min-max-followers')[0].dataset.minFollowers
             var budget=$('#budget-currency')[0].dataset.budget

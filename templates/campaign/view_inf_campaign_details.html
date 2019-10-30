@@ -51,7 +51,7 @@
                         <div class="col-sm-6">
                             <div class="row">
                                 <div class="mb-1 col-xl-6">
-                                    <span class="font-small-3">Period:</span><span class="font-small-3 no-wrap">{{ item['proposal_from_date'] }} - {{ item['proposal_to_date'] }}</span>
+                                    <span class="font-small-3">Period:</span><span class="font-small-3 no-wrap">{{ item['proposal_from_date'] }} to {{ item['proposal_to_date'] }}</span>
                                 </div>
                                 <div class="mb-1 col-xl-6">
                                     <span class="font-small-3 channels-fix">Channels:
@@ -79,7 +79,7 @@
                             <div class="row">
                                 <div class="mb-1 col-xl-6 col-sm-12 txt-center">
                                     <div class="engagement padding-top-8 padding-bottom-xs">
-                                        <div class="rating">{{ item['proposal_price'] }} {{ item['currency'] }}</div>
+                                        <div class="rating" data-budget="{{ item['proposal_price'] }}" data-currency="{{ item['currency'] }}"> </div>
                                         <div class="rating-txt">Remuneration</div>
                                     </div>
                                 </div>
@@ -582,6 +582,11 @@
     });
 
     $(document).ready(function(){
+        var currencyList={"EUR":"€","GBR":"£","INR":"₹","USD":"$"}
+        var rating=$('.rating')
+        budget=rating[0].dataset.budget;
+        currency=rating[0].dataset.currency;
+        rating[0].innerText=currencyList[currency]+" "+Number(budget).toFixed(2)
 
         $("#send_message_form").submit(function(e) {
             var form = $(this);

@@ -14,11 +14,15 @@
             <div class="card offers_item">
                 <div class="card-header">
                     <div class="row offers_item__header">
-                        <div class="col-6"><i class="ft ft-eye"></i></div>
+                        <div class="col-6"><i class="ft ft-eye"></i> Views</div>
                         <div class="col-6 text-right"><i class="ft ft-calendar"></i> posted on:</div>
                     </div>
                     <div class="row offers_item__header">
-                        <div class="col-6"> {{item['no_of_views']}}</div>
+                        {% if item['no_of_views']==None %}
+                            <div class="col-6">0</div>
+                        {% else %}
+                            <div class="col-6"> {{item['no_of_views']}}</div>
+                        {% endif %}
                         <div class="col-6 text-right">{{item['posted_date']}}</div>
                     </div>
                     <div class="row">
@@ -77,8 +81,8 @@
                                 </div>
                                 <div class="col-12">
                                     <div class="engagement">
-                                        <div class="rating">
-                                            {{item['min_lower_followers']}} - {{item['max_upper_followers']}}
+                                        <div class="rating" data-min-followers="{{item['min_lower_followers']}}" data-max-followers="{{item['max_upper_followers']}}">
+
                                         </div>
                                         <div class="rating-txt">
                                             Followers
@@ -87,11 +91,11 @@
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="engagement">
-                                        <div class="rating">
-                                            {{ item['budget'] }}
+                                        <div class="rating" data-budget="{{ item['budget'] }}" data-currency="{{item['currency']}}">
+
                                         </div>
                                         <div class="rating-txt">
-                                            {{item['currency']}}
+                                            Remuneration
                                         </div>
                                     </div>
                                 </div>
@@ -127,9 +131,7 @@
                                 <div class="col-12">
                                     <div class="arrangements">
                                         {% set arrangements = item['arrangements'].split(',') %}
-                                        {% for arrangement in arrangements %}
-                                        <span class="color1">{{ arrangement }}, </span>
-                                        {% endfor %}
+                                        <span class="color1">{{ ", ".join(arrangements) }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -157,10 +159,10 @@
                         <div class="row d-flex align-items-center mt-2">
                             <div class="col-md-6 d-flex flex-row align-items-center">
                                 {% if profile_data['data']['profile_pic'] %}
-                                <img src="/static/img/{{ profile_data['data']['profile_pic'] }}"
+                                <img src="../static/img/{{ profile_data['data']['profile_pic'] }}"
                                      class="rounded offers_item__profile-thumb channel-image-circle">
                                 {% else %}
-                                <img src="/static/img/fixed_image.png" class="rounded offers_item__profile-thumb channel-image-circle">
+                                <img src="../static/img/fixed_image.png" class="rounded offers_item__profile-thumb channel-image-circle">
                                 {% endif %}
                                 <span>{{ profile_data['data']['first_name'] }} {{ profile_data['data']['last_name'] }}</span>
                             </div>
@@ -188,6 +190,17 @@
                 $('#classified-status-button'+{{loop.index}})[0].dataset.originalTitle="Expired";
             }
         {% endfor%}
+        var currencyList={"EUR":"€","GBR":"£","INR":"₹","USD":"$"}
+        var rating=$('.rating')
+        for(var i=0;i<rating.length;i=i+2){
+            min=rating[i].dataset.minFollowers;
+            max=rating[i].dataset.maxFollowers;
+            budget=rating[i+1].dataset.budget;
+            currency=rating[i+1].dataset.currency;
+            console.log(min,max,budget,currency);
+            rating[i].innerText=abbrNum(min,0)+ "-" +abbrNum(max,0)
+            rating[i+1].innerText=currencyList[currency]+" "+Number(budget).toFixed(2)
+        }
     })
 </script>
 {% endblock %}

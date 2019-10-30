@@ -27,7 +27,31 @@
                 <div class="card-block campaign-item padding-top-normal">
                     <div class="row">
                         <div class="col-12">
-                            <h5 class="no-padding-bottom no-margin-bottom">{{ item['campaign_name'] }} <span class="campaign_status {{ item['campaign_status'] }}" data-toggle="tooltip" title="{{ item['campaign_status'] }}"></span></h5>
+                            <h5 class="no-padding-bottom no-margin-bottom">{{ item['campaign_name'] }} <span class="campaign_status {{ item['campaign_status'] }}" data-toggle="tooltip" title="{{ item['campaign_status'] }}"></span>
+                            {% if item['status'] == 'Proposal Sent' %}
+                            <!--{{ item['status'] }}-->
+
+                            {% elif item['status'] == 'Current Partner' %}
+                            <!--{{ item['status'] }}-->
+                            {% elif item['campaign_status'] == 'Active' %}
+
+                            {% else %}
+
+
+                            <div class="all-menu text-right" style="float:right;margin-top:-5px;">
+                                    <a id="copy-option{{loop.index}}" data-toggle="tooltip"
+                                       title="Copy Classified" style="display:none;" onclick="submitNewClassifiedAdd('{{item['classified_id']}}')">
+                                        <i class="copy-classified-ads far fa-copy"></i>
+                                    </a>
+                                    <a id="edit-option{{loop.index}}" href="/editCampaign/{{ item['campaign_id'] }}" data-toggle="tooltip"
+                                       title="Edit Campaign" style="display:none;"><i class="edit-classified-ads far fa-edit"></i></a>
+                                    <a id="delete-option{{loop.index}}" href="/deleteCampaign/{{ item['campaign_id'] }}" data-toggle="tooltip"
+                                       title="Delete Campaign" style="display:none;"><i class="delete-classified-ads far fa-trash-alt"></i></a>
+                                    <a class="multiple-option{{loop.index}}" data-toggle="tooltip"
+                                       title="Options"><i class="multiple-classified-ads fas fa-ellipsis-v" onclick="showMultipleMenu({{loop.index}})"></i></a>
+                            </div>
+                            </h5>
+                            {% endif %}
                             <hr class="divide">
                         </div>
                         {% set _ = glob.update({'campaign_id':item['campaign_id']}) %}
@@ -36,7 +60,7 @@
                         <div class="col-sm-6">
                             <div class="row">
                                 <div class="mb-1 col-xl-6">
-                                    <span class="font-small-3">Period:</span><span class="font-small-3 no-wrap">{{ item['from_date'] }} - {{ item['to_date'] }}</span>
+                                    <span class="font-small-3">Period:</span><span class="font-small-3 no-wrap">{{ item['from_date'] }} to {{ item['to_date'] }}</span>
                                 </div>
                                 <div class="mb-1 col-xl-6">
                                     <span class="font-small-3 channels-fix">Channels:
@@ -61,7 +85,7 @@
                             <div class="row">
                                 <div class="mb-1 col-xl-6 col-sm-12 txt-center">
                                     <div class="engagement padding-top-8 padding-bottom-xs">
-                                        <div class="rating">{{ item['budget'] }} {{ item['currency'] }}</div>
+                                        <div class="rating" data-budget="{{ item['budget'] }}" data-currency="{{ item['currency'] }}"> </div>
                                         <div class="rating-txt">Budget</div>
                                     </div>
                                 </div>
@@ -445,7 +469,11 @@
 <script>
     $(document).ready(function () {
     getBrandReport('{{ view_campaign_details_data['data'][0]['campaign_id'] }}');
-
+    var currencyList={"EUR":"€","GBR":"£","INR":"₹","USD":"$"}
+    var rating=$('.rating')
+    budget=rating[0].dataset.budget;
+    currency=rating[0].dataset.currency;
+    rating[0].innerText=currencyList[currency]+" "+Number(budget).toFixed(2)
 
 
     $("#send_message_form").submit(function (e) {

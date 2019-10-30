@@ -32,19 +32,7 @@
                 <tr>
                     <td>
                         <a href="/viewInfCampaignDetails/{{ item['proposal_id'] }}">{{ item['campaign_name'] }}</a>
-                        {% if item['status'] == 'Proposal Sent' %}
-                        <!--{{ item['status'] }}-->
-
-                        {% elif item['status'] == 'Current Partner' %}
-                        <!--{{ item['status'] }}-->
-
-                        {% else %}
-                        <!--<a href="/editCampaign/{{ item['campaign_id'] }}"><img src="/static/icons/edit.png" height="14px" width="13px"></a>-->
-                        <!--<a href="/deleteCampaign/{{ item['campaign_id'] }}"><img src="/static/icons/delete.png" height="14px" width="13px"></a>-->
-                        {% endif %}
-
                     </td>
-
                     <td>
                         <span class="{{ item['campaign_status'] }}" data-toggle="tooltip" title="{{ item['campaign_status'] }}"></span>
                         <!--{{ item['campaign_status'] }}-->

@@ -22,6 +22,7 @@
                 <thead style="text-align:center">
                 <tr>
                     <th scope="col"><b style="font-weight: 500; font-size:16px;">Campaign</b></th>
+                    <th scope="col"></th>
                     <th scope="col"><b style="font-weight: 500; font-size:16px;">Status</b></th>
                     <th scope="col"><b style="font-weight: 500; font-size:16px;">Start</b></th>
                     <th scope="col"><b style="font-weight: 500; font-size:16px;">End</b></th>
@@ -32,11 +33,13 @@
                     <th scope="col"><b style="font-weight: 500; font-size:16px;">ROI</b></th>
                 </tr>
                 </thead>
-                <tbody style="text-align:center">
+                <tbody style="text-align:center;font-size:0.9rem!important;">
                 {% for item in view_campaign_data %}
                 <tr>
                     <td>
                         <a href="/viewCampaignDetails/{{ item['campaign_id'] }}" class="color1">{{ item['campaign_name']|truncate(32, False, '...', 0) }}</a>
+                    </td>
+                    <td style="padding:0.75rem 0;">
                         {% if item['status'] == 'Proposal Sent' %}
                         <!--{{ item['status'] }}-->
 
@@ -45,12 +48,32 @@
                         {% elif item['campaign_status'] == 'Active' %}
 
                         {% else %}
-                        <div class="clear">
-                        <a href="/editCampaign/{{ item['campaign_id'] }}"><img src="/static/icons/edit.png" height="24px" width="24px"></a>
-                        <a href="/deleteCampaign/{{ item['campaign_id'] }}"><img src="/static/icons/delete.png" height="24px" width="24px"></a>
+                        <a class="multiple-option{{loop.index}}" id="dropdownMenuButton-{{loop.index}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                           title="Options"><i class="multiple-classified-ads fas fa-ellipsis-v"></i></a>
+<!--                        <a href="/editCampaign/{{ item['campaign_id'] }}"><img src="/static/icons/edit.png" height="24px" width="24px"></a>-->
+<!--                        <a href="/deleteCampaign/{{ item['campaign_id'] }}"><img src="/static/icons/delete.png" height="24px" width="24px"></a>-->
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton-{{loop.index}}">
+                            <a class="dropdown-item" id="copy-option{{loop.index}}" style="padding:0.5rem 1rem;">
+                                <i class="copy-classified-ads far fa-copy" style="top:0px;"></i>
+                                <div style="display:inline;float:right;margin-left:10px;">
+                                    Copy Campaign
+                                </div>
+                            </a>
+
+                            <a class="dropdown-item" id="edit-option{{loop.index}}" href="/editCampaign/{{ item['campaign_id'] }}" style="padding:0.5rem 1rem;">
+                                <i class="edit-classified-ads far fa-edit" style="top:0px;"></i>
+                                <div style="display:inline;float:right;margin-left:10px;">
+                                    Edit Campaign
+                                </div>
+                            </a>
+                            <a class="dropdown-item" id="delete-option{{loop.index}}" href="/deleteCampaign/{{ item['campaign_id'] }}" style="padding:0.5rem 1rem;">
+                               <i class="delete-classified-ads far fa-trash-alt" style="top:0px;"></i>
+                                <div style="display:inline;float:right;margin-left:10px;">
+                                    Delete Campaign
+                                </div>
+                            </a>
                         </div>
                         {% endif %}
-
                     </td>
 
                     <td>
@@ -83,7 +106,7 @@
                             <!--<button class="btn btn-sm btn-outline-secondary fa fa-user-plus"></button>-->
                         </span>
                     </td>
-                    <td class="no-wrap">{{ item['budget'] }} {{ item['currency'] }}</td>
+                    <td class="no-wrap">{{ item['budget'] }}</td>
                     <td>Coming Soon</td>
                 </tr>
                 {% endfor %}
