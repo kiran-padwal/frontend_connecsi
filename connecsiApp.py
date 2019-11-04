@@ -1139,7 +1139,7 @@ def searchInfluencers():
             print(e)
             pass
         print('I M HERE BEFORE GETTING TOTAL VIDEOS')
-        print(data)
+        # print(data)
         for item in data['data']:
             total_videos_url = base_url + 'Youtube/totalVideos/' + str(item['channel_id'])
             try:
