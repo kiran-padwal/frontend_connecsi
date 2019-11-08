@@ -3935,108 +3935,289 @@ $("#create_alert_form").submit(function (e) {
 
     // range slider starts
     $('.sliderUI').each(function () {
-        var $this = $(this);
+        console.log()
+        if($(this)[0].dataset.price=="false"){
+            var $this = $(this);
         var $lv = $this.closest('.sliderContainer').find('.lower-value');
         var $uv = $this.closest('.sliderContainer').find('.upper-value');
         if ($lv.length > 0 && $uv.length > 0) {
-            var keypressSlider = document.getElementById($this.attr('id'));
-            var input0 = document.getElementById($lv.attr('id'));
-            var input1 = document.getElementById($uv.attr('id'));
-            var inputs = [input0, input1];
-            noUiSlider.create(keypressSlider, {
-                start: [parseInt(input0.value), parseInt(input1.value)],
-                step: 10000,
-                connect: true,
-                //tooltips: [true, wNumb({ decimals: 1 })],
-                range: {
-                    'min': parseInt(input0.getAttribute('data-range')),
-                    'max': parseInt(input1.getAttribute('data-range'))
-                },
-                format: {
-                    from: function (value) {
-                        return parseInt(value);
+                var keypressSlider = document.getElementById($this.attr('id'));
+                var input0 = document.getElementById($lv.attr('id'));
+                var input1 = document.getElementById($uv.attr('id'));
+                var inputs = [input0, input1];
+                noUiSlider.create(keypressSlider, {
+                    start: [0, 1100000],
+                    step: 10000,
+                    connect: true,
+                    tooltips: true,
+                    range: {
+                        'min': [0],
+                        '5.2%':  [1000,1000],
+                        '32.2%': [10000,5000],
+                        '47.2%': [40000,10000],
+                        '64.080%': [100000,50000],
+                        '75.45%': [300000,100000],
+                        '95.0175%': [1000000,0],
+                        'max': [1100000]
                     },
-                    to: function (value) {
-                        return parseInt(value);
+                    format: {
+                        from: Number,
+                        to: function(value) {
+                            if(value=="0"){
+                                return ("No minimum")
+                            }
+                            if(value=="1100000"){
+                                return ("No maximum")
+                            }
+                            value=abbrNum(parseInt(value),0)
+                            return (value);
+                        }
                     }
+                });
+
+                keypressSlider.noUiSlider.on('update', function (values, handle) {
+                    if(values[handle].split(" ")[1]=="minimum"){
+                        inputs[handle].value = 0;           // setting minimum value as 0
+                    }
+                    else if(values[handle].split(" ")[1]=="maximum"){
+                        inputs[handle].value = 300000000;   // setting maxmimum value as 30000000
+                    }
+                    else{
+                        inputs[handle].value = values[handle].split(" ")[0]*1000;
+                    }
+                });
+
+                function setSliderHandle(i, value) {
+                    var r = [null, null];
+                    r[i] = value;
+                    keypressSlider.noUiSlider.set(r);
+
                 }
-            });
 
-            keypressSlider.noUiSlider.on('update', function (values, handle) {
-                inputs[handle].value = values[handle];
-            });
+                inputs.forEach(function (input, handle) {
 
-            function setSliderHandle(i, value) {
-                var r = [null, null];
-                r[i] = value;
-                keypressSlider.noUiSlider.set(r);
+                    input.addEventListener('change', function () {
+                        setSliderHandle(handle, this.value);
 
-            }
+                    });
 
-            inputs.forEach(function (input, handle) {
+                    input.addEventListener('keydown', function (e) {
 
-                input.addEventListener('change', function () {
-                    setSliderHandle(handle, this.value);
+                        var values = keypressSlider.noUiSlider.get();
+                        var value = Number(values[handle]);
 
+                        // [[handle0_down, handle0_up], [handle1_down, handle1_up]]
+                        var steps = keypressSlider.noUiSlider.steps();
+
+                        // [down, up]
+                        var step = steps[handle];
+
+                        var position;
+
+                        // 13 is enter,
+                        // 38 is key up,
+                        // 40 is key down.
+                        switch (e.which) {
+
+
+                            case 13:
+                                setSliderHandle(handle, this.value);
+                                break;
+
+                            case 38:
+
+                                // Get step to go increase slider value (up)
+                                position = step[1];
+
+                                // false = no step is set
+                                if (position === false) {
+                                    position = 1;
+                                }
+
+                                // null = edge of slider
+                                if (position !== null) {
+                                    setSliderHandle(handle, value + position);
+                                }
+
+                                break;
+
+                            case 40:
+
+                                position = step[0];
+
+                                if (position === false) {
+                                    position = 1;
+                                }
+
+                                if (position !== null) {
+                                    setSliderHandle(handle, value - position);
+                                }
+
+                                break;
+                        }
+                    });
                 });
+                var hands=$('.noUi-handle');
+                for (var i=0;i<hands.length;i++){
+                    hands[i].style.cursor="all-scroll";
+                }
 
-                input.addEventListener('keydown', function (e) {
+                var tips=$('.noUi-tooltip')
+                for (var i=0;i<tips.length;i=i+2){
+                    tips[i].style.bottom="210%";
+                    tips[i].style.fontSize="0.8rem";
+                    tips[i].style.backgroundColor="whitesmoke";
+                }
+                for (var i=1;i<tips.length;i=i+2){
+                    tips[i].style.bottom="-48px";
+                    tips[i].style.fontSize="0.8rem";
+                    tips[i].style.backgroundColor="whitesmoke";
+                }
+                }
 
-                    var values = keypressSlider.noUiSlider.get();
-                    var value = Number(values[handle]);
-
-                    // [[handle0_down, handle0_up], [handle1_down, handle1_up]]
-                    var steps = keypressSlider.noUiSlider.steps();
-
-                    // [down, up]
-                    var step = steps[handle];
-
-                    var position;
-
-                    // 13 is enter,
-                    // 38 is key up,
-                    // 40 is key down.
-                    switch (e.which) {
-
-                        case 13:
-                            setSliderHandle(handle, this.value);
-                            break;
-
-                        case 38:
-
-                            // Get step to go increase slider value (up)
-                            position = step[1];
-
-                            // false = no step is set
-                            if (position === false) {
-                                position = 1;
+        }
+        else{
+            var $this = $(this);
+        var $lv = $this.closest('.sliderContainer').find('.lower-value');
+        var $uv = $this.closest('.sliderContainer').find('.upper-value');
+        if ($lv.length > 0 && $uv.length > 0) {
+                var keypressSlider = document.getElementById($this.attr('id'));
+                var input0 = document.getElementById($lv.attr('id'));
+                var input1 = document.getElementById($uv.attr('id'));
+                var inputs = [input0, input1];
+                noUiSlider.create(keypressSlider, {
+                    start: [0, 10001],
+                    step: 10000,
+                    connect: true,
+                    tooltips: true,
+                    range: {
+                        'min': [0],
+                        '4%':  [100,100],
+                        '44%': [1000,500],
+                        '80%': [5000,1000],
+                        '95%': [10000,0],
+                        'max': [10001]
+                    },
+                    format: {
+                        from: Number,
+                        to: function(value) {
+                            var c=$('#currency')[0].value;
+                            if(value=="0"){
+                                return ("No minimum")
                             }
-
-                            // null = edge of slider
-                            if (position !== null) {
-                                setSliderHandle(handle, value + position);
+                            if(value=="10001"){
+                                return ("No maximum")
                             }
-
-                            break;
-
-                        case 40:
-
-                            position = step[0];
-
-                            if (position === false) {
-                                position = 1;
-                            }
-
-                            if (position !== null) {
-                                setSliderHandle(handle, value - position);
-                            }
-
-                            break;
+                            value=parseInt(value)
+                            return (currencyIndex[c]+" "+value);
+                        }
                     }
                 });
-            });
+
+                keypressSlider.noUiSlider.on('update', function (values, handle) {
+                    if(values[handle].split(" ")[1]=="minimum"){
+                        inputs[handle].value = 0;
+                    }
+                    else if(values[handle].split(" ")[1]=="maximum"){
+                        inputs[handle].value = 300000;
+                    }
+                    else{
+                        inputs[handle].value = values[handle].split(" ")[1];
+                    }
+                });
+
+                function setSliderHandle(i, value) {
+                    var r = [null, null];
+                    r[i] = value;
+                    keypressSlider.noUiSlider.set(r);
+
+                }
+
+                inputs.forEach(function (input, handle) {
+
+                    input.addEventListener('change', function () {
+                        setSliderHandle(handle, this.value);
+
+                    });
+
+                    input.addEventListener('keydown', function (e) {
+
+                        var values = keypressSlider.noUiSlider.get();
+                        var value = Number(values[handle]);
+
+                        // [[handle0_down, handle0_up], [handle1_down, handle1_up]]
+                        var steps = keypressSlider.noUiSlider.steps();
+
+                        // [down, up]
+                        var step = steps[handle];
+
+                        var position;
+
+                        // 13 is enter,
+                        // 38 is key up,
+                        // 40 is key down.
+                        switch (e.which) {
+
+
+                            case 13:
+                                setSliderHandle(handle, this.value);
+                                break;
+
+                            case 38:
+
+                                // Get step to go increase slider value (up)
+                                position = step[1];
+
+                                // false = no step is set
+                                if (position === false) {
+                                    position = 1;
+                                }
+
+                                // null = edge of slider
+                                if (position !== null) {
+                                    setSliderHandle(handle, value + position);
+                                }
+
+                                break;
+
+                            case 40:
+
+                                position = step[0];
+
+                                if (position === false) {
+                                    position = 1;
+                                }
+
+                                if (position !== null) {
+                                    setSliderHandle(handle, value - position);
+                                }
+
+                                break;
+                        }
+                    });
+                });
+                var hands=$('.noUi-handle');
+                for (var i=0;i<hands.length;i++){
+                    hands[i].style.cursor="all-scroll";
+                }
+
+                var tips=$('.noUi-tooltip')
+                for (var i=0;i<tips.length;i=i+2){
+                    tips[i].style.bottom="210%";
+                    tips[i].style.fontSize="0.8rem";
+                    tips[i].style.backgroundColor="whitesmoke";
+                }
+                for (var i=1;i<tips.length;i=i+2){
+                    tips[i].style.bottom="-48px";
+                    tips[i].style.fontSize="0.8rem";
+                    tips[i].style.backgroundColor="whitesmoke";
+                }
+
+        }
+
         }
     });
+
 
     $('.tabs').on('click', '.tab', function (e) {
         e.preventDefault();
