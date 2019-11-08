@@ -3946,7 +3946,7 @@ $("#create_alert_form").submit(function (e) {
                 var input1 = document.getElementById($uv.attr('id'));
                 var inputs = [input0, input1];
                 noUiSlider.create(keypressSlider, {
-                    start: [0, 1100000],
+                    start: [parseInt(input0.value), parseInt(input1.value)],
                     step: 10000,
                     connect: true,
                     tooltips: true,
@@ -4086,7 +4086,7 @@ $("#create_alert_form").submit(function (e) {
                 var input1 = document.getElementById($uv.attr('id'));
                 var inputs = [input0, input1];
                 noUiSlider.create(keypressSlider, {
-                    start: [0, 10001],
+                    start: [parseInt(input0.value), parseInt(input1.value)],
                     step: 10000,
                     connect: true,
                     tooltips: true,
