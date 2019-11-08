@@ -2,19 +2,23 @@
 {{ super() }}
 {% block body %}
 
+<div class="row">
+    <div class="col-sm-12">
+        <div class="content-header" style="font-size:1.5rem!important;">My Campaigns</div>
+        <p class="content-sub-header"></p>
+    </div>
+</div>
 
 <div class="card">
     <div class="card-body">
-        <div class="card-header text-center" style="color:#11D2DA;">
-            My Campaigns
-        </div>
+
         <div class="table-responsive" style="background-color: white;">
             <!--<div>-->
                 <!--<button type="button">My Campaigns</button>-->
                 <!--<button type="button">Calendar</button>-->
             <!--</div>-->
             <table class="table table-striped">
-                <thead>
+                <thead style="text-align:center">
                 <tr>
                     <th scope="col"><b style="font-weight: 500; font-size:16px;">Campaign</b></th>
                     <th scope="col"><b style="font-weight: 500; font-size:16px;">Status</b></th>
@@ -27,14 +31,14 @@
                     <th scope="col"><b style="font-weight: 500; font-size:16px;">ROI</b></th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody style="text-align:center;font-size:13px!important;">
                 {% for item in view_inf_campaigns_data['data'] %}
-                <tr>
+                <tr class="align-middle">
                     <td>
                         <a href="/viewInfCampaignDetails/{{ item['proposal_id'] }}">{{ item['campaign_name'] }}</a>
                     </td>
                     <td>
-                        <span class="{{ item['campaign_status'] }}" data-toggle="tooltip" title="{{ item['campaign_status'] }}"></span>
+                        <span class="{{ item['campaign_status'] }}" data-toggle="tooltip" title="{{ item['campaign_status'] }}" style="cursor:pointer;height:10px;width:10px;"></span>
                         <!--{{ item['campaign_status'] }}-->
                     </td>
 
@@ -49,14 +53,14 @@
                             {% endfor %}
                         {% endfor %}
                     </td>
-                    <td>
-                        {{ item['regions'] }}
+                    <td id="regionCountries">
+
                     </td>
                     <td>
                         {% if item['profile_pic'] %}
-                            <img  src="static/img/{{ item['profile_pic'] }}" class="img" height="19px" width="19px">
+                            <img  src="../static/img/{{ item['profile_pic'] }}" class="img" height="19px" width="19px">
                             {% else %}
-                            <img  src="static/img/fixed_image.png" class="img" height="19px" width="19px">
+                            <img  src="../static/img/fixed_image.png" class="img" height="19px" width="19px">
                             {% endif %}
                         {{ item['brand_first_name'] }}
                         <!--<span class="float-right text muted">-->
@@ -64,7 +68,7 @@
                             <!--&lt;!&ndash;<button class="btn btn-sm btn-outline-secondary fa fa-user-plus"></button>&ndash;&gt;-->
                         <!--</span>-->
                     </td>
-                    <td>{{ item['proposal_price'] }} {{ item['currency'] }}</td>
+                    <td>{{ item['proposal_price'] }}</td>
                     <td>Coming Soon</td>
                 </tr>
                 {% endfor %}
@@ -132,6 +136,22 @@
     </div>
 </div>
 <script>
+var regionCountries='{{view_inf_campaigns_data['data'][0]['regions']}}'.split(',');
+var list1=[]
+for(var i=0;i<regionCountries.length;i++){
+    $.ajax({
+        type:'GET',
+        async:false,
+        url:'https://restcountries.eu/rest/v2/name/'+regionCountries[i]+'?fullText=true',
+        success:function(data){
+            list1.push(data[0]['name'])
+
+        }
+
+    })
+}
+finalString=list1.join(", ");
+$('#regionCountries')[0].innerText=finalString;
 function searchInfluencers(campaign_name,campaign_id,channel,string_word,min_lower,max_upper,country) {
     <!--alert(channel_id);-->
     $("#campaign_name").val(campaign_name);

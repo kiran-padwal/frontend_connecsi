@@ -60,26 +60,25 @@
                         <div class="col-sm-6">
                             <div class="row">
                                 <div class="mb-1 col-xl-6">
-                                    <span class="font-small-3">Period:</span><span class="font-small-3 no-wrap">{{ item['from_date'] }} to {{ item['to_date'] }}</span>
+                                    <span class="font-small-3 bold-500-letter-spacing">Period: </span><span class="font-small-3 no-wrap">{{ item['from_date'] }} - {{ item['to_date'] }}</span>
                                 </div>
                                 <div class="mb-1 col-xl-6">
-                                    <span class="font-small-3 channels-fix">Channels:
-                                    <ul class="other-channels">
+                                    <span class="font-small-3 bold-500-letter-spacing">Channels:</span>
+                                    <ul class="other-channels" style="display:block;">
                                         {% set channels = item['channels'].split(',') %}
                                         {% for channel in channels %}
                                         {% if channel == 'youtube' %}
-                                        <li><a href="#" target="_blank"><i class="fa fa-youtube"></i></a></li>
+                                        <li><a href="#" target="_blank"><i class="fa fa-youtube" style="font-size: 20px;"></i></a></li>
                                         {% elif channel == 'facebook' %}
-                                        <li><a href="#" target="_blank"><i class="fa fa-facebook-square"></i></a></li>
+                                        <li><a href="#" target="_blank"><i class="fa fa-facebook-square" style="font-size: 20px;"></i></a></li>
                                         {% elif channel == 'twitter' %}
-                                        <li><a href="#" target="_blank"><i class="fa fa-twitter"></i></a></li>
+                                        <li><a href="#" target="_blank"><i class="fa fa-twitter" style="font-size: 20px;"></i></a></li>
                                         {% elif channel == 'instagram' %}
-                                        <li><a href="#" target="_blank"><i class="fa fa-instagram"></i></a></li>
+                                        <li><a href="#" target="_blank"><i class="fa fa-instagram" style="font-size: 20px;"></i></a></li>
                                         {% endif %}
                                         {% endfor %}
                                         <!--<li><a href="#"><i class="fa fa-youtube-square-square color2"></i></a></li>-->
                                     </ul>
-                                    </span>
                                 </div>
                             </div>
                             <div class="row">
@@ -99,7 +98,7 @@
                             <div class="row">
                                 <div class="mb-1 col-sm-6 d-flex flex-column justify-content-between">
                                     <div>
-                                        <div class="font-small-3">Countries:</div>
+                                        <div class="font-small-3 bold-500-letter-spacing">Countries:</div>
                                         <div class="font-small-3 block">
                                             {% for region_name in item['region_name_list'] %}
                                             <span class="block-xs bg-light-grey mb-1">{{ region_name }}</span>
@@ -110,7 +109,7 @@
                                 </div>
                                 <div class="mb-1 col-sm-6 d-flex flex-column justify-content-between">
                                     <div>
-                                    <div class="font-small-3">Categories:</div>
+                                    <div class="font-small-3 bold-500-letter-spacing">Categories:</div>
                                     <div class="font-small-3 block">
                                         <span class="block-xs bg-light-grey mb-1">{{ item['video_cat_name'] }}</span>
                                     </div>
@@ -121,7 +120,7 @@
                             <div class="row">
                                 <div class="col-sm-6 d-flex flex-column justify-content-between">
                                     <div>
-                                    <div class="font-small-3">KPI's:</div>
+                                    <div class="font-small-3 bold-500-letter-spacing">KPI's:</div>
                                     <div class="font-small-3 block">
                                         <span class="color1">{{ item['kpis'] }}</span>
                                     </div>
@@ -130,7 +129,7 @@
                                 </div>
                                 <div class="col-sm-6 d-flex flex-column justify-content-between">
                                     <div>
-                                    <div class="font-small-3">Arrangements:</div>
+                                    <div class="font-small-3 bold-500-letter-spacing">Arrangements:</div>
                                     <div class="font-small-3 block">
                                         <span class="color1">
                                         {% set arrangements = item['arrangements'].split(',') %}
@@ -146,7 +145,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-12 mb-1">
-                                    <div class="font-small-3">Attachments:</div>
+                                    <div class="font-small-3 bold-500-letter-spacing">Attachments:</div>
                                     <div class="font-small-3 block">
                                         {% set files = item['files'].split(',') %}
                                         {% for file in files %}
@@ -172,10 +171,10 @@
                             <div class="description">
                                 <div class="row">
                                     <div class="col-12">
-                                        <span class="font-small-3"><b>Description:</b></span>
+                                        <span class="font-small-3 bold-500-letter-spacing">Description:</span>
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="row description-box">
                                     <div class="col-12">
                                         <p class="font-small-3 campaign-description">{{ item['campaign_description'] }}</p>
                                     </div>
@@ -219,15 +218,17 @@
                             </tr>
 
                             {% for youtube_inf_data in view_campaign_details_data['data'][0]['youtube_inf_data'] %}
-                            <tr>
+                            <tr style="font-size:12px;">
+
                                 <td class="align-middle">
+                                    {% if youtube_inf_data['channel_img'] %}
+                                    <img src="{{ youtube_inf_data['channel_img'] }}" class="showSubmenu rounded-circle width-50" style="width:30px!important;">
+                                    {% else %}
+                                    <img src="/static/img/fixed_image.png" class="showSubmenu rounded-circle width-50" style="width:30px!important;">
+                                    {% endif %}
                                     <div class="menu d-flex flex-column align-items-center">
-                                        {% if youtube_inf_data['channel_img'] %}
-                                        <img src="{{ youtube_inf_data['channel_img'] }}" class="showSubmenu rounded-circle width-50">
-                                        {% else %}
-                                        <img src="/static/img/fixed_image.png" class="showSubmenu rounded-circle width-50">
-                                        {% endif %}
-                                        <span class="my-1 influencerMenu" data-inf="{{ youtube_inf_data['channel_id'] }}">{{ youtube_inf_data['title'] }} <i class="fas fa-caret-square-down"></i></span>
+
+                                        <span class="my-1 influencerMenu" data-inf="{{ youtube_inf_data['channel_id'] }}">{{ youtube_inf_data['title'] }} <i class="fa fa-angle-right" style="position:absolute;top:-100%;right:0;cursor:pointer;font-size:20px;"></i></span>
                                         <div class="submenu">
                                             <div class="submenu__content">
                                                    <span data-toggle="modal" data-target="#sendMessage">
@@ -240,7 +241,7 @@
                                                 <span style="display: none" data-toggle="modal" data-target="#edit_del_report_screen" id="editReportIcon{{ youtube_inf_data['channel_id'] }}">
                                                        <a onclick="edit_del_Report('{{ view_campaign_details_data['data'][0]['campaign_id'] }}','{{ youtube_inf_data['proposal_channels'] }}')" title="Edit/Delete Report" ><img src="/static/icons/writing.png" height="14px" width="13px"></a>
                                                    </span>
-                                                <a  href="{{ youtube_inf_data['ref_link'] }}" class="fa fa-link "  title="Reference Link" style="position: relative; z-index: 1; font-size:14px; color:#9E57DD;"></a>
+                                                <a  href="{{ youtube_inf_data['ref_link'] }}" target="_blank" class="fa fa-link "  title="Reference Link" style="position: relative; z-index: 1; font-size:14px; color:#9E57DD;"></a>
                                                 {% endif %}
                                                 <a title="Payment Feature Coming Soon" href="#"><img src="/static/icons/payment-method.png" height="14px" width="13px"></a>
                                             </div>
@@ -252,10 +253,24 @@
                                     {% for status in channel_status_campaign_data['data'] %}
                                     {% if youtube_inf_data['channel_id']==status['channel_id']  %}
                                     <!--{{ status['status'] }}&nbsp;<a href="/inbox/{{status['message_id']}}">inbox</a>-->
+                                    {%if status['status'] == 'Added'%}
+                                        {% set color = 'purple' %}
+                                    {% elif status['status'] == 'Contacted'%}
+                                        {% set color = 'orange' %}
+
+                                    {% elif status['status'] == 'Negotiations'%}
+                                        {% set color = 'orange' %}
+
+                                    {% elif status['status'] == 'Proposal Sent'%}
+                                        {% set color = 'lightgreen' %}
+
+                                    {% elif status['status'] == 'Current Partner'%}
+                                        {% set color = 'darkgreen' %}
+                                    {% endif %}
                                     {% if status['status']!='Added' and status['status']!='Contacted' %}
-                                    {{ status['status'] }}&nbsp;<a href="/inbox/{{status['message_id']}}" style="display:block;color:#599ae9;" data-toggle="tooltip" title="Go to conversation"><i class="goto-inbox-icon far fa-comments" style="color:#a8a8a8;"></i></a>
+                                    <span style="color:{{color}};">{{ status['status'] }}</span>&nbsp;<a href="/inbox/{{status['message_id']}}" style="display:block;color:#599ae9;" data-toggle="tooltip" title="Go to conversation"><img src="../static/images/chat-icon.jpeg" class="goto-inbox-icon far fa-comments" style="color:#a8a8a8;height:20px;margin-bottom:4px;"/></a>
                                     {% else %}
-                                    {{ status['status'] }}
+                                    <span style="color:{{color}};">{{ status['status'] }}</span>
                                     {% endif %}
                                     {% endif %}
                                     {% endfor %}
@@ -266,32 +281,52 @@
                                     {% for channel in channels %}
                                     {% set channel_final = channel.split('@') %}
                                     {% if channel_final[0] == 'youtube' %}
-                                    <a href="#" class="fa fa-youtube"></a>
+                                    <a href="#" class="fa fa-youtube" style="font-size:20px;"></a>
                                     {% elif channel_final[0] == 'facebook' %}
-                                    <a href="#" class="fa fa-facebook-square"></a>
+                                    <a href="#" class="fa fa-facebook-square" style="font-size:20px;"></a>
                                     {% elif channel_final[0] == 'twitter' %}
-                                    <a href="#" class="fa fa-twitter"></a>
+                                    <a href="#" class="fa fa-twitter" style="font-size:20px;"></a>
                                     {% elif channel_final[0] == 'instagram' %}
-                                    <a href="#" class="fa fa-instagram"></a>
+                                    <a href="#" class="fa fa-instagram" style="font-size:20px;"></a>
                                     {% endif %}
                                     {% endfor %}
                                     {% endif %}
                                 </td>
                                 <td class="align-middle" >
                                     {% if item['currency']=='USD' %}
-                                    &#36; {{youtube_inf_data['proposal_price']}}
+                                        {% if youtube_inf_data['proposal_price'] %}
+                                            &#36; {{youtube_inf_data['proposal_price']}}
+                                        {% else %}
+                                            &#36; 0
+                                        {% endif %}
                                     {% endif %}
                                     {% if item['currency']=='GBP' %}
-                                    &#163; {{youtube_inf_data['proposal_price']}}
+                                        {% if youtube_inf_data['proposal_price'] %}
+                                            &#163; {{youtube_inf_data['proposal_price']}}
+                                        {% else %}
+                                            &#163; 0
+                                        {% endif %}
                                     {% endif %}
                                     {% if item['currency']=='PLN' %}
-                                    &#122; {{youtube_inf_data['proposal_price']}}
+                                        {% if youtube_inf_data['proposal_price'] %}
+                                            &#122; {{youtube_inf_data['proposal_price']}}
+                                        {% else %}
+                                            &#122; 0
+                                        {% endif %}
                                     {% endif %}
                                     {% if item['currency']=='INR' %}
-                                    &#8377; {{youtube_inf_data['proposal_price']}}
+                                        {% if youtube_inf_data['proposal_price'] %}
+                                            &#8377; {{youtube_inf_data['proposal_price']}}
+                                        {% else %}
+                                            &#8377; 0
+                                        {% endif %}
                                     {% endif %}
                                     {% if item['currency']=='EUR' %}
-                                    &#8364; {{youtube_inf_data['proposal_price']}}
+                                        {% if youtube_inf_data['proposal_price'] %}
+                                            &#8364; {{youtube_inf_data['proposal_price']}}
+                                        {% else %}
+                                            &#8364; 0
+                                        {% endif %}
                                     {% endif %}
                                 </td>
                                 <td class="align-middle" id="revenue_total{{ youtube_inf_data['channel_id'] }}"></td>
@@ -308,11 +343,21 @@
                             {% for channel in channels %}
                             {% set channel_final = channel.split('@') %}
 
-                            <tr class="{{ youtube_inf_data['channel_id'] }}" style="display: none">
+                            <tr class="{{ youtube_inf_data['channel_id'] }}" style="display: none;font-size:12px;">
                                 <td class="align-middle">
                                 </td>
                                 <td class="align-middle"></td>
-                                <td class="align-middle" id="channel">{{ channel_final[0] }}</td>
+                                <td class="align-middle" id="channel">
+                                    {% if channel_final[0] == 'youtube' %}
+                                    <a href="#" class="fa fa-youtube" style="font-size:20px;"></a>
+                                    {% elif channel_final[0] == 'facebook' %}
+                                    <a href="#" class="fa fa-facebook-square" style="font-size:20px;"></a>
+                                    {% elif channel_final[0] == 'twitter' %}
+                                    <a href="#" class="fa fa-twitter" style="font-size:20px;"></a>
+                                    {% elif channel_final[0] == 'instagram' %}
+                                    <a href="#" class="fa fa-instagram" style="font-size:20px;"></a>
+                                    {% endif %}
+                                </td>
                                 <td class="align-middle"></td>
                                 <td class="align-middle" id="revenue{{ channel_final[1] }}"></td>
                                 <td class="align-middle"></td>
@@ -388,7 +433,9 @@
 
 
 <!-- add report Modal form-->
+
 <div class="modal fade" id="addReport" role="dialog"  data-backdrop="static">
+
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -468,6 +515,7 @@
         crossorigin="anonymous"></script>
 <script>
     $(document).ready(function () {
+
     getBrandReport('{{ view_campaign_details_data['data'][0]['campaign_id'] }}');
     var currencyList={"EUR":"€","GBR":"£","INR":"₹","USD":"$"}
     var rating=$('.rating')
@@ -518,7 +566,7 @@
             return 'fa-instagram'
         }
     }
-
+    var addReportCurrency='{{view_campaign_details_data['data'][0]['currency']}}'
     function addReport(campaign_id,proposal_channels) {
         $("#brand_report_campaign_id").empty();
         $("#brand_report_campaign_id").val(campaign_id);
@@ -533,14 +581,9 @@
                 '<div class="col-12 mb-1 d-inline-flex align-items-center">'+
                 '<input type="hidden" name="channel_id" value="'+channel+'">'+
                 '<i class="fa '+social(channel_final[0])+'"></i><span class="text-capitalize ml-1">'+channel_final[0]+'</span></div>'+
-                '<div class="col-md-5 col-12 mb-1"><input class="form-control" type="number" name="new_users" placeholder="New Users"></div>'+
-                '<div class="col-md-5 col-12 mb-1"><input class="form-control" type="number" name="revenue" placeholder="Revenue Generated"></div>'+
-                '<div class="col-md-2 col-12 mb-2"><select class="form-control" name="currency">'+
-                '<option value="USD">USD</option>'+
-                '<option value="EUR">EUR</option>'+
-                '<option value="INR">INR</option>'+
-                '<option value="PLN">PLN</option>'+
-                '</select></div>'+
+                '<div class="col-md-6 col-12 mb-1"><input class="form-control" type="number" name="new_users" placeholder="New Users"></div>'+
+                '<div class="col-md-6 col-12 mb-1"><input class="form-control" type="number" name="revenue" placeholder="Revenue Generated"></div>'+
+                '<input type="hidden" name="currency" value="'+addReportCurrency+'">'+
                 '</div>');
         }
     }
@@ -568,15 +611,9 @@
                             '<div class="col-12 mb-1">'+
                             '<input type="hidden" name="channel_id" value="'+val.channel_id+'">'+
                             '<i class="fa '+social(val.channel)+'"></i><span class="ml-1 d-inline-flex align-items-center text-capitalize">' + val.channel +'</span></div>'+
-                            '<div class="col-md-5 col-12 mb-1"><input class="form-control" type="number" name="new_users" placeholder="New Users" value="'+val.new_users+'"></div>'+
-                            '<div class="col-md-5 col-12 mb-1"><input class="form-control" type="number" name="revenue" placeholder="Revenue Generated" value="'+val.revenue_generated+'"></div>'+
-                            '<div class="col-md-2 col-12 mb-1"><select class="form-control" name="currency">'+
-                            '<option value="'+val.currency+'">'+val.currency+'</option>'+
-                            '<option value="USD">USD</option>'+
-                            '<option value="EUR">EUR</option>'+
-                            '<option value="INR">INR</option>'+
-                            '<option value="PLN">PLN</option>'+
-                            '</select></div>'+
+                            '<div class="col-md-6 col-12 mb-1"><input class="form-control" type="number" name="new_users" placeholder="New Users" value="'+val.new_users+'"></div>'+
+                            '<div class="col-md-6 col-12 mb-1"><input class="form-control" type="number" name="revenue" placeholder="Revenue Generated" value="'+val.revenue_generated+'"></div>'+
+                            '<input type="hidden" name="currency" value="'+addReportCurrency+'">'+
                             '</div>');
                         $('#edit_brand_Report_modal').modal('toggle');
                     });
@@ -626,7 +663,8 @@
                         }
                         {% endfor %}
                     });
-                    $("#revenue_total{{ youtube_inf_data['channel_id'] }}").html('dollar+euro'+total_revenue);
+                    var currencyIndex={'INR':'₹','USD':'$','EUR':'€','GBR':'£'}
+                    $("#revenue_total{{ youtube_inf_data['channel_id'] }}").html(currencyIndex[addReportCurrency]+" "+total_revenue);
                     $("#new_users_total{{ youtube_inf_data['channel_id'] }}").html(total_new_users);
                     {% endif %}
                     {% endfor %}

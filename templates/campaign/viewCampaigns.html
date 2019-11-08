@@ -4,7 +4,7 @@
 
 <div class="row">
     <div class="col-sm-12">
-        <div class="content-header">All Campaigns</div>
+        <div class="content-header" style="font-size:1.5rem!important;">All Campaigns</div>
         <p class="content-sub-header"></p>
     </div>
 </div>
@@ -12,10 +12,6 @@
 <div class="row">
     <div class="col-sm-12">
 <div class="card">
-    <div class="card-header">
-        <h4 class="card-title">List</h4>
-        <p></p>
-    </div>
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-striped">
@@ -33,9 +29,9 @@
                     <th scope="col"><b style="font-weight: 500; font-size:16px;">ROI</b></th>
                 </tr>
                 </thead>
-                <tbody style="text-align:center;font-size:0.9rem!important;">
+                <tbody style="text-align:center;font-size:13px!important;">
                 {% for item in view_campaign_data %}
-                <tr>
+                <tr class="align-middle">
                     <td>
                         <a href="/viewCampaignDetails/{{ item['campaign_id'] }}" class="color1">{{ item['campaign_name']|truncate(32, False, '...', 0) }}</a>
                     </td>
@@ -49,26 +45,26 @@
 
                         {% else %}
                         <a class="multiple-option{{loop.index}}" id="dropdownMenuButton-{{loop.index}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                                           title="Options"><i class="multiple-classified-ads fas fa-ellipsis-v"></i></a>
+                                           title="Options"><i class="multiple-classified-ads fas fa-ellipsis-v" style="top:0;"></i></a>
 <!--                        <a href="/editCampaign/{{ item['campaign_id'] }}"><img src="/static/icons/edit.png" height="24px" width="24px"></a>-->
 <!--                        <a href="/deleteCampaign/{{ item['campaign_id'] }}"><img src="/static/icons/delete.png" height="24px" width="24px"></a>-->
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton-{{loop.index}}">
                             <a class="dropdown-item" id="copy-option{{loop.index}}" style="padding:0.5rem 1rem;">
                                 <i class="copy-classified-ads far fa-copy" style="top:0px;"></i>
-                                <div style="display:inline;float:right;margin-left:10px;">
+                                <div style="display:inline;float:right;margin-left:10px;font-size:13px;">
                                     Copy Campaign
                                 </div>
                             </a>
 
                             <a class="dropdown-item" id="edit-option{{loop.index}}" href="/editCampaign/{{ item['campaign_id'] }}" style="padding:0.5rem 1rem;">
                                 <i class="edit-classified-ads far fa-edit" style="top:0px;"></i>
-                                <div style="display:inline;float:right;margin-left:10px;">
+                                <div style="display:inline;float:right;margin-left:10px;font-size:13px;">
                                     Edit Campaign
                                 </div>
                             </a>
                             <a class="dropdown-item" id="delete-option{{loop.index}}" href="/deleteCampaign/{{ item['campaign_id'] }}" style="padding:0.5rem 1rem;">
                                <i class="delete-classified-ads far fa-trash-alt" style="top:0px;"></i>
-                                <div style="display:inline;float:right;margin-left:10px;">
+                                <div style="display:inline;float:right;margin-left:10px;font-size:13px;">
                                     Delete Campaign
                                 </div>
                             </a>
@@ -77,7 +73,7 @@
                     </td>
 
                     <td>
-                        <span class="{{ item['campaign_status'] }}" data-toggle="tooltip" title="{{ item['campaign_status'] }}"></span>
+                        <span class="{{ item['campaign_status'] }}" data-toggle="tooltip" title="{{ item['campaign_status'] }}" style="height:10px;width:10px;cursor:pointer;" ></span>
                         <!--{{ item['campaign_status'] }}-->
                     </td>
 
@@ -87,20 +83,20 @@
                         {% set channels = item['channels'].split(',') %}
                         {% for channel in channels %}
                         {% if channel == 'youtube' %}
-                        <a href="#" class="fa fa-youtube"></a>
+                        <a href="#" class="fa fa-youtube" style="font-size:20px;"></a>
                         {% elif channel == 'facebook' %}
-                        <a href="#" class="fa fa-facebook-square"></a>
+                        <a href="#" class="fa fa-facebook-square" style="font-size:20px;"></a>
                         {% elif channel == 'twitter' %}
-                        <a href="#" class="fa fa-twitter"></a>
+                        <a href="#" class="fa fa-twitter" style="font-size:20px;"></a>
                         {% elif channel == 'instagram' %}
-                        <a href="#" class="fa fa-instagram"></a>
+                        <a href="#" class="fa fa-instagram" style="font-size:20px;"></a>
                         {% endif %}
                         {% endfor %}
                     </td>
                     <td>
                         {{ ", ".join(item['region_name_list']) }}
                     </td>
-                    <td>{{ item['no_of_influencers'] }}
+                    <td>{{ item['no_of_influencers'] }}&nbsp
                         <span class="text muted">
                                 <a href="#" data-campaign-name="{{ item['campaign_name'] }}" data-campaign-id="{{ item['campaign_id'] }}" data-channels="{{ item['channels'] }}" data-video-cat-name="{{ item['video_cat_name'] }}" data-min-followers="{{ item['min_lower_followers'] }}" data-max-followers="{{ item['max_upper_followers'] }}" data-regions="{{ item['regions'] }}" class="fa fa-user-plus black search-influencers color1" data-toggle="modal" data-backdrop="true" data-target="#create_alert_modal" data-tooltip="true" title="Add Influencer" style="font-size:20px;"></a>
                             <!--<button class="btn btn-sm btn-outline-secondary fa fa-user-plus"></button>-->

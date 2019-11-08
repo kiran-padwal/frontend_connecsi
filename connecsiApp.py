@@ -1139,7 +1139,6 @@ def searchInfluencers():
             print(e)
             pass
         print('I M HERE BEFORE GETTING TOTAL VIDEOS')
-        # print(data)
         for item in data['data']:
             total_videos_url = base_url + 'Youtube/totalVideos/' + str(item['channel_id'])
             try:
@@ -1157,6 +1156,25 @@ def searchInfluencers():
                                favInfList_data=favInfList_data,payload_form_filter=payload)
 
 
+
+@connecsiApp.route('/elasticSearch', methods=['GET'])
+@is_logged_in
+def elasticSearch():
+    data = []
+    source_cluster = 'http://35.230.103.215:9200'
+    # es = elasticsearch.Elasticsearch(source_cluster)
+
+
+    return data
+    # return render_template('search/searchInfluencers.html', favInfList_data_alerts=favInfList_data_alerts,
+    #                        maxAlerts=maxAlerts, maxAddToFavorites=maxAddToFavorites, maxExportLists=maxExportLists,
+    #                        maxMessages=maxMessages, packageName=packageName, countMessages=countMessages,
+    #                        countAlerts=countAlerts, countAddToFavorites=countAddToFavorites,
+    #                        messageSubscription=messageSubscription, countExportList=countExportList,
+    #                        regionCodes=regionCodes_json,
+    #                        lookup_string=lookup_string, form_filters=form_filters, data=data, pagination='',
+    #                        view_campaign_data=view_campaign_data,
+    #                        favInfList_data=favInfList_data, payload_form_filter=payload)
 
 #
 @connecsiApp.route('/addFundsBrands')
@@ -1731,7 +1749,6 @@ def viewCampaigns():
     print(view_campaign_data_list)
     return render_template('campaign/viewCampaigns.html',view_campaign_data=view_campaign_data_list)
 
-
 @connecsiApp.route('/viewInfCampaigns',methods=['GET','POST'])
 @is_logged_in
 def viewInfCampaigns():
@@ -1743,11 +1760,11 @@ def viewInfCampaigns():
     print(response_json)
     for item1 in response_json['data']:
         print(item1)
-        item1['from_date'] = datetime.datetime.strptime(item1['from_date'],
+        item1['proposal_from_date'] = datetime.datetime.strptime(item1['proposal_from_date'],
                                                         '%d-%b-%y').strftime('%d %b %Y')
-        item1['to_date'] = datetime.datetime.strptime(item1['to_date'],
+        item1['proposal_to_date'] = datetime.datetime.strptime(item1['proposal_to_date'],
                                                       '%d-%b-%y').strftime('%d %b %Y')
-        item1['budget'] = curreny[item1['currency']] + " " + str("%.2f" % item1['budget'])
+        item1['proposal_price'] = curreny[item1['currency']] + " " + str("%.2f" % item1['proposal_price'])
     return render_template('campaign/view_all_inf_campaigns.html',view_inf_campaigns_data=response_json)
 
 
@@ -1811,6 +1828,7 @@ def viewCampaignDetails(campaign_id):
 
     return render_template('campaign/viewCampaignDetails.html',view_campaign_details_data=view_campaign_details_data,channel_status_campaign_data=channel_status_campaign_data)
 
+
 @connecsiApp.route('/viewInfCampaignDetails/<string:proposal_id>',methods=['GET'])
 @is_logged_in
 def viewInfCampaignDetails(proposal_id):
@@ -1825,9 +1843,14 @@ def viewInfCampaignDetails(proposal_id):
     for item in view_inf_campaign_details_data['data']:
         user_id = item['user_id']
         campaign_id=item['campaign_id']
+        channel_status_campaign = requests.get(
+        url=base_url + 'Campaign/channel_status_for_campaign_by_campaign_id/' + str(campaign_id))
+        print('status of channel =', channel_status_campaign.json())
+        channel_status_campaign_data = channel_status_campaign.json()
         item['proposal_to_date'] = datetime.datetime.strptime(item['proposal_to_date'], '%d-%b-%y').strftime('%d %b %Y')
         item['proposal_from_date'] = datetime.datetime.strptime(item['proposal_from_date'], '%d-%b-%y').strftime('%d %b %Y')
         proposal_channels= item['proposal_channels']
+
         channel_id_list = proposal_channels.split(',')
         for channel in channel_id_list:
             channel_id_final = channel.split('@')
@@ -1848,7 +1871,7 @@ def viewInfCampaignDetails(proposal_id):
     #         print(item1)
     return render_template('campaign/view_inf_campaign_details.html',
                            view_inf_campaign_details_data=view_inf_campaign_details_data,
-                           bcr=bcr_list,infcr=infcr)
+                           bcr=bcr_list,infcr=infcr,channel_status_campaign_data=channel_status_campaign_data)
 
 
 
@@ -3346,6 +3369,7 @@ def getFavInfListOne():
 def influencerFavoritesList(channel_name):
     formValue={}
     formValue['channel']=channel_name
+    print("channel name is ",channel_name)
     data=''
     view_campaign_data=''
     subscriptionValue = getSubscriptionValues(str(session["user_id"]))
@@ -3480,10 +3504,12 @@ def influencerFavoritesList(channel_name):
             response3 = requests.get(url=url3)
             favInfList_data_alerts = response3.json()
             linechart_id_alert = 1
+            print("data time", favInfList_data_alerts)
             for item in favInfList_data_alerts['data']:
                 item.update({'linechart_id': linechart_id_alert})
                 linechart_id_alert += 1
 
+            print("data time",favInfList_data_alerts)
 
         except Exception as e:
             print(e)

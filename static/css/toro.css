@@ -2470,3 +2470,37 @@ background-color:#9370DB;
     background-color:transparent;
 }
 
+.dropdown-item.noti-container:hover{
+    background-color:transparent;
+}
+
+.noUi-tooltip {
+    display: none!important;
+}
+.noUi-active .noUi-tooltip {
+    display: block!important;
+}
+.noUi-handle{
+    cursor:all-scroll;
+}
+.noUi-handle .noUi-handle-upper .noUi-tooltip{
+    bottom:-42px!important;
+}
+
+#influencers-table td{
+    padding:0.5rem 0.10rem!important;
+}
+
+.bold-500-letter-spacing{
+    font-weight: 500!important;
+    letter-spacing: 1px!important;
+}
+.description{
+    overflow-y: unset!important;
+}
+.arrangements__container{
+    overflow-y: unset!important;
+}
+.table-striped td{
+    padding:0.5rem!important;
+}

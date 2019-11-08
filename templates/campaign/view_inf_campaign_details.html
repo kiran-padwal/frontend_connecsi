@@ -51,29 +51,30 @@
                         <div class="col-sm-6">
                             <div class="row">
                                 <div class="mb-1 col-xl-6">
-                                    <span class="font-small-3">Period:</span><span class="font-small-3 no-wrap">{{ item['proposal_from_date'] }} to {{ item['proposal_to_date'] }}</span>
+                                    <span class="font-small-3 bold-500-letter-spacing" >Period: </span><span class="font-small-3 no-wrap">{{ item['proposal_from_date'] }} - {{ item['proposal_to_date'] }}</span>
                                 </div>
                                 <div class="mb-1 col-xl-6">
-                                    <span class="font-small-3 channels-fix">Channels:
+                                    <span class="font-small-3 bold-500-letter-spacing" style="display:block;">Channels:
+
+                                    </span>
                                     <ul class="other-channels">
                                         {% set channels = item['proposal_channels'].split(',') %}
                                         {% for channel in channels %}
                                         {% set final_channels = channel.split('@') %}
                                         {% for item_final_channel in final_channels %}
                                         {% if item_final_channel == 'youtube' %}
-                                        <li><a href="#" target="_blank"><i class="fa fa-youtube"></i></a></li>
+                                        <li><a href="#" target="_blank"><i class="fa fa-youtube" style="font-size: 20px;"></i></a></li>
                                         {% elif item_final_channel == 'facebook' %}
-                                        <li><a href="#" target="_blank"><i class="fa fa-facebook-square"></i></a></li>
+                                        <li><a href="#" target="_blank"><i class="fa fa-facebook-square" style="font-size: 20px;"></i></a></li>
                                         {% elif item_final_channel == 'twitter' %}
-                                        <li><a href="#" target="_blank"><i class="fa fa-twitter"></i></a></li>
+                                        <li><a href="#" target="_blank"><i class="fa fa-twitter" style="font-size: 20px;"></i></a></li>
                                         {% elif item_final_channel == 'instagram' %}
-                                        <li><a href="#" target="_blank"><i class="fa fa-instagram"></i></a></li>
+                                        <li><a href="#" target="_blank"><i class="fa fa-instagram" style="font-size: 20px;"></i></a></li>
                                         {% endif %}
                                         {% endfor %}
                                         {% endfor %}
                                         <!--<li><a href="#"><i class="fa fa-youtube-square-square color2"></i></a></li>-->
                                     </ul>
-                                    </span>
                                 </div>
                             </div>
                             <div class="row">
@@ -98,10 +99,10 @@
                             <div class="row">
                                 <div class="mb-1 col-sm-6 d-flex flex-column justify-content-between">
                                     <div>
-                                        <div class="font-small-3">Countries:</div>
-                                        <div class="font-small-3 block">
+                                        <div class="font-small-3 bold-500-letter-spacing">Countries:</div>
+                                        <div class="font-small-3 block" id="regionsCountries">
 
-                                            <span class="block-xs bg-light-grey mb-1">{{ item['regions'] }}</span>
+
 
                                         </div>
                                     </div>
@@ -109,7 +110,7 @@
                                 </div>
                                 <div class="mb-1 col-sm-6 d-flex flex-column justify-content-between">
                                     <div>
-                                    <div class="font-small-3">Categories:</div>
+                                    <div class="font-small-3 bold-500-letter-spacing">Categories:</div>
                                     <div class="font-small-3 block">
                                         <span class="block-xs bg-light-grey mb-1">{{ item['video_cat_name'] }}</span>
                                     </div>
@@ -120,7 +121,7 @@
                             <div class="row">
                                 <div class="col-sm-6 d-flex flex-column justify-content-between">
                                     <div>
-                                    <div class="font-small-3">KPI's:</div>
+                                    <div class="font-small-3 bold-500-letter-spacing">KPI's:</div>
                                     <div class="font-small-3 block">
                                         <span class="color1">{{ item['proposal_kpis'] }}</span>
                                     </div>
@@ -129,7 +130,7 @@
                                 </div>
                                 <div class="col-sm-6 d-flex flex-column justify-content-between">
                                     <div>
-                                    <div class="font-small-3">Arrangements:</div>
+                                    <div class="font-small-3 bold-500-letter-spacing">Arrangements:</div>
                                     <div class="font-small-3 block">
                                         <span class="color1">
 
@@ -142,7 +143,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-12 mb-1">
-                                    <div class="font-small-3">Attachments:</div>
+                                    <div class="font-small-3 bold-500-letter-spacing">Attachments:</div>
                                     <div class="font-small-3 block">
                                         {% set files = item['campaign_files'].split(',') %}
                                         {% for file in files %}
@@ -168,7 +169,7 @@
                             <div class="description">
                                 <div class="row">
                                     <div class="col-12">
-                                        <span class="font-small-3"><b>Description:</b></span>
+                                        <span class="font-small-3 bold-500-letter-spacing">Description:</span>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -193,7 +194,7 @@
                 <div class="card-block campaign-item padding-top-normal">
                     <div style="background-color: white;">
                         <table class="text-center table table-bordered table-responsive-xl table-striped table-hover mystyle" style="background-color: white;">
-                            <tr class="mystyle">
+                            <tr class="mystyle" style="color:black;">
                                 <th>Sponsor</th>
                                 <th>Status</th>
                                 <th>Channels</th>
@@ -209,7 +210,7 @@
                             </tr>
 
                             {% for youtube_inf_data in view_inf_campaign_details_data['data'] %}
-                            <tr>
+                            <tr style="font-size:12px;color:black;">
                                 <td class="align-middle">
                                     <div class="menu d-flex flex-column align-items-center">
                                         <img  src="/static/img/{{ youtube_inf_data['profile_pic'] }}" class="showSubmenu rounded-circle width-50">
@@ -228,7 +229,7 @@
                                                 <span data-toggle="modal" data-target="#edit_del_report_screen" id="editReportIcon{{ youtube_inf_data['channel_id'] }}" style="display:None;">
                                                     <a onclick="edit_del_Report('{{ view_inf_campaign_details_data['data'][0]['campaign_id'] }}','{{ youtube_inf_data['proposal_channels'] }}')" title="Edit/Delete Report" ><img src="/static/icons/writing.png" height="14px" width="13px"></a>
                                                 </span>
-                                                <a  href="{{ youtube_inf_data['proposal_ref_link'] }}" class="fa fa-link "  title="Reference Link" style="position: relative; z-index: 1; font-size:14px; color:#9E57DD;"></a>
+                                                <a  href="{{ youtube_inf_data['proposal_ref_link'] }}" target="_blank" class="fa fa-link "  title="Reference Link" style="position: relative; z-index: 1; font-size:14px; color:#9E57DD;"></a>
                                                 {% endif %}
                                                 <!-- end of optional -->
 
@@ -244,9 +245,33 @@
                                 </td>
 
                                 <td class="align-middle">
-                                    {% for status in view_inf_campaign_details_data['data'] %}
-                                    {{status['channel_campaign_status']}}
-                                    {% endfor %}
+                                    {% for status in channel_status_campaign_data['data'] %}
+
+
+                                        {% if youtube_inf_data['mapped_youtube_channel_id']==status['channel_id']  %}
+                                        <!--{{ status['status'] }}&nbsp;<a href="/inbox/{{status['message_id']}}">inbox</a>-->
+                                        {%if status['status'] == 'Added'%}
+                                            {% set color = 'purple' %}
+                                        {% elif status['status'] == 'Contacted'%}
+                                            {% set color = 'orange' %}
+
+                                        {% elif status['status'] == 'Negotiations'%}
+                                            {% set color = 'orange' %}
+
+                                        {% elif status['status'] == 'Proposal Sent'%}
+                                            {% set color = 'lightgreen' %}
+
+                                        {% elif status['status'] == 'Current Partner'%}
+                                            {% set color = 'darkgreen' %}
+                                        {% endif %}
+                                        {% if status['status']!='Added' and status['status']!='Contacted' %}
+                                        <span style="color:{{color}};">{{ status['status'] }}</span>&nbsp;<a href="/inbox/{{status['message_id']}}" style="display:block;color:#599ae9;" data-toggle="tooltip" title="Go to conversation"><img src="../static/images/chat-icon.jpeg" class="goto-inbox-icon far fa-comments" style="color:#a8a8a8;height:20px;margin-bottom:4px;"/></a>
+                                        {% else %}
+                                        <span style="color:{{color}};">{{ status['status'] }}</span>
+                                        {% endif %}
+                                        {% endif %}
+                                        {% endfor %}
+
                                 </td>
                                 <td class="align-middle">
                                     {% if youtube_inf_data['proposal_channels'] %}
@@ -290,7 +315,7 @@
                                 <td class="align-middle" id="new_users_total{{ session['user_id'] }}"></td>
                                 <td class="align-middle" id="total_eng_rate{{ session['user_id'] }}"></td>
                                 <td class="align-middle" id="total_cpa{{session['user_id']}}"></td>
-                                <td class="align-middle">Comming soon..</td>
+                                <td class="align-middle" style="color:purple;">Comming soon</td>
                             </tr>
                             {% if youtube_inf_data['proposal_channels'] %}
                             {% set channels = youtube_inf_data['proposal_channels'].split(',') %}
@@ -424,7 +449,6 @@
                             consolidated_total_cpa = new_users_total/{{glob.proposal_price}}
                             consolidated_total_cpa = consolidated_total_cpa.toFixed(2);
                             if (consolidated_total_posts != 0 && total_followers != 0){
-                                alert('total followers= '+total_followers);
                                 consolidated_total_eng_rate = (consolidated_total_likes+consolidated_total_comments+consolidated_total_shares/consolidated_total_posts)/total_followers;
                                 consolidated_total_eng_rate = consolidated_total_eng_rate.toFixed(5);
                                 consolidated_total_eng_rate = consolidated_total_eng_rate*100;
@@ -492,7 +516,7 @@
 <div class="modal fade" id="addReport" role="dialog"  data-backdrop="true">
     <div class="modal-dialog modal-centered modal-wide modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header alert-primary">
+            <div class="modal-header">
                 <b class="modal-title">Add Report</b>
                 <button  type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
@@ -1004,7 +1028,19 @@
         });
 
     }
+var regionCountries='{{view_inf_campaign_details_data['data'][0]['regions']}}'.split(',');
+for(var i=0;i<regionCountries.length;i++){
+    $.ajax({
+        type:'GET',
+        async:false,
+        url:'https://restcountries.eu/rest/v2/name/'+regionCountries[i]+'?fullText=true',
+        success:function(data){
+            $('#regionsCountries')[0].innerHTML+='<span class="block-xs bg-light-grey mb-1">'+data[0]['name']+'</span>&nbsp;';
 
+        }
+
+    })
+}
 
 </script>
 
