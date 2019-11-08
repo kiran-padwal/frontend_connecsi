@@ -1118,7 +1118,7 @@ def searchInfluencers():
 
     else:
         print('Not POST METHOD')
-        payload = {"channel":"Youtube","category_id": "","country": "US","min_lower": 0,"max_upper": 100000000,"sort_order": "High To Low",
+        payload = {"channel":"Youtube","category_id": "","country": "US","min_lower": 0,"max_upper": 300000000,"sort_order": "High To Low",
             "offset": 0
         }
         try:
@@ -1131,7 +1131,7 @@ def searchInfluencers():
                 item.update({'linechart_id': linechart_id})
                 # print(item)
                 linechart_id += 1
-            form_filters = {'channel': 'Youtube', 'string_word': '', 'country': 'US', 'min_lower': '0', 'max_upper': '100000000', 'sort_order': 'High To Low', 'country_name': 'Poland'}
+            form_filters = {'channel': 'Youtube', 'string_word': '', 'country': 'US', 'min_lower': '0', 'max_upper': '300000000', 'sort_order': 'High To Low', 'country_name': 'Poland'}
         except:
             pass
 
