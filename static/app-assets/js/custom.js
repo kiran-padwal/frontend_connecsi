@@ -3134,7 +3134,16 @@ $('#upgradeSubButton').click(function(){
 
     $('.influencerMenu').each(function (index ) {
         $(this).click(function () {
-            $(this).find("i").toggleClass("icon-reversed");
+            var classNow=$(this).find("i")[0].className.split(" ")[1]
+            if(classNow=='fa-angle-right'){
+                $(this).find("i").removeClass('fa-angle-right');
+                $(this).find("i").addClass('fa-angle-down');
+            }
+            else{
+                $(this).find("i").removeClass('fa-angle-down');
+                $(this).find("i").addClass('fa-angle-right');
+
+            }
             var id = $(this).data('inf');
             $('#influencers-table').find('tr.'+id).toggle();
         });
