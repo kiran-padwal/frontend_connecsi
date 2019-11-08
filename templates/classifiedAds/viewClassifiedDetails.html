@@ -90,7 +90,7 @@
                     <div class="col-md-6">
                         <div class="row">
                             <div class="col-12">
-                                <span>General Info: </span>
+                                <span class="bold-500-letter-spacing">General Info: </span>
                             </div>
                             <div class="col-lg-6">
                                 <div class="engagement">
@@ -115,17 +115,17 @@
 
                             </div>
                             <div class="col-12">
-                                <span>Channels:</span>
+                                <span class="bold-500-letter-spacing" style="display:block;">Channels:</span>
                                 {% set channels = item['channels'].split(',') %}
                                 {% for channel in channels %}
                                 {% if channel == 'youtube' %}
-                                <a href="#" class="fa fa-youtube fa-lg icons"></a>
+                                <a href="#" class="fa fa-youtube fa-lg icons" style="font-size:20px;"></a>
                                 {% elif channel == 'facebook' %}
-                                <a href="#" class="fa fa-facebook-square fa-lg icons"></a>
+                                <a href="#" class="fa fa-facebook-square fa-lg icons" style="font-size:20px;"></a>
                                 {% elif channel == 'twitter' %}
-                                <a href="#" class="fa fa-twitter fa-lg icons"></a>
+                                <a href="#" class="fa fa-twitter fa-lg icons" style="font-size:20px;"></a>
                                 {% elif channel == 'instagram' %}
-                                <a href="#" class="fa fa-instagram fa-lg icons"></a>
+                                <a href="#" class="fa fa-instagram fa-lg icons" style="font-size:20px;"></a>
                                 {% endif %}
                                 {% endfor %}
                             </div>
@@ -133,7 +133,7 @@
                                 <hr>
                             </div>
                             <div class="col-12">
-                                <span>Categories: </span>
+                                <span class="bold-500-letter-spacing">Categories: </span>
                             </div>
                             <div class="col-12">
                                 {% set video_cat_names = item['video_cat_name'].split(',') %}
@@ -145,19 +145,19 @@
                                 <hr>
                             </div>
                             <div class="col-12">
-                                <span>Content Type: </span>
+                                <span class="bold-500-letter-spacing">Content Type: </span>
                             </div>
                             <div class="col-12">
                                 {% set arrangements = item['arrangements'].split(',') %}
 
-                                <span class="color1">{{", ".join(arrangements)}} </span>
+                                <span class="color1" style="font-size:15px;">{{", ".join(arrangements)}} </span>
 
                             </div>
                             <div class="col-12">
                                 <hr>
 
                                 <div class="description">
-                                    <span class="description__title">Description</span>
+                                    <span class="description__title bold-500-letter-spacing">Description</span>
 
                                     <p>{{ item['classified_description'] }}</p>
                                 </div>
@@ -253,6 +253,7 @@ $(document).ready(function(){
             rating[i].innerText=abbrNum(min,0)+ "-" +abbrNum(max,0)
             rating[i+1].innerText=currencyList[currency]+" "+Number(budget).toFixed(2)
         }
+
 
 });
 

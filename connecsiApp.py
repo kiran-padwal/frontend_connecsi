@@ -1,3 +1,5 @@
+import elasticsearch
+# from elasticsearch import Elasticsearch
 import datetime
 import http
 import re
@@ -1157,14 +1159,22 @@ def searchInfluencers():
 
 
 
-@connecsiApp.route('/elasticSearch', methods=['GET'])
+@connecsiApp.route('/elasticSearch', methods=['GET','POST'])
 @is_logged_in
 def elasticSearch():
     data = []
     source_cluster = 'http://35.230.103.215:9200'
-    # es = elasticsearch.Elasticsearch(source_cluster)
-
-
+    es = elasticsearch.Elasticsearch(source_cluster)
+    filter_payload = {
+        'size': 10000,
+        'query': {
+            'match': {
+                'country': 'pewdiepie'
+            }
+        }
+    }
+    res = es.search(index='connecsi_admin', body=filter_payload, scroll='1m')
+    print(res)
     return data
     # return render_template('search/searchInfluencers.html', favInfList_data_alerts=favInfList_data_alerts,
     #                        maxAlerts=maxAlerts, maxAddToFavorites=maxAddToFavorites, maxExportLists=maxExportLists,
@@ -4062,12 +4072,11 @@ def deletedClassifieds():
     for item in all_classified_data['data']:
         if item['deleted'] =='true':
             deleted_classified_list.append(item)
+            item['posted_date'] = datetime.datetime.strptime(item['posted_date'],
+                                                             '%Y-%m-%d').strftime('%d %b %Y')
 
     print(deleted_classified_list)
     return render_template('classifiedAds/deleted_classifieds.html',view_classified_data=deleted_classified_list)
-
-
-
 
 def exportCsv(data):
     print('my data = ', data)
@@ -4103,7 +4112,6 @@ def exportCsv(data):
 #     print(profile_data_json)
 #
 #     return render_template('classifiedAds/view_all_classifiedAds.html',all_classified_data=view_classified_data_list,profile_data=profile_data_json)
-
 
 @connecsiApp.route('/viewAllClassifiedAds',methods=['GET','POST'])
 @is_logged_in
@@ -4150,6 +4158,7 @@ def viewAllClassifiedAds():
     profile_data_json = response.json()
     print(profile_data_json)
     return render_template('classifiedAds/view_all_classifiedAds.html',maxClassified=maxClassified,countClassified=countClassified,messageSubscription=messageSubscription,all_classified_data=view_classified_data_list,profile_data=profile_data_json)
+
 # @connecsiApp.route('/viewClassifiedDetails/<string:classified_id>')
 # @is_logged_in
 # def viewClassifiedDetails(classified_id):
@@ -5035,8 +5044,6 @@ def saveOffer():
     else:
         flash('Unauthorized', 'danger')
 
-
-
 @connecsiApp.route('/viewAllOffers', methods=['GET', 'POST'])
 @is_logged_in
 def viewAllOffers():
@@ -5044,14 +5051,14 @@ def viewAllOffers():
     from templates.offers.offer import Offer
     offerObj = Offer(user_id=user_id)
     all_offer_data = offerObj.get_all_offers()
-    print('all off data = ',all_offer_data)
+    print('all off data = ', all_offer_data)
     view_offer_data_list = []
     for item in all_offer_data['data']:
         item['posted_date'] = datetime.datetime.strptime(item['posted_date'],
                                                          '%Y-%m-%d').strftime('%d %b %Y')
         if item['deleted'] != 'true':
             view_offer_data_list.append(item)
-    print('list = ',view_offer_data_list)
+    print('list = ', view_offer_data_list)
 
     view_profile_url = base_url + 'Influencer/getDetailsByUserId/' + str(user_id)
     response = requests.get(view_profile_url)
@@ -5060,7 +5067,6 @@ def viewAllOffers():
 
     return render_template('offers/view_all_offer.html',
                            all_offer_data=view_offer_data_list, profile_data=profile_data_json)
-
 # @connecsiApp.route('/viewOfferDetails/<string:offer_id>')
 # @is_logged_in
 # def viewOfferDetails(offer_id):
@@ -5203,6 +5209,7 @@ def viewOfferDetails(offer_id):
         print(e)
 
 
+
 @connecsiApp.route('/deleteOffer/<string:offer_id>', methods=['GET'])
 @is_logged_in
 def deleteOffer(offer_id):
@@ -5234,6 +5241,9 @@ def deletedOffers():
     for item in all_offer_data['data']:
         if item['deleted'] == 'true':
             deleted_offer_list.append(item)
+            item['posted_date'] = datetime.datetime.strptime(item['posted_date'],
+                                                             '%Y-%m-%d').strftime('%d %b %Y')
+
 
     print(deleted_offer_list)
     return render_template('offers/deleted_offers.html', view_offer_data=deleted_offer_list)
@@ -5565,7 +5575,6 @@ def getClassifieds():
                 results.append(item)
         print(results)
         return jsonify(results=results)
-
 
 
                 # @connecsiApp.route('/login/authorized')
@@ -6835,4 +6844,4 @@ def changingAlertNotification():
 
 if __name__ == '__main__':
     # connecsiApp.secret_key = 'connecsiSecretKey'
-    connecsiApp.run(debug=True,host='0.0.0.0',port=8090,threaded=True)
+    connecsiApp.run(debug=True,host='127.0.0.1',port=8090,threaded=True)

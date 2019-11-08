@@ -68,7 +68,7 @@
                         <div class="col-xl-6 col-lg-12">
                             <div class="row">
                                 <div class="col-12">
-                                    <span>General Info:</span>
+                                    <span class="bold-500-letter-spacing">General Info:</span>
                                 </div>
                                 <div class="col-12">
                                     <div class="engagement">
@@ -98,40 +98,43 @@
                         <div class="col-xl-6 col-lg-12">
                             <div class="row">
                             <div class="col-12">
-                                    <span class="social">Channels:
+                                    <span class="social bold-500-letter-spacing">Channels:</span>
                                         {% set channels = item['channels'].split(',') %}
-                                    {% for channel in channels %}
-                                    {% if channel == 'youtube' %}
-                                    <a href="#" class="fa fa-youtube"></a>
-                                    {% elif channel == 'facebook' %}
-                                    <a href="#" class="fa fa-facebook-square"></a>
-                                    {% elif channel == 'twitter' %}
-                                    <a href="#" class="fa fa-twitter"></a>
-                                    {% elif channel == 'instagram' %}
-                                    <a href="#" class="fa fa-instagram"></a>
-                                    {% endif %}
-                                    {% endfor %}</span>
+                                        <ul style="list-style:none;display:inline-flex;padding:0;">
+                                            {% for channel in channels %}
+                                            {% if channel == 'youtube' %}
+                                            <li style="margin-right:5px;"><a href="#" class="fa fa-youtube" style="font-size:20px;"></a></li>
+                                            {% elif channel == 'facebook' %}
+                                            <li style="margin-right:5px;"><a href="#" class="fa fa-facebook-square" style="font-size:20px;"></a></li>
+                                            {% elif channel == 'twitter' %}
+                                            <li style="margin-right:5px;"><a href="#" class="fa fa-twitter" style="font-size:20px;"></a></li>
+                                            {% elif channel == 'instagram' %}
+                                            <li style="margin-right:5px;"><a href="#" class="fa fa-instagram" style="font-size:20px;"></a></li>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </ul>
+
 
                                 <hr>
                             </div>
 
                             <div class="col-12">
-                                <span>Content Type: </span>
+                                <span class="bold-500-letter-spacing">Content Type: </span>
                             </div>
 
                             <div class="col-12">
                                 <div class="arrangements">
                                     {% set arrangements = item['arrangements'].split(',') %}
-                                    <span class="color1">{{ ", ".join(arrangements) }} </span>
+                                    <span class="color1" style="font-size:15px;">{{ ", ".join(arrangements) }} </span>
                                 </div>
                             </div>
                             </div>
                         </div>
                         <div class="col-xl-6 col-lg-12">
-                            <hr>
+                            <hr style="margin:3px 0;">
                             <div class="row">
                                 <div class="col-12">
-                                    <span>Categories: </span>
+                                    <span class="bold-500-letter-spacing">Categories: </span>
                                 </div>
                                 <div class="col-12 categories">
                                     <div class="cat d-flex flex-wrap">

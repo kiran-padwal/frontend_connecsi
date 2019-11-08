@@ -2026,9 +2026,9 @@ td .menu .submenu:before {
 }
 .copy-classified-ads,.edit-classified-ads,.delete-classified-ads,.multiple-classified-ads{
     position:relative;
-    color:#599ae9;
+    color:#848484;
     top:5px;
-    font-size:20px;
+    font-size:16px;
 }
 
 .all-menu a{
@@ -2099,9 +2099,9 @@ border-radius: 5px
 }
 .copy-classified-ads,.edit-classified-ads,.delete-classified-ads,.multiple-classified-ads{
     position:relative;
-    color:#599ae9;
+    color:#848484;
     top:5px;
-    font-size:20px;
+    font-size:16px;
 }
 .all-menu a{
     margin-right:5px;
@@ -2504,3 +2504,36 @@ background-color:#9370DB;
 .table-striped td{
     padding:0.5rem!important;
 }
+
+
+.bold-500-letter-spacing{
+    font-weight: 500!important;
+    letter-spacing: 1px!important;
+}
+.description{
+    overflow-y: auto!important;
+}
+.arrangements__container{
+    overflow-y: auto!important;
+}
+.table-striped td{
+    padding:0.5rem!important;
+}
+.categories__container{
+    overflow-y: auto!important;
+}
+.arrangements{
+    overflow-y: auto!important;
+}
+
+.fc-content{
+    font-size:0.7rem!important;
+}
+.fc-content .fc-title{
+    font-size:0.7rem!important;
+    font-weight:600!important;
+}
+.fc-day-grid-event.fc-h-event.fc-event.fc-not-start.fc-end,.fc-day-grid-event.fc-h-event.fc-event.fc-not-start.fc-not-end{
+    opacity:0.65!important;
+}
+

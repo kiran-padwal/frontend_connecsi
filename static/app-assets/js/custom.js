@@ -4120,7 +4120,7 @@ $("#create_alert_form").submit(function (e) {
                             '<div class="col-xl-6 col-lg-12">' +
                             '<div class="row">' +
                             '<div class="col-12">' +
-                            '<span>General Info:</span>' +
+                            '<span class="bold-500-letter-spacing">General Info:</span>' +
                             '</div>' +
 
                             '<div class="col-12">' +
@@ -4146,23 +4146,26 @@ $("#create_alert_form").submit(function (e) {
                             '<div class="row">' +
                             '<div class="col-xl-6 col-lg-12">' +
                             '<div class="row">' +
-                            '<div class="col-12">' +
-                            '<span class="social">Channels: ' +
-                            '<span class="facebook-' + index + '"></span>' +
-                            '<span class="youtube-' + index + '">' +
-                            '</span><span class="twitter-' + index + '">' +
-                            '</span><span class="instagram-' + index + '">' +
+                            '<div class="col-12" style="margin-left:15px;">' +
+                            '<span class="social bold-500-letter-spacing" style="display:block;">Channels: ' +
                             '</span>' +
+                            '<ul style="list-style:none;display:inline-flex;padding:0;">'+
+                            '<li class="facebook-' + index + '" style="margin-right:5px;"></li>' +
+                            '<li class="youtube-' + index + '" style="margin-right:5px;">' +
+                            '</li><li class="twitter-' + index + '" style="margin-right:5px;">' +
+                            '</li><li class="instagram-' + index + '" style="margin-right:5px;">' +
+                            '</ul>'+
                             '</span>' +
 
                             '<hr>'+
                             '</div>' +
 
-                            '<div class="col-12">' +
-                            '<span>Content Type: </span>' +
+                            '<div class="col-12" style="margin-left:15px;">' +
+
+                            '<span class="bold-500-letter-spacing">Content Type: </span>' +
                             '</div>' +
 
-                            '<div class="col-12 arrangements__container">' +
+                            '<div class="col-12 arrangements__container" style="margin-left:15px;">' +
                             '<div id="arrangements-' + index + '"></div>' +
                             '</div>'+
                             '</div>'+
@@ -4170,7 +4173,8 @@ $("#create_alert_form").submit(function (e) {
                             '<div class="col-xl-6 col-lg-12">' +
                             '<div class="row">' +
                             '<div class="col-12">' +
-                            '<span>Categories: </span>' +
+                            '<hr style="margin:3px 0;">'+
+                            '<span class="bold-500-letter-spacing">Categories: </span>' +
                             '</div>' +
 
                             '<div class="col-12 categories__container">' +
@@ -4181,7 +4185,7 @@ $("#create_alert_form").submit(function (e) {
                             '</div>'+
                             '</div>'+
 
-                            '<div class="card-footer">' +
+                            '<div class="card-footer" style="padding:0;">' +
                             '<div class="offers_item__footer">' +
                             '<div class="row d-flex align-items-center mt-2">' +
                             ' <div class="col-md-6 d-flex flex-row align-items-center">' +
@@ -4203,24 +4207,26 @@ $("#create_alert_form").submit(function (e) {
                             '</div>');
                     $.each(this.channels.split(','), function (key, val) {
                         if (val === 'youtube') {
-                            $(".youtube-" + index).append("<a href='#' class='fa fa-youtube-square'></a>");
+                            $(".youtube-" + index).append("<a href='#' class='fa fa-youtube' style='font-size:20px;'></a>");
                         }
                         if (val === 'instagram') {
-                            $(".instagram-" + index).append("<a href='#' class='fa fa-instagram'></a>");
+                            $(".instagram-" + index).append("<a href='#' class='fa fa-instagram' style='font-size:20px;'></a>");
                         }
                         if (val === 'facebook') {
-                            $(".facebook-" + index).append("<a href='#' class='fa fa-facebook-square'></a>");
+                            $(".facebook-" + index).append("<a href='#' class='fa fa-facebook-square' style='font-size:20px;'></a>");
                         }
                         if (val === 'twitter') {
-                            $(".twitter-" + index).append("<a href='#' class='fa fa-twitter-square'></a>");
+                            $(".twitter-" + index).append("<a href='#' class='fa fa-twitter' style='font-size:20px;'></a>");
                         }
                     })
                     $.each(this.video_cat_name.split(','), function (key, val) {
                         $("#cat-" + index).append('<span class="offers_item__categories">' + val + '</span>');
                     })
                     $.each(this.arrangements.split(','), function (key, val) {
-                        $("#arrangements-" + index).append('<span class="arrangement color1">' + val + ', </span>');
+                        $("#arrangements-" + index).append('<span class="arrangement color1" style="font-size:15px;">' + val + ', </span>');
                     })
+                    var textShown=$("#arrangements-" + index)[0].children[$("#arrangements-" + index)[0].children.length-1].innerText
+                    $("#arrangements-" + index)[0].children[$("#arrangements-" + index)[0].children.length-1].innerText=textShown.substring(0,textShown.length-1);
                     $('#classifiedData').show("slow");
                 });
             }
@@ -4474,7 +4480,7 @@ $("#create_alert_form").submit(function (e) {
                         '<div class="col-xl-6 col-lg-12">' +
                         '<div class="row">' +
                         '<div class="col-12">' +
-                        '<span>General Info:</span>' +
+                        '<span class="bold-500-letter-spacing">General Info:</span>' +
                         '</div>' +
 
                         '<div class="col-12">' +
@@ -4502,19 +4508,22 @@ $("#create_alert_form").submit(function (e) {
                         '<div class="col-xl-6 col-lg-12">' +
                         '<div class="row">' +
                         '<div class="col-12">' +
-                        '<span class="social">Channels: ' +
-                        '<span class="facebook-' + index + '"></span>' +
-                        '<span class="youtube-' + index + '">' +
-                        '</span><span class="twitter-' + index + '">' +
-                        '</span><span class="instagram-' + index + '">' +
+                        '<span class="social bold-500-letter-spacing" style="display:block;">Channels: ' +
+
                         '</span>' +
+                        '<ul style="list-style:none;display:inline-flex;padding:0;">'+
+                        '<li class="facebook-' + index + '" style="margin-right:5px;"></li>' +
+                        '<li class="youtube-' + index + '" style="margin-right:5px;">' +
+                        '</li><li class="twitter-' + index + '" style="margin-right:5px;">' +
+                        '</li><li class="instagram-' + index + '" style="margin-right:5px;">' +
+                        '</ul>'+
                         '</span>' +
 
                         '<hr>' +
                         '</div>' +
 
                         '<div class="col-12">' +
-                        '<span>Content Type: </span>' +
+                        '<span class="bold-500-letter-spacing">Content Type: </span>' +
                         '</div>' +
 
                         '<div class="col-12 arrangements__container">' +
@@ -4526,7 +4535,8 @@ $("#create_alert_form").submit(function (e) {
                         '<div class="col-xl-6 col-lg-12">' +
                         '<div class="row">' +
                         '<div class="col-12">' +
-                        '<span>Categories: </span>' +
+                        '<hr style="margin:3px 0;">'+
+                        '<span class="bold-500-letter-spacing">Categories: </span>' +
                         '</div>' +
 
                         '<div class="col-12 categories__container">' +
@@ -4559,24 +4569,26 @@ $("#create_alert_form").submit(function (e) {
                         '</div>');
                     $.each(this.channels.split(','), function (key, val) {
                         if (val === 'youtube') {
-                            $(".youtube-" + index).append("<a href='#' class='fa fa-youtube-square'></a>");
+                            $(".youtube-" + index).append("<a href='#' class='fa fa-youtube' style='font-size:20px;'></a>");
                         }
                         if (val === 'instagram') {
-                            $(".instagram-" + index).append("<a href='#' class='fa fa-instagram'></a>");
+                            $(".instagram-" + index).append("<a href='#' class='fa fa-instagram' style='font-size:20px;'></a>");
                         }
                         if (val === 'facebook') {
-                            $(".facebook-" + index).append("<a href='#' class='fa fa-facebook-square'></a>");
+                            $(".facebook-" + index).append("<a href='#' class='fa fa-facebook-square' style='font-size:20px;'></a>");
                         }
                         if (val === 'twitter') {
-                            $(".twitter-" + index).append("<a href='#' class='fa fa-twitter-square'></a>");
+                            $(".twitter-" + index).append("<a href='#' class='fa fa-twitter' style='font-size:20px;'></a>");
                         }
                     });
                     $.each(this.video_cat_name.split(','), function (key, val) {
                         $("#cat-" + index).append('<span class="offers_item__categories">' + val + '</span>');
                     });
                     $.each(this.arrangements.split(','), function (key, val) {
-                        $("#arrangements-" + index).append('<span class="arrangement color1">' + val + ', </span>');
+                        $("#arrangements-" + index).append('<span class="arrangement color1" style="font-size:15px;">' + val + ', </span>');
                     });
+                    var textShown=$("#arrangements-" + index)[0].children[$("#arrangements-" + index)[0].children.length-1].innerText
+                    $("#arrangements-" + index)[0].children[$("#arrangements-" + index)[0].children.length-1].innerText=textShown.substring(0,textShown.length-1);
                     $('#offerData').show("slow");
 
                 });
@@ -4707,17 +4719,15 @@ $("#create_alert_form").submit(function (e) {
         $('.tab-content-item-list-container').perfectScrollbar();
     }
 
-    if($('.email-app-mail-content').length > 0){
-        $('.email-app-mail-content').perfectScrollbar();
-    }
+
 
     if($('.modal-body').length > 0){
         $('.modal-body').perfectScrollbar();
     }
 
-    if($('.arrangements').length > 0){
-        $('.arrangements').perfectScrollbar();
-    }
+//    if($('.arrangements').length > 0){
+//        $('.arrangements').perfectScrollbar();
+//    }
 
     if($('.categories').length > 0){
         $('.categories').perfectScrollbar();
@@ -4725,6 +4735,7 @@ $("#create_alert_form").submit(function (e) {
     if($('.tabs-content').length > 0){
     $('.tabs-content').perfectScrollbar();
     }
+
 
     $('.reset-button').on('click', function(e){
         e.preventDefault();

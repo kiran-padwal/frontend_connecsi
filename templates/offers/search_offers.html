@@ -97,34 +97,34 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-5 sliderContainer">
-                                    <label>Followers range</label>
-                                    <div id="slider2" class="sliderUI"></div>
+                                    <label style="margin-bottom:20px;">Followers range</label>
+                                    <div id="slider2" class="sliderUI" data-price="false"></div>
 
                                     <div class="row">
                                         <div class="col-sm-12 padding-top-xs">
-                                            <input class="form-control form-control-xs bg-light-grey slider-input round left lower-value"
+                                            <input type="hidden" class="form-control form-control-xs bg-light-grey slider-input round left lower-value"
                                                    name="min_lower" value="0" data-range="0" id="lower-value2">
-                                            <input class="form-control form-control-xs bg-light-grey slider-input round right upper-value"
+                                            <input type="hidden" class="form-control form-control-xs bg-light-grey slider-input round right upper-value"
                                                    name="max_upper" value="100000000" data-range="100000000"
                                                    id="upper-value2">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-sm-5 sliderContainer">
-                                    <label>Price range</label>
-                                    <div id="slider3" class="sliderUI"></div>
+                                    <label style="margin-bottom:20px;">Price range</label>
+                                    <div id="slider3" class="sliderUI" data-price="true"></div>
                                     <div class="row">
                                         <div class="col-sm-12 padding-top-xs">
-                                            <input class="form-control form-control-xs bg-light-grey slider-input round left lower-value"
+                                            <input type="hidden" class="form-control form-control-xs bg-light-grey slider-input round left lower-value"
                                                    name="min_lower_price" value="0" data-range="0" id="lower-value3">
-                                            <input class="form-control form-control-xs bg-light-grey slider-input round right upper-value"
+                                            <input type="hidden" class="form-control form-control-xs bg-light-grey slider-input round right upper-value"
                                                    name="max_upper_price" value="100000000" data-range="100000000"
                                                    id="upper-value3">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-sm-2">
-                                    <label>Currency</label>
+                                    <label >Currency</label>
                                     <select class="form-control" name="currency" id="currency">
                                         <option value="USD">USD</option>
                                         <option value="EUR">EUR</option>
@@ -138,8 +138,10 @@
                                 <button type="submit"
                                         class="btn btn-primary bg-color1 no-margin-bottom mr-1">Submit <i
                                         class="fa fa-search"></i></button>
-                                <a href="#" class="btn btn-raised reset-button btn-warning color-white no-margin-bottom">
-                                    Reset <i class="fa fa-close"></i></a>
+
+
+<!--                                <a href="#" class="btn btn-raised reset-button btn-warning color-white no-margin-bottom">-->
+<!--                                    Reset <i class="fa fa-close"></i></a>-->
                             </div>
                         </div>
                     </form>
