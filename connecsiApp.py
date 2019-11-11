@@ -1162,29 +1162,339 @@ def searchInfluencers():
 @connecsiApp.route('/elasticSearch', methods=['GET','POST'])
 @is_logged_in
 def elasticSearch():
-    data = []
-    source_cluster = 'http://35.230.103.215:9200'
-    es = elasticsearch.Elasticsearch(source_cluster)
-    filter_payload = {
-        'size': 10000,
-        'query': {
-            'match': {
-                'country': 'pewdiepie'
-            }
+    start = time.time()
+    user_id = session['user_id']
+    url_regionCodes = base_url + 'Youtube/regionCodes'
+    url_videoCat = base_url + 'Youtube/videoCategories'
+    regionCodes_json = ''
+    videoCat_json = ''
+    form_filters = ''
+    country_name = ''
+    subValues = getSubscriptionValues(str(user_id))
+    countExportList = 0
+    packageName = ''
+    countAddToFavorites = 0
+    countAlerts = 0
+    countMessages = 0
+    messageSubscription = {
+        'Export Lists': {
+            'heading': '',
+            'text': ''
+        },
+        'Add to Favorites': {
+            'heading': '',
+            'text': ''
+        },
+        'Alerts': {
+            'heading': '',
+            'text': ''
+        },
+        'Messages': {
+            'heading': '',
+            'text': ''
         }
     }
-    res = es.search(index='connecsi_admin', body=filter_payload, scroll='1m')
-    print(res)
-    return data
-    # return render_template('search/searchInfluencers.html', favInfList_data_alerts=favInfList_data_alerts,
-    #                        maxAlerts=maxAlerts, maxAddToFavorites=maxAddToFavorites, maxExportLists=maxExportLists,
-    #                        maxMessages=maxMessages, packageName=packageName, countMessages=countMessages,
-    #                        countAlerts=countAlerts, countAddToFavorites=countAddToFavorites,
-    #                        messageSubscription=messageSubscription, countExportList=countExportList,
-    #                        regionCodes=regionCodes_json,
-    #                        lookup_string=lookup_string, form_filters=form_filters, data=data, pagination='',
-    #                        view_campaign_data=view_campaign_data,
-    #                        favInfList_data=favInfList_data, payload_form_filter=payload)
+    maxAlerts = 0
+    maxAddToFavorites = 0
+    maxMessages = 0
+    maxExportLists = 0
+    for i in subValues['data']:
+        print(i['feature_name'])
+        if (i['feature_name'].lower() == 'export lists'):
+            countExportList = i['units']
+            packageName = i['package_name']
+            maxExportLists = i['base_units'] + i['added_units']
+            messageSubscription['Export Lists']['heading'] = "Limit Reached"
+            messageSubscription['Export Lists']['text'] = "Your current plan has only " + str(
+                countExportList) + " records left (Allowed: " + str(maxExportLists) + " ) therefore, only " + str(
+                countExportList) + " records will be added to to you export list. Please customize your plan to add more or upgrade to unlock more features and add-ons."
+        if (i['feature_name'].lower() == 'add to favorites'):
+            countAddToFavorites = i['units']
+            maxAddToFavorites = i['base_units'] + i['added_units']
+            messageSubscription['Add to Favorites']['text'] = ''
+        if (i['feature_name'].lower() == 'alerts'):
+            countAlerts = i['units']
+            maxAlerts = i['base_units'] + i['added_units']
+            messageSubscription['Alerts']['text'] = ''
+        if (i['feature_name'].lower() == 'messages'):
+            countMessages = i['units']
+            maxMessages = i['base_units'] + i['added_units']
+            messageSubscription['Messages']['text'] = ''
+
+    if (countMessages == -1):
+        messageSubscription['Messages']['heading'] = 'Upgrade Plan'
+        messageSubscription['Messages'][
+            'text'] = "This feature is unavailable in your current plan. Please upgrade your account to get access to additional features and add-ons."
+    elif (countMessages == 0):
+        messageSubscription['Messages']['heading'] = 'Limit Reached'
+        messageSubscription['Messages']['text'] = "You have reached the limit of Messages. (Allowed: " + str(
+            maxMessages) + " ) Please customize your plan to add more or upgrade to unlock more features and add-ons."
+
+    if (countExportList == 0):
+        messageSubscription['Export Lists']['heading'] = "Limit Reached"
+        messageSubscription['Export Lists']['text'] = "You have reached the limit of Export Lists. (Allowed: " + str(
+            maxExportLists) + " ) Please customize your plan to add more or upgrade to unlock more features and add-ons."
+    elif (countExportList == -1):
+        messageSubscription['Export Lists']['heading'] = "Upgrade Plan"
+        messageSubscription['Export Lists'][
+            'text'] = "This feature is unavailable in your current plan. Please upgrade your account to get access to additional features and add-ons."
+
+    if (countAddToFavorites == 0):
+        messageSubscription['Add to Favorites']['heading'] = "Limit Reached"
+        messageSubscription['Add to Favorites'][
+            'text'] = "You have reached the limit of Add to Favorites. (Allowed: " + str(
+            maxAddToFavorites) + " ) Please customize your plan to add more or upgrade to unlock more features and add-ons."
+
+    if (countAlerts == -1):
+        messageSubscription['Alerts']['heading'] = "Upgrade Plan"
+        messageSubscription['Alerts'][
+            'text'] = "This feature is unavailable in your current plan. Please upgrade your account to get access to additional features and add-ons."
+    elif (countAlerts == 0):
+        messageSubscription['Alerts']['heading'] = "Limit Reached"
+        messageSubscription['Alerts']['text'] = "You have reached the limit of Alerts. (Allowed: " + str(
+            maxAlerts) + " ) Please customize your plan to add more or upgrade to unlock more features and add-ons."
+
+    view_campaign_data = ''
+    data = ''
+    favInfList_data = ''
+    try:
+        response_regionCodes = requests.get(url=url_regionCodes)
+        regionCodes_json = response_regionCodes.json()
+    except Exception as e:
+        print(e)
+    try:
+        response_videoCat = requests.get(url=url_videoCat)
+        videoCat_json = response_videoCat.json()
+    except Exception as e:
+        print(e)
+
+    lookup_string = ''
+    for cat in videoCat_json['data']:
+        lookup_string += ''.join(',' + cat['video_cat_name'])
+    # lookup_string = lookup_string.replace('&', 'and')
+
+    print('before getting campaigns')
+    from templates.campaign import campaign
+    campaignObj = campaign.Campaign(user_id=user_id)
+    view_campaign_data = campaignObj.get_all_campaigns()
+    for item in view_campaign_data['data']:
+        if item['deleted'] == 'true':
+            view_campaign_data['data'].remove(item)
+
+    print('after getting campaigns')
+    print(view_campaign_data)
+    try:
+        url = base_url + '/Brand/getInfluencerFavListNew/' + str(user_id)
+        response = requests.get(url=url)
+        favInfList_data = response.json()
+        linechart_id = 1
+        for item in favInfList_data['data']:
+            item.update({'linechart_id': linechart_id})
+            linechart_id += 1
+    except Exception as e:
+        print(e)
+        pass
+
+    try:
+        url = base_url + '/Brand/getInfluencerFavList/' + str(user_id)
+        response3 = requests.get(url=url)
+        favInfList_data_alerts = response3.json()
+        linechart_id_alert = 1
+        for item in favInfList_data_alerts['data']:
+            item.update({'linechart_id': linechart_id_alert})
+            linechart_id_alert += 1
+    except Exception as e:
+        print(e)
+        pass
+
+    ###### POST METHOD#######
+    print('before POST METHOD')
+    if request.method == 'POST':
+        print('i m inside POST METHOD')
+        string_word = request.form.get('string_word')
+        category = string_word.replace('and', '&')
+        sort_order = request.form.get('sort_order')
+        print(sort_order)
+        print(category)
+        category_id = ''
+        for cat in videoCat_json['data']:
+            if cat['video_cat_name'] == category:
+                print("category id = ", cat['video_cat_id'])
+                category_id = cat['video_cat_id']
+
+        form_filters = request.form.to_dict()
+        print('post form filters =', form_filters)
+        if form_filters['country']:
+            url_country_name = base_url + 'Youtube/regionCode/' + form_filters['country']
+            try:
+                response_country_name = requests.get(url=url_country_name)
+                country_name_json = response_country_name.json()
+                print(country_name_json['data'][0][1])
+                country_name = country_name_json['data'][0][1]
+            except Exception as e:
+                print(e)
+            form_filters.update({'country_name': country_name})
+        print('final form filters = ', form_filters)
+
+        payload = request.form.to_dict()
+        payload.update({'category_id': str(category_id)})
+        payload.update({'min_lower': payload.get('min_lower')})
+        payload.update({'max_upper': payload.get('max_upper')})
+
+        try:
+            if form_filters['offset']:
+                payload.update({'offset': int(form_filters['offset'])})
+            else:
+                payload.update({'offset': 0})
+                print('i m in else no offset set')
+        except:
+            payload.update({'offset': 0})
+            pass
+
+        print('payload form filter = ', payload)
+
+        try:
+            channel = request.form.get('channel')
+            print('channel name = ', channel)
+            url = base_url + 'Youtube/searchChannels/' + channel
+            print(url)
+            # del payload['channel']
+            # del payload['string_word']
+            print(payload)
+            response = requests.post(url, json=payload)
+            print(response.json())
+            data = response.json()
+            linechart_id = 1
+            for item in data['data']:
+                item.update({'linechart_id': linechart_id})
+                # print(item)
+                linechart_id += 1
+            try:
+                exportCsv(data=data)
+            except Exception as e:
+                print(e)
+                pass
+            if form_filters['channel'] == 'Twitter':
+                for item in data['data']:
+                    item.update({'total_videos': 100})
+                    # total_videos_url = base_url + 'Youtube/totalVideos/' + str(item['channel_id'])
+                    # try:
+                    #     response = requests.get(total_videos_url)
+                    #     total_videos = response.json()
+                    #     for item1 in total_videos['data']:
+                    #         item.update(item1)
+                    # print(item)
+                    # except:
+                    #     pass
+            if form_filters['channel'] == 'Youtube':
+                for item in data['data']:
+                    total_videos_url = base_url + 'Youtube/totalVideos/' + str(item['channel_id'])
+                    try:
+                        response = requests.get(total_videos_url)
+                        total_videos = response.json()
+                        for item1 in total_videos['data']:
+                            item.update(item1)
+                        print(item)
+                    except:
+                        pass
+                        # if form_filters['channel']=='Instagram':
+                        # for item in data['data']:
+                        #     item.update({'total_videos':100})
+                        # total_videos_url = base_url + 'Youtube/totalVideos/' + str(item['channel_id'])
+                        # try:
+                        #     response = requests.get(total_videos_url)
+                        #     total_videos = response.json()
+                        #     for item1 in total_videos['data']:
+                        #         item.update(item1)
+                        # print(item)
+                        # except:
+                        #     pass
+            # print(data)
+            return render_template('search/elasticSearch.html', favInfList_data_alerts=favInfList_data_alerts,
+                                   maxAlerts=maxAlerts, maxAddToFavorites=maxAddToFavorites,
+                                   maxExportLists=maxExportLists, maxMessages=maxMessages, countMessages=countMessages,
+                                   packageName=packageName, countAlerts=countAlerts,
+                                   countAddToFavorites=countAddToFavorites, messageSubscription=messageSubscription,
+                                   countExportList=countExportList, regionCodes=regionCodes_json,
+                                   lookup_string=lookup_string, form_filters=form_filters, data=data,
+                                   view_campaign_data=view_campaign_data
+                                   , favInfList_data=favInfList_data, payload_form_filter=payload)
+        except Exception as e:
+            print(e)
+            print('i m hee')
+            return render_template('search/elasticSearch.html', favInfList_data_alerts=favInfList_data_alerts,
+                                   maxAlerts=maxAlerts, maxAddToFavorites=maxAddToFavorites,
+                                   maxExportLists=maxExportLists, maxMessages=maxMessages, countMessages=countMessages,
+                                   packageName=packageName, countAlerts=countAlerts,
+                                   countAddToFavorites=countAddToFavorites, messageSubscription=messageSubscription,
+                                   countExportList=countExportList, regionCodes=regionCodes_json,
+                                   lookup_string=lookup_string, form_filters=form_filters, data=data,
+                                   view_campaign_data=view_campaign_data
+                                   , favInfList_data=favInfList_data, payload_form_filter=payload)
+
+
+    else:
+        # source_cluster = 'http://35.230.103.215:9200'
+        # es = elasticsearch.Elasticsearch(source_cluster)
+
+        # res = es.search(index='connecsi_admin', body=filter_payload, scroll='1m')
+        # print(res)
+        print('Not POST METHOD')
+        data = []
+        title = "blowek"
+        country = "PL"
+        subscribercount_gained="desc"
+        size="10"
+        offset = "0"
+        try:
+            youtube_elastic_search_url = 'http://35.230.103.215:9200/connecsi_admin/_search?' \
+                             'q=title:'+title+'%20AND%20country:'+country+'' \
+                             '&sort=subscribercount_gained:'+subscribercount_gained+'' \
+                             '&size='+size+'&from='+offset
+            print(youtube_elastic_search_url)
+            response = requests.get(youtube_elastic_search_url)
+            print(response)
+            print(response.json())
+            data.append(response.json())
+            print(data)
+            linechart_id = 1
+            for item in data:
+                item.update({'linechart_id': linechart_id})
+                # print(item)
+                linechart_id += 1
+            # form_filters = {'channel': 'Youtube', 'string_word': '', 'country': 'US', 'min_lower': '0',
+            #                 'max_upper': '300000000', 'sort_order': 'High To Low', 'country_name': 'Poland'}
+        except:
+            pass
+
+        try:
+            pass
+            # exportCsv(data=data)
+        except Exception as e:
+            print(e)
+            pass
+        print('I M HERE BEFORE GETTING TOTAL VIDEOS')
+        # for item in data:
+        #     total_videos_url = base_url + 'Youtube/totalVideos/' + str(item['channel_id'])
+        #     try:
+        #         response = requests.get(total_videos_url)
+        #         total_videos = response.json()
+        #         for item1 in total_videos['data']:
+        #             item.update(item1)
+        #             # print(item)
+        #     except:
+        #         pass
+        end = time.time()
+        print(end - start)
+        return render_template('search/elasticSearch.html', favInfList_data_alerts=favInfList_data_alerts,
+                               maxAlerts=maxAlerts, maxAddToFavorites=maxAddToFavorites, maxExportLists=maxExportLists,
+                               maxMessages=maxMessages, packageName=packageName, countMessages=countMessages,
+                               countAlerts=countAlerts, countAddToFavorites=countAddToFavorites,
+                               messageSubscription=messageSubscription, countExportList=countExportList,
+                               regionCodes=regionCodes_json,
+                               lookup_string=lookup_string, form_filters=form_filters, data=data, pagination='',
+                               view_campaign_data=view_campaign_data,
+                               favInfList_data=favInfList_data)
 
 #
 @connecsiApp.route('/addFundsBrands')
