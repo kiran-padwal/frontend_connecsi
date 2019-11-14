@@ -1453,11 +1453,11 @@ def elasticSearch():
                              '&size='+size+'&from='+offset
             print(youtube_elastic_search_url)
             response = requests.get(youtube_elastic_search_url)
-            print(response)
-            print(response.json())
+            # print(response)
+            # print(response.json())
             data.append(response.json())
-            print(data)
-            print("real check up",data[0]['hits']['hits'][0]['_source']['youtube_followers_history'])
+            # print(data)
+            # print("real check up",data[0]['hits']['hits'][0]['_source']['youtube_followers_history'])
             data1={}
             data1=data[0]['hits']['hits']
             linechart_id = 1
