@@ -1444,7 +1444,7 @@ def elasticSearch():
         title = "PewDiePie"
         country = "PL"
         subscribercount_gained="desc"
-        size="20"
+        size="10"
         offset = "0"
         try:
             youtube_elastic_search_url = 'http://35.230.103.215:9200/connecsi_admin/_search?' \
