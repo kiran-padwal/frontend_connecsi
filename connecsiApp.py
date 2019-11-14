@@ -1441,14 +1441,14 @@ def elasticSearch():
         # print(res)
         print('Not POST METHOD')
         data = []
-        title = "blowek"
+        title = "PewDiePie"
         country = "PL"
         subscribercount_gained="desc"
-        size="10"
+        size="20"
         offset = "0"
         try:
             youtube_elastic_search_url = 'http://35.230.103.215:9200/connecsi_admin/_search?' \
-                             'q=title:'+title+'%20AND%20country:'+country+'' \
+                             'q=country:'+country+'' \
                              '&sort=subscribercount_gained:'+subscribercount_gained+'' \
                              '&size='+size+'&from='+offset
             print(youtube_elastic_search_url)
@@ -1457,13 +1457,18 @@ def elasticSearch():
             print(response.json())
             data.append(response.json())
             print(data)
+            print("real check up",data[0]['hits']['hits'][0]['_source']['youtube_followers_history'])
+            data1={}
+            data1=data[0]['hits']['hits']
             linechart_id = 1
-            for item in data:
+            for item in data[0]['hits']['hits']:
                 item.update({'linechart_id': linechart_id})
                 # print(item)
                 linechart_id += 1
-            # form_filters = {'channel': 'Youtube', 'string_word': '', 'country': 'US', 'min_lower': '0',
-            #                 'max_upper': '300000000', 'sort_order': 'High To Low', 'country_name': 'Poland'}
+            form_filters = {'channel': 'Youtube', 'string_word': '', 'country': 'US', 'min_lower': '0',
+                            'max_upper': '300000000', 'sort_order': 'High To Low', 'country_name': 'United States'}
+            payload={'channel': 'Youtube', 'string_word': '', 'country': 'US', 'min_lower': '0',
+                            'max_upper': '300000000', 'sort_order': 'High To Low', 'country_name': 'United States'}
         except:
             pass
 
@@ -1492,9 +1497,9 @@ def elasticSearch():
                                countAlerts=countAlerts, countAddToFavorites=countAddToFavorites,
                                messageSubscription=messageSubscription, countExportList=countExportList,
                                regionCodes=regionCodes_json,
-                               lookup_string=lookup_string, form_filters=form_filters, data=data, pagination='',
+                               lookup_string=lookup_string, form_filters=form_filters, data=data,data1=data1, pagination='',
                                view_campaign_data=view_campaign_data,
-                               favInfList_data=favInfList_data)
+                               favInfList_data=favInfList_data,payload_form_filter=payload)
 
 #
 @connecsiApp.route('/addFundsBrands')

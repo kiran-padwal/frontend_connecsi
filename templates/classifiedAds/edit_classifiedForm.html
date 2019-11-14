@@ -93,11 +93,11 @@
                                             <div class="form-field sliderContainer">
                                                 <div class="form-group">
                                                     <label>Followers</label>
-                                                    <div id="slider" class="sliderUI"></div>
+                                                    <div id="slider" class="sliderUI" data-price="false" style="margin-top:18px;"></div>
                                                 </div>
-                                                <input class="form-control form-control-xs bg-light-grey slider-input round left lower-value"
+                                                <input type="hidden" class="form-control form-control-xs bg-light-grey slider-input round left lower-value"
                                                        name="min_lower" value="{{item['min_lower_followers']}}" data-range="0" id="lower-value">
-                                                <input class="form-control form-control-xs bg-light-grey slider-input round right upper-value"
+                                                <input type="hidden" class="form-control form-control-xs bg-light-grey slider-input round right upper-value"
                                                        name="max_upper" value="{{item['max_upper_followers']}}" data-range="100000000"
                                                        id="upper-value">
                                             </div>
