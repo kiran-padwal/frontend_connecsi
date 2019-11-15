@@ -20,7 +20,7 @@
                 </h4>
             </div>
             <div class="card-body">
-                <form action="/searchInfluencers" method="POST" name="form_search" id="form_search">
+                <form action="/elasticSearch" method="POST" name="form_search" id="form_search">
                     <div class="row">
                         <div class="col-sm-2">
                             <div class="form-group">
@@ -199,7 +199,7 @@
 
 <div class="row">
         {% for item in data1 %}
-        {% set _ = glob.update({'total_rows':data1 | length }) %}
+
 
         <div class="col-md-6 col-nc-lg-6 col-lg-12">
             <!-- influencer card -->
@@ -761,9 +761,69 @@
         {% endfor %}
     </div>
 
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="card-block text-center pagination_block">
+                    <div class="row" style="display:inline;">
+                        <div class="col-sm-12" id="pagination" style="left:45%;">
+                            <!--{{ glob.total_rows }}-->
+                            <!--{{ payload_form_filter }}-->
+                            {% set _ = glob.update({'total_rows':total_rows}) %}
+                            {% if glob.total_rows %}
+                            {% set pages = ((glob.total_rows)/20)|round|int %}
+                            <!--{{ pages }}-->
+                            {% set _ = glob.update({'offset':0}) %}
+                            {% set current_offset = form_filters['offset']|int %}
 
+                            {% for pages in range(pages) %}
 
+                                <form id="" method="POST" action="/elasticSearch">
+                                    <input type="hidden" name="channel" value="{{form_filters['channel']}}">
+                                    <input type="hidden" name="string_word" value="{{form_filters['string_word']}}">
+                                    <input type="hidden" name="country" value="{{form_filters['country']}}">
+                                    <input type="hidden" name="min_lower" value="{{form_filters['min_lower']}}">
+                                    <input type="hidden" name="max_upper" value="{{form_filters['max_upper']}}">
+                                    <input type="hidden" name="sort_order" value="{{form_filters['sort_order']}}">
+                                    <input type="hidden" name="category_id" value="{{form_filters['category_id']}}">
+                                    <input type="hidden" name="offset" value="{{glob.offset}}">
+                                    {% if glob.offset == current_offset-40 or glob.offset == current_offset-20 or
+                                    glob.offset == 0 or glob.offset == current_offset or glob.offset==current_offset+20 or
+                                    glob.offset==current_offset+40 %}
+                                    {% if current_offset == glob.offset %}
 
+                                    {% set _ = glob.update({'current_page':loop.index}) %}
+                                    <div class="text-center">
+                                        <button type="submit" disabled class="btn btn-info btn-sm" name="search_inf">
+                                            {{loop.index}}
+                                        </button>
+                                    </div>
+                                    {% else %}
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-info btn-sm" name="search_inf">{{loop.index}}</button>
+                                    </div>
+                                    {% endif %}
+                                    {% elif glob.offset == current_offset-60 or glob.offset == current_offset+60 %}
+                                    <div class="text-center" data-toggle="tooltip" title="Next">
+                                        <button type="submit" class="btn btn-info btn-sm" name="search_inf">...</button>
+                                    </div>
+                                    {% endif %}
+
+                                </form>
+
+                            {% set _ = glob.update({'offset':(glob.offset+20)|int}) %}
+                            <!--{{glob.offset}}-->
+                            {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    Page {{glob.current_page}} of {{ pages }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 

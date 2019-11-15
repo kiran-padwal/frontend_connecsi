@@ -1324,6 +1324,7 @@ def elasticSearch():
 
         form_filters = request.form.to_dict()
         print('post form filters =', form_filters)
+
         if form_filters['country']:
             url_country_name = base_url + 'Youtube/regionCode/' + form_filters['country']
             try:
@@ -1336,101 +1337,107 @@ def elasticSearch():
             form_filters.update({'country_name': country_name})
         print('final form filters = ', form_filters)
 
-        payload = request.form.to_dict()
-        payload.update({'category_id': str(category_id)})
-        payload.update({'min_lower': payload.get('min_lower')})
-        payload.update({'max_upper': payload.get('max_upper')})
 
         try:
             if form_filters['offset']:
-                payload.update({'offset': int(form_filters['offset'])})
+                form_filters.update({'offset': int(form_filters['offset'])})
             else:
-                payload.update({'offset': 0})
+                form_filters.update({'offset': 0})
                 print('i m in else no offset set')
         except:
-            payload.update({'offset': 0})
+            form_filters.update({'offset': 0})
             pass
 
-        print('payload form filter = ', payload)
+        print('payload form filter = ', form_filters)
 
         try:
             channel = request.form.get('channel')
             print('channel name = ', channel)
-            url = base_url + 'Youtube/searchChannels/' + channel
-            print(url)
-            # del payload['channel']
-            # del payload['string_word']
-            print(payload)
-            response = requests.post(url, json=payload)
-            print(response.json())
-            data = response.json()
-            linechart_id = 1
-            for item in data['data']:
-                item.update({'linechart_id': linechart_id})
-                # print(item)
-                linechart_id += 1
-            try:
-                exportCsv(data=data)
-            except Exception as e:
-                print(e)
-                pass
+
             if form_filters['channel'] == 'Twitter':
-                for item in data['data']:
-                    item.update({'total_videos': 100})
-                    # total_videos_url = base_url + 'Youtube/totalVideos/' + str(item['channel_id'])
-                    # try:
-                    #     response = requests.get(total_videos_url)
-                    #     total_videos = response.json()
-                    #     for item1 in total_videos['data']:
-                    #         item.update(item1)
-                    # print(item)
-                    # except:
-                    #     pass
+                print('total posts are missing')
+                # for item in data['data']:
+                #     item.update({'total_videos': 100})
+
             if form_filters['channel'] == 'Youtube':
-                for item in data['data']:
-                    total_videos_url = base_url + 'Youtube/totalVideos/' + str(item['channel_id'])
-                    try:
-                        response = requests.get(total_videos_url)
-                        total_videos = response.json()
-                        for item1 in total_videos['data']:
-                            item.update(item1)
-                        print(item)
-                    except:
-                        pass
-                        # if form_filters['channel']=='Instagram':
-                        # for item in data['data']:
-                        #     item.update({'total_videos':100})
-                        # total_videos_url = base_url + 'Youtube/totalVideos/' + str(item['channel_id'])
-                        # try:
-                        #     response = requests.get(total_videos_url)
-                        #     total_videos = response.json()
-                        #     for item1 in total_videos['data']:
-                        #         item.update(item1)
-                        # print(item)
-                        # except:
-                        #     pass
-            # print(data)
-            return render_template('search/elasticSearch.html', favInfList_data_alerts=favInfList_data_alerts,
-                                   maxAlerts=maxAlerts, maxAddToFavorites=maxAddToFavorites,
-                                   maxExportLists=maxExportLists, maxMessages=maxMessages, countMessages=countMessages,
-                                   packageName=packageName, countAlerts=countAlerts,
-                                   countAddToFavorites=countAddToFavorites, messageSubscription=messageSubscription,
-                                   countExportList=countExportList, regionCodes=regionCodes_json,
-                                   lookup_string=lookup_string, form_filters=form_filters, data=data,
-                                   view_campaign_data=view_campaign_data
-                                   , favInfList_data=favInfList_data, payload_form_filter=payload)
+                data = []
+                # title = "PewDiePie"
+                country = form_filters['country']
+                if form_filters['sort_order'] == 'High To Low':
+                    subscribercount_gained = "desc"
+                else:
+                    subscribercount_gained = 'asc'
+                size = "20"
+                offset = str(form_filters['offset'])
+                min_lower = form_filters['min_lower']
+                max_upper = form_filters['max_upper']
+
+                youtube_elastic_search_url = 'http://35.230.103.215:9200/connecsi_admin/_search?' \
+                                             'q=subscribercount_gained:['+min_lower+'+TO+'+max_upper+']%20AND%20country:' + country + '' \
+                                             '&sort=subscribercount_gained:' + subscribercount_gained + '' \
+                                             '&size=' + size + '&from=' + offset
+                print(youtube_elastic_search_url)
+                response = requests.get(youtube_elastic_search_url)
+                # print(response)
+                # print(response.json())
+                data.append(response.json())
+                # print(data)
+                print("real check up", data[0]['hits']['total']['value'])
+                data1 = {}
+                data1 = data[0]['hits']['hits']
+                total_rows = data[0]['hits']['total']['value']
+                linechart_id = 1
+                for item in data[0]['hits']['hits']:
+                    item.update({'linechart_id': linechart_id})
+                    # print(item)
+                    linechart_id += 1
+
+
+                try:
+                    print('wait for export csv')
+                    # exportCsv(data=data)
+                except Exception as e:
+                    print(e)
+                    pass
+                print('I M HERE BEFORE GETTING TOTAL VIDEOS')
+                end = time.time()
+                print(end - start)
+                # form_filters = {'channel': 'Youtube', 'string_word': '', 'country': 'US', 'min_lower': '0',
+                #                 'max_upper': '300000000', 'sort_order': 'High To Low', 'country_name': 'United States',
+                #                 'offset': offset}
+                return render_template('search/elasticSearch.html', favInfList_data_alerts=favInfList_data_alerts,
+                                       maxAlerts=maxAlerts, maxAddToFavorites=maxAddToFavorites,
+                                       maxExportLists=maxExportLists,
+                                       maxMessages=maxMessages, packageName=packageName, countMessages=countMessages,
+                                       countAlerts=countAlerts, countAddToFavorites=countAddToFavorites,
+                                       messageSubscription=messageSubscription, countExportList=countExportList,
+                                       regionCodes=regionCodes_json,
+                                       lookup_string=lookup_string, form_filters=form_filters, data1=data1,
+                                       pagination='',
+                                       view_campaign_data=view_campaign_data,
+                                       favInfList_data=favInfList_data,
+                                       total_rows=total_rows
+                                       # payload_form_filter=payload
+                                       )
+
+
         except Exception as e:
             print(e)
             print('i m hee')
             return render_template('search/elasticSearch.html', favInfList_data_alerts=favInfList_data_alerts,
                                    maxAlerts=maxAlerts, maxAddToFavorites=maxAddToFavorites,
-                                   maxExportLists=maxExportLists, maxMessages=maxMessages, countMessages=countMessages,
-                                   packageName=packageName, countAlerts=countAlerts,
-                                   countAddToFavorites=countAddToFavorites, messageSubscription=messageSubscription,
-                                   countExportList=countExportList, regionCodes=regionCodes_json,
-                                   lookup_string=lookup_string, form_filters=form_filters, data=data,
-                                   view_campaign_data=view_campaign_data
-                                   , favInfList_data=favInfList_data, payload_form_filter=payload)
+                                   maxExportLists=maxExportLists,
+                                   maxMessages=maxMessages, packageName=packageName, countMessages=countMessages,
+                                   countAlerts=countAlerts, countAddToFavorites=countAddToFavorites,
+                                   messageSubscription=messageSubscription, countExportList=countExportList,
+                                   regionCodes=regionCodes_json,
+                                   lookup_string=lookup_string, form_filters=form_filters, data1=data1,
+                                   pagination='',
+                                   view_campaign_data=view_campaign_data,
+                                   favInfList_data=favInfList_data,
+                                   total_rows=total_rows
+                                   # payload_form_filter=payload
+                                   )
 
 
     else:
@@ -1442,9 +1449,9 @@ def elasticSearch():
         print('Not POST METHOD')
         data = []
         title = "PewDiePie"
-        country = "PL"
+        country = "US"
         subscribercount_gained="desc"
-        size="10"
+        size="20"
         offset = "0"
         try:
             youtube_elastic_search_url = 'http://35.230.103.215:9200/connecsi_admin/_search?' \
@@ -1457,49 +1464,42 @@ def elasticSearch():
             # print(response.json())
             data.append(response.json())
             # print(data)
-            # print("real check up",data[0]['hits']['hits'][0]['_source']['youtube_followers_history'])
+            print("real check up",data[0]['hits']['total']['value'])
             data1={}
             data1=data[0]['hits']['hits']
+            total_rows = data[0]['hits']['total']['value']
             linechart_id = 1
             for item in data[0]['hits']['hits']:
                 item.update({'linechart_id': linechart_id})
                 # print(item)
                 linechart_id += 1
-            form_filters = {'channel': 'Youtube', 'string_word': '', 'country': 'US', 'min_lower': '0',
-                            'max_upper': '300000000', 'sort_order': 'High To Low', 'country_name': 'United States'}
-            payload={'channel': 'Youtube', 'string_word': '', 'country': 'US', 'min_lower': '0',
-                            'max_upper': '300000000', 'sort_order': 'High To Low', 'country_name': 'United States'}
+
         except:
             pass
 
         try:
-            pass
+            print('wait for export csv')
             # exportCsv(data=data)
         except Exception as e:
             print(e)
             pass
         print('I M HERE BEFORE GETTING TOTAL VIDEOS')
-        # for item in data:
-        #     total_videos_url = base_url + 'Youtube/totalVideos/' + str(item['channel_id'])
-        #     try:
-        #         response = requests.get(total_videos_url)
-        #         total_videos = response.json()
-        #         for item1 in total_videos['data']:
-        #             item.update(item1)
-        #             # print(item)
-        #     except:
-        #         pass
         end = time.time()
         print(end - start)
+        form_filters = {'channel': 'Youtube', 'string_word': '', 'country': 'US', 'min_lower': '0',
+                        'max_upper': '300000000', 'sort_order': 'High To Low', 'country_name': 'United States','offset':offset}
         return render_template('search/elasticSearch.html', favInfList_data_alerts=favInfList_data_alerts,
                                maxAlerts=maxAlerts, maxAddToFavorites=maxAddToFavorites, maxExportLists=maxExportLists,
                                maxMessages=maxMessages, packageName=packageName, countMessages=countMessages,
                                countAlerts=countAlerts, countAddToFavorites=countAddToFavorites,
                                messageSubscription=messageSubscription, countExportList=countExportList,
                                regionCodes=regionCodes_json,
-                               lookup_string=lookup_string, form_filters=form_filters, data=data,data1=data1, pagination='',
+                               lookup_string=lookup_string, form_filters=form_filters,data1=data1, pagination='',
                                view_campaign_data=view_campaign_data,
-                               favInfList_data=favInfList_data,payload_form_filter=payload)
+                               favInfList_data=favInfList_data,
+                               total_rows=total_rows
+                               # payload_form_filter=payload
+                               )
 
 #
 @connecsiApp.route('/addFundsBrands')
