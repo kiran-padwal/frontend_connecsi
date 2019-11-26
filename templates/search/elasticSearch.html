@@ -10,17 +10,47 @@
 </div>
 
 <!-- Grid With Label start -->
+<form action="/elasticSearch" method="POST" name="form_search" id="form_search">
 <div class="row">
     <div class="col-12">
         <div class="card filters">
             <div class="card-header">
-                <h4 class="text-left head-border card-title no-transform mb-0">
-                    <i class="fa fa-filter"></i> Filters <a href="#" class="filter-toggle"><i
-                        class="fa fa-caret-up"></i><i class="fa fa-caret-down"></i></a>
-                </h4>
+                <div class="row">
+                    <div class="col-sm-3">
+
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="row">
+                                        <div class="col-sm-11" style="padding-right:0;">
+                                            <input style="border-radius:0;" type="text" class="form-control" name="keyword-title" value="{{form_filters['keyword-title']}}" id="keyword-title" placeholder="Search">
+                                        </div>
+                                        <div class="col-sm-1" style="background-color: #9370DB;cursor:pointer;" onclick="submitSearch()" data-toggle="tooltip" title="Search">
+                                            <span style="margin-top: 25%;right: 20%;position: absolute;" ><i class="fa fa-search" aria-hidden="true" style="color:white;font-size:20px;"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <h6 class="text-left head-border card-title no-transform mb-0" style="font-size:20px;">
+                    <a style="color:black;cursor:pointer;" href="#" class="filter-toggle closed" data-toggle="tooltip" title="Filters"><svg viewBox="0 0 24 24" style="height:30px;width:30px;margin-top:3px;" preserveAspectRatio="xMidYMid meet" focusable="false" class="style-scope yt-icon" style="pointer-events: none; display: block; width: 100%; height: 100%;"><g class="style-scope yt-icon">
+        <path d="M0 0h24v24H0z" fill="none" class="style-scope yt-icon"></path>
+        <path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z" class="style-scope yt-icon"></path>
+      </g></svg></a>
+                </h6>
+                    </div>
+
+                </div>
+
+
             </div>
-            <div class="card-body">
-                <form action="/elasticSearch" method="POST" name="form_search" id="form_search">
+
+            <div class="card-body" style="display:none;">
+
                     <div class="row">
                         <div class="col-sm-2">
                             <div class="form-group">
@@ -39,42 +69,53 @@
                                 <label>Category</label>
                                 <!--<input class="form-control" id="string_word" name="string_word" type="text"-->
                                 <!--placeholder="Enter Keywords" {% if form_filters['string_word'] %} value="{{ form_filters['string_word'] }}" {% endif %} />-->
-                                <select class="form-control" name="string_word" data-live-search="true" data-live-search-style="begins">
+                                <select class="form-control" name="string_word" data-live-search="true" data-live-search-style="begins" onchange="submitSearch()" multiple="multiple">
                                     <!--<select class="form-control" name="country">-->
                                     {% set lookup = lookup_string.split(',') %}
-                                    {% for item in lookup %}
-                                        {% if item|string == form_filters['string_word']|string %}
-                                            <option  value="{{ item }}" selected>{{ item }}</option>
-                                        {% endif %}
+                                    {% for cate in form_filters['string_word']%}
+                                        {% for item in lookup %}
+                                            {% if item|string == cate %}
+                                                <option  value="{{ item }}" selected>{{ item }}</option>
+                                            {% endif %}
+                                        {% endfor %}
                                     {% endfor %}
 
-                                    {% for item in lookup %}
-                                        {% if item|string == form_filters['string_word']|string %}
+                                        {% for item in lookup %}
+                                            {% if item|string in form_filters['string_word'] %}
+                                            {% else %}
+                                                <option  value="{{ item }}" >{{ item }}</option>
+                                            {% endif %}
+                                        {% endfor %}
 
-                                        {% else %}
-                                            <option  value="{{ item }}" >{{ item }}</option>
-                                        {% endif %}
-                                    {% endfor %}
                                 </select>
                             </div>
                         </div>
                         <div class="col-sm-2">
                             <div class="form-group">
                                 <label>Country</label>
-                                <select class="form-control" name="country" data-live-search="true" data-live-search-style="begins">
+                                <select class="form-control" name="country" data-live-search="true" data-live-search-style="begins" onchange="submitSearch()" multiple="multiple">
                                     <!--<select class="form-control" name="country">-->
-                                    {% for item in regionCodes['data'] %}
-                                    {% if item['region_code']|string == form_filters['country']|string %}
-                                    <option  value="{{ item['region_code'] }}" selected>{{ item['country_name'] }}</option>
-                                    {% endif %}
+                                    {% for c in form_filters['country']%}
+                                        {% for item in regionCodes['data'] %}
+
+                                        {% if item['region_code']|string == c %}
+                                        <option  value="{{ item['region_code'] }}" selected>{{ item['country_name'] }}</option>
+                                        {% endif %}
+                                        {% endfor %}
                                     {% endfor %}
 
-                                    {% for item in regionCodes['data'] %}
-                                    {% if item['region_code']|string == form_filters['country']|string %}
-                                    {% else %}
-                                    <option  value="{{ item['region_code'] }}" >{{ item['country_name'] }}</option>
-                                    {% endif %}
-                                    {% endfor %}
+
+
+
+                                        {% for item in regionCodes['data'] %}
+
+                                            {% if item['region_code']|string in  form_filters['country']  %}
+                                            {% else %}
+                                                <option  value="{{ item['region_code'] }}">{{ item['country_name'] }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+
+
                                 </select>
                             </div>
                         </div>
@@ -85,13 +126,13 @@
                                     <div class="col-sm-12 sliderContainer">
                                         <div id="slider" class="sliderUI" data-price="false"></div>
                                         <div class="row">
-                                            <div class="col-sm-12 padding-top-xs">
-                                                <input type="hidden" class="form-control form-control-xs bg-light-grey slider-input round left lower-value"
+                                            <div class="col-sm-12 padding-top-xs" style="display:none;">
+                                                <input  class="form-control form-control-xs bg-light-grey slider-input round left lower-value"
                                                        name="min_lower" value="{{form_filters['min_lower']}}" data-range="0"
-                                                       id="lower-value">
-                                                <input type="hidden" class="form-control form-control-xs bg-light-grey slider-input round right upper-value"
+                                                       id="lower-value" onchange="submitSearch()">
+                                                <input  class="form-control form-control-xs bg-light-grey slider-input round right upper-value"
                                                        name="max_upper" value="{{form_filters['max_upper']}}" data-range="100000000"
-                                                       id="upper-value">
+                                                       id="upper-value" onchange="submitSearch()">
                                             </div>
                                         </div>
                                     </div>
@@ -100,21 +141,22 @@
                         </div>
                     </div>
                     <input type="hidden" name="sort_order" id="sort_order" value="{{form_filters['sort_order']}}">
-                    <div class="form-actions no-padding-bottom">
-                        <div class="text-right">
-                            <button type="submit"
-                                    id="btn-search-inf"
-                                    class="btn btn-raised btn-primary bg-color1 no-margin-bottom mr-1">Submit <i
-                                    class="fa fa-search"></i></button>
-                            <!--<a href="#" class="btn btn-raised btn-warning reset-button color-white no-margin-bottom">-->
-                            <!--Reset <i class="fa fa-close"></i></a>-->
-                        </div>
-                    </div>
-                </form>
+<!--                    <div class="form-actions no-padding-bottom">-->
+<!--                        <div class="text-right">-->
+<!--                            <button type="submit"-->
+<!--                                    id="btn-search-inf"-->
+<!--                                    class="btn btn-raised btn-primary bg-color1 no-margin-bottom mr-1">Submit <i-->
+<!--                                    class="fa fa-search"></i></button>-->
+<!--                            &lt;!&ndash;<a href="#" class="btn btn-raised btn-warning reset-button color-white no-margin-bottom">&ndash;&gt;-->
+<!--                            &lt;!&ndash;Reset <i class="fa fa-close"></i></a>&ndash;&gt;-->
+<!--                        </div>-->
+<!--                    </div>-->
+
             </div>
         </div>
     </div>
 </div>
+    </form>
 <!-- Grid With Label end -->
 
 
@@ -127,7 +169,7 @@
                 <div class="btn-wrapper">
                     <!-- Single Button Dropdown -->
                     <div class="btn-group mr-1 mb-1" style="max-width: 132px">
-                        <select class="bg-transparent"  id="sort" style="font-size:12px;">
+                        <select class="bg-transparent"  id="sort" style="font-size:12px;" onchange="submitSearch()">
                             {% if form_filters['sort_order'] %}
                             <option value="{{ form_filters['sort_order'] }}">{{ form_filters['sort_order'] }}
                             </option>
@@ -237,8 +279,15 @@
                                     <div class="col-lg-4 col-nc-lg-6 col-6 txt-center">
                                         <div class="v-block"></div>
                                         <div class="img-wrapper">
-
+                                            {% if form_filters['channel']=='Youtube' %}
                                             <img id="channel_img-{{item['_source']['channel_id']}}" src="{{item['_source']['channel_img']}}" class="img-responsive" height="110px" width="110px">
+                                            {% endif %}
+                                            {% if form_filters['channel']=='Instagram' %}
+                                            <img id="channel_img-{{item['_source']['insta_id']}}" src="" class="img-responsive" height="110px" width="110px">
+                                            {% endif %}
+                                            {% if form_filters['channel']=='Twitter' %}
+                                            <img id="channel_img-{{item['_source']['twitter_id']}}" src="{{item['_source']['channel_img']}}" class="img-responsive" height="110px" width="110px">
+                                            {% endif %}
 
                                             <ul class="user-actions">
                                                 <li>
@@ -367,7 +416,9 @@
                                         <div class="engagement">
                                             <div class="rating">
 
-                                                {% if item['_source']['video_details'] | length %}
+                                                {% if form_filters['channel']=='Youtube'%}
+
+                                                    {% if item['_source']['video_details'] | length %}
                                                     {% if item['_source']['total_100video_likes'] == 'None' %}
                                                         {% set likes = 0|int %}
                                                     {% else %}
@@ -401,6 +452,105 @@
                                                 {% else %}
                                                     0 %
                                                 {% endif %}
+
+
+                                                {% endif %}
+
+
+                                                {% if form_filters['channel']=='Instagram'%}
+
+
+                                                    {% if item['_source']['insta_post_details'] | length %}
+                                                    {% if item['_source']['total_100video_likes'] == 'None' %}
+                                                        {% set likes = 0|int %}
+                                                    {% else %}
+                                                        {% set likes = item['_source']['total_100video_likes'] %}
+                                                    {% endif %}
+
+                                                    {% if item['_source']['total_100video_comments'] == 'None' %}
+                                                        {% set comments = 0|int %}
+                                                    {% else %}
+                                                        {% set comments = item['_source']['total_100video_comments'] %}
+                                                    {% endif %}
+
+                                                    {% set total = (likes|int + comments|int)%}
+                                                        <!--{{ total }} <br>-->
+                                                    {% set total = (total/item['_source']['insta_post_details'] |length )|round|int %}
+                                                    <!--{{ total }} <br>-->
+                                                    {% if item['_source']['no_of_followers']%}
+                                                        {% set total = (total/item['_source']['no_of_followers'])%}
+                                                        {% set total = total|round(4, 'floor')*100 %}
+                                                        {% set total = total|round(2, 'floor') %}
+                                                        {{ total }} %
+                                                    {% else %}
+                                                        0 %
+                                                    {% endif %}
+
+
+                                                {% else %}
+                                                    0 %
+                                                {% endif %}
+
+
+
+
+
+
+
+
+
+
+                                                {% endif %}
+
+
+
+
+                                                {% if form_filters['channel']=='Twitter'%}
+
+
+                                                    {% if item['_source']['twitter_followers_history'] | length %}
+                                                    {% if item['_source']['total_100video_likes'] == 'None' %}
+                                                        {% set likes = 0|int %}
+                                                    {% else %}
+                                                        {% set likes = item['_source']['total_100video_likes'] %}
+                                                    {% endif %}
+
+                                                    {% if item['_source']['total_100video_comments'] == 'None' %}
+                                                        {% set comments = 0|int %}
+                                                    {% else %}
+                                                        {% set comments = item['_source']['total_100video_comments'] %}
+                                                    {% endif %}
+
+
+                                                    {% set total = (likes|int + comments|int)%}
+                                                        <!--{{ total }} <br>-->
+                                                    {% set total = (total/item['_source']['twitter_followers_history'] |length )|round|int %}
+                                                    <!--{{ total }} <br>-->
+                                                    {% if item['_source']['no_of_followers']%}
+                                                        {% set total = (total/item['_source']['no_of_followers'])%}
+                                                        {% set total = total|round(4, 'floor')*100 %}
+                                                        {% set total = total|round(2, 'floor') %}
+                                                        {{ total }} %
+                                                    {% else %}
+                                                        0 %
+                                                    {% endif %}
+
+
+                                                {% else %}
+                                                    0 %
+                                                {% endif %}
+
+
+
+
+
+
+
+
+
+
+                                                {% endif %}
+
                                             </div>
                                             <div class="rating-txt">Engagement Rate</div>
                                             <div class="engagement-bar">
@@ -419,10 +569,24 @@
                                         <ul class="analyse-list">
                                             <!-- total followers -->
                                             <li>
-                                                <div class="analyse-result" data-integers="{{item['_source']['subscribercount_gained']}}">
+                                                {% if form_filters['channel'] == 'Instagram'  or form_filters['channel'] == 'Twitter' %}
+
+                                                    <div class="analyse-result" data-integers="{{item['_source']['no_of_followers']}}">
 
 
                                                 </div>
+                                                {% endif %}
+
+                                                <!--views end-->
+                                                <!--likes-->
+                                                {% if form_filters['channel'] == 'Youtube' %}
+                                                    <div class="analyse-result" data-integers="{{item['_source']['subscribercount_gained']}}">
+
+
+                                                </div>
+
+                                                {% endif %}
+
                                                 <div>Total Followers</div>
                                             </li>
                                             <!-- total followers end -->
@@ -464,14 +628,14 @@
                                             {% endif %}
                                             {% if form_filters['channel'] == 'Twitter' %}
                                             <li>
-                                                <div class="analyse-result" data-integers="{{ (item['total_100video_likes']/100)|int }}">
+                                                    <div class="analyse-result" data-integers="{{ (item['_source']['total_100video_likes']/100)|int }}">
                                                 </div>
                                                 <div>Avg Likes / Post</div>
                                             </li>
                                             {% endif %}
                                             {% if form_filters['channel'] == 'Instagram' %}
                                             <li>
-                                                <div class="analyse-result" data-integers="{{ (item['total_100video_likes']/100)|int }}">
+                                                <div class="analyse-result" data-integers="{{ (item['_source']['total_100video_likes']/100)|int }}">
                                                 </div>
                                                 <div>Avg Likes / Post</div>
                                             </li>
@@ -497,7 +661,7 @@
                                             {% endif %}
                                             {% if form_filters['channel'] == 'Instagram' %}
                                             <li>
-                                                <div class="analyse-result" data-integers="{{ (item['total_100video_comments']/100)|int }}">
+                                                <div class="analyse-result" data-integers="{{ (item['_source']['total_100video_comments']/100)|int }}">
                                                 </div>
                                                 <div>Avg Comments / Post</div>
                                             </li>
@@ -510,8 +674,8 @@
                                             {% endif %}
                                             {% if form_filters['channel'] == 'Twitter' %}
                                             <li>
-                                                {% if item['total_100video_shares'] %}
-                                                <div class="analyse-result" data-integers="{{ (item['total_100video_shares']/100)|int }}">
+                                                {% if item['_source']['total_100video_shares'] %}
+                                                <div class="analyse-result" data-integers="{{ (item['_source']['total_100video_comments']/100)|int }}">
                                                 </div>
                                                 {% else %}
                                                 <div class="analyse-result" data-integers="0">
@@ -764,10 +928,9 @@
 <div class="row">
     <div class="col-sm-12">
         <div class="card">
-            <div class="card-body">
+            <div class="card-body text-center">
                 <div class="card-block text-center pagination_block">
-                    <div class="row" style="display:inline;">
-                        <div class="col-sm-12" id="pagination" style="left:45%;">
+                        <div class="col-sm-12" id="pagination">
                             <!--{{ glob.total_rows }}-->
                             <!--{{ payload_form_filter }}-->
                             {% set _ = glob.update({'total_rows':total_rows}) %}
@@ -779,7 +942,7 @@
 
                             {% for pages in range(pages) %}
 
-                                <form id="" method="POST" action="/elasticSearch">
+                                <form id="" method="POST" action="/elasticSearch" style="margin:0;">
                                     <input type="hidden" name="channel" value="{{form_filters['channel']}}">
                                     <input type="hidden" name="string_word" value="{{form_filters['string_word']}}">
                                     <input type="hidden" name="country" value="{{form_filters['country']}}">
@@ -794,19 +957,23 @@
                                     {% if current_offset == glob.offset %}
 
                                     {% set _ = glob.update({'current_page':loop.index}) %}
-                                    <div class="text-center">
-                                        <button type="submit" disabled class="btn btn-info btn-sm" name="search_inf">
+                                    <div class="text-center" style="margin-right:4px;">
+                                        <button type="submit" disabled class="btn btn-info btn-sm" name="search_inf" style="background-color:#9370DB !important;border-color:#9370DB !important;">
                                             {{loop.index}}
                                         </button>
                                     </div>
                                     {% else %}
-                                    <div class="text-center">
-                                        <button type="submit" class="btn btn-info btn-sm" name="search_inf">{{loop.index}}</button>
+                                    <div class="text-center" style="margin-right:4px;">
+                                        <button type="submit" class="btn btn-info btn-sm" name="search_inf" style="background-color:#9370DB !important;border-color:#9370DB !important;">{{loop.index}}</button>
                                     </div>
                                     {% endif %}
-                                    {% elif glob.offset == current_offset-60 or glob.offset == current_offset+60 %}
-                                    <div class="text-center" data-toggle="tooltip" title="Next">
-                                        <button type="submit" class="btn btn-info btn-sm" name="search_inf">...</button>
+                                    {% elif glob.offset == current_offset+60 %}
+                                    <div class="text-center" data-toggle="tooltip" title="Next" style="margin-right:4px;">
+                                        <button type="submit" class="btn btn-info btn-sm" name="search_inf" style="background-color:#9370DB !important;border-color:#9370DB !important;">...</button>
+                                    </div>
+                                    {% elif glob.offset == current_offset-60%}
+                                    <div class="text-center" data-toggle="tooltip" title="Previous" style="margin-right:4px;">
+                                        <button type="submit" class="btn btn-info btn-sm" name="search_inf" style="background-color:#9370DB !important;border-color:#9370DB !important;">...</button>
                                     </div>
                                     {% endif %}
 
@@ -820,7 +987,6 @@
                     </div>
                     Page {{glob.current_page}} of {{ pages }}
                 </div>
-            </div>
         </div>
     </div>
 </div>
@@ -1038,6 +1204,7 @@
                         {% for item in view_campaign_data['data'] %}
                         {% set channels_ids = [] %}
                         {% for item1 in item['youtube_inf_data'] %}
+
                         {{ channels_ids.append(item1['channel_id'])|default("", true) }}
                         {% endfor %}
                         <tr data-campaign-id="{{ channels_ids|join(',') }}">
@@ -1245,6 +1412,19 @@
 
 
 <script>
+<!--$(document).ajaxStart(function(){-->
+<!--    document.getElementById('loader-div').style.display="none";-->
+<!--})-->
+<!--$(document).ajaxStop(function(){-->
+<!--    document.getElementById('loader-div').style.display="none";-->
+<!--})-->
+$("input[type=hidden]").bind("change", function() {
+    console.log("helloji",$(this).val());
+});
+function submitSearch(){
+    console.log("hello",$('#form_search'));
+    document.getElementById("form_search").submit();
+}
 function showingOption(v){
     var prev=v.previousSibling;
     if(prev.style.display=="none"){
@@ -1263,6 +1443,7 @@ function showingOption(v){
 function updateChannelStatusForCampaignByCampaignId(campaign_id){
     <!--alert(channel_id);-->
     <!--alert(campaign_id);-->
+
     $.ajax({
                type: "GET",
                async:false,
@@ -1270,6 +1451,7 @@ function updateChannelStatusForCampaignByCampaignId(campaign_id){
                contentType: 'application/json;charset=UTF-8',
                success: function(data)
                {
+
                console.log("values hai ji",data,data.results)
 
 
@@ -1379,14 +1561,12 @@ function getCampaign_ids(channel_id){
 
         }
         else{
-            document.getElementById('loader-div').style.display="block";
             $.ajax({
                 type: "GET",
                 url: '/addToFavInfList/'+channel_id+'/'+channel_name,
                 <!--data: form.serialize(), // serializes the form's elements.-->
                 success: function (data) {
                     alert(data);
-                    document.getElementById('loader-div').style.display="block";
                     getFavInfList();
                     $.ajax({
                         type:'POST',
@@ -1394,7 +1574,6 @@ function getCampaign_ids(channel_id){
                         success:function(data){
                             console.log("done updating favorites units",data);
                             countAddToFavorites--;
-                            document.getElementById('loader-div').style.display="block";
 
                         }
                     })
@@ -1566,14 +1745,14 @@ function getCampaign_ids(channel_id){
                  $("#favList"+channel_id).html(svg);
 <!--                 $('#alert'+channel_id).find('.tab-content-item-list').empty();-->
 <!--                 $('#alert'+channel_id).find('.tab-content-item-list').append('<li>No Alerts Set</li></hr>');-->
-                 document.getElementById('loader-div').style.display="block";
+<!--                 document.getElementById('loader-div').style.display="block";-->
                  $.ajax({
                     type:'POST',
                     url:'/addingBackFeatureValue/'+'Add to favorites',
                     success:function(data){
                         console.log("done adding back favorites units",data);
                         countAddToFavorites=countAddToFavorites+1;
-                        document.getElementById('loader-div').style.display="block";
+<!--                        document.getElementById('loader-div').style.display="block";-->
                     }
                 })
             }
@@ -1593,28 +1772,24 @@ function getCampaign_ids(channel_id){
         if(channel_name_graph=='youtube'){
             graph_color='rgba(255,0,0,0.1)'
             graph_border='rgba(255,0,0,0.5)';
-        }
-        else if(channel_name_graph=='twitter'){
-            graph_color='rgba(0,255,255,0.1)';
-            graph_border='rgba(0,255,255,0.5)';
-        }
-        else if(channel_name_graph=='facebook'){
-            graph_color='rgba(59,89,152,0.1)';
-            graph_border='rgba(59,89,152,0.5)';
-        }
-        else if(channel_name_graph=='instagram'){
-            graph_color='rgba(193, 53, 132,0.1)';
-            graph_border='rgba(193, 53, 132,0.5)';
-        }
+
+
+
             {% for item in data1 %}
                 console.log("hello2")
                 index={{loop.index}}
-                g='{{item['_source']['youtube_followers_history']}}'
+                if(channel_name_graph=='youtube'){
+                    g='{{item['_source']['youtube_followers_history']}}'
+                }
+                else if(channel_name_graph=='instagram'){
+                    g='{{item['_source']['insta_followers_history']}}'
+                }
+
                 g=g.replace(/&#39;/g,'"')
                 g[-1]='{'
                 g[0]='}'
                 graphData=JSON.parse(g);
-
+                console.log("data",graphData);
                 if(graphData.length!=0){
                          var months=[];
                          var monthsSet=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sept','Oct','Nov','Dec'];
@@ -1798,6 +1973,424 @@ function getCampaign_ids(channel_id){
 
 
             {% endfor %}
+
+
+        }
+        else if(channel_name_graph=='twitter'){
+            graph_color='rgba(0,255,255,0.1)';
+            graph_border='rgba(0,255,255,0.5)';
+
+
+            {% for item in data1 %}
+                console.log("hello2")
+                index={{loop.index}}
+
+                    g='{{item['_source']['twitter_followers_history']}}'
+
+                g=g.replace(/&#39;/g,'"')
+                console.log(g)
+
+
+                graphData=JSON.parse(g);
+                console.log("data",graphData);
+                if(graphData.length!=0){
+                         var months=[];
+                         var monthsSet=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sept','Oct','Nov','Dec'];
+                         var currentDate=new Date().getMonth();
+                         console.log(currentDate)
+                         var start=currentDate-3;
+                         var end=currentDate+2;
+                         var looping=6;
+                         while(looping){
+                            var dataSet1={};
+                            var followers=0;
+                            if(start<=currentDate){
+                                followers=0;
+                            }
+                            if(start<0){
+                                dataSet1={
+                                    'month':12+start,
+                                    'followers':followers
+                                }
+                            }
+                            else if(start>11){
+                                dataSet1={
+                                    'month':start-12,
+                                    'followers':followers
+                                }
+                            }
+                            else{
+                                dataSet1={
+                                    'month':start,
+                                    'followers':followers
+                                }
+                            }
+                            months.push(dataSet1);
+                            start++;
+                            looping--;
+                            console.log(dataSet1)
+                         }
+
+                         console.log("months",months)
+                         for(var i=0;i<graphData.length;i++){
+                                var d= new Date((graphData[i]['inserted_date'])).getMonth();
+                                console.log("this",d)
+                                if(currentDate!=d){
+                                        var dat={
+                                            'month':d,
+                                            'followers':graphData[i]['no_of_followers']
+                                        }
+                                        for(var m=0;m<months.length;m++){
+                                            if(months[m]['month']==d){
+                                                months[m]['followers']=graphData[i]['no_of_followers'];
+                                                break;
+                                            }
+                                        }
+                                }
+                         }
+                         var demo=[0,0,0,0,0,0];
+                         for(var n=0;n<months.length;n++){
+                                if(months[n].followers==0){
+                                demo[n]=1;
+                                var min=0;
+                                var max=0;
+                                if(n==0){
+                                    max=months[n+1].followers;
+                                }
+                                else if(n-1==0){
+                                    max=months[n+1].followers;
+                                }
+                                else if(n-1>0&&n+1<months.length){
+                                    min=months[n-1].followers;
+                                    max=months[n+1].followers;
+                                }
+                                else if(n+1==months.length){
+                                    min=months[n].followers;
+                                }
+                                months[n].followers=max-(max*16.67)/100;
+                              }
+                              if(months[n].followers==0){
+                                demo[n]=-1;
+                              }
+                         }
+                         var labels=[];
+                         var dataSetValues=[];
+                         for(var m=0;m<months.length;m++){
+                                labels.push(monthsSet[months[m]['month']]);
+                                dataSetValues.push(parseInt(months[m]['followers']))
+                         }
+                         var realDataSet=[];
+                         var futureDataSet=[];
+                         for(var m=0;m<demo.length;m++){
+                             realDataSet.push(dataSetValues[m]);
+                             futureDataSet.push(dataSetValues[m]);
+                         }
+                         for(var m=0;m<demo.length;m++){
+                                if(demo[m]==1||demo[m]==0){
+                                    futureDataSet[m]=NaN;
+                                }
+                                else if(demo[m]=-1){
+                                    realDataSet[m]=NaN;
+                                }
+                         }
+                         var m=0;
+                         while(m<realDataSet.length&&!Number.isNaN(realDataSet[m])){
+                            m++;
+                         }
+                         console.log("m value",m);
+                         for (var t=m;t>=0;t--){
+                            realDataSet[t]=realDataSet[t+1]-(realDataSet[t+1]*16.67)/100
+                         }
+                         if(m-1>0){
+                            m--;
+                            futureDataSet[m]=realDataSet[m];
+                            m++;
+                         }
+                         var increasePercentage=16.67;
+                         while(m<realDataSet.length){
+                            var val=futureDataSet[m-1]+(futureDataSet[m-1]*16.67)/100;
+                            futureDataSet[m]=parseInt(val);
+                            m++;
+                         }
+
+                         console.log(realDataSet,futureDataSet)
+                          var ctx = document.getElementById("lineChart"+{{loop.index}});
+                                 var myChart = new Chart(ctx, {
+                                    type: 'line',
+                                    data: {
+                                        labels: labels,
+                                        datasets:[
+                                        {
+                                                label: "Real",
+                                                data: realDataSet,
+                                                backgroundColor :graph_color,
+                                                borderColor: graph_border,
+                                                borderWidth : 1
+                                        },
+                                        {
+                                                label: "Projected",
+                                                data: futureDataSet,
+                                                backgroundColor :'rgba(183, 183, 183, 0.1)',
+                                                borderColor: 'rgba(183, 183, 183, 0.5)',
+                                                borderWidth : 1
+                                        }]
+                                    },
+                                    options: {
+    <!--                                    legend: {-->
+    <!--                                        onClick: (e) => e.stopPropagation()-->
+    <!--                                    },-->
+                                        scales: {
+                                            yAxes: [{
+                                                ticks: {
+                                                    callback: function(label,index,labels){
+                                                            if (label >= 1000000000) {
+                                                               return (label / 1000000000).toFixed(1).replace(/\.0$/, '') + 'G';
+                                                            }
+                                                            if (label >= 1000000) {
+                                                                return (label / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+                                                            }
+                                                            if (label >= 1000) {
+                                                                return (label / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+                                                            }
+                                                            return label;
+                                                    },
+                                                    beginAtZero:true
+                                                }
+                                            }]
+                                        },
+                                        tooltips: {
+                                                 callbacks: {
+                                                              label: function(tooltipItems, data) {
+                                                                        var valueChange=tooltipItems.yLabel;
+                                                                        if (valueChange >= 1000000000) {
+                                                                           return (valueChange / 1000000000).toFixed(1).replace(/\.0$/, '') + 'G';
+                                                                        }
+                                                                        if (valueChange >= 1000000) {
+                                                                            return (valueChange / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+                                                                        }
+                                                                        if (valueChange >= 1000) {
+                                                                            return (valueChange / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+                                                                        }
+                                                                        return valueChange;
+                                                                    }
+                                                              }
+                                                 }
+                                        }
+                                 });
+                    }
+
+
+            {% endfor %}
+
+        }
+        else if(channel_name_graph=='facebook'){
+            graph_color='rgba(59,89,152,0.1)';
+            graph_border='rgba(59,89,152,0.5)';
+        }
+        else if(channel_name_graph=='instagram'){
+            graph_color='rgba(193, 53, 132,0.1)';
+            graph_border='rgba(193, 53, 132,0.5)';
+
+
+            {% for item in data1 %}
+                console.log("hello2")
+                index={{loop.index}}
+
+                    g='{{item['_source']['insta_followers_history']}}'
+
+                g=g.replace(/&#39;/g,'"')
+                g[-1]='{'
+                g[0]='}'
+                graphData=JSON.parse(g);
+                console.log("data",graphData);
+                if(graphData.length!=0){
+                         var months=[];
+                         var monthsSet=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sept','Oct','Nov','Dec'];
+                         var currentDate=new Date().getMonth();
+                         console.log(currentDate)
+                         var start=currentDate-3;
+                         var end=currentDate+2;
+                         var looping=6;
+                         while(looping){
+                            var dataSet1={};
+                            var followers=0;
+                            if(start<=currentDate){
+                                followers=0;
+                            }
+                            if(start<0){
+                                dataSet1={
+                                    'month':12+start,
+                                    'followers':followers
+                                }
+                            }
+                            else if(start>11){
+                                dataSet1={
+                                    'month':start-12,
+                                    'followers':followers
+                                }
+                            }
+                            else{
+                                dataSet1={
+                                    'month':start,
+                                    'followers':followers
+                                }
+                            }
+                            months.push(dataSet1);
+                            start++;
+                            looping--;
+                            console.log(dataSet1)
+                         }
+
+                         console.log("months",months)
+                         for(var i=0;i<graphData.length;i++){
+                                var d= new Date((graphData[i]['inserted_date'])).getMonth();
+                                console.log("this",d)
+                                if(currentDate!=d){
+                                        var dat={
+                                            'month':d,
+                                            'followers':graphData[i]['no_of_followers']
+                                        }
+                                        for(var m=0;m<months.length;m++){
+                                            if(months[m]['month']==d){
+                                                months[m]['followers']=graphData[i]['no_of_followers'];
+                                                break;
+                                            }
+                                        }
+                                }
+                         }
+                         var demo=[0,0,0,0,0,0];
+                         for(var n=0;n<months.length;n++){
+                                if(months[n].followers==0){
+                                demo[n]=1;
+                                var min=0;
+                                var max=0;
+                                if(n==0){
+                                    max=months[n+1].followers;
+                                }
+                                else if(n-1==0){
+                                    max=months[n+1].followers;
+                                }
+                                else if(n-1>0&&n+1<months.length){
+                                    min=months[n-1].followers;
+                                    max=months[n+1].followers;
+                                }
+                                else if(n+1==months.length){
+                                    min=months[n].followers;
+                                }
+                                months[n].followers=max-(max*16.67)/100;
+                              }
+                              if(months[n].followers==0){
+                                demo[n]=-1;
+                              }
+                         }
+                         var labels=[];
+                         var dataSetValues=[];
+                         for(var m=0;m<months.length;m++){
+                                labels.push(monthsSet[months[m]['month']]);
+                                dataSetValues.push(parseInt(months[m]['followers']))
+                         }
+                         var realDataSet=[];
+                         var futureDataSet=[];
+                         for(var m=0;m<demo.length;m++){
+                             realDataSet.push(dataSetValues[m]);
+                             futureDataSet.push(dataSetValues[m]);
+                         }
+                         for(var m=0;m<demo.length;m++){
+                                if(demo[m]==1||demo[m]==0){
+                                    futureDataSet[m]=NaN;
+                                }
+                                else if(demo[m]=-1){
+                                    realDataSet[m]=NaN;
+                                }
+                         }
+                         var m=0;
+                         while(m<realDataSet.length&&!Number.isNaN(realDataSet[m])){
+                            m++;
+                         }
+                         if(m-1>0){
+                            m--;
+                            futureDataSet[m]=realDataSet[m];
+                            m++;
+                         }
+                         var increasePercentage=16.67;
+                         while(m<realDataSet.length){
+                            var val=futureDataSet[m-1]+(futureDataSet[m-1]*16.67)/100;
+                            futureDataSet[m]=parseInt(val);
+                            m++;
+                         }
+                         console.log(realDataSet,futureDataSet)
+                          var ctx = document.getElementById("lineChart"+{{loop.index}});
+                                 var myChart = new Chart(ctx, {
+                                    type: 'line',
+                                    data: {
+                                        labels: labels,
+                                        datasets:[
+                                        {
+                                                label: "Real",
+                                                data: realDataSet,
+                                                backgroundColor :graph_color,
+                                                borderColor: graph_border,
+                                                borderWidth : 1
+                                        },
+                                        {
+                                                label: "Projected",
+                                                data: futureDataSet,
+                                                backgroundColor :'rgba(183, 183, 183, 0.1)',
+                                                borderColor: 'rgba(183, 183, 183, 0.5)',
+                                                borderWidth : 1
+                                        }]
+                                    },
+                                    options: {
+    <!--                                    legend: {-->
+    <!--                                        onClick: (e) => e.stopPropagation()-->
+    <!--                                    },-->
+                                        scales: {
+                                            yAxes: [{
+                                                ticks: {
+                                                    callback: function(label,index,labels){
+                                                            if (label >= 1000000000) {
+                                                               return (label / 1000000000).toFixed(1).replace(/\.0$/, '') + 'G';
+                                                            }
+                                                            if (label >= 1000000) {
+                                                                return (label / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+                                                            }
+                                                            if (label >= 1000) {
+                                                                return (label / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+                                                            }
+                                                            return label;
+                                                    },
+                                                    beginAtZero:true
+                                                }
+                                            }]
+                                        },
+                                        tooltips: {
+                                                 callbacks: {
+                                                              label: function(tooltipItems, data) {
+                                                                        var valueChange=tooltipItems.yLabel;
+                                                                        if (valueChange >= 1000000000) {
+                                                                           return (valueChange / 1000000000).toFixed(1).replace(/\.0$/, '') + 'G';
+                                                                        }
+                                                                        if (valueChange >= 1000000) {
+                                                                            return (valueChange / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+                                                                        }
+                                                                        if (valueChange >= 1000) {
+                                                                            return (valueChange / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+                                                                        }
+                                                                        return valueChange;
+                                                                    }
+                                                              }
+                                                 }
+                                        }
+                                 });
+                    }
+
+
+            {% endfor %}
+
+        }
+
+
+
       }
       renderGraph();
           <!--ashish code for eng rate-->
@@ -1988,9 +2581,16 @@ function getCampaign_ids(channel_id){
 
             function imageExists(image_url){
                 var http = new XMLHttpRequest();
-                http.open('HEAD', image_url, false);
+                try {
+                    http.open('HEAD', image_url, false);
+                    console.log("false fixed image 2")
+                    http.send();
+                    console.log("false fixed image 1")
+                }
+                catch(err) {
+                    return false;
+                }
 
-                http.send();
                 return http.status != 403 && http.status != 404 && http.status != 410;
 
             }
@@ -2009,12 +2609,32 @@ function getCampaign_ids(channel_id){
                     $('#channel_img-'+channel_id).attr("src",img);
                 }
                 else{
+                    console.log("false fixed image")
                     $('#channel_img-'+channel_id).attr("src","../static/img/fixed_image.png");
                 }
             }
-            {% for item in data1 %}
-                image_status('{{item['_source']['channel_img']}}','{{item['_source']['channel_id']}}');
-            {% endfor %}
+            {% if form_filters['channel']=='Youtube'%}
+
+                {% for item in data1 %}
+                    image_status('{{item['_source']['channel_img']}}','{{item['_source']['channel_id']}}');
+                {% endfor %}
+
+            {% endif %}
+
+            {% if form_filters['channel']=='Instagram'%}
+
+                {% for item in data1 %}
+                    image_status('{{item['_source']['channel_img']}}','{{item['_source']['insta_id']}}');
+                {% endfor %}
+
+            {% endif %}
+            {% if form_filters['channel']=='Twitter'%}
+
+                {% for item in data1 %}
+                    image_status('{{item['_source']['channel_img']}}','{{item['_source']['twitter_id']}}');
+                {% endfor %}
+
+            {% endif %}
 
         });
     </script>

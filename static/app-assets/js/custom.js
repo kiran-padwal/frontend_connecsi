@@ -1,3 +1,15 @@
+
+window.onbeforeunload = function(e) {
+  document.getElementById('loader-div').style.display="block";
+};
+$(document).ready(function(){
+    document.getElementById('loader-div').style.display="none";
+})
+function loaderStart(){
+    document.getElementById('loader-div').style.display="block";
+}
+
+
 function formatDate(date) {
     var d = new Date(date),
         month = '' + (d.getMonth() + 1),
@@ -2327,10 +2339,12 @@ function getNotificationReady(){
 //}
 
 
-$(window).bind('beforeunload',function(){
-     document.getElementById('loader-div').style.display="block";
+//$(window).bind('beforeunload',function(){
+//     document.getElementById('loader-div').style.display="block";
+//
+//});
 
-});
+
 
 jQuery('<div class="quantity-nav"><div class="quantity-button quantity-up">+</div><div class="quantity-button quantity-down">-</div></div>').insertAfter('.quantity input');
 $('.quantity-button').click(function() {
@@ -2554,7 +2568,7 @@ $('#upgradeSubButton').click(function(){
             }
       }
 
-    document.getElementById('loader-div').style.display="none";
+//    document.getElementById('loader-div').style.display="none";
 // ends
 
     setTimeout(function(){
@@ -5272,12 +5286,12 @@ function showReadMessage(x){
 };
 
 
-$(document).ajaxStart(function(){
-    document.getElementById('loader-div').style.display="block";
-})
-$(document).ajaxStop(function(){
-    document.getElementById('loader-div').style.display="none";
-})
+//$(document).ajaxStart(function(){
+//    document.getElementById('loader-div').style.display="block";
+//})
+//$(document).ajaxStop(function(){
+//    document.getElementById('loader-div').style.display="none";
+//})
 
 function imageExists(image_url){
             var http = new XMLHttpRequest();
@@ -5376,7 +5390,7 @@ function loadingTop10Influencers(){
                url: '/getTop20Influencers/'+channel,
                success: function(data)
                {
-                    document.getElementById('loader-div').style.display="none";
+//                    document.getElementById('loader-div').style.display="none";
                    value1=(data.results).slice(0,9);
                    var loop = $('#top10Influencertable')[0].childNodes[3].childNodes;
                    for( var i=1,j=0;i<loop.length;i=i+2,j++){
@@ -5493,7 +5507,7 @@ function loadingTop10Influencers(){
                         }
                         }
 
-                        document.getElementById('loader-div').style.display="none";
+//                        document.getElementById('loader-div').style.display="none";
                }
          });
 }
