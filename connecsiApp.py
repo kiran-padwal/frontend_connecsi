@@ -1403,7 +1403,7 @@ def elasticSearch():
                 max_upper = form_filters['max_upper']
                 titleValue = ''
                 if (form_filters['keyword-title'] != ''):
-                    titleValue = 'title:' + form_filters['keyword-title']
+                    titleValue = 'title:' + form_filters['keyword-title']+'*'
                     if (categoryNewList == ''):
                         titleValue += '%20AND%20'
                     else:
