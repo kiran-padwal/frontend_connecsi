@@ -2537,3 +2537,28 @@ background-color:#9370DB;
     opacity:0.65!important;
 }
 
+.line-chart{
+    max-width:400px!important;
+    max-height:200px!important;
+
+}
+.menu-content .active a{
+    border-right:5px solid #9370DB !important;
+}
+#main-menu-navigation .active a{
+    border-right:5px solid #9370DB !important;
+}
+
+
+
+.menu-content .active a{
+    border-right:5px solid #9370DB !important;
+}
+#main-menu-navigation .active a{
+    border-right:5px solid #9370DB !important;
+}
+.card {
+    margin:1px 0 !important;
+    filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.3))!important;
+    border: 0.5px solid rgba(0,0,0,0.1)!important;
+}

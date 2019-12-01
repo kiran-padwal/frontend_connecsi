@@ -24,18 +24,23 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="row">
-                                        <div class="col-sm-11" style="padding-right:0;">
-                                            <input style="border-radius:0;" type="text" class="form-control" name="keyword-title" value="{{form_filters['keyword-title']}}" id="keyword-title" placeholder="Search">
+                                        <div id="search-box1" class="col-sm-10" style="padding-right:0;">
+                                            <input style="border-radius:0;" type="text" class="form-control" name="keyword-title" value="{{form_filters['keyword-title']}}" id="keyword-title" placeholder="Search" autocomplete="off">
                                         </div>
-                                        <div class="col-sm-1" style="background-color: #9370DB;cursor:pointer;" onclick="submitSearch()" data-toggle="tooltip" title="Search">
-                                            <span style="margin-top: 25%;right: 20%;position: absolute;" ><i class="fa fa-search" aria-hidden="true" style="color:white;font-size:20px;"></i></span>
+                                        <div id="search-box2" class="col-sm-1" style="background-color: #9370DB;cursor:pointer;" onclick="submitSearch()" data-toggle="tooltip" title="Search">
+                                            <span id="search-box3" style="top: 25%;right: 26%;position: absolute;" ><i class="fa fa-search" aria-hidden="true" style="color:white;font-size:20px;"></i></span>
+                                        </div>
+                                    </div>
+                                    <div id="smallScreen" class="row" style="display:none;margin:0;">
+                                        <div class="col-12" style="background-color: #9370DB;cursor:pointer;padding:0.5rem;" onclick="submitSearch()" data-toggle="tooltip" title="Search">
+                                            <span style="position: relative;margin-left: 45%;" ><i class="fa fa-search" aria-hidden="true" style="color:white;font-size:20px;"></i></span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-3" id="filter-box1">
                         <h6 class="text-left head-border card-title no-transform mb-0" style="font-size:20px;">
                     <a style="color:black;cursor:pointer;" href="#" class="filter-toggle closed" data-toggle="tooltip" title="Filters"><svg viewBox="0 0 24 24" style="height:30px;width:30px;margin-top:3px;" preserveAspectRatio="xMidYMid meet" focusable="false" class="style-scope yt-icon" style="pointer-events: none; display: block; width: 100%; height: 100%;"><g class="style-scope yt-icon">
         <path d="M0 0h24v24H0z" fill="none" class="style-scope yt-icon"></path>
@@ -943,7 +948,8 @@
                             {% for pages in range(pages) %}
 
                                 <form id="" method="POST" action="/elasticSearch" style="margin:0;">
-                                    <input type="hidden" name="channel" value="{{form_filters['channel']}}">
+                                    <input type="hidden" name="keyword-title" value="{{form_filters['keyword-title']}}">
+                                    <input type="hidden" name="channel" value={{form_filters['channel']}}>
                                     <input type="hidden" name="string_word" value="{{form_filters['string_word']}}">
                                     <input type="hidden" name="country" value="{{form_filters['country']}}">
                                     <input type="hidden" name="min_lower" value="{{form_filters['min_lower']}}">
@@ -1412,6 +1418,19 @@
 
 
 <script>
+
+$(function() {
+    $('#form_search').each(function() {
+        $(this).find('input').keypress(function(e) {
+            // Enter pressed?
+            if(e.which == 10 || e.which == 13) {
+                this.form.submit();
+            }
+        });
+
+        $(this).find('input[type=submit]').hide();
+    });
+});
 <!--$(document).ajaxStart(function(){-->
 <!--    document.getElementById('loader-div').style.display="none";-->
 <!--})-->

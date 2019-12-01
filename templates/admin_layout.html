@@ -78,7 +78,7 @@
 
     <script src="{{ url_for('static', filename='app-assets/vendors/js/core/jquery-3.2.1.min.js') }}" type="text/javascript"></script>
 </head>
-<body data-col="2-columns" class=" 2-columns loading" id="brand-view">
+<body data-col="2-columns" class=" 2-columns loading" id="brand-view" onloadstart="loaderStart()">
 <div id="loader-div" style="display:none;">
     <div class="loader-gif"></div>
 </div>
@@ -170,7 +170,7 @@
     </div>
 
     <!--start container-->
-<aside _ngcontent-yaw-c4="" class="notification-sidebar" id="notification-sidebar">
+<aside _ngcontent-yaw-c4="" class="notification-sidebar" id="notification-sidebar" style="margin-top:3.38rem;">
         <a _ngcontent-yaw-c4="" class="notification-sidebar-close">
             <i _ngcontent-yaw-c4="" class="ft-x font-large-1" style="color:#9370DB;"></i>
         </a>
