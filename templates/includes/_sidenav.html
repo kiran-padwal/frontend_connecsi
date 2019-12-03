@@ -2,8 +2,10 @@
     <!-- main menu header-->
     <!-- Sidebar Header starts-->
     <div class="sidebar-header">
-        <div class="logo clearfix"><a href="/admin" class="logo-text float-left">
-            <div class="logo-img"><img src="{{ url_for('static', filename='img/miniature.png') }}" alt="connecsi logo"/></div><span class="text align-middle logo-img-txt"><img src="{{ url_for('static', filename='img/logo2.png') }}" class="logo-responsive" alt="connecsi"/></span></a><a id="sidebarToggle" href="#" class="nav-toggle d-none d-sm-none d-md-none d-lg-block"><i data-toggle="expanded" class="ft-toggle-right toggle-icon"></i></a><a id="sidebarClose" href="#" class="nav-close d-block d-md-block d-lg-none d-xl-none"><i class="ft-x"></i></a></div>
+        <div class="logo clearfix" style="padding-top:0px;">
+            <a style="top:5px;" id="sidebarToggle" href="#" class="nav-toggle d-none d-sm-none d-md-none d-lg-block"><i data-toggle="expanded" class="ft-toggle-right toggle-icon"></i></a>
+            <a style="top:5px;" id="sidebarClose" href="#" class="nav-close d-block d-md-block d-lg-none d-xl-none"><i class="ft-x"></i></a>
+        </div>
     </div>
     <!-- Sidebar Header Ends-->
     <!-- / main menu header-->
@@ -16,8 +18,6 @@
                     <ul class="menu-content">
                         <li><a href="/elasticSearch" class="menu-item">Influencers</a>
                         </li>
-                        <!--<li><a href="/searchInfluencers" class="menu-item">Influencers</a>-->
-                        <!--</li>-->
                         <li ><a href="/searchOffers" class="menu-item">Offers</a>
                         </li>
                     </ul>

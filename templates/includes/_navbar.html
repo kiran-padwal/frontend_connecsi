@@ -1,11 +1,21 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-faded header-navbar" style="height:3.38rem;background-color: #9370DB!important;">
     <div class="container-fluid">
-        <div class="navbar-header">
+        <div class="navbar-header" style="padding-left:0!important;">
+            <div class="">
+                <a href="/admin" class="logo-text float-left">
+                    <div class="logo-img" style="display:inline-block ;margin: 12px 0 0 0;">
+                        <img src="{{ url_for('static', filename='img/logo12.png') }}" alt="connecsi logo"/>
+                    </div>
+                    <span id="mobile-screen-logo" class="text align-middle logo-img-txt">
+                        <img src="{{ url_for('static', filename='img/logo13.png') }}" class="logo-responsive" alt="connecsi"/>
+                    </span>
+                </a>
+            </div>
             <button type="button" data-toggle="collapse" class="navbar-toggle d-lg-none float-left" style="color:white;">
 
 
                 <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
-            <div id="navbarSupportedContent" class="collapse navbar-collapse" style="position: absolute;margin-top: -1.2rem;right: 2rem;">
+            <div id="navbarSupportedContent" class="collapse navbar-collapse" style="position: absolute;margin-top:0.5rem;right: 2rem;">
                 <ul class="navbar-nav">
                     <!--<li class="nav-item mr-2 d-none d-lg-block">-->
                         <!--<a id="navbar-fullscreen" href="javascript:;" class="nav-link apptogglefullscreen"><i class="ft-maximize font-medium-3 blue-grey darken-4"></i>-->

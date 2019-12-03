@@ -1320,6 +1320,7 @@ def elasticSearch():
         else:
             print("pagination click")
             countryList = request.form.get('country')
+            import ast
             countryList = ast.literal_eval(countryList)
             keywordSearch = request.form.get('keyword-title')
             categoryList = request.form.get('string_word')

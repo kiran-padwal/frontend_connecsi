@@ -250,7 +250,7 @@
 
         <div class="col-md-6 col-nc-lg-6 col-lg-12">
             <!-- influencer card -->
-            <div class="card">
+            <div class="card hover-border">
                 <div class="card-body">
                     <div class="card-block padding-top-normal influencer-item" data-channel-id="{{ item['_source']['channel_id'] }}">
                         <div class="row padding-cols-xs">
@@ -930,68 +930,366 @@
         {% endfor %}
     </div>
 
-<div class="row">
+<div class="row" style="margin-bottom:1rem;">
     <div class="col-sm-12">
         <div class="card">
             <div class="card-body text-center">
+
                 <div class="card-block text-center pagination_block">
                         <div class="col-sm-12" id="pagination">
-                            <!--{{ glob.total_rows }}-->
-                            <!--{{ payload_form_filter }}-->
-                            {% set _ = glob.update({'total_rows':total_rows}) %}
-                            {% if glob.total_rows %}
-                            {% set pages = ((glob.total_rows)/20)|round|int %}
-                            <!--{{ pages }}-->
-                            {% set _ = glob.update({'offset':0}) %}
-                            {% set current_offset = form_filters['offset']|int %}
+                            <ngb-pagination _ngcontent-kyf-c6="" role="navigation"><!----><!----><!----><!----><!----><!---->
+                                <ul class="pagination"><!---->
+                                    {% set _ = glob.update({'total_rows':total_rows}) %}
+                                        {% if glob.total_rows %}
+                                        {% set pages = ((glob.total_rows)/20)|round|int %}
+                                        <!--{{ pages }}-->
+                                        {% set _ = glob.update({'offset':0}) %}
+                                        {% set current_offset = form_filters['offset']|int %}
+                                        {% set current_page=((current_offset/20) +1) |int %}
+                                        <form id="paginationFormFirst" method="POST" action="/elasticSearch" style="margin:0;" name="paginationFormFirst">
+                                                <input type="hidden" name="keyword-title" value="{{form_filters['keyword-title']}}">
+                                                <input type="hidden" name="channel" value={{form_filters['channel']}}>
+                                                <input type="hidden" name="string_word" value="{{form_filters['string_word']}}">
+                                                <input type="hidden" name="country" value="{{form_filters['country']}}">
+                                                <input type="hidden" name="min_lower" value="{{form_filters['min_lower']}}">
+                                                <input type="hidden" name="max_upper" value="{{form_filters['max_upper']}}">
+                                                <input type="hidden" name="sort_order" value="{{form_filters['sort_order']}}">
+                                                <input type="hidden" name="category_id" value="{{form_filters['category_id']}}">
+                                                <input type="hidden" name="offset" value="0">
+                                                {% if current_page==1%}
+                                                    <li class="page-item ng-star-inserted inactiveButton">
+                                                        <a aria-label="First" class="page-link" href="#" onclick="submitForm('paginationFormFirst')"><!---->
+                                                            <span aria-hidden="true" class="ng-star-inserted" onclick="">««</span>
+                                                        </a>
+                                                    </li>
+                                                {% else %}
+                                                    <li data-toggle="tooltip" title="First" class="page-item ng-star-inserted">
+                                                        <a aria-label="First" class="page-link" href="#" onclick="submitForm('paginationFormFirst')"><!---->
+                                                            <span aria-hidden="true" class="ng-star-inserted" onclick="">««</span>
+                                                        </a>
+                                                    </li>
+                                                {% endif %}
+                                        </form>
 
-                            {% for pages in range(pages) %}
+                                        <form id="paginationFormPrevious" method="POST" action="/elasticSearch" style="margin:0;" name="paginationFormPrevious">
+                                                <input type="hidden" name="keyword-title" value="{{form_filters['keyword-title']}}">
+                                                <input type="hidden" name="channel" value={{form_filters['channel']}}>
+                                                <input type="hidden" name="string_word" value="{{form_filters['string_word']}}">
+                                                <input type="hidden" name="country" value="{{form_filters['country']}}">
+                                                <input type="hidden" name="min_lower" value="{{form_filters['min_lower']}}">
+                                                <input type="hidden" name="max_upper" value="{{form_filters['max_upper']}}">
+                                                <input type="hidden" name="sort_order" value="{{form_filters['sort_order']}}">
+                                                <input type="hidden" name="category_id" value="{{form_filters['category_id']}}">
+                                                <input type="hidden" name="offset" value="{{current_offset-20}}">
+                                                {% if current_page==1%}
+                                                    <li class="page-item ng-star-inserted inactiveButton">
+                                                        <a aria-label="Previous" class="page-link" href="#" onclick="submitForm('paginationFormPrevious')"><!---->
+                                                            <span aria-hidden="true" class="ng-star-inserted" onclick="">«</span>
+                                                        </a>
+                                                    </li>
+                                                {% else %}
+                                                    <li data-toggle="tooltip" title="Previous" class="page-item ng-star-inserted">
+                                                        <a aria-label="Previous" class="page-link" href="#" onclick="submitForm('paginationFormPrevious')"><!---->
+                                                            <span aria-hidden="true" class="ng-star-inserted" onclick="">«</span>
+                                                        </a>
+                                                    </li>
+                                                {% endif %}
 
-                                <form id="" method="POST" action="/elasticSearch" style="margin:0;">
-                                    <input type="hidden" name="keyword-title" value="{{form_filters['keyword-title']}}">
-                                    <input type="hidden" name="channel" value={{form_filters['channel']}}>
-                                    <input type="hidden" name="string_word" value="{{form_filters['string_word']}}">
-                                    <input type="hidden" name="country" value="{{form_filters['country']}}">
-                                    <input type="hidden" name="min_lower" value="{{form_filters['min_lower']}}">
-                                    <input type="hidden" name="max_upper" value="{{form_filters['max_upper']}}">
-                                    <input type="hidden" name="sort_order" value="{{form_filters['sort_order']}}">
-                                    <input type="hidden" name="category_id" value="{{form_filters['category_id']}}">
-                                    <input type="hidden" name="offset" value="{{glob.offset}}">
-                                    {% if glob.offset == current_offset-40 or glob.offset == current_offset-20 or
-                                    glob.offset == 0 or glob.offset == current_offset or glob.offset==current_offset+20 or
-                                    glob.offset==current_offset+40 %}
-                                    {% if current_offset == glob.offset %}
+                                        </form>
+                                        {% if current_page==1 %}
+                                            {% if pages>=3 %}
+                                                {% for j in range(1,4) %}
 
-                                    {% set _ = glob.update({'current_page':loop.index}) %}
-                                    <div class="text-center" style="margin-right:4px;">
-                                        <button type="submit" disabled class="btn btn-info btn-sm" name="search_inf" style="background-color:#9370DB !important;border-color:#9370DB !important;">
-                                            {{loop.index}}
-                                        </button>
-                                    </div>
-                                    {% else %}
-                                    <div class="text-center" style="margin-right:4px;">
-                                        <button type="submit" class="btn btn-info btn-sm" name="search_inf" style="background-color:#9370DB !important;border-color:#9370DB !important;">{{loop.index}}</button>
-                                    </div>
-                                    {% endif %}
-                                    {% elif glob.offset == current_offset+60 %}
-                                    <div class="text-center" data-toggle="tooltip" title="Next" style="margin-right:4px;">
-                                        <button type="submit" class="btn btn-info btn-sm" name="search_inf" style="background-color:#9370DB !important;border-color:#9370DB !important;">...</button>
-                                    </div>
-                                    {% elif glob.offset == current_offset-60%}
-                                    <div class="text-center" data-toggle="tooltip" title="Previous" style="margin-right:4px;">
-                                        <button type="submit" class="btn btn-info btn-sm" name="search_inf" style="background-color:#9370DB !important;border-color:#9370DB !important;">...</button>
-                                    </div>
-                                    {% endif %}
+                                                    {% if current_page==j%}
+                                                        <form id="pagination{{loop.index}}" method="POST" action="/elasticSearch" name="pagination{{loop.index}}" style="margin:0;">
+                                                            <input type="hidden" name="keyword-title" value="{{form_filters['keyword-title']}}">
+                                                            <input type="hidden" name="channel" value={{form_filters['channel']}}>
+                                                            <input type="hidden" name="string_word" value="{{form_filters['string_word']}}">
+                                                            <input type="hidden" name="country" value="{{form_filters['country']}}">
+                                                            <input type="hidden" name="min_lower" value="{{form_filters['min_lower']}}">
+                                                            <input type="hidden" name="max_upper" value="{{form_filters['max_upper']}}">
+                                                            <input type="hidden" name="sort_order" value="{{form_filters['sort_order']}}">
+                                                            <input type="hidden" name="category_id" value="{{form_filters['category_id']}}">
+                                                            <input type="hidden" name="offset" value="{{glob.offset}}">
+                                                            <li class="page-item active ng-star-inserted">
+                                                                <a aria-label="pages" class="page-link" href="#" onclick="submitForm('pagination{{loop.index}}')"><!---->
+                                                                    <span aria-hidden="true" class="ng-star-inserted" onclick="">{{j}}</span>
+                                                                </a>
+                                                            </li>
 
-                                </form>
 
-                            {% set _ = glob.update({'offset':(glob.offset+20)|int}) %}
-                            <!--{{glob.offset}}-->
-                            {% endfor %}
-                            {% endif %}
+                                                        </form>
+                                                    {% else %}
+                                                        <form id="pagination{{loop.index}}" method="POST" action="/elasticSearch" name="pagination{{loop.index}}" style="margin:0;">
+                                                            <input type="hidden" name="keyword-title" value="{{form_filters['keyword-title']}}">
+                                                            <input type="hidden" name="channel" value={{form_filters['channel']}}>
+                                                            <input type="hidden" name="string_word" value="{{form_filters['string_word']}}">
+                                                            <input type="hidden" name="country" value="{{form_filters['country']}}">
+                                                            <input type="hidden" name="min_lower" value="{{form_filters['min_lower']}}">
+                                                            <input type="hidden" name="max_upper" value="{{form_filters['max_upper']}}">
+                                                            <input type="hidden" name="sort_order" value="{{form_filters['sort_order']}}">
+                                                            <input type="hidden" name="category_id" value="{{form_filters['category_id']}}">
+                                                            <input type="hidden" name="offset" value="{{glob.offset}}">
+                                                            <li class="page-item ng-star-inserted">
+                                                                <a aria-label="pages" class="page-link" href="#" onclick="submitForm('pagination{{loop.index}}')"><!---->
+                                                                    <span aria-hidden="true" class="ng-star-inserted" onclick="">{{j}}</span>
+                                                                </a>
+                                                            </li>
+
+
+                                                        </form>
+                                                    {% endif %}
+
+                                                {% set _ = glob.update({'offset':(glob.offset+20)|int}) %}
+                                                <!--{{glob.offset}}-->
+                                                {% endfor %}
+                                            {% else %}
+                                                {% for j in range(1,pages+1) %}
+
+                                                    {% if current_page==j%}
+                                                        <form id="pagination{{loop.index}}" method="POST" action="/elasticSearch" name="pagination{{loop.index}}" style="margin:0;">
+                                                            <input type="hidden" name="keyword-title" value="{{form_filters['keyword-title']}}">
+                                                            <input type="hidden" name="channel" value={{form_filters['channel']}}>
+                                                            <input type="hidden" name="string_word" value="{{form_filters['string_word']}}">
+                                                            <input type="hidden" name="country" value="{{form_filters['country']}}">
+                                                            <input type="hidden" name="min_lower" value="{{form_filters['min_lower']}}">
+                                                            <input type="hidden" name="max_upper" value="{{form_filters['max_upper']}}">
+                                                            <input type="hidden" name="sort_order" value="{{form_filters['sort_order']}}">
+                                                            <input type="hidden" name="category_id" value="{{form_filters['category_id']}}">
+                                                            <input type="hidden" name="offset" value="{{glob.offset}}">
+                                                            <li class="page-item active ng-star-inserted">
+                                                                <a aria-label="pages" class="page-link" href="#" onclick="submitForm('pagination{{loop.index}}')"><!---->
+                                                                    <span aria-hidden="true" class="ng-star-inserted" onclick="">{{j}}</span>
+                                                                </a>
+                                                            </li>
+
+
+                                                        </form>
+                                                    {% else %}
+                                                        <form id="pagination{{loop.index}}" method="POST" action="/elasticSearch" name="pagination{{loop.index}}" style="margin:0;">
+                                                            <input type="hidden" name="keyword-title" value="{{form_filters['keyword-title']}}">
+                                                            <input type="hidden" name="channel" value={{form_filters['channel']}}>
+                                                            <input type="hidden" name="string_word" value="{{form_filters['string_word']}}">
+                                                            <input type="hidden" name="country" value="{{form_filters['country']}}">
+                                                            <input type="hidden" name="min_lower" value="{{form_filters['min_lower']}}">
+                                                            <input type="hidden" name="max_upper" value="{{form_filters['max_upper']}}">
+                                                            <input type="hidden" name="sort_order" value="{{form_filters['sort_order']}}">
+                                                            <input type="hidden" name="category_id" value="{{form_filters['category_id']}}">
+                                                            <input type="hidden" name="offset" value="{{glob.offset}}">
+                                                            <li class="page-item ng-star-inserted">
+                                                                <a aria-label="pages" class="page-link" href="#" onclick="submitForm('pagination{{loop.index}}')"><!---->
+                                                                    <span aria-hidden="true" class="ng-star-inserted" onclick="">{{j}}</span>
+                                                                </a>
+                                                            </li>
+
+
+                                                        </form>
+                                                    {% endif %}
+
+                                                {% set _ = glob.update({'offset':(glob.offset+20)|int}) %}
+                                                <!--{{glob.offset}}-->
+                                                {% endfor %}
+                                            {% endif %}
+                                        {% elif current_page==pages %}
+                                            {% if pages>=3 %}
+                                                {% for j in range(pages-2,pages+1) %}
+
+                                                    {% if current_page==j%}
+                                                        <form id="pagination{{loop.index}}" method="POST" action="/elasticSearch" name="pagination{{loop.index}}" style="margin:0;">
+                                                            <input type="hidden" name="keyword-title" value="{{form_filters['keyword-title']}}">
+                                                            <input type="hidden" name="channel" value={{form_filters['channel']}}>
+                                                            <input type="hidden" name="string_word" value="{{form_filters['string_word']}}">
+                                                            <input type="hidden" name="country" value="{{form_filters['country']}}">
+                                                            <input type="hidden" name="min_lower" value="{{form_filters['min_lower']}}">
+                                                            <input type="hidden" name="max_upper" value="{{form_filters['max_upper']}}">
+                                                            <input type="hidden" name="sort_order" value="{{form_filters['sort_order']}}">
+                                                            <input type="hidden" name="category_id" value="{{form_filters['category_id']}}">
+                                                            <input type="hidden" name="offset" value="{{glob.offset}}">
+                                                            <li class="page-item active ng-star-inserted">
+                                                                <a aria-label="pages" class="page-link" href="#" onclick="submitForm('pagination{{loop.index}}')"><!---->
+                                                                    <span aria-hidden="true" class="ng-star-inserted" onclick="">{{j}}</span>
+                                                                </a>
+                                                            </li>
+
+
+                                                        </form>
+                                                    {% else %}
+                                                        <form id="pagination{{loop.index}}" method="POST" action="/elasticSearch" name="pagination{{loop.index}}" style="margin:0;">
+                                                            <input type="hidden" name="keyword-title" value="{{form_filters['keyword-title']}}">
+                                                            <input type="hidden" name="channel" value={{form_filters['channel']}}>
+                                                            <input type="hidden" name="string_word" value="{{form_filters['string_word']}}">
+                                                            <input type="hidden" name="country" value="{{form_filters['country']}}">
+                                                            <input type="hidden" name="min_lower" value="{{form_filters['min_lower']}}">
+                                                            <input type="hidden" name="max_upper" value="{{form_filters['max_upper']}}">
+                                                            <input type="hidden" name="sort_order" value="{{form_filters['sort_order']}}">
+                                                            <input type="hidden" name="category_id" value="{{form_filters['category_id']}}">
+                                                            <input type="hidden" name="offset" value="{{glob.offset}}">
+                                                            <li class="page-item ng-star-inserted">
+                                                                <a aria-label="pages" class="page-link" href="#" onclick="submitForm('pagination{{loop.index}}')"><!---->
+                                                                    <span aria-hidden="true" class="ng-star-inserted" onclick="">{{j}}</span>
+                                                                </a>
+                                                            </li>
+
+
+                                                        </form>
+                                                    {% endif %}
+
+                                                {% set _ = glob.update({'offset':(glob.offset+20)|int}) %}
+                                                <!--{{glob.offset}}-->
+                                                {% endfor %}
+                                            {% else %}
+                                                {% for pages in range(1,pages+1) %}
+
+                                                    {% if current_page==j%}
+                                                        <form id="pagination{{loop.index}}" method="POST" action="/elasticSearch" name="pagination{{loop.index}}" style="margin:0;">
+                                                            <input type="hidden" name="keyword-title" value="{{form_filters['keyword-title']}}">
+                                                            <input type="hidden" name="channel" value={{form_filters['channel']}}>
+                                                            <input type="hidden" name="string_word" value="{{form_filters['string_word']}}">
+                                                            <input type="hidden" name="country" value="{{form_filters['country']}}">
+                                                            <input type="hidden" name="min_lower" value="{{form_filters['min_lower']}}">
+                                                            <input type="hidden" name="max_upper" value="{{form_filters['max_upper']}}">
+                                                            <input type="hidden" name="sort_order" value="{{form_filters['sort_order']}}">
+                                                            <input type="hidden" name="category_id" value="{{form_filters['category_id']}}">
+                                                            <input type="hidden" name="offset" value="{{glob.offset}}">
+                                                            <li class="page-item active ng-star-inserted">
+                                                                <a aria-label="pages" class="page-link" href="#" onclick="submitForm('pagination{{loop.index}}')"><!---->
+                                                                    <span aria-hidden="true" class="ng-star-inserted" onclick="">{{j}}</span>
+                                                                </a>
+                                                            </li>
+
+
+                                                        </form>
+                                                    {% else %}
+                                                        <form id="pagination{{loop.index}}" method="POST" action="/elasticSearch" name="pagination{{loop.index}}" style="margin:0;">
+                                                            <input type="hidden" name="keyword-title" value="{{form_filters['keyword-title']}}">
+                                                            <input type="hidden" name="channel" value={{form_filters['channel']}}>
+                                                            <input type="hidden" name="string_word" value="{{form_filters['string_word']}}">
+                                                            <input type="hidden" name="country" value="{{form_filters['country']}}">
+                                                            <input type="hidden" name="min_lower" value="{{form_filters['min_lower']}}">
+                                                            <input type="hidden" name="max_upper" value="{{form_filters['max_upper']}}">
+                                                            <input type="hidden" name="sort_order" value="{{form_filters['sort_order']}}">
+                                                            <input type="hidden" name="category_id" value="{{form_filters['category_id']}}">
+                                                            <input type="hidden" name="offset" value="{{glob.offset}}">
+                                                            <li class="page-item ng-star-inserted">
+                                                                <a aria-label="pages" class="page-link" href="#" onclick="submitForm('pagination{{loop.index}}')"><!---->
+                                                                    <span aria-hidden="true" class="ng-star-inserted" onclick="">{{j}}</span>
+                                                                </a>
+                                                            </li>
+
+
+                                                        </form>
+                                                    {% endif %}
+
+                                                {% set _ = glob.update({'offset':(glob.offset+20)|int}) %}
+                                                <!--{{glob.offset}}-->
+                                                {% endfor %}
+                                            {% endif %}
+
+                                        {% else %}
+                                            {% for j in range(current_page-1,current_page+2) %}
+
+                                                {% if current_page==j%}
+                                                        <form id="pagination{{loop.index}}" method="POST" action="/elasticSearch" name="pagination{{loop.index}}" style="margin:0;">
+                                                            <input type="hidden" name="keyword-title" value="{{form_filters['keyword-title']}}">
+                                                            <input type="hidden" name="channel" value={{form_filters['channel']}}>
+                                                            <input type="hidden" name="string_word" value="{{form_filters['string_word']}}">
+                                                            <input type="hidden" name="country" value="{{form_filters['country']}}">
+                                                            <input type="hidden" name="min_lower" value="{{form_filters['min_lower']}}">
+                                                            <input type="hidden" name="max_upper" value="{{form_filters['max_upper']}}">
+                                                            <input type="hidden" name="sort_order" value="{{form_filters['sort_order']}}">
+                                                            <input type="hidden" name="category_id" value="{{form_filters['category_id']}}">
+                                                            <input type="hidden" name="offset" value="{{glob.offset}}">
+                                                            <li class="page-item active ng-star-inserted">
+                                                                <a aria-label="pages" class="page-link" href="#" onclick="submitForm('pagination{{loop.index}}')"><!---->
+                                                                    <span aria-hidden="true" class="ng-star-inserted" onclick="">{{j}}</span>
+                                                                </a>
+                                                            </li>
+
+
+                                                        </form>
+                                                    {% else %}
+                                                        <form id="pagination{{loop.index}}" method="POST" action="/elasticSearch" name="pagination{{loop.index}}" style="margin:0;">
+                                                            <input type="hidden" name="keyword-title" value="{{form_filters['keyword-title']}}">
+                                                            <input type="hidden" name="channel" value={{form_filters['channel']}}>
+                                                            <input type="hidden" name="string_word" value="{{form_filters['string_word']}}">
+                                                            <input type="hidden" name="country" value="{{form_filters['country']}}">
+                                                            <input type="hidden" name="min_lower" value="{{form_filters['min_lower']}}">
+                                                            <input type="hidden" name="max_upper" value="{{form_filters['max_upper']}}">
+                                                            <input type="hidden" name="sort_order" value="{{form_filters['sort_order']}}">
+                                                            <input type="hidden" name="category_id" value="{{form_filters['category_id']}}">
+                                                            <input type="hidden" name="offset" value="{{glob.offset}}">
+                                                            <li class="page-item ng-star-inserted">
+                                                                <a aria-label="pages" class="page-link" href="#" onclick="submitForm('pagination{{loop.index}}')"><!---->
+                                                                    <span aria-hidden="true" class="ng-star-inserted" onclick="">{{j}}</span>
+                                                                </a>
+                                                            </li>
+
+
+                                                        </form>
+                                                    {% endif %}
+
+                                            {% set _ = glob.update({'offset':(glob.offset+20)|int}) %}
+                                            <!--{{glob.offset}}-->
+                                            {% endfor %}
+                                        {% endif %}
+
+                                        <form id="paginationFormNext" method="POST" action="/elasticSearch" style="margin:0;" name="paginationFormNext">
+                                                <input type="hidden" name="keyword-title" value="{{form_filters['keyword-title']}}">
+                                                <input type="hidden" name="channel" value={{form_filters['channel']}}>
+                                                <input type="hidden" name="string_word" value="{{form_filters['string_word']}}">
+                                                <input type="hidden" name="country" value="{{form_filters['country']}}">
+                                                <input type="hidden" name="min_lower" value="{{form_filters['min_lower']}}">
+                                                <input type="hidden" name="max_upper" value="{{form_filters['max_upper']}}">
+                                                <input type="hidden" name="sort_order" value="{{form_filters['sort_order']}}">
+                                                <input type="hidden" name="category_id" value="{{form_filters['category_id']}}">
+                                                <input type="hidden" name="offset" value="{{current_offset+20}}">
+
+                                                {% if current_page==pages %}
+                                                    <li class="page-item ng-star-inserted inactiveButton">
+                                                        <a aria-label="Next" class="page-link" href="#" onclick="submitForm('paginationFormNext')"><!---->
+                                                            <span aria-hidden="true" class="ng-star-inserted">»</span>
+                                                        </a>
+                                                    </li>
+                                                {% else %}
+                                                    <li data-toggle="tooltip" title="Next" class="page-item ng-star-inserted">
+                                                        <a aria-label="Next" class="page-link" href="#" onclick="submitForm('paginationFormNext')"><!---->
+                                                            <span aria-hidden="true" class="ng-star-inserted">»</span>
+                                                        </a>
+                                                    </li>
+                                                {% endif %}
+                                        </form>
+                                        <form  id="paginationFormLast" method="POST" action="/elasticSearch" style="margin:0;" name="paginationFormLast">
+                                                <input type="hidden" name="keyword-title" value="{{form_filters['keyword-title']}}">
+                                                <input type="hidden" name="channel" value={{form_filters['channel']}}>
+                                                <input type="hidden" name="string_word" value="{{form_filters['string_word']}}">
+                                                <input type="hidden" name="country" value="{{form_filters['country']}}">
+                                                <input type="hidden" name="min_lower" value="{{form_filters['min_lower']}}">
+                                                <input type="hidden" name="max_upper" value="{{form_filters['max_upper']}}">
+                                                <input type="hidden" name="sort_order" value="{{form_filters['sort_order']}}">
+                                                <input type="hidden" name="category_id" value="{{form_filters['category_id']}}">
+                                                <input type="hidden" name="offset" value="{{glob.total_rows-20}}">
+                                                {% if current_page==pages %}
+                                                    <li class="page-item ng-star-inserted inactiveButton">
+                                                        <a aria-label="Last" class="page-link" href="#" onclick="submitForm('paginationFormLast')"><!---->
+                                                            <span aria-hidden="true" class="ng-star-inserted">»»</span>
+                                                        </a>
+                                                    </li>
+                                                {% else %}
+                                                    <li data-toggle="tooltip" title="Last" class="page-item ng-star-inserted">
+                                                        <a aria-label="Last" class="page-link" href="#" onclick="submitForm('paginationFormLast')"><!---->
+                                                            <span aria-hidden="true" class="ng-star-inserted">»»</span>
+                                                        </a>
+                                                    </li>
+                                                {% endif %}
+
+                                        </form>
+                                        {% endif %}
+
+                                </ul>
+                            </ngb-pagination>
                         </div>
                     </div>
-                    Page {{glob.current_page}} of {{ pages }}
+                    <span style="font-size:0.9rem;">Page {{current_page}} of {{ pages }}</span>
                 </div>
         </div>
     </div>
@@ -1418,6 +1716,63 @@
 
 
 <script>
+
+function submitForm(formName){
+
+    document.getElementById(formName).submit();
+
+}
+
+
+
+if (document.documentElement.clientWidth > 1300) {
+  console.log('Greater!');
+  $('.wrapper')[0].style.width='1300px'
+  $('.wrapper')[0].style.margin='0 auto'
+}
+// fire when below 1203
+else {
+  console.log('Smaller!');
+}
+if (document.documentElement.clientWidth <992) {
+  console.log('Greater!');
+  $('#navbarSupportedContent')[0].style.marginTop='0.5rem'
+  $('#navbarSupportedContent')[0].style.right='4rem'
+  $('#dropdownBasic3')[0].style.marginRight='0.4rem';
+  $('#dropdownBasic2')[0].style.marginRight='0.4rem';
+  $('#search-box1')[0].style.padding='15px';
+  $('#search-box1').removeClass('col-md-11');
+  $('#search-box1').addClass('col-md-12');
+    $('#search-box2')[0].style.display='none';
+    $('#smallScreen')[0].style.display='block';
+    $('#filter-box1')[0].style.marginTop='15px';
+
+
+}
+$(window).resize(function(){
+  if (document.documentElement.clientWidth > 1300) {
+  console.log('Greater!');
+  $('.wrapper')[0].style.width='1300px'
+  $('.wrapper')[0].style.margin='0 auto'
+}
+// fire when below 1203
+else {
+  console.log('Smaller!');
+}
+if (document.documentElement.clientWidth <992) {
+  console.log('Greater!');
+  $('#navbarSupportedContent')[0].style.marginTop='0.5rem'
+  $('#navbarSupportedContent')[0].style.right='4rem'
+  $('#dropdownBasic3')[0].style.marginRight='0.4rem';
+  $('#dropdownBasic2')[0].style.marginRight='0.4rem';
+    $('#search-box2')[0].style.display='none';
+    $('#smallScreen')[0].style.display='block';
+    $('#search-box1').removeClass('col-md-11');
+  $('#search-box1').addClass('col-md-12');
+  $('#filter-box1')[0].style.marginTop='15px';
+}
+});
+
 
 $(function() {
     $('#form_search').each(function() {
