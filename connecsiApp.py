@@ -1293,7 +1293,7 @@ def elasticSearch():
     except Exception as e:
         print(e)
         pass
-
+    favInfList_data_alerts=''
     try:
         url = base_url + '/Brand/getInfluencerFavList/' + str(user_id)
         response3 = requests.get(url=url)
@@ -7418,4 +7418,4 @@ def changingAlertNotification():
 if __name__ == '__main__':
     # connecsiApp.secret_key = 'connecsiSecretKey'
     host = config.get('auth', 'host')
-    connecsiApp.run(host=host,port=8090,threaded=True,ssl_context='adhoc')
+    connecsiApp.run(debug=True,host=host,port=8090,threaded=True)
