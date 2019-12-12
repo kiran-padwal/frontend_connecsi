@@ -2600,3 +2600,17 @@ div,h4,th,span{
     border-color:#9370DB!important;
 
 }
+
+.text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.highlighted-message{
+    padding-right:0;
+    border-right:3px solid #009DA0!important;
+    border-top:1px solid lightgray!important;
+    border-bottom:1px solid lightgray!important;
+    border-left:1px solid lightgray!important;
+}
+

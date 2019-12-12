@@ -3868,7 +3868,7 @@ $("#create_alert_form").submit(function (e) {
 
 
     var selectedMessageHref = localStorage.getItem('messageHref');
-    $("a[href$='" + selectedMessageHref + "']").addClass('bg-blue-grey bg-lighten-5');
+    $("a[href$='" + selectedMessageHref + "']").addClass('bg-blue-grey bg-lighten-5 highlighted-message');
 
     if ($('#donut-dashboard-chart').length) {
         //dashboard chart

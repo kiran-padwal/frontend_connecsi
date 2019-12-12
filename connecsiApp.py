@@ -2867,6 +2867,7 @@ def calendarView():
     print(campaign_data)
     return render_template('campaign/calenderView.html',campaign_data=campaign_data)
 
+
 @connecsiApp.route('/inbox/<string:message_id>',methods = ['GET'])
 @is_logged_in
 def inbox(message_id):
@@ -2947,7 +2948,8 @@ def inbox(message_id):
             first_name = ''
             profile_pic = ''
             if inbox_user_type == 'brand':
-                brand_details_url = base_url+'/Brand/'+str(inbox_user_id)
+                brand_details_url = base_url+'Brand/'+str(inbox_user_id)
+                print(brand_details_url)
                 brand_details_resposne = requests.get(url=brand_details_url)
                 brand_details_json = brand_details_resposne.json()
                 print('brand details = ',brand_details_json)
@@ -3011,7 +3013,7 @@ def inbox(message_id):
             first_name = ''
             profile_pic = ''
             if full_conv_user_type == 'brand':
-                brand_details_url = base_url+'/Brand/'+str(full_conv_user_id)
+                brand_details_url = base_url+'Brand/'+str(full_conv_user_id)
                 brand_details_resposne = requests.get(url=brand_details_url)
                 brand_details_json = brand_details_resposne.json()
                 print('brand details for conv =',brand_details_json)
@@ -3019,7 +3021,7 @@ def inbox(message_id):
                 profile_pic = brand_details_json['data']['profile_pic']
             elif full_conv_user_type == 'influencer':
                 full_conv_email_id = item['from_email_id']
-                influencer_details_url = base_url + '/Influencer/GetDetailsByEmailId/' + str(full_conv_email_id)
+                influencer_details_url = base_url + 'Influencer/GetDetailsByEmailId/' + str(full_conv_email_id)
                 influencer_details_resposne = requests.get(url=influencer_details_url)
                 influencer_details_json = influencer_details_resposne.json()
                 print('INF DETAILS=======',influencer_details_json)
@@ -3097,6 +3099,56 @@ def inbox(message_id):
                 print('after sorting inbox = ',item)
         print(message_id_list1)
         ############## sort end ####################################
+        print("data1", inbox)
+        today=datetime.datetime.now()
+
+        for i in inbox['data']:
+            diff=today-datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple()))
+            print('difference',diff.days)
+            print("timing",datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%I:%M%p"))
+            daysDiff=diff.days
+            hoursDiff=diff.days*24+diff.seconds//3600
+            if(daysDiff==0):
+                if(hoursDiff<=12):
+                    i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%I:%M%p")
+
+                else:
+                    i['date']='Today'
+            elif(daysDiff==1):
+                i['date']='Yesterday'
+            elif(daysDiff>1 and daysDiff<7):
+                i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%a")
+            else:
+                pass
+                year = datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).year
+                if(year==today.year):
+                    i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%d %b")
+                else:
+                    i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime('%d %b %y')
+        for i in full_conv['data']:
+            diff=today-datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple()))
+            print('difference',diff.days)
+            print("timing",datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%I:%M%p"))
+            daysDiff=diff.days
+            hoursDiff=diff.days*24+diff.seconds//3600
+            if(daysDiff==0):
+                if(hoursDiff<=12):
+                    i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%I:%M%p")
+
+                else:
+                    i['date']='Today'
+            elif(daysDiff==1):
+                i['date']='Yesterday'
+            elif(daysDiff>1 and daysDiff<7):
+                i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%a")
+            else:
+                pass
+                year = datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).year
+                if(year==today.year):
+                    i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%d %b")
+                else:
+                    i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime('%d %b %y')
+
         return render_template('email/inbox.html', maxAuto=maxAuto,packageName=packageName,countAutoProposal=countAutoProposal,messageSubscription=messageSubscription,inbox = inbox, full_conv = full_conv, conv_title=conv_title,view_campaign_data=view_campaign_data)
     except Exception as e:
         print(e)
@@ -3107,10 +3159,8 @@ def inbox(message_id):
     view_campaign_data = campaignObj.get_all_campaigns()
 
     print('final conv default = ', full_conv)
-
+    print("data2",inbox)
     return render_template('email/inbox.html',maxAuto=maxAuto,packageName=packageName,countAutoProposal=countAutoProposal,messageSubscription=messageSubscription,inbox=inbox, full_conv = full_conv,conv_title=conv_title,view_campaign_data=view_campaign_data)
-
-
 
 @connecsiApp.route('/update_message_as_read/<string:message_id>',methods=['GET'])
 @is_logged_in
@@ -3240,7 +3290,7 @@ def deleted():
             first_name = ''
             profile_pic = ''
             if full_conv_user_type == 'brand':
-                brand_details_url = base_url+'/Brand/'+str(full_conv_user_id)
+                brand_details_url = base_url+'Brand/'+str(full_conv_user_id)
                 brand_details_resposne = requests.get(url=brand_details_url)
                 brand_details_json = brand_details_resposne.json()
                 print(brand_details_json)
@@ -3248,7 +3298,7 @@ def deleted():
                 profile_pic = brand_details_json['data']['profile_pic']
             elif full_conv_user_type == 'influencer':
                 full_conv_email_id = item['from_email_id']
-                influencer_details_url = base_url + '/Influencer/GetDetailsByEmailId/' + str(full_conv_email_id)
+                influencer_details_url = base_url + 'Influencer/GetDetailsByEmailId/' + str(full_conv_email_id)
                 influencer_details_resposne = requests.get(url=influencer_details_url)
                 influencer_details_json = influencer_details_resposne.json()
                 print('INF DETAILS=======', influencer_details_json)
@@ -3862,7 +3912,7 @@ def addToFavInfList(channel_id,channel_name):
         print(channel_id)
         print(channel_name)
         user_id = session['user_id']
-        url = base_url+'/Brand/addToFavListNew/'+channel_id+'/'+str(user_id)+'/'+channel_name
+        url = base_url+'Brand/addToFavListNew/'+channel_id+'/'+str(user_id)+'/'+channel_name
         response = requests.post(url=url)
         print(response)
         return channel_name+' Influencer Added To Your Favorite List'
@@ -3901,7 +3951,7 @@ def getFavInfListOne():
 #     view_campaign_data=''
 #     try:
 #         user_id = session['user_id']
-#         url = base_url+'/Brand/getInfluencerFavList_with_details/'+str(user_id)+'/'+channel_name
+#         url = base_url+'Brand/getInfluencerFavList_with_details/'+str(user_id)+'/'+channel_name
 #         response = requests.get(url=url)
 #         data = response.json()
 #         print(data)
@@ -4043,7 +4093,7 @@ def influencerFavoritesList(channel_name):
 
     try:
         user_id = session['user_id']
-        url = base_url+'/Brand/getInfluencerFavList_with_details_new/'+str(user_id)+'/'+channel_name
+        url = base_url+'Brand/getInfluencerFavList_with_details_new/'+str(user_id)+'/'+channel_name
         response = requests.get(url=url)
         data = response.json()
         print(data)

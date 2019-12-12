@@ -27,7 +27,7 @@
 
 
 <div class="row">
-    <div class="col-12">
+    <div class="col-12" style="padding:0;">
         <div class="card">
             <div class="card-body">
                 <div class="card-block padding-top-normal">
@@ -59,13 +59,13 @@
                                 <div class="email-app-content w-100">
                                     {% endif %}
                                     <div class="email-app-content-area w-100">
-                                        <div class="email-app-list-mails p-0">
+                                        <div class="email-app-list-mails p-0" style="border-left:1px solid #e6ecf5;">
                                             <div class="email-app-list">
-                                                <div id="users-list">
+                                                <div id="users-list" style="overflow-x:hidden;">
                                                     <div class="list-group">
                                                         <div class="users-list-padding">
                                                             {% for item in inbox['data'] %}
-                                                            <a
+                                                            <a style="padding-left:0.5rem!important;"
                                                                     {% if item['conv_id'] %}
                                                                         onclick="update_conversation_as_read('{{item['conv_id']}}')"
                                                                     {% else %}
@@ -96,7 +96,7 @@
                                                 <!--<span class="badge badge-primary">Unread</span>-->
                                                 {% set _ = glob.update({'total_unread_messages' : glob.total_unread_messages + 1 }) %}
                                                 {% else %}
-                                            <h6 class="list-group-item-heading">{{ item['first_name'] }}
+                                            <h6 class="list-group-item-heading">{{ item['first_name']|striptags|truncate(32, False, '...', 0) }}
                                                 {% endif %}
                                             </h6>
                                             <span class="font-small-2 primary text-bold-300">{{ item['date'] }}</span>
@@ -126,10 +126,10 @@
                             </span>
                                                     </p>
                                                 </div>
-                                                <div class="media-list">
+                                                <div class="media-list" style="padding:0 1rem;">
                                                     {% for item in full_conv['data'] %}
                                                     <div id="headingCollapse{{ item['collapse_id'] }}" class="card-header p-0">
-                                                        <a data-toggle="collapse" href="#collapse{{ item['collapse_id'] }}" aria-expanded="false"
+                                                        <a style="border-bottom:0.5px solid lightgrey!important;" data-toggle="collapse" href="#collapse{{ item['collapse_id'] }}" aria-expanded="false"
                                                            aria-controls="collapse{{ item['collapse_id'] }}"
                                                            class="email-app-sender list-group-item list-group-item-action no-border collapsed">
 
@@ -169,7 +169,7 @@
                                                 {% endif %}
                                             </span>
                                                                     </p>
-                                                                    <span class="float-left text muted text-bold-300">{{ item['date'] }}</span>
+                                                                    <span class="float-left text muted text-bold-300 font-small-2 primary">{{ item['date'] }}</span>
                                                                 </div>
                                                             </div>
 
@@ -759,6 +759,7 @@
 
 
 <script>
+console.log('hello ji',$('.media-list')[0].children.length,$('.media-list')[0].children[$('.media-list')[0].children.length-1].className='card-collapse collapse show');
 function update_message_as_read(message_id){
         <!--alert(message_id);-->
          $.ajax({
