@@ -28953,11 +28953,11 @@ ngb-accordion .card {
 } */
 @media (min-width: 992px) {
   .email-app-list-mails {
-    width: 30% !important;
+    width: 40% !important;
     border-right: 1px solid #e6ecf5;
     float: left; }
   .email-application .email-app-mail-content {
-    width: 70%; } }
+    width: 60%; } }
 
 @media (min-width: 768px) and (max-width: 1199.98px) {
   .email-app-list-mails {
