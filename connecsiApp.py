@@ -138,7 +138,7 @@ def resetemail():
     if request.method == 'POST':
         payload = request.form.to_dict()
         email_id = payload.get('reset_email')
-        url = base_url + '/Messages/ForgotPassword/' + str(email_id)
+        url = base_url+'Messages/ForgotPassword/' + str(email_id)
         # print(payload)
         try:
             response = requests.post(url, json=payload)
@@ -695,7 +695,7 @@ def changePassword():
 #     print('after getting campaigns')
 #     print(view_campaign_data)
 #     try:
-#         url = base_url + '/Brand/getInfluencerFavList/' + str(user_id)
+#         url = base_url+'Brand/getInfluencerFavList/' + str(user_id)
 #         response = requests.get(url=url)
 #         favInfList_data = response.json()
 #         linechart_id = 1
@@ -825,7 +825,7 @@ def changePassword():
 #             "offset": 0
 #         }
 #         try:
-#             url = base_url + '/Youtube/searchChannels/youtube'
+#             url = base_url+'Youtube/searchChannels/youtube'
 #             response = requests.post(url, json=payload)
 #             print(response.json())
 #             data = response.json()
@@ -978,7 +978,7 @@ def searchInfluencers():
     print('after getting campaigns')
     print(view_campaign_data)
     try:
-        url = base_url + '/Brand/getInfluencerFavListNew/' + str(user_id)
+        url = base_url+'Brand/getInfluencerFavListNew/' + str(user_id)
         response = requests.get(url=url)
         favInfList_data = response.json()
         linechart_id = 1
@@ -990,7 +990,7 @@ def searchInfluencers():
         pass
 
     try:
-        url = base_url + '/Brand/getInfluencerFavList/' + str(user_id)
+        url = base_url+'Brand/getInfluencerFavList/' + str(user_id)
         response3 = requests.get(url=url)
         favInfList_data_alerts = response3.json()
         linechart_id_alert = 1
@@ -1122,7 +1122,7 @@ def searchInfluencers():
             "offset": 0
         }
         try:
-            url = base_url + '/Youtube/searchChannels/youtube'
+            url = base_url+'Youtube/searchChannels/youtube'
             response = requests.post(url, json=payload)
             print(response.json())
             data = response.json()
@@ -1283,7 +1283,7 @@ def elasticSearch():
     print('after getting campaigns')
     print(view_campaign_data)
     try:
-        url = base_url + '/Brand/getInfluencerFavListNew/' + str(user_id)
+        url = base_url+'Brand/getInfluencerFavListNew/' + str(user_id)
         response = requests.get(url=url)
         favInfList_data = response.json()
         linechart_id = 1
@@ -1295,7 +1295,7 @@ def elasticSearch():
         pass
     favInfList_data_alerts=''
     try:
-        url = base_url + '/Brand/getInfluencerFavList/' + str(user_id)
+        url = base_url+'Brand/getInfluencerFavList/' + str(user_id)
         response3 = requests.get(url=url)
         favInfList_data_alerts = response3.json()
         linechart_id_alert = 1
@@ -2958,7 +2958,7 @@ def inbox(message_id):
                 print(first_name)
             elif inbox_user_type == 'influencer':
                 inbox_email_id = item['from_email_id']
-                influencer_details_url = base_url + '/Influencer/GetDetailsByEmailId/' + str(inbox_email_id)
+                influencer_details_url = base_url+'Influencer/GetDetailsByEmailId/' + str(inbox_email_id)
                 print(influencer_details_url)
 
                 influencer_details_resposne = requests.get(url=influencer_details_url)
@@ -3388,13 +3388,13 @@ def sent():
             reciepents_first_name=''
             reciepents_profile_pic = ''
             if sent_user_type == 'brand':
-                brand_details_url = base_url + '/Brand/' + str(sent_user_id)
+                brand_details_url = base_url+'Brand/' + str(sent_user_id)
                 brand_details_resposne = requests.get(url=brand_details_url)
                 brand_details_json = brand_details_resposne.json()
                 # print(brand_details_json)
                 senders_first_name = brand_details_json['data']['first_name']
                 full_conv_to_email_id = item['to_email_id']
-                influencer_details_url = base_url + '/Influencer/GetDetailsByEmailId/' + str(full_conv_to_email_id)
+                influencer_details_url = base_url+'Influencer/GetDetailsByEmailId/' + str(full_conv_to_email_id)
                 influencer_details_resposne = requests.get(url=influencer_details_url)
                 influencer_details_json = influencer_details_resposne.json()
                 # print(influencer_details_json)
@@ -3402,14 +3402,14 @@ def sent():
                 reciepents_profile_pic = influencer_details_json['data']['channel_img']
             elif sent_user_type == 'influencer':
                 full_conv_email_id = item['from_email_id']
-                influencer_details_url = base_url + '/Influencer/GetDetailsByEmailId/' + str(full_conv_email_id)
+                influencer_details_url = base_url+'Influencer/GetDetailsByEmailId/' + str(full_conv_email_id)
                 influencer_details_resposne = requests.get(url=influencer_details_url)
                 influencer_details_json = influencer_details_resposne.json()
                 # print(influencer_details_json)
                 senders_first_name = influencer_details_json['data']['first_name']
 
                 full_conv_to_email_id = item['to_email_id']
-                brand_details_url = base_url + '/Brand/getDetailsByEmailId/' + str(full_conv_to_email_id)
+                brand_details_url = base_url+'Brand/getDetailsByEmailId/' + str(full_conv_to_email_id)
                 brand_details_resposne = requests.get(url=brand_details_url)
                 brand_details_json = brand_details_resposne.json()
                 # print(brand_details_json)
@@ -3927,7 +3927,7 @@ def addToFavInfList(channel_id,channel_name):
 @is_logged_in
 def getFavInfList():
     user_id = session['user_id']
-    url = base_url + '/Brand/getInfluencerFavListNew/' + str(user_id)
+    url = base_url+'Brand/getInfluencerFavListNew/' + str(user_id)
     response = requests.get(url=url)
     response_json=response.json()
     print(response_json)
@@ -3937,7 +3937,7 @@ def getFavInfList():
 @is_logged_in
 def getFavInfListOne():
     user_id = session['user_id']
-    url = base_url + '/Brand/getInfluencerFavList/' + str(user_id)
+    url = base_url+'Brand/getInfluencerFavList/' + str(user_id)
     response = requests.get(url=url)
     response_json=response.json()
     print(response_json)
@@ -4133,7 +4133,7 @@ def influencerFavoritesList(channel_name):
 
         try:
 
-            url3 = base_url + '/Brand/getInfluencerFavList/' + str(user_id)
+            url3 = base_url+'Brand/getInfluencerFavList/' + str(user_id)
             response3 = requests.get(url=url3)
             favInfList_data_alerts = response3.json()
             linechart_id_alert = 1
@@ -4163,7 +4163,7 @@ def influencerFavoritesList(channel_name):
 #         payload = request.form.to_dict()
 #         print(payload)
 #         try:
-#             url = base_url + '/Brand/createInfluencerAlerts/'+str(user_id)
+#             url = base_url+'Brand/createInfluencerAlerts/'+str(user_id)
 #             response = requests.put(url=url,json=payload)
 #             # data = response.json()
 #             return 'Created Alerts for Favorite Influencer'
@@ -4198,7 +4198,7 @@ def createAlerts():
         else:
             notifi = "0000"
         try:
-            url = base_url + '/Brand/createInfluencerAlerts/'+str(user_id)
+            url = base_url+'Brand/createInfluencerAlerts/'+str(user_id)
             response = requests.put(url=url,json=payload)
             data = response.json()
 
@@ -4242,7 +4242,7 @@ def createAlerts():
 #         payload = request.form.to_dict()
 #         print(payload)
 #         try:
-#             url = base_url + '/Brand/createInfluencerAlerts/'+str(user_id)
+#             url = base_url+'Brand/createInfluencerAlerts/'+str(user_id)
 #             response = requests.put(url=url,json=payload)
 #             data = response.json()
 #             return 'Created Alerts for Favorite Influencer'
@@ -6364,7 +6364,7 @@ def getYoutubeUserFromYoutubeApi(youtube_username):
 def getYoutubeSearchDropDownResults(youtube_searchChannel):
     try:
         print (youtube_searchChannel)
-        url = base_url + '/Youtube/getYoutubeChannelSnippetFromYoutubeSearchApi/' + youtube_searchChannel
+        url = base_url+'Youtube/getYoutubeChannelSnippetFromYoutubeSearchApi/' + youtube_searchChannel
         response = requests.get(url=url)
         response_json = response.json()
         print ("data ji",response_json)
@@ -6378,7 +6378,7 @@ def getYoutubeSearchDropDownResults(youtube_searchChannel):
 def getYoutubeVideoCategory(youtube_ChannelID):
     try:
         print (youtube_ChannelID)
-        url = base_url + '/Youtube/getVideoCategoriesByChannelId/' + youtube_ChannelID
+        url = base_url+'Youtube/getVideoCategoriesByChannelId/' + youtube_ChannelID
         response = requests.get(url=url)
         response_json = response.json()
         print ("data ji",response_json)
@@ -6396,7 +6396,7 @@ def getYoutubeVideoCategory(youtube_ChannelID):
 #@is_logged_in
 def getTwitterUserFromTwitterApi(twitter_username):
     try:
-        url = base_url + '/Twitter/getTwitterChannelsDetailsFromConnecsi/' + twitter_username
+        url = base_url+'Twitter/getTwitterChannelsDetailsFromConnecsi/' + twitter_username
         response = requests.get(url=url)
         response_json = response.json()
         return jsonify(results=response_json)
@@ -6410,7 +6410,7 @@ def getTwitterUserFromTwitterApi(twitter_username):
 def getTwitterSearchDropDownResults(twitter_searchChannel):
     try:
         print(twitter_searchChannel)
-        url = base_url + '/Twitter/getTwitterChannelsFromTwitterSearchApi/' + twitter_searchChannel
+        url = base_url+'Twitter/getTwitterChannelsFromTwitterSearchApi/' + twitter_searchChannel
         response = requests.get(url=url)
         response_json = response.json()
         print("data ji", response_json)
@@ -6449,7 +6449,7 @@ def influencerScannerAdvertiser():
 @is_logged_in
 def getChannelGraphData(channel_name,channel_id):
        try:
-           url = base_url + '/GraphHistory/getNoOfFollowersHistory/' + channel_name+'/'+channel_id
+           url = base_url+'GraphHistory/getNoOfFollowersHistory/' + channel_name+'/'+channel_id
 
            response = requests.get(url=url)
 
@@ -7229,7 +7229,7 @@ def getAllFollowersViewsLikesComments(channel_id,channel_name):
         response = requests.get(url=url)
         response_json = response.json()
         screen_name=response_json['data'][0]['screen_name']
-        url = base_url + '/Twitter/getTwitterChannelsDetailsFromConnecsi/' + str(screen_name)
+        url = base_url+'Twitter/getTwitterChannelsDetailsFromConnecsi/' + str(screen_name)
         response = requests.get(url=url)
         response_json = response.json()
         print("twitter data", response_json)
