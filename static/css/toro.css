@@ -2614,3 +2614,10 @@ div,h4,th,span{
     border-left:1px solid lightgray!important;
 }
 
+.highlighted-message{
+    padding-right:0;
+    border-right:3px solid #745EFF!important;
+    border-top:1px solid lightgray!important;
+    border-bottom:1px solid lightgray!important;
+    border-left:1px solid lightgray!important;
+}

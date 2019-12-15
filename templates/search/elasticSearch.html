@@ -1010,7 +1010,7 @@
                                                             <input type="hidden" name="max_upper" value="{{form_filters['max_upper']}}">
                                                             <input type="hidden" name="sort_order" value="{{form_filters['sort_order']}}">
                                                             <input type="hidden" name="category_id" value="{{form_filters['category_id']}}">
-                                                            <input type="hidden" name="offset" value="{{glob.offset}}">
+                                                            <input type="hidden" name="offset" value="{{(j-1)*20}}">
                                                             <li class="page-item active ng-star-inserted">
                                                                 <a aria-label="pages" class="page-link" href="#" onclick="submitForm('pagination{{loop.index}}')"><!---->
                                                                     <span aria-hidden="true" class="ng-star-inserted" onclick="">{{j}}</span>
@@ -1029,7 +1029,7 @@
                                                             <input type="hidden" name="max_upper" value="{{form_filters['max_upper']}}">
                                                             <input type="hidden" name="sort_order" value="{{form_filters['sort_order']}}">
                                                             <input type="hidden" name="category_id" value="{{form_filters['category_id']}}">
-                                                            <input type="hidden" name="offset" value="{{glob.offset}}">
+                                                            <input type="hidden" name="offset" value="{{(j-1)*20}}">
                                                             <li class="page-item ng-star-inserted">
                                                                 <a aria-label="pages" class="page-link" href="#" onclick="submitForm('pagination{{loop.index}}')"><!---->
                                                                     <span aria-hidden="true" class="ng-star-inserted" onclick="">{{j}}</span>
@@ -1056,7 +1056,7 @@
                                                             <input type="hidden" name="max_upper" value="{{form_filters['max_upper']}}">
                                                             <input type="hidden" name="sort_order" value="{{form_filters['sort_order']}}">
                                                             <input type="hidden" name="category_id" value="{{form_filters['category_id']}}">
-                                                            <input type="hidden" name="offset" value="{{glob.offset}}">
+                                                            <input type="hidden" name="offset" value="{{(j-1)*20}}">
                                                             <li class="page-item active ng-star-inserted">
                                                                 <a aria-label="pages" class="page-link" href="#" onclick="submitForm('pagination{{loop.index}}')"><!---->
                                                                     <span aria-hidden="true" class="ng-star-inserted" onclick="">{{j}}</span>
@@ -1075,7 +1075,7 @@
                                                             <input type="hidden" name="max_upper" value="{{form_filters['max_upper']}}">
                                                             <input type="hidden" name="sort_order" value="{{form_filters['sort_order']}}">
                                                             <input type="hidden" name="category_id" value="{{form_filters['category_id']}}">
-                                                            <input type="hidden" name="offset" value="{{glob.offset}}">
+                                                            <input type="hidden" name="offset" value="{{(j-1)*20}}">
                                                             <li class="page-item ng-star-inserted">
                                                                 <a aria-label="pages" class="page-link" href="#" onclick="submitForm('pagination{{loop.index}}')"><!---->
                                                                     <span aria-hidden="true" class="ng-star-inserted" onclick="">{{j}}</span>
@@ -1104,7 +1104,7 @@
                                                             <input type="hidden" name="max_upper" value="{{form_filters['max_upper']}}">
                                                             <input type="hidden" name="sort_order" value="{{form_filters['sort_order']}}">
                                                             <input type="hidden" name="category_id" value="{{form_filters['category_id']}}">
-                                                            <input type="hidden" name="offset" value="{{glob.offset}}">
+                                                            <input type="hidden" name="offset" value="{{(j-1)*20}}">
                                                             <li class="page-item active ng-star-inserted">
                                                                 <a aria-label="pages" class="page-link" href="#" onclick="submitForm('pagination{{loop.index}}')"><!---->
                                                                     <span aria-hidden="true" class="ng-star-inserted" onclick="">{{j}}</span>
@@ -1123,7 +1123,7 @@
                                                             <input type="hidden" name="max_upper" value="{{form_filters['max_upper']}}">
                                                             <input type="hidden" name="sort_order" value="{{form_filters['sort_order']}}">
                                                             <input type="hidden" name="category_id" value="{{form_filters['category_id']}}">
-                                                            <input type="hidden" name="offset" value="{{glob.offset}}">
+                                                            <input type="hidden" name="offset" value="{{(j-1)*20}}">
                                                             <li class="page-item ng-star-inserted">
                                                                 <a aria-label="pages" class="page-link" href="#" onclick="submitForm('pagination{{loop.index}}')"><!---->
                                                                     <span aria-hidden="true" class="ng-star-inserted" onclick="">{{j}}</span>
@@ -1138,7 +1138,7 @@
                                                 <!--{{glob.offset}}-->
                                                 {% endfor %}
                                             {% else %}
-                                                {% for pages in range(1,pages+1) %}
+                                                {% for j in range(1,pages+1) %}
 
                                                     {% if current_page==j%}
                                                         <form id="pagination{{loop.index}}" method="POST" action="/elasticSearch" name="pagination{{loop.index}}" style="margin:0;">
@@ -1150,7 +1150,7 @@
                                                             <input type="hidden" name="max_upper" value="{{form_filters['max_upper']}}">
                                                             <input type="hidden" name="sort_order" value="{{form_filters['sort_order']}}">
                                                             <input type="hidden" name="category_id" value="{{form_filters['category_id']}}">
-                                                            <input type="hidden" name="offset" value="{{glob.offset}}">
+                                                            <input type="hidden" name="offset" value="{{(j-1)*20}}">
                                                             <li class="page-item active ng-star-inserted">
                                                                 <a aria-label="pages" class="page-link" href="#" onclick="submitForm('pagination{{loop.index}}')"><!---->
                                                                     <span aria-hidden="true" class="ng-star-inserted" onclick="">{{j}}</span>
@@ -1169,7 +1169,7 @@
                                                             <input type="hidden" name="max_upper" value="{{form_filters['max_upper']}}">
                                                             <input type="hidden" name="sort_order" value="{{form_filters['sort_order']}}">
                                                             <input type="hidden" name="category_id" value="{{form_filters['category_id']}}">
-                                                            <input type="hidden" name="offset" value="{{glob.offset}}">
+                                                            <input type="hidden" name="offset" value="{{(j-1)*20}}">
                                                             <li class="page-item ng-star-inserted">
                                                                 <a aria-label="pages" class="page-link" href="#" onclick="submitForm('pagination{{loop.index}}')"><!---->
                                                                     <span aria-hidden="true" class="ng-star-inserted" onclick="">{{j}}</span>
@@ -1198,7 +1198,7 @@
                                                             <input type="hidden" name="max_upper" value="{{form_filters['max_upper']}}">
                                                             <input type="hidden" name="sort_order" value="{{form_filters['sort_order']}}">
                                                             <input type="hidden" name="category_id" value="{{form_filters['category_id']}}">
-                                                            <input type="hidden" name="offset" value="{{glob.offset}}">
+                                                            <input type="hidden" name="offset" value="{{(j-1)*20}}">
                                                             <li class="page-item active ng-star-inserted">
                                                                 <a aria-label="pages" class="page-link" href="#" onclick="submitForm('pagination{{loop.index}}')"><!---->
                                                                     <span aria-hidden="true" class="ng-star-inserted" onclick="">{{j}}</span>
@@ -1217,7 +1217,7 @@
                                                             <input type="hidden" name="max_upper" value="{{form_filters['max_upper']}}">
                                                             <input type="hidden" name="sort_order" value="{{form_filters['sort_order']}}">
                                                             <input type="hidden" name="category_id" value="{{form_filters['category_id']}}">
-                                                            <input type="hidden" name="offset" value="{{glob.offset}}">
+                                                            <input type="hidden" name="offset" value="{{(j-1)*20}}">
                                                             <li class="page-item ng-star-inserted">
                                                                 <a aria-label="pages" class="page-link" href="#" onclick="submitForm('pagination{{loop.index}}')"><!---->
                                                                     <span aria-hidden="true" class="ng-star-inserted" onclick="">{{j}}</span>

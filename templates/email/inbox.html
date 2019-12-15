@@ -65,7 +65,7 @@
                                                     <div class="list-group">
                                                         <div class="users-list-padding">
                                                             {% for item in inbox['data'] %}
-                                                            <a style="padding-left:0.5rem!important;"
+                                                            <a style="padding-left:0.5rem!important;padding-right: 0!important;"
                                                                     {% if item['conv_id'] %}
                                                                         onclick="update_conversation_as_read('{{item['conv_id']}}')"
                                                                     {% else %}
@@ -92,14 +92,14 @@
                                         </span>
                                         <div class="media-body">
                                             {% if item['read'] == 'false' %}
-                                            <h6 class="list-group-item-heading text-bold-500" style="color:black;">{{ item['first_name'] }}
+                                            <h6 class="list-group-item-heading text-bold-500" style="color:black;display: -webkit-inline-box;">{{ item['first_name']|striptags|truncate(32, False, '...', 0) }}
                                                 <!--<span class="badge badge-primary">Unread</span>-->
                                                 {% set _ = glob.update({'total_unread_messages' : glob.total_unread_messages + 1 }) %}
                                                 {% else %}
-                                            <h6 class="list-group-item-heading">{{ item['first_name']|striptags|truncate(32, False, '...', 0) }}
+                                            <h6 class="list-group-item-heading" style="display: -webkit-inline-box;">{{ item['first_name']|striptags|truncate(32, False, '...', 0) }}
                                                 {% endif %}
                                             </h6>
-                                            <span class="font-small-2 primary text-bold-300">{{ item['date'] }}</span>
+                                            <h6 class="font-small-2 primary text-bold-300" style="display: -webkit-inline-box;float: right;margin-right:0.5rem;">{{ item['date'] }}</h6>
                                             <p class="list-group-item-text text-truncate text-bold-300">
                                                 {{ item['subject']|striptags|truncate(32, False, '...', 0) }}
                                             </p>
@@ -113,8 +113,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="email-app-mail-content">
-                                            <div class="email-app-mail-content-detail">
+                                        <div class="email-app-mail-content" >
+                                            <div class="email-app-mail-content-detail" style="overflow-x:hidden!important;">
                                                 <div class="email-app-title">
                                                     <button class="btn btn-raised btn-primary back-to-inbox font-medium-1 w-100">
                                                         <i class="fa fa-angle-left"></i> Back to inbox</button>
@@ -759,6 +759,7 @@
 
 
 <script>
+
 console.log('hello ji',$('.media-list')[0].children.length,$('.media-list')[0].children[$('.media-list')[0].children.length-1].className='card-collapse collapse show');
 function update_message_as_read(message_id){
         <!--alert(message_id);-->

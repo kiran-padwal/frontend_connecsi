@@ -1,4 +1,9 @@
 
+if($('.email-app-mail-content').length > 0){
+    $('.email-app-mail-content').perfectScrollbar();
+}
+
+
 
 if (document.documentElement.clientWidth > 1300) {
   console.log('Greater!');

@@ -1258,6 +1258,9 @@ def elasticSearch():
     try:
         response_regionCodes = requests.get(url=url_regionCodes)
         regionCodes_json = response_regionCodes.json()
+
+        regionCodes_json['data']=regionCodes_json['data'][0:61:1]
+        print("region codes are ", regionCodes_json, len(regionCodes_json['data']))
     except Exception as e:
         print(e)
     try:
@@ -1337,8 +1340,9 @@ def elasticSearch():
         print('i m inside POST METHOD')
         string_word = request.form.get('string_word')
         category=string_word
-        countryString=','.join(countryList)
-        categoryString=','.join(categoryList)
+
+        countryString=','.join(list(dict.fromkeys(countryList)))
+        categoryString=','.join(list(dict.fromkeys(categoryList)))
         print("searching ",countryString,categoryString)
         sort_order = request.form.get('sort_order')
         print(sort_order)
@@ -1657,6 +1661,7 @@ def elasticSearch():
                                total_rows=total_rows
                                # payload_form_filter=payload
                                )
+
 
 def exportCsv_part2(data, channel):
     print("hello ji")
