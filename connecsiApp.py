@@ -408,6 +408,11 @@ def login():
                         session['user_id']=user_id
                         session['notification']=None
                         print(session['user_id'])
+                        view_profile_url = base_url + 'Brand/' + str(user_id)
+                        response_profile = requests.get(view_profile_url)
+                        response_profile_json=response_profile.json()
+                        print("login try",response_profile_json)
+                        session['default_currency']=response_profile_json['data']['default_currency']
                         return redirect(url_for('admin'))
                     else:
                         flash("You have not Activated your account, To Activate your account please click on the activation link sent to your email address", 'danger')
@@ -424,77 +429,6 @@ def login():
             password = request.form.get('inf_password')
             print(email_id)
             print(password)
-
-
-@connecsiApp.route('/admin')
-@is_logged_in
-def admin():
-    title='Dashboard'
-    top10Inf_url = base_url + 'Youtube/top10Influencers'
-
-    try:
-        response = requests.get(top10Inf_url)
-        # print(response.json())
-        top10Inf = response.json()
-        print(top10Inf)
-        # for item in top10Inf['data']:
-        #     # print(item)
-        #     # print(item['channel_id'])
-        #     total_videos_url = base_url + 'Youtube/totalVideos/'+str(item['channel_id'])
-        #     try:
-        #         response = requests.get(total_videos_url)
-        #         total_videos = response.json()
-        #         # print(total_videos)
-        #         for item1 in total_videos['data']:
-        #             # print(item1)
-        #             item.update(item1)
-        #
-        #     except:pass
-        #     print(item)
-
-        user_id = session['user_id']
-        from templates.campaign.campaign import Campaign
-        campaignObj = Campaign(user_id=user_id)
-        # campaignObj = templates.campaign.campaign.Campaign(user_id=user_id)
-        view_campaign_data = campaignObj.get_all_campaigns()
-        view_campaign_data_list = []
-        active_campaigns = 0
-        completed_campaigns = 0
-        new_campaigns = 0
-        for item in view_campaign_data['data']:
-            if item['deleted'] != 'true':
-                view_campaign_data_list.append(item)
-            if item['campaign_status']=='Finished':
-                completed_campaigns = completed_campaigns+1
-            if item['campaign_status']=='Active':
-                active_campaigns = active_campaigns+1
-            if item['campaign_status']=='New':
-                new_campaigns = new_campaigns+1
-        # print(view_campaign_data_list)
-        for item1 in view_campaign_data_list:
-            campaign_id = item1['campaign_id']
-            channel_status_campaign = requests.get(
-                url=base_url + 'Campaign/channel_status_for_campaign_by_campaign_id/' + str(campaign_id))
-            # print(channel_status_campaign.json())
-            channel_status_campaign_json = channel_status_campaign.json()
-            try:
-                item1.update({'status': channel_status_campaign_json['data'][0]['status']})
-            except:
-                item1.update({'status': ''})
-                pass
-        print('final campaign list with status = ',view_campaign_data_list)
-
-        try:
-            res_fav_list = requests.get(url=base_url+'Brand/getInfluencerFavListNew/'+str(user_id))
-            favListJson = res_fav_list.json()
-            favListCount = len(favListJson['data'])
-        except:
-            pass
-            favListCount = 0
-        return render_template('index.html', title=title, top10Inf=top10Inf,new_campaigns=new_campaigns,
-                               completed_campaigns=completed_campaigns,active_campaigns=active_campaigns,favListCount=favListCount)
-    except Exception as e:
-        print(e)
 
 #
 #
@@ -1840,6 +1774,7 @@ def payment():
 @connecsiApp.route('/checkout',methods=['GET'])
 @is_logged_in
 def payment1():
+    currencyIndex = {'INR': '₹', 'USD': '$', 'EUR': '€', 'GBR': '£'}
     subData = session['subData']
     print("hello ji",subData['data'])
     subValue1 = getSubscriptionValues(str(session['user_id']))
@@ -1874,7 +1809,7 @@ def payment1():
             else:
                 value[i['feature_name']] = 1
     print("box",value)
-    return render_template('payment/checkout.html',data=subData['data'],amount=subData['amount'],pub_key=subData['pub_key'],subValue=value,date=date)
+    return render_template('payment/checkout.html',currencySign=currencyIndex[session['default_currency']],data=subData['data'],amount=subData['amount'],pub_key=subData['pub_key'],subValue=value,date=date)
 
 
 # @connecsiApp.route('/payment',methods=['POST'])
@@ -2069,6 +2004,7 @@ def viewMyPayments():
 @connecsiApp.route('/addCampaign')
 @is_logged_in
 def addCampaign():
+    currencyIndex = {'INR': '₹', 'USD': '$', 'EUR': '€', 'GBR': '£'}
     url_regionCodes = base_url + 'Youtube/regionCodes'
     regionCodes_json = ''
     subscriptionValue=getSubscriptionValues(str(session["user_id"]))
@@ -2107,6 +2043,7 @@ def addCampaign():
     try:
         regionCodes_response = requests.get(url=url_regionCodes)
         regionCodes_json = regionCodes_response.json()
+	regionCodes_json['data']=regionCodes_json['data'][0:91:1]
         print(regionCodes_json)
     except:pass
     url_videoCat = base_url + 'Youtube/videoCategories'
@@ -2117,11 +2054,12 @@ def addCampaign():
         print(videoCat_json)
     except Exception as e:
         print(e)
-    return render_template('campaign/add_campaignForm.html',maxCampaign=maxCampaign,maxClassified=maxClassified,classified_count=classified_count,messageSubscription=messageSubscription,campaign_count=campaign_count,regionCodes=regionCodes_json,videoCategories = videoCat_json)
+    return render_template('campaign/add_campaignForm.html',currencySign=currencyIndex[session['default_currency']],maxCampaign=maxCampaign,maxClassified=maxClassified,classified_count=classified_count,messageSubscription=messageSubscription,campaign_count=campaign_count,regionCodes=regionCodes_json,videoCategories = videoCat_json)
 
 @connecsiApp.route('/editCampaign/<string:campaign_id>',methods=['GET'])
 @is_logged_in
 def editCampaign(campaign_id):
+    currencyIndex = {'INR': '₹', 'USD': '$', 'EUR': '€', 'GBR': '£'}
     url_regionCodes = base_url + 'Youtube/regionCodes'
     regionCodes_json = ''
     try:
@@ -2152,7 +2090,7 @@ def editCampaign(campaign_id):
             item['kpis'] = item['kpis'].replace(' ', '')
     except Exception as e:
         print(e)
-    return render_template('campaign/edit_campaignForm.html', view_campaign_details_data=view_campaign_details_data,
+    return render_template('campaign/edit_campaignForm.html', currencySign=currencyIndex[session['default_currency']],view_campaign_details_data=view_campaign_details_data,
                            regionCodes=regionCodes_json, videoCategories=videoCat_json)
 
 
@@ -2220,7 +2158,7 @@ def updateCampaign():
         filenames_string = ','.join(filenames)
         print('file name string', filenames_string)
         payload.update({'files': filenames_string})
-
+        payload['budget']=payload['budget'].split(" ")[1]
         print('last payload',payload)
         # exit()
 
@@ -2756,7 +2694,8 @@ def saveCampaign():
         try:
             del payload['country']
             del payload['is_classified_post']
-        except:pass
+        except:
+            pass
 
         files = request.files.getlist("campaign_files")
         print(files)
@@ -2768,7 +2707,9 @@ def saveCampaign():
                 filenames.append(filename)
         filenames_string = ','.join(filenames)
         payload.update({'files': filenames_string})
+        payload['budget'] = payload['budget'].split(" ")[1]
         print(payload)
+
         # exit()
         if is_classified_post == 'on':
             payload.update({'is_classified_post':'TRUE'})
@@ -2871,9 +2812,305 @@ def calendarView():
     return render_template('campaign/calenderView.html',campaign_data=campaign_data)
 
 
+# @connecsiApp.route('/inbox/<string:message_id>',methods = ['GET'])
+# @is_logged_in
+# def inbox(message_id):
+#     message_id = str(message_id)
+#     inbox = ''
+#     full_conv=''
+#     conv_title=''
+#     length_conv=''
+#     countAutoProposal=0
+#     user_id = session['user_id']
+#
+#     subValues = getSubscriptionValues(str(user_id))
+#     countMessages = 0
+#     packageName=''
+#     messageSubscription = {
+#         'Autofill Proposal': {
+#             'text':'',
+#             'heading':''
+#         }
+#     }
+#
+#     maxAuto=0
+#     for i in subValues['data']:
+#         if (i['feature_name'].lower() == 'autofill proposal'):
+#             packageName = i['package_name']
+#             countAutoProposal = i['units']
+#             maxAuto=i['base_units']+i['added_units']
+#             messageSubscription['Autofill Proposal']['text'] = ''
+#
+#     if (countAutoProposal == 0):
+#         messageSubscription['Autofill Proposal']['text'] = "You have reached the limit of Autofill Proposal. (Allowed: "+str(maxAuto)+" ) Please customize your plan to add more or upgrade to unlock more features and add-ons."
+#         messageSubscription['Autofill Proposal']['heading'] = "Limit Reached"
+#
+#     print('user id=',user_id)
+#     type = session['type']
+#     print('user type = ',type)
+#     email_id = session['email_id']
+#     print('email id =', email_id)
+#     url = base_url + 'Messages/' + str(user_id) + '/' + type
+#     conv_url = base_url + 'Messages/conversations/' + str(email_id)
+#     try:
+#         response = requests.get(url=url)
+#         data = response.json()
+#         print('messages = ',data)
+#         conv_resposne = requests.get(url=conv_url)
+#         conv_data = conv_resposne.json()
+#         print('conv = ',conv_data)
+#         ###################### get inbox
+#         inboxList=[]
+#         message_id_list=[]
+#         for item in data['data']:
+#             if item['to_email_id'] == email_id:
+#                inboxList.append(item)
+#                message_id_list.append(item['message_id'])
+#         # print(mylist)
+#         for item in conv_data['data']:
+#             # if item['to_email_id'] == email_id and item['message_id'] not in message_id_list:
+#             if item['to_email_id'] == email_id :
+#                # message_id1 = item['message_id']
+#                # print(message_id1)
+#                # for message in data['data']:
+#                #     if message_id1 == message['message_id']:
+#                #        read = message['read']
+#                #        item.update({'read': read})
+#                inboxList.append(item)
+#         print('inboxList  =',inboxList)
+#         inboxSorted = sorted(inboxList, key=lambda k: k['message_id'])
+#         print('sorted inboxlist = ', inboxSorted)
+#         inbox = {}
+#         inbox.update({'data':inboxSorted})
+#         print('inbox = ',inbox)
+#
+#         for item in inbox['data']:
+#             inbox_user_id = item['user_id']
+#             print(inbox_user_id)
+#             inbox_user_type = item['user_type']
+#             print('inbox user type',inbox_user_type)
+#             first_name = ''
+#             profile_pic = ''
+#             if inbox_user_type == 'brand':
+#                 brand_details_url = base_url+'Brand/'+str(inbox_user_id)
+#                 print(brand_details_url)
+#                 brand_details_resposne = requests.get(url=brand_details_url)
+#                 brand_details_json = brand_details_resposne.json()
+#                 print('brand details = ',brand_details_json)
+#                 first_name = brand_details_json['data']['first_name']
+#                 profile_pic = brand_details_json['data']['profile_pic']
+#                 print(first_name)
+#             elif inbox_user_type == 'influencer':
+#                 inbox_email_id = item['from_email_id']
+#                 influencer_details_url = base_url+'Influencer/GetDetailsByEmailId/' + str(inbox_email_id)
+#                 print(influencer_details_url)
+#
+#                 influencer_details_resposne = requests.get(url=influencer_details_url)
+#                 influencer_details_json = influencer_details_resposne.json()
+#                 print(influencer_details_json)
+#                 first_name = influencer_details_json['data']['first_name']
+#                 profile_pic = influencer_details_json['data']['channel_img']
+#                 if first_name =='':
+#                     first_name=inbox_email_id
+#             item.update({'first_name': first_name})
+#             item.update({'profile_pic': profile_pic})
+#             # print(item)
+#
+#         # #######################################
+#
+#         from_email_id=''
+#
+#         if message_id == "0":
+#             try:
+#                 message_id = inbox['data'][-1]['message_id']
+#                 from_email_id = inbox['data'][0]['from_email_id']
+#                 print('default message id = ', message_id)
+#             except:pass
+#         else: print('new message id = ',message_id)
+#             # print(from_email_id)
+#         # ########################### get conversations
+#
+#         getConv_url = base_url + 'Messages/conversations/' + str(message_id)+'/'+str(user_id)+'/'+str(type)
+#         print(getConv_url)
+#         full_conv_resposne = requests.get(url=getConv_url)
+#         full_conv_data = full_conv_resposne.json()
+#         print('full_conv_data = ',full_conv_data)
+#         #################################################
+#         convList = []
+#         for item in data['data']:
+#             if item['message_id'] == int(message_id):
+#                 convList.append(item)
+#         # print(mylist)
+#         for item in full_conv_data['data']:
+#             if item['message_id'] == int(message_id):
+#                 convList.append(item)
+#         full_conv = {}
+#         full_conv.update({'data': convList})
+#         print('full_conv = ', full_conv)
+#         length_conv = len(full_conv['data'])
+#         print('length = ',length_conv)
+#         collapse_id = 1
+#         for item in full_conv['data']:
+#             full_conv_user_id = item['user_id']
+#             # print(full_conv_user_id)
+#             full_conv_user_type = item['user_type']
+#             first_name = ''
+#             profile_pic = ''
+#             if full_conv_user_type == 'brand':
+#                 brand_details_url = base_url+'Brand/'+str(full_conv_user_id)
+#                 brand_details_resposne = requests.get(url=brand_details_url)
+#                 brand_details_json = brand_details_resposne.json()
+#                 print('brand details for conv =',brand_details_json)
+#                 first_name = brand_details_json['data']['first_name']
+#                 profile_pic = brand_details_json['data']['profile_pic']
+#             elif full_conv_user_type == 'influencer':
+#                 full_conv_email_id = item['from_email_id']
+#                 influencer_details_url = base_url + 'Influencer/GetDetailsByEmailId/' + str(full_conv_email_id)
+#                 influencer_details_resposne = requests.get(url=influencer_details_url)
+#                 influencer_details_json = influencer_details_resposne.json()
+#                 print('INF DETAILS=======',influencer_details_json)
+#                 inf_channel_id = influencer_details_json['data']['channel_id']
+#                 print('INF CHANNEL ID ======',inf_channel_id)
+#                 item.update({'channel_id':inf_channel_id})
+#                 first_name = influencer_details_json['data']['first_name']
+#                 profile_pic = influencer_details_json['data']['channel_img']
+#                 if first_name =='':
+#                     first_name=full_conv_email_id
+#             item.update({'first_name': first_name})
+#             item.update({'collapse_id':collapse_id})
+#             item.update({'profile_pic': profile_pic})
+#             # print(item)
+#             collapse_id+=1
+# ################ remove deleted message from inbox and conv ##################
+#         removed_deleted_messages_from_inbox = []
+#         for item in inbox['data']:
+#             try:
+#                 deleted_from_user_id_string = item['deleted_from_user_id']
+#                 deleted_from_user_id_list = deleted_from_user_id_string.split(',')
+#                 print('deleted user list from inbox',deleted_from_user_id_list)
+#                 if str(user_id) not in deleted_from_user_id_list:
+#                     removed_deleted_messages_from_inbox.append(item)
+#             except:
+#                 removed_deleted_messages_from_inbox.append(item)
+#                 pass
+#         inbox.update({'data': removed_deleted_messages_from_inbox})
+#         print('removed deleted from inbox', inbox)
+#
+#         inbox['data'] = inbox['data'][::-1]
+#         inbox.update({'data':inbox['data']})
+#         removed_deleted_messages_from_conv = []
+#         for item in full_conv['data']:
+#             try:
+#                 deleted_from_user_id_string = item['deleted_from_user_id']
+#                 deleted_from_user_id_list = deleted_from_user_id_string.split(',')
+#                 print('deleted user list from full conv', deleted_from_user_id_list)
+#                 if str(user_id) not in deleted_from_user_id_list:
+#                     removed_deleted_messages_from_conv.append(item)
+#             except:
+#                 removed_deleted_messages_from_conv.append(item)
+#                 pass
+#         full_conv.update({'data':removed_deleted_messages_from_conv})
+#         print('removed deleted from conv',full_conv)
+# ############################################################
+#         # ####################################
+#         try:
+#             conv_title = full_conv['data'][0]['subject']
+#         except:pass
+#
+#         from templates.campaign.campaign import Campaign
+#         campaignObj = Campaign(user_id=user_id)
+#         view_campaign_data = campaignObj.get_all_campaigns()
+#         for item in view_campaign_data['data']:
+#             if item['deleted'] == 'true':
+#                 view_campaign_data['data'].remove(item)
+#
+#         print('final conv = ',full_conv)
+#         for item in full_conv['data']:
+#             print(item)
+#         print('campaign data = ',view_campaign_data)
+#         print('final inbox =',inbox)
+#         ############## sort inbox according to date ################
+#         for item in inbox['data']:
+#             print('message inbox = ',item)
+#
+#         inbox['data'].sort(key=lambda x: datetime.datetime.strptime(x['date'], '%A, %d. %B %Y %I:%M%p'),reverse=True)
+#         message_id_list1 = []
+#         for item in inbox['data']:
+#             if item['message_id'] not in message_id_list1:
+#                 message_id_list1.append(item['message_id'])
+#             else:
+#                 inbox['data'].remove(item)
+#                 print('after sorting inbox = ',item)
+#         print(message_id_list1)
+#         ############## sort end ####################################
+#         print("data1", inbox)
+#         today=datetime.datetime.now()
+#
+#         for i in inbox['data']:
+#             diff=today-datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple()))
+#             print('difference',diff.days)
+#             print("timing",datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%I:%M%p"))
+#             daysDiff=diff.days
+#             hoursDiff=diff.days*24+diff.seconds//3600
+#             if(daysDiff==0):
+#                 if(hoursDiff<=12):
+#                     i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%I:%M%p")
+#
+#                 else:
+#                     i['date']='Today'
+#             elif(daysDiff==1):
+#                 i['date']='Yesterday'
+#             elif(daysDiff>1 and daysDiff<7):
+#                 i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%a")
+#             else:
+#                 pass
+#                 year = datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).year
+#                 if(year==today.year):
+#                     i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%d %b")
+#                 else:
+#                     i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime('%d %b %y')
+#         for i in full_conv['data']:
+#             diff=today-datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple()))
+#             print('difference',diff.days)
+#             print("timing",datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%I:%M%p"))
+#             daysDiff=diff.days
+#             hoursDiff=diff.days*24+diff.seconds//3600
+#             if(daysDiff==0):
+#                 if(hoursDiff<=12):
+#                     i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%I:%M%p")
+#
+#                 else:
+#                     i['date']='Today'
+#             elif(daysDiff==1):
+#                 i['date']='Yesterday'
+#             elif(daysDiff>1 and daysDiff<7):
+#                 i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%a")
+#             else:
+#                 pass
+#                 year = datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).year
+#                 if(year==today.year):
+#                     i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%d %b")
+#                 else:
+#                     i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime('%d %b %y')
+#
+#         return render_template('email/inbox.html', maxAuto=maxAuto,packageName=packageName,countAutoProposal=countAutoProposal,messageSubscription=messageSubscription,inbox = inbox, full_conv = full_conv, conv_title=conv_title,view_campaign_data=view_campaign_data)
+#     except Exception as e:
+#         print(e)
+#         pass
+#
+#     from templates.campaign.campaign import Campaign
+#     campaignObj = Campaign(user_id=user_id)
+#     view_campaign_data = campaignObj.get_all_campaigns()
+#
+#     print('final conv default = ', full_conv)
+#     print("data2",inbox)
+#     return render_template('email/inbox.html',maxAuto=maxAuto,packageName=packageName,countAutoProposal=countAutoProposal,messageSubscription=messageSubscription,inbox=inbox, full_conv = full_conv,conv_title=conv_title,view_campaign_data=view_campaign_data)
+
+
 @connecsiApp.route('/inbox/<string:message_id>',methods = ['GET'])
 @is_logged_in
 def inbox(message_id):
+    currencyIndex = {'INR': '₹', 'USD': '$', 'EUR': '€', 'GBR': '£'}
     message_id = str(message_id)
     inbox = ''
     full_conv=''
@@ -3152,7 +3389,7 @@ def inbox(message_id):
                 else:
                     i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime('%d %b %y')
 
-        return render_template('email/inbox.html', maxAuto=maxAuto,packageName=packageName,countAutoProposal=countAutoProposal,messageSubscription=messageSubscription,inbox = inbox, full_conv = full_conv, conv_title=conv_title,view_campaign_data=view_campaign_data)
+        return render_template('email/inbox.html',currencySign=currencyIndex[session['default_currency']], maxAuto=maxAuto,packageName=packageName,countAutoProposal=countAutoProposal,messageSubscription=messageSubscription,inbox = inbox, full_conv = full_conv, conv_title=conv_title,view_campaign_data=view_campaign_data)
     except Exception as e:
         print(e)
         pass
@@ -3163,7 +3400,7 @@ def inbox(message_id):
 
     print('final conv default = ', full_conv)
     print("data2",inbox)
-    return render_template('email/inbox.html',maxAuto=maxAuto,packageName=packageName,countAutoProposal=countAutoProposal,messageSubscription=messageSubscription,inbox=inbox, full_conv = full_conv,conv_title=conv_title,view_campaign_data=view_campaign_data)
+    return render_template('email/inbox.html',currencySign=currencyIndex[session['default_currency']],maxAuto=maxAuto,packageName=packageName,countAutoProposal=countAutoProposal,messageSubscription=messageSubscription,inbox=inbox, full_conv = full_conv,conv_title=conv_title,view_campaign_data=view_campaign_data)
 
 @connecsiApp.route('/update_message_as_read/<string:message_id>',methods=['GET'])
 @is_logged_in
@@ -3697,7 +3934,7 @@ def updateProposal():
        proposal_channels_string = ','.join(proposal_channels)
        print(proposal_channels_string)
        payload.update({'edit_proposal_channels': proposal_channels_string})
-
+       payload['proposal_price']=payload['proposal_price'].split(" ")[1]
        print(payload)
        proposal_id = request.form.get('proposal_id')
        url = base_url + 'Brand/Proposal/get/' + str(proposal_id)
@@ -4280,6 +4517,7 @@ def createAlerts():
 @connecsiApp.route('/addClassified')
 @is_logged_in
 def addClassified():
+    currencyIndex = {'INR': '₹', 'USD': '$', 'EUR': '€', 'GBR': '£'}
     url_regionCodes = base_url + 'Youtube/regionCodes'
     regionCodes_json = ''
     subscriptionValue = getSubscriptionValues(str(session["user_id"]))
@@ -4323,6 +4561,7 @@ def addClassified():
     try:
         regionCodes_response = requests.get(url=url_regionCodes)
         regionCodes_json = regionCodes_response.json()
+	regionCodes_json['data']=regionCodes_json['data'][0:91:1]
         print(regionCodes_json)
     except:pass
     url_videoCat = base_url + 'Youtube/videoCategories'
@@ -4333,7 +4572,7 @@ def addClassified():
         print(videoCat_json)
     except Exception as e:
         print(e)
-    return render_template('classifiedAds/add_classifiedForm.html',maxClassified=maxClassified,maxCampaign=maxCampaign,campaign_count=campaign_count,classified_count=classified_count,messageSubscription=messageSubscription,regionCodes=regionCodes_json,videoCategories = videoCat_json)
+    return render_template('classifiedAds/add_classifiedForm.html',currencySign=currencyIndex[session['default_currency']],maxClassified=maxClassified,maxCampaign=maxCampaign,campaign_count=campaign_count,classified_count=classified_count,messageSubscription=messageSubscription,regionCodes=regionCodes_json,videoCategories = videoCat_json)
 
 # @connecsiApp.route('/saveClassified',methods=['POST'])
 # @is_logged_in
@@ -4423,7 +4662,6 @@ def addClassified():
 #     else:
 #         flash('Unauthorized', 'danger')
 
-
 @connecsiApp.route('/saveClassified',methods=['POST'])
 @is_logged_in
 def saveClassified():
@@ -4455,6 +4693,7 @@ def saveClassified():
             del payload['convert_to_campaign']
         except:
             pass
+        payload['budget'] = payload['budget'].split(" ")[1]
         print(payload)
 
         files = request.files.getlist("campaign_files")
@@ -4526,6 +4765,7 @@ def saveClassified():
 @connecsiApp.route('/editClassified/<string:classified_id>',methods=['GET'])
 @is_logged_in
 def editClassified(classified_id):
+    currencyIndex = {'INR': '₹', 'USD': '$', 'EUR': '€', 'GBR': '£'}
     url_regionCodes = base_url + 'Youtube/regionCodes'
     regionCodes_json = ''
     try:
@@ -4557,7 +4797,7 @@ def editClassified(classified_id):
             item['kpis'] = item['kpis'].replace(' ', '')
     except Exception as e:
         print(e)
-    return render_template('classifiedAds/edit_classifiedForm.html', view_classified_details_data=classified_details,
+    return render_template('classifiedAds/edit_classifiedForm.html', currencySign=currencyIndex[session['default_currency']],view_classified_details_data=classified_details,
                            regionCodes=regionCodes_json, videoCategories=videoCat_json)
 
 
@@ -4601,14 +4841,14 @@ def updateClassified():
         else:
             payload.update({'convert_to_campaign':'FALSE'})
         files = request.files.getlist("campaign_files")
-        # print(files)
+        print("form files",files)
         # exit()
         filenames=[]
         for file in files:
             # filename = brands_classified_files.save(file)
-            filename = campaign_files.save(file)
-            filenames.append(filename)
-
+            if (file.filename):
+                filename = campaign_files.save(file)
+                filenames.append(filename)
 
         user_id = session['user_id']
         url_classified = base_url + 'Classified/' + str(classified_id) + '/' + str(user_id)
@@ -4625,7 +4865,7 @@ def updateClassified():
         filenames_string = ','.join(filenames)
         print('file name string', filenames_string)
         payload.update({'files': filenames_string})
-
+        payload['budget']=payload['budget'].split(' ')[1]
         print('last payload',payload)
 
         if convert_to_campaign == 'on':
@@ -6506,6 +6746,7 @@ def get_auto_or_manual(channel_id):
 @connecsiApp.route('/upgrade')
 @is_logged_in
 def upgrade():
+    currencyIndex = {'INR': '₹', 'USD': '$', 'EUR': '€', 'GBR': '£'}
     subValue=getSubscriptionValues(str(session['user_id']))
     subscriptionName=subValue['data'][0]['base_package']
     expiryDateOfPackage=subValue['data'][0]['p_expiry_date']
@@ -6516,7 +6757,7 @@ def upgrade():
             value[i['feature_name']] = 0
         else:
             value[i['feature_name']] = 1
-    return render_template('user/upgrade.html',subscriptionName=subscriptionName,subValue=value,expiryDateOfPackage=expiryDateOfPackage)
+    return render_template('user/upgrade.html',currencySign=currencyIndex[session['default_currency']],subscriptionName=subscriptionName,subValue=value,expiryDateOfPackage=expiryDateOfPackage)
 
 def levelsWithFeatures(package_name):
     package_features={}

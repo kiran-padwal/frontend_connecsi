@@ -37,7 +37,7 @@
                                                         {% endif %}
                                                     </div>
                                                     <div class="col-5 text-right">
-                                                        <h6 id="plan-price">€ {{'%0.2f'| format(amount/100|float)}}</h6>
+                                                        <h6 id="plan-price">{{currencySign}} {{'%0.2f'| format(amount/100|float)}}</h6>
                                                     </div>
 
                                                     <div class="col-1 text-left">
@@ -55,7 +55,7 @@
                                                         <h6 id="addOn-name">Add-ons</h6>
                                                     </div>
                                                     <div class="col-5 text-right">
-                                                        <h6 id="addOn-price">€ 0</h6>
+                                                        <h6 id="addOn-price">{{currencySign}} 0</h6>
                                                     </div>
                                                     <div class="col-1 text-left">
                                                         <a id="delete-option-addOn" data-toggle="tooltip"
@@ -71,7 +71,7 @@
                                                         <h6 id="vat-name">Taxes(VAT)</h6>
                                                     </div>
                                                     <div class="col-5 text-right">
-                                                        <h6 id="vat-price">€ 0</h6>
+                                                        <h6 id="vat-price">{{currencySign}} 0</h6>
                                                     </div>
                                                     <div class="col-1 text-right">
 
@@ -86,7 +86,7 @@
                                                         <h4 id="total-name">TOTAL</h4>
                                                     </div>
                                                     <div class="col-5 text-right">
-                                                        <h4 id="total-price">€ 0</h4>
+                                                        <h4 id="total-price">{{currencySign}} 0</h4>
                                                     </div>
                                                     <div class="col-1 text-right">
 
@@ -451,7 +451,7 @@
                                     </div>
                                     <div class="col-3">
                                         <input  id="price1" type="hidden"  name="price1"  value="0">
-                                        <h6 id="totalPrice" style="margin:0;font-size:1rem;">€ 0</h6>
+                                        <h6 id="totalPrice" style="margin:0;font-size:1rem;">{{currencySign}} 0</h6>
                                         <h6 style="font-size:0.6rem;">Monthly</h6>
                                     </div>
                                     <div class="col-5">
@@ -518,6 +518,7 @@ var addOnsData={
 }
 var handler = StripeCheckout.configure({
     key: '{{pub_key}}',
+    currency: '{{session['default_currency']}}',
     image: './static/img/logo_Only_1024x768_color.png',
     locale: 'auto',
     token: function (token) {
@@ -640,8 +641,8 @@ $(window).on('popstate', function () {
         totalSum=vatcal+addOnPrice+planPrice;
         totalSum=totalSum.toFixed(2);
         vatcal=vatcal.toFixed(2);
-        $('#vat-price')[0].innerHTML='€'+' '+vatcal;
-        $('#total-price')[0].innerHTML='€'+' '+totalSum;
+        $('#vat-price')[0].innerHTML='{{currencySign}}'+' '+vatcal;
+        $('#total-price')[0].innerHTML='{{currencySign}}'+' '+totalSum;
         $('#price1')[0].value=addOnPrice;
         changeStripe(totalSum*100);
     }

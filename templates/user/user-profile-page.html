@@ -140,30 +140,44 @@
                                 </div>
                                 <div class="row" style="margin-bottom: 10px;">
                                     <div class="col-5">
-                                        <b >City:</b>
+                                        <b >Address:</b>
                                     </div>
                                     <div class="col-7">
-                                        <span class="display-block overflow-hidden">{% if data['data']['city'] == '' %}
+                                        <span class="display-block overflow-hidden">{% if data['data']['address_line'] == '' %}
 
                                                                                     {% else %}
-                                                                                    {{ data['data']['city'] }}
+                                                                                    {{ data['data']['address_line'] }}
                                                                                     {% endif %}
                                         </span>
                                     </div>
                                 </div>
                                 <div class="row" style="margin-bottom: 10px;">
                                     <div class="col-5">
-                                        <b >Postal Code:</b>
+                                        <b >Country:</b>
                                     </div>
                                     <div class="col-7">
-                                        <span class="display-block overflow-hidden">{% if data['data']['postal_code'] == '' %}
+                                        <span class="display-block overflow-hidden">{% if data['data']['country'] == '' %}
 
                                                                                     {% else %}
-                                                                                    {{ data['data']['postal_code'] }}
+                                                                                    {{ data['data']['country'] }}
                                                                                     {% endif %}
                                         </span>
                                     </div>
                                 </div>
+                                <div class="row" style="margin-bottom: 10px;">
+                                    <div class="col-5">
+                                        <b >Tax Number:</b>
+                                    </div>
+                                    <div class="col-7">
+                                        <span class="display-block overflow-hidden">{% if data['data']['tax_no'] == '' %}
+
+                                                                                    {% else %}
+                                                                                    {{ data['data']['tax_no'] }}
+                                                                                    {% endif %}
+                                        </span>
+                                    </div>
+                                </div>
+
 
 
                             </div>
@@ -210,39 +224,39 @@
                                 </div>
                                 <div class="row" style="margin-bottom: 10px;">
                                     <div class="col-5">
-                                        <b >Address:</b>
+                                        <b >Default currency:</b>
                                     </div>
                                     <div class="col-7">
-                                        <span class="display-block overflow-hidden">{% if data['data']['address_line'] == '' %}
+                                        <span class="display-block overflow-hidden">{% if data['data']['default_currency'] == '' %}
 
                                                                                     {% else %}
-                                                                                    {{ data['data']['address_line'] }}
+                                                                                    {{ data['data']['default_currency'] }}
                                                                                     {% endif %}
                                         </span>
                                     </div>
                                 </div>
                                 <div class="row" style="margin-bottom: 10px;">
                                     <div class="col-5">
-                                        <b >Country:</b>
+                                        <b >City:</b>
                                     </div>
                                     <div class="col-7">
-                                        <span class="display-block overflow-hidden">{% if data['data']['country'] == '' %}
+                                        <span class="display-block overflow-hidden">{% if data['data']['city'] == '' %}
 
                                                                                     {% else %}
-                                                                                    {{ data['data']['country'] }}
+                                                                                    {{ data['data']['city'] }}
                                                                                     {% endif %}
                                         </span>
                                     </div>
                                 </div>
                                 <div class="row" style="margin-bottom: 10px;">
                                     <div class="col-5">
-                                        <b >Tax Number:</b>
+                                        <b >Postal Code:</b>
                                     </div>
                                     <div class="col-7">
-                                        <span class="display-block overflow-hidden">{% if data['data']['tax_no'] == '' %}
+                                        <span class="display-block overflow-hidden">{% if data['data']['postal_code'] == '' %}
 
                                                                                     {% else %}
-                                                                                    {{ data['data']['tax_no'] }}
+                                                                                    {{ data['data']['postal_code'] }}
                                                                                     {% endif %}
                                         </span>
                                     </div>

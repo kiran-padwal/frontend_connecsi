@@ -491,23 +491,13 @@
                                             <input type="text" class="form-control" name="ref_link" id="proposal_ref_link" placeholder="ref link" required>
                                         </div>
                                     </div>
-                                    <div class="col-lg-3">
+                                    <div class="col-lg-6">
                                         <div class="form-group">
                                             <label for="price">Price:</label>
-                                            <input class="form-control" type="number" name="proposal_price" id="price" required placeholder="amount" min="0">
+                                            <input class="form-control" type="currency" name="proposal_price" id="price" required placeholder="amount" min="0"  oninput="change_format_1()">
                                         </div>
                                     </div>
-                                    <div class="col-lg-3">
-                                        <div class="form-group">
-                                            <label for="proposal_currency">Currency:</label>
-                                            <select name="currency" id="proposal_currency" class="form-control">
-                                                <option value="USD">USD</option>
-                                                <option value="EUR">EUR</option>
-                                                <option value="PLN">PLN</option>
-                                                <option value="INR">INR</option>
-                                            </select>
-                                        </div>
-                                    </div>
+                                    <input type="hidden" name="currency" id="proposal_currency" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-4"></div>
@@ -680,23 +670,13 @@
                                             <input type="text" class="form-control" name="edit_proposal_ref_link" id="edit_proposal_ref_link" placeholder="ref link" required>
                                         </div>
                                     </div>
-                                    <div class="col-lg-3">
+                                    <div class="col-lg-6">
                                         <div class="form-group">
                                             <label for="price">Price:</label>
-                                            <input class="form-control" type="number" name="proposal_price" id="edit_proposal_price" required placeholder="amount">
+                                            <input class="form-control" type="currency" name="proposal_price" id="edit_proposal_price" required placeholder="amount" oninput="change_format()">
                                         </div>
                                     </div>
-                                    <div class="col-lg-3">
-                                        <div class="form-group">
-                                            <label for="edit_proposal_currency">Currency:</label>
-                                            <select name="currency" id="edit_proposal_currency" class="form-control">
-                                                <option id="USD" value="USD">USD</option>
-                                                <option id="EUR" value="EUR">EUR</option>
-                                                <option id="PLN" value="PLN">PLN</option>
-                                                <option id="INR" value="INR">INR</option>
-                                            </select>
-                                        </div>
-                                    </div>
+                                    <input type="hidden" name="currency" id="edit_proposal_currency" value="{{session['default_currency']}}" class="form-control"/>
                                 </div>
                             </div>
                             <div class="col-md-4"></div>
@@ -825,7 +805,15 @@ function editProposal(message_id,campaign_id){
                             type:'GET',
                             url:'/get_auto_or_manual/'+proposal_id,
                             success:function(data){
-                                var auto_or_manual=data['data'][0]['auto_or_manual'];
+                                console.log("data",data);
+                                if(data['data'].length==0){
+                                    auto_or_manual='manual';
+                                }
+                                else{
+                                    auto_or_manual=data['data'][0]['auto_or_manual'];
+                                }
+
+
                                 if(auto_or_manual=='auto'){
                                     console.log("auto")
                                         $( '#edit_proposal_channels').empty();
@@ -897,7 +885,9 @@ function editProposal(message_id,campaign_id){
                                                     <!--$('#edit_proposal_currency').empty();-->
                                                     <!--$('#edit_proposal_price').val(val.currency);-->
                                                     $('#edit_proposal_price').empty();
-                                                    $('#edit_proposal_price').val(val.proposal_price);
+                                                    var v="{{currencySign}} "+val.proposal_price;
+                                                    console.log(v,"v")
+                                                    $('#edit_proposal_price').val(v);
                                                     $('#edit_proposal_target_url').empty();
                                                     $('#edit_proposal_target_url').val(val.target_url);
                                                     $('#edit_proposal_ref_link').empty();
@@ -986,7 +976,10 @@ function editProposal(message_id,campaign_id){
                                                 <!--$('#edit_proposal_currency').empty();-->
                                                 <!--$('#edit_proposal_price').val(val.currency);-->
                                                 $('#edit_proposal_price').empty();
-                                                $('#edit_proposal_price').val(val.proposal_price);
+                                                var v="{{currencySign}} "+val.proposal_price;
+                                                console.log(v,"v");
+                                                $('#edit_proposal_price').val(v);
+
                                                 $('#edit_proposal_target_url').empty();
                                                 $('#edit_proposal_target_url').val(val.target_url);
                                                 $('#edit_proposal_ref_link').empty();
@@ -1310,6 +1303,50 @@ function getProposal(message_id,campaign_id){
 
     });
 </script>
+<script>
 
+    function change_format(){
+        var val=document.getElementById('edit_proposal_price').value;
+        var count=val.split(".").length-1;
+        if(isNaN(val[val.length-1]) && val[val.length-1]!='.'){
+            document.getElementById('edit_proposal_price').value=val.substring(0,val.length-1);
+            return;
+        }
+        if(count==2){
+             document.getElementById('edit_proposal_price').value=val.substring(0,val.length-1);
+            return;
+        }
+        if(val.length==2 && val[0]=='{{currencySign}}'){
+             document.getElementById('edit_proposal_price').value=''
+        }
+        if(val[0]!='{{currencySign}}'){
+            val=document.getElementById('edit_proposal_price').value;
+            document.getElementById('edit_proposal_price').value='{{currencySign}} '+val;
+
+        }
+
+    }
+    function change_format_1(){
+        var val=document.getElementById('price').value;
+        var count=val.split(".").length-1;
+        if(isNaN(val[val.length-1]) && val[val.length-1]!='.'){
+            document.getElementById('price').value=val.substring(0,val.length-1);
+            return;
+        }
+        if(count==2){
+             document.getElementById('price').value=val.substring(0,val.length-1);
+            return;
+        }
+        if(val.length==2 && val[0]=='{{currencySign}}'){
+             document.getElementById('price').value=''
+        }
+        if(val[0]!='{{currencySign}}'){
+            val=document.getElementById('price').value;
+            document.getElementById('price').value='{{currencySign}} '+val;
+
+        }
+
+    }
+</script>
 
 {% endblock %}

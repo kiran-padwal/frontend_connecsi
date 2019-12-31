@@ -193,7 +193,7 @@
                                                 {% for item in regionCodes['data'] %}
                                                 {% if item['country_name']==data['data']['country']%}
                                                 {% else %}
-                                                <option  value="{{ item['country_name'] }}">{{ item['country_name'] }}</option>
+                                                <option  value="{{ item['region_code'] }}">{{ item['country_name'] }}</option>
                                                 {% endif %}
                                                 {% endfor %}
                                             </select>
@@ -284,6 +284,18 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
+                                            <label for="budget_currency">Default currency:</label>
+                                            <select id="budget_currency" name="budget_currency" class="form-control"
+                                                    value="{{data['data']['default_currency']}}">
+                                                <option value="USD" disabled>&#36; USD</option>
+                                                <option value="EUR">&#8364; EUR</option>
+                                                <option value="GBP" disabled>&#163; GBP</option>
+                                                <option value="INR" disabled>&#8377; INR</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
                                             <label for="monthly_budget">Budget(monthly):</label>
                                             {% if data['data']['tax_no']==None%}
                                                 <input type="text" id="monthly_budget" name="monthly_budget"
@@ -295,18 +307,7 @@
 
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="budget_currency">Currency:</label>
-                                            <select id="budget_currency" name="budget_currency" class="form-control"
-                                                    value="{{data['data']['budget_currency']}}">
-                                                <option value="USD">&#36; USD</option>
-                                                <option value="EUR">&#8364; EUR</option>
-                                                <option value="GBP">&#163; GBP</option>
-                                                <option value="INR">&#8377; INR</option>
-                                            </select>
-                                        </div>
-                                    </div>
+
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">

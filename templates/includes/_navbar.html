@@ -69,6 +69,11 @@
                             <a href="/upgrade" class="dropdown-item py-1">
                                 <img src="../static/images/shield.svg" style="height: 17px;width: 17px;margin: 0 .9rem 0 0;"/><span style="font-weight: 400;color: #212529;text-align: inherit;white-space: nowrap;">Upgrade</span>
                             </a>
+                            <a href="#" class="dropdown-item py-1" id="currency">
+                                <i class="fa fa-{{session['default_currency'] | lower}} mr-2"></i>
+                                <span>{{session['default_currency']}}</span>
+
+                            </a>
                             <div class="dropdown-divider"></div>
                             <a href="/logout" class="dropdown-item"><i class="ft-power mr-2"></i><span>Logout</span></a>
                         </div>
