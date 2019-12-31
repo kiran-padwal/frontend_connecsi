@@ -2043,9 +2043,11 @@ def addCampaign():
     try:
         regionCodes_response = requests.get(url=url_regionCodes)
         regionCodes_json = regionCodes_response.json()
-	regionCodes_json['data']=regionCodes_json['data'][0:91:1]
+        regionCodes_json['data']=regionCodes_json['data'][0:91:1]
         print(regionCodes_json)
-    except:pass
+    except Exception as e:
+        print(e)
+        pass
     url_videoCat = base_url + 'Youtube/videoCategories'
     videoCat_json=''
     try:
@@ -4558,12 +4560,14 @@ def addClassified():
             'text'] = "You have reached the limit of Create Campaign. (Allowed: " + str(
             maxCampaign) + " ) Please customize your plan to add more or upgrade to unlock more features and add-ons."
         messageSubscription['Create Campaign']['heading'] = "Limit Reached"
+
     try:
         regionCodes_response = requests.get(url=url_regionCodes)
         regionCodes_json = regionCodes_response.json()
-	regionCodes_json['data']=regionCodes_json['data'][0:91:1]
+        regionCodes_json['data'] = regionCodes_json['data'][0:91:1]
         print(regionCodes_json)
-    except:pass
+    except Exception as e:
+        pass
     url_videoCat = base_url + 'Youtube/videoCategories'
     videoCat_json=''
     try:
