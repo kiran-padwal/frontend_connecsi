@@ -432,6 +432,76 @@ def login():
 
 #
 #
+@connecsiApp.route('/admin')
+@is_logged_in
+def admin():
+    title='Dashboard'
+    top10Inf_url = base_url + 'Youtube/top10Influencers'
+    currencyIndex = {'INR': '₹', 'USD': '$', 'EUR': '€', 'GBR': '£'}
+    try:
+        response = requests.get(top10Inf_url)
+        # print(response.json())
+        top10Inf = response.json()
+        print(top10Inf)
+        # for item in top10Inf['data']:
+        #     # print(item)
+        #     # print(item['channel_id'])
+        #     total_videos_url = base_url + 'Youtube/totalVideos/'+str(item['channel_id'])
+        #     try:
+        #         response = requests.get(total_videos_url)
+        #         total_videos = response.json()
+        #         # print(total_videos)
+        #         for item1 in total_videos['data']:
+        #             # print(item1)
+        #             item.update(item1)
+        #
+        #     except:pass
+        #     print(item)
+
+        user_id = session['user_id']
+        from templates.campaign.campaign import Campaign
+        campaignObj = Campaign(user_id=user_id)
+        # campaignObj = templates.campaign.campaign.Campaign(user_id=user_id)
+        view_campaign_data = campaignObj.get_all_campaigns()
+        view_campaign_data_list = []
+        active_campaigns = 0
+        completed_campaigns = 0
+        new_campaigns = 0
+        for item in view_campaign_data['data']:
+            if item['deleted'] != 'true':
+                view_campaign_data_list.append(item)
+            if item['campaign_status']=='Finished':
+                completed_campaigns = completed_campaigns+1
+            if item['campaign_status']=='Active':
+                active_campaigns = active_campaigns+1
+            if item['campaign_status']=='New':
+                new_campaigns = new_campaigns+1
+        # print(view_campaign_data_list)
+        for item1 in view_campaign_data_list:
+            campaign_id = item1['campaign_id']
+            channel_status_campaign = requests.get(
+                url=base_url + 'Campaign/channel_status_for_campaign_by_campaign_id/' + str(campaign_id))
+            # print(channel_status_campaign.json())
+            channel_status_campaign_json = channel_status_campaign.json()
+            try:
+                item1.update({'status': channel_status_campaign_json['data'][0]['status']})
+            except:
+                item1.update({'status': ''})
+                pass
+        print('final campaign list with status = ',view_campaign_data_list)
+
+        try:
+            res_fav_list = requests.get(url=base_url+'Brand/getInfluencerFavListNew/'+str(user_id))
+            favListJson = res_fav_list.json()
+            favListCount = len(favListJson['data'])
+        except:
+            pass
+            favListCount = 0
+        return render_template('index.html', currencySign=currencyIndex[session['default_currency']],title=title, top10Inf=top10Inf,new_campaigns=new_campaigns,
+                               completed_campaigns=completed_campaigns,active_campaigns=active_campaigns,favListCount=favListCount)
+    except Exception as e:
+        print(e)
+
 @connecsiApp.route('/getTop20Influencers/<string:channel_name>',methods=['GET'])
 @is_logged_in
 def getTop20Influencers(channel_name):
