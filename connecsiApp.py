@@ -3889,16 +3889,16 @@ def show_youtube_channels_without_email_id():
     to_email_id = 'kiran.padwal@connecsi.com'
     url = base_url+'Messages/getMessagesByToEmailId/'+to_email_id
     response = requests.get(url=url)
-    print(response.json())
+    # print(response.json())
 
     data = []
     response_json = response.json()
     for item in response_json['data']:
-        print(item)
+        print('ITEMS = ',item)
         channel_name_list = item['channel_id'].split('@')
-        print(channel_name_list)
+        print('channel name list =',channel_name_list)
         channel_name = channel_name_list[1]
-        if channel_name == 'youtube':
+        if channel_name == 'youtube' or channel_name=='Youtube':
            item['channel_id']=channel_name_list[0]
            data.append(item)
            channel_details_url = base_url+'Youtube/getChannelDetailsByChannelId/'+item['channel_id']
