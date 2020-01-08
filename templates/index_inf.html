@@ -14,7 +14,7 @@
                         <div class="dropdown-menu dropdown-menu-right">
                             <!--<a class="dropdown-item" href="/searchInfluencers">C</a>-->
                             <div role="separator" class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="/searchClassifieds">Classified Ads</a>
+                            <a class="dropdown-item" href="/search-classifieds">Classified Ads</a>
                         </div>
                     </div>
                 </div>
@@ -113,29 +113,29 @@
                             <div class="media quotes">
                                 <div class="quote-item" style="display: none">
                                     <div class="media-body white text-left">
-                                        <h3>$20 000</h3>
+                                        <h3>{{currencySign}}20 000</h3>
                                         <span>Spent this Month</span>
                                     </div>
                                     <div class="media-right align-self-center">
-                                        <i class="fa fa-dollar white font-large-2"></i>
+                                        <i class="fa fa-{{session['default_currency'] | lower}} white font-large-2"></i>
                                     </div>
                                 </div>
                                 <div class="quote-item" style="display: none">
                                     <div class="media-body white text-left">
-                                        <h3>$4 000</h3>
+                                        <h3>{{currencySign}}4 000</h3>
                                         <span>Budget in Hand</span>
                                     </div>
                                     <div class="media-right align-self-center">
-                                        <i class="fa fa-usd white font-large-2"></i>
+                                        <i class="fa fa-{{session['default_currency'] | lower}} white font-large-2"></i>
                                     </div>
                                 </div>
                                 <div class="quote-item" style="display: none">
                                     <div class="media-body white text-left">
-                                        <h3>$25 000</h3>
+                                        <h3>{{currencySign}}25 000</h3>
                                         <span>Total Budget</span>
                                     </div>
                                     <div class="media-right align-self-center">
-                                        <i class="fa fa-usd white font-large-2"></i>
+                                        <i class="fa fa-{{session['default_currency'] | lower}} white font-large-2"></i>
                                     </div>
                                 </div>
                             </div>
@@ -150,7 +150,7 @@
                             <div class="media quotes">
                                 <div class="quote-item" style="display: none">
                                     <div class="media-body white text-left">
-                                        <h3>$20 000</h3>
+                                        <h3>{{currencySign}}20 000</h3>
                                         <span>Revenue</span>
                                     </div>
                                     <div class="media-right align-self-center">

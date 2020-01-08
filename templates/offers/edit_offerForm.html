@@ -38,23 +38,16 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-3 my-1">
+                                        <div class="col-md-6 my-1">
                                             <label for="budget">Budget</label>
-                                            <input type="number"
+                                            <input type="currency"
                                                    class="form-control"
                                                    name="budget"
-                                                   id="budget" value="{{ item['budget'] }}"
+                                                   id="budget" value="{{currencySign}} {{ item['budget'] }}"
+                                                   oninput="change_format()"
                                                    placeholder="Budget" >
                                         </div>
-                                        <div class="col-md-3 my-1">
-                                            <label for="currency">Currency</label>
-                                            <select class="form-control" name="currency" id="currency" >
-                                                <option value="USD">USD</option>
-                                                <option value="EUR">EUR</option>
-                                                <option value="GBP">GBP</option>
-                                                <option value="INR">INR</option>
-                                            </select>
-                                        </div>
+                                        <input type="hidden" class="form-control" name="currency" id="currency" value="{{session['default_currency']}}">
                                         <div class="col-md-3 my-1">
                                             <label for="channels">Channels</label>
                                             <select class="form-control" id="channels" name="channels"
@@ -193,4 +186,28 @@
         </div>
     </div>
 </div>
+<script>
+
+    function change_format(){
+        var val=document.getElementById('budget').value;
+        var count=val.split(".").length-1;
+        if(isNaN(val[val.length-1]) && val[val.length-1]!='.'){
+            document.getElementById('budget').value=val.substring(0,val.length-1);
+            return;
+        }
+        if(count==2){
+             document.getElementById('budget').value=val.substring(0,val.length-1);
+            return;
+        }
+        if(val.length==2 && val[0]=='{{currencySign}}'){
+             document.getElementById('budget').value=''
+        }
+        if(val[0]!='{{currencySign}}'){
+            val=document.getElementById('budget').value;
+            document.getElementById('budget').value='{{currencySign}} '+val;
+
+        }
+
+    }
+</script>
 {% endblock %}

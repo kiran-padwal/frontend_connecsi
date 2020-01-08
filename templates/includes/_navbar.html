@@ -62,15 +62,17 @@
                             <a href="/inf_editProfile" class="dropdown-item py-1"><i class="ft-edit mr-2"></i><span>Edit Profile</span></a>
                             {% endif %}
                             <a href="/inbox/0" class="dropdown-item py-1" id="myinbox">
-                                <i class="ft-mail mr-2"></i>
+                                <i class="ft-mail mr-2" style="margin-right:0.5rem!important;"></i>
                                 <span>My Inbox</span>
 
                             </a>
+                            {% if session['type'] == 'brand' %}
                             <a href="/upgrade" class="dropdown-item py-1">
-                                <img src="../static/images/shield.svg" style="height: 17px;width: 17px;margin: 0 .9rem 0 0;"/><span style="font-weight: 400;color: #212529;text-align: inherit;white-space: nowrap;">Upgrade</span>
+                                <img src="../static/images/shield.svg" style="height: 17px;width: 17px;margin: 0 .6rem 0 0;"/><span style="font-weight: 400;color: #212529;text-align: inherit;white-space: nowrap;">Upgrade</span>
                             </a>
+                            {%endif%}
                             <a href="#" class="dropdown-item py-1" id="currency">
-                                <i class="fa fa-{{session['default_currency'] | lower}} mr-2"></i>
+                                <i class="fa fa-{{session['default_currency'] | lower}} mr-2" style="margin-right:0.8rem!important;font-size:1.1rem;"></i>
                                 <span>{{session['default_currency']}}</span>
 
                             </a>

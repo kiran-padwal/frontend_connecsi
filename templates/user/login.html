@@ -2,7 +2,9 @@
 {{ super() }}
 {% block body %}
 <title xmlns="http://www.w3.org/1999/html">{{title}}</title>
-<img src="{{ url_for('static', filename='img/logo_full.png') }}" alt="connecsi logo"/>
+<a href="https://www.connecsi.com" target="_blank">
+    <img src="{{ url_for('static', filename='img/logo_full.png') }}" alt="connecsi logo"/>
+</a>
 
 <ul class="tabs">
     <li class="tab col s6"><a class="active active-border brand-tab" href="#brand">Brand</a></li>

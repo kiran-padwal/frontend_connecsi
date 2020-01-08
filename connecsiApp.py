@@ -1161,7 +1161,7 @@ def searchInfluencers():
                                lookup_string=lookup_string,form_filters=form_filters,data=data,pagination='',view_campaign_data=view_campaign_data,
                                favInfList_data=favInfList_data,payload_form_filter=payload)
 
-@connecsiApp.route('/elasticSearch', methods=['GET','POST'])
+@connecsiApp.route('/search-influencers', methods=['GET','POST'])
 @is_logged_in
 def elasticSearch():
     start = time.time()
@@ -5783,12 +5783,21 @@ def add_insta_channel():
 @connecsiApp.route('/admin_inf')
 @is_logged_in
 def admin_inf():
+    currencyIndex = {'INR': '₹', 'USD': '$', 'EUR': '€', 'GBR': '£'}
     title='Influencer Dashboard'
     # url = 'https://www.googleapis.com/youtube/v3/channels?part=statistics,id,snippet,contentOwnerDetails,status&mine=true'
     # channel_data = google.get(url).json()
-
+    url = base_url + 'Influencer/getDetailsByUserId/' + str(session['user_id'])
+    try:
+        response=requests.get(url=url)
+        response_json=response.json()
+        print('new things',response_json['data'][0])
+        session['default_currency']=response_json['data'][0]['default_currency']
+    except Exception as e:
+        print(e)
+        pass
     # print('channel details = ', channel_data)
-    return render_template('index_inf.html',title=title)
+    return render_template('index_inf.html',title=title,currencySign=currencyIndex[session['default_currency']])
 
 # @connecsiApp.route('/inf_profile')
 # @is_logged_in
@@ -5803,9 +5812,20 @@ def admin_inf():
 @connecsiApp.route('/inf_profile')
 @is_logged_in
 def inf_profile():
+
     user_id = session['user_id']
     print(user_id)
     form_filter={}
+    url_regionCodes = base_url + 'Youtube/regionCodes'
+    try:
+        response_regionCodes = requests.get(url=url_regionCodes)
+        regionCodes_json = response_regionCodes.json()
+
+        regionCodes_json['data'] = regionCodes_json['data'][0:91:1]
+        print("region codes are ", regionCodes_json, len(regionCodes_json['data']))
+    except Exception as e:
+        print(e)
+
     response = requests.get(url=base_url+'Influencer/getDetailsByUserId/'+str(user_id))
     response2 = requests.get(url=base_url + 'Youtube/getChannelDetailsByChannelId/' + str(user_id))
     data2=response2.json()
@@ -5818,7 +5838,11 @@ def inf_profile():
     profile_data['data'][0]['total_100video_views'] = data2['data'][0]['total_100video_views']
     profile_data['data'][0]['total_videos'] = 100
     form_filter['channel']='Youtube'
-    print(profile_data)
+    print(profile_data['data'][0]['country'])
+    for item in regionCodes_json['data']:
+        if (item['region_code'] == profile_data['data'][0]['country']):
+            profile_data['data'][0]['country'] = item['country_name']
+            break
     return render_template('user/inf_profile.html',data=profile_data,form_filters=form_filter)
 
 @connecsiApp.route('/inf_editProfile')
@@ -5834,6 +5858,7 @@ def inf_editProfile():
         url_regionCodes = base_url + 'Youtube/regionCodes'
         response_regionCodes = requests.get(url=url_regionCodes)
         regionCodes_json = response_regionCodes.json()
+        regionCodes_json['data']=regionCodes_json['data'][0:91:1]
         print(regionCodes_json['data'])
     except Exception as e:
         print(e)
@@ -5894,16 +5919,17 @@ def updateProfile_inf():
                 if 'mapped_insta_channel_id' in inf_dict:
                     print('inside insta channel id')
                     res = requests.get(url=base_url + 'Influencer/updateCountryToInstaChannel/' + str(inf_dict['mapped_insta_channel_id']) + '/' + str(country))
-            return redirect(url_for("inf_editProfile"))
+            return redirect(url_for("inf_profile"))
         except Exception as e:
             print(e)
             pass
             # return ''
-            return redirect(url_for("inf_editProfile"))
+            return redirect(url_for("inf_profile"))
 
 @connecsiApp.route('/addOffer')
 @is_logged_in
 def addOffer():
+    currencyIndex = {'INR': '₹', 'USD': '$', 'EUR': '€', 'GBR': '£'}
     url_regionCodes = base_url + 'Youtube/regionCodes'
     regionCodes_json = ''
     try:
@@ -5920,7 +5946,7 @@ def addOffer():
         print(videoCat_json)
     except Exception as e:
         print(e)
-    return render_template('offers/add_offerForm.html', regionCodes=regionCodes_json,
+    return render_template('offers/add_offerForm.html', currencySign=currencyIndex[session['default_currency']],regionCodes=regionCodes_json,
                            videoCategories=videoCat_json)
 
 @connecsiApp.route('/saveOffer', methods=['POST'])
@@ -5961,6 +5987,7 @@ def saveOffer():
                 filenames.append(filename)
         filenames_string = ','.join(filenames)
         payload.update({'files': filenames_string})
+        payload['budget'] = payload['budget'].split(" ")[1]
         print('final offer payload = ',payload)
 
         user_id = session['user_id']
@@ -6191,6 +6218,7 @@ def deletedOffers():
 @connecsiApp.route('/editOffer/<string:offer_id>', methods=['GET'])
 @is_logged_in
 def editOffer(offer_id):
+    currencyIndex = {'INR': '₹', 'USD': '$', 'EUR': '€', 'GBR': '£'}
     url_regionCodes = base_url + 'Youtube/regionCodes'
     regionCodes_json = ''
     try:
@@ -6223,7 +6251,7 @@ def editOffer(offer_id):
     except Exception as e:
         print(e)
     return render_template('offers/edit_offerForm.html',
-                           view_offer_details_data=offer_details,
+                           view_offer_details_data=offer_details,currencySign=currencyIndex[session['default_currency']],
                            regionCodes=regionCodes_json, videoCategories=videoCat_json)
 
 @connecsiApp.route('/updateOffer', methods=['POST'])
@@ -6266,8 +6294,9 @@ def updateOffer():
         # exit()
         filenames = []
         for file in files:
-            filename = offer_files.save(file)
-            filenames.append(filename)
+            if (file.filename):
+                filename = offer_files.save(file)
+                filenames.append(filename)
 
         user_id = session['user_id']
         url_offer = base_url + 'Offer/' + str(offer_id) + '/' + str(user_id)
@@ -6284,7 +6313,7 @@ def updateOffer():
         filenames_string = ','.join(filenames)
         print('file name string', filenames_string)
         payload.update({'files': filenames_string})
-
+        payload['budget'] = payload['budget'].split(" ")[1]
         print('last payload', payload)
 
         url = base_url + 'Offer/' + str(offer_id) + '/' + str(user_id)
@@ -6326,7 +6355,7 @@ def updateOffer():
 #                            regionCodes=regionCodes_json)
 
 
-@connecsiApp.route('/searchOffers',methods=['GET','POST'])
+@connecsiApp.route('/search-offers',methods=['GET','POST'])
 @is_logged_in
 def searchOffers():
     url_regionCodes = base_url + 'Youtube/regionCodes'
@@ -6459,7 +6488,7 @@ def getOffers():
         return jsonify(results=results)
 
 
-@connecsiApp.route('/searchClassifieds', methods=['GET', 'POST'])
+@connecsiApp.route('/search-classifieds', methods=['GET', 'POST'])
 @is_logged_in
 def searchClassifieds():
     url_regionCodes = base_url + 'Youtube/regionCodes'

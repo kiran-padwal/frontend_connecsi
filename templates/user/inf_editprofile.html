@@ -168,7 +168,6 @@
                                             </option>
                                             {% endif %}
                                             {% endfor %}
-                                            <option value=""></option>
                                             {% for item1 in regionCodes['data'] %}
                                             {% if item1['region_code'] == country %}
                                             {% else %}
@@ -195,6 +194,18 @@
                                                style="width:400px;"> </span>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="budget_currency">Default currency:</label>
+                                            <select id="budget_currency" name="budget_currency" class="form-control"
+                                                    value="{{item['default_currency']}}">
+                                                <option value="USD" disabled>&#36; USD</option>
+                                                <option value="EUR">&#8364; EUR</option>
+                                                <option value="GBP" disabled>&#163; GBP</option>
+                                                <option value="INR" disabled>&#8377; INR</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 <!--<div class="col-md-6">-->
                                     <!--<div class="form-group">-->
                                         <!--<label class="full-width">&nbsp;</label>-->
