@@ -946,7 +946,7 @@
                                         {% set _ = glob.update({'offset':0}) %}
                                         {% set current_offset = form_filters['offset']|int %}
                                         {% set current_page=((current_offset/20) +1) |int %}
-                                        <form id="paginationFormFirst" method="POST" action="/elasticSearch" style="margin:0;" name="paginationFormFirst">
+                                        <form id="paginationFormFirst" method="POST" action="/search-influencers" style="margin:0;" name="paginationFormFirst">
                                                 <input type="hidden" name="keyword-title" value="{{form_filters['keyword-title']}}">
                                                 <input type="hidden" name="channel" value={{form_filters['channel']}}>
                                                 <input type="hidden" name="string_word" value="{{form_filters['string_word']}}">
@@ -971,7 +971,7 @@
                                                 {% endif %}
                                         </form>
 
-                                        <form id="paginationFormPrevious" method="POST" action="/elasticSearch" style="margin:0;" name="paginationFormPrevious">
+                                        <form id="paginationFormPrevious" method="POST" action="/search-influencers" style="margin:0;" name="paginationFormPrevious">
                                                 <input type="hidden" name="keyword-title" value="{{form_filters['keyword-title']}}">
                                                 <input type="hidden" name="channel" value={{form_filters['channel']}}>
                                                 <input type="hidden" name="string_word" value="{{form_filters['string_word']}}">
@@ -1001,7 +1001,7 @@
                                                 {% for j in range(1,4) %}
 
                                                     {% if current_page==j%}
-                                                        <form id="pagination{{loop.index}}" method="POST" action="/elasticSearch" name="pagination{{loop.index}}" style="margin:0;">
+                                                        <form id="pagination{{loop.index}}" method="POST" action="/search-influencers" name="pagination{{loop.index}}" style="margin:0;">
                                                             <input type="hidden" name="keyword-title" value="{{form_filters['keyword-title']}}">
                                                             <input type="hidden" name="channel" value={{form_filters['channel']}}>
                                                             <input type="hidden" name="string_word" value="{{form_filters['string_word']}}">
@@ -1020,7 +1020,7 @@
 
                                                         </form>
                                                     {% else %}
-                                                        <form id="pagination{{loop.index}}" method="POST" action="/elasticSearch" name="pagination{{loop.index}}" style="margin:0;">
+                                                        <form id="pagination{{loop.index}}" method="POST" action="/search-influencers" name="pagination{{loop.index}}" style="margin:0;">
                                                             <input type="hidden" name="keyword-title" value="{{form_filters['keyword-title']}}">
                                                             <input type="hidden" name="channel" value={{form_filters['channel']}}>
                                                             <input type="hidden" name="string_word" value="{{form_filters['string_word']}}">
@@ -1047,7 +1047,7 @@
                                                 {% for j in range(1,pages+1) %}
 
                                                     {% if current_page==j%}
-                                                        <form id="pagination{{loop.index}}" method="POST" action="/elasticSearch" name="pagination{{loop.index}}" style="margin:0;">
+                                                        <form id="pagination{{loop.index}}" method="POST" action="/search-influencers" name="pagination{{loop.index}}" style="margin:0;">
                                                             <input type="hidden" name="keyword-title" value="{{form_filters['keyword-title']}}">
                                                             <input type="hidden" name="channel" value={{form_filters['channel']}}>
                                                             <input type="hidden" name="string_word" value="{{form_filters['string_word']}}">
@@ -1066,7 +1066,7 @@
 
                                                         </form>
                                                     {% else %}
-                                                        <form id="pagination{{loop.index}}" method="POST" action="/elasticSearch" name="pagination{{loop.index}}" style="margin:0;">
+                                                        <form id="pagination{{loop.index}}" method="POST" action="/search-influencers" name="pagination{{loop.index}}" style="margin:0;">
                                                             <input type="hidden" name="keyword-title" value="{{form_filters['keyword-title']}}">
                                                             <input type="hidden" name="channel" value={{form_filters['channel']}}>
                                                             <input type="hidden" name="string_word" value="{{form_filters['string_word']}}">
@@ -1095,7 +1095,7 @@
                                                 {% for j in range(pages-2,pages+1) %}
 
                                                     {% if current_page==j%}
-                                                        <form id="pagination{{loop.index}}" method="POST" action="/elasticSearch" name="pagination{{loop.index}}" style="margin:0;">
+                                                        <form id="pagination{{loop.index}}" method="POST" action="/search-influencers" name="pagination{{loop.index}}" style="margin:0;">
                                                             <input type="hidden" name="keyword-title" value="{{form_filters['keyword-title']}}">
                                                             <input type="hidden" name="channel" value={{form_filters['channel']}}>
                                                             <input type="hidden" name="string_word" value="{{form_filters['string_word']}}">
@@ -1114,7 +1114,7 @@
 
                                                         </form>
                                                     {% else %}
-                                                        <form id="pagination{{loop.index}}" method="POST" action="/elasticSearch" name="pagination{{loop.index}}" style="margin:0;">
+                                                        <form id="pagination{{loop.index}}" method="POST" action="/search-influencers" name="pagination{{loop.index}}" style="margin:0;">
                                                             <input type="hidden" name="keyword-title" value="{{form_filters['keyword-title']}}">
                                                             <input type="hidden" name="channel" value={{form_filters['channel']}}>
                                                             <input type="hidden" name="string_word" value="{{form_filters['string_word']}}">
@@ -1141,7 +1141,7 @@
                                                 {% for j in range(1,pages+1) %}
 
                                                     {% if current_page==j%}
-                                                        <form id="pagination{{loop.index}}" method="POST" action="/elasticSearch" name="pagination{{loop.index}}" style="margin:0;">
+                                                        <form id="pagination{{loop.index}}" method="POST" action="/search-influencers" name="pagination{{loop.index}}" style="margin:0;">
                                                             <input type="hidden" name="keyword-title" value="{{form_filters['keyword-title']}}">
                                                             <input type="hidden" name="channel" value={{form_filters['channel']}}>
                                                             <input type="hidden" name="string_word" value="{{form_filters['string_word']}}">
@@ -1160,7 +1160,7 @@
 
                                                         </form>
                                                     {% else %}
-                                                        <form id="pagination{{loop.index}}" method="POST" action="/elasticSearch" name="pagination{{loop.index}}" style="margin:0;">
+                                                        <form id="pagination{{loop.index}}" method="POST" action="/search-influencers" name="pagination{{loop.index}}" style="margin:0;">
                                                             <input type="hidden" name="keyword-title" value="{{form_filters['keyword-title']}}">
                                                             <input type="hidden" name="channel" value={{form_filters['channel']}}>
                                                             <input type="hidden" name="string_word" value="{{form_filters['string_word']}}">
@@ -1189,7 +1189,7 @@
                                             {% for j in range(current_page-1,current_page+2) %}
 
                                                 {% if current_page==j%}
-                                                        <form id="pagination{{loop.index}}" method="POST" action="/elasticSearch" name="pagination{{loop.index}}" style="margin:0;">
+                                                        <form id="pagination{{loop.index}}" method="POST" action="/search-influencers" name="pagination{{loop.index}}" style="margin:0;">
                                                             <input type="hidden" name="keyword-title" value="{{form_filters['keyword-title']}}">
                                                             <input type="hidden" name="channel" value={{form_filters['channel']}}>
                                                             <input type="hidden" name="string_word" value="{{form_filters['string_word']}}">
@@ -1208,7 +1208,7 @@
 
                                                         </form>
                                                     {% else %}
-                                                        <form id="pagination{{loop.index}}" method="POST" action="/elasticSearch" name="pagination{{loop.index}}" style="margin:0;">
+                                                        <form id="pagination{{loop.index}}" method="POST" action="/search-influencers" name="pagination{{loop.index}}" style="margin:0;">
                                                             <input type="hidden" name="keyword-title" value="{{form_filters['keyword-title']}}">
                                                             <input type="hidden" name="channel" value={{form_filters['channel']}}>
                                                             <input type="hidden" name="string_word" value="{{form_filters['string_word']}}">
@@ -1233,7 +1233,7 @@
                                             {% endfor %}
                                         {% endif %}
 
-                                        <form id="paginationFormNext" method="POST" action="/elasticSearch" style="margin:0;" name="paginationFormNext">
+                                        <form id="paginationFormNext" method="POST" action="/search-influencers" style="margin:0;" name="paginationFormNext">
                                                 <input type="hidden" name="keyword-title" value="{{form_filters['keyword-title']}}">
                                                 <input type="hidden" name="channel" value={{form_filters['channel']}}>
                                                 <input type="hidden" name="string_word" value="{{form_filters['string_word']}}">
@@ -1258,7 +1258,7 @@
                                                     </li>
                                                 {% endif %}
                                         </form>
-                                        <form  id="paginationFormLast" method="POST" action="/elasticSearch" style="margin:0;" name="paginationFormLast">
+                                        <form  id="paginationFormLast" method="POST" action="/search-influencers" style="margin:0;" name="paginationFormLast">
                                                 <input type="hidden" name="keyword-title" value="{{form_filters['keyword-title']}}">
                                                 <input type="hidden" name="channel" value={{form_filters['channel']}}>
                                                 <input type="hidden" name="string_word" value="{{form_filters['string_word']}}">
