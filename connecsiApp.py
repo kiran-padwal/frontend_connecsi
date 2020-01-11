@@ -3223,10 +3223,10 @@ def inbox(message_id):
     try:
         response = requests.get(url=url)
         data = response.json()
-        print('messages = ',data)
+        # print('messages = ',data)
         conv_resposne = requests.get(url=conv_url)
         conv_data = conv_resposne.json()
-        print('conv = ',conv_data)
+        # print('conv = ',conv_data)
         ###################### get inbox
         inboxList=[]
         message_id_list=[]
@@ -3245,12 +3245,12 @@ def inbox(message_id):
                #        read = message['read']
                #        item.update({'read': read})
                inboxList.append(item)
-        print('inboxList  =',inboxList)
+        # print('inboxList  =',inboxList)
         inboxSorted = sorted(inboxList, key=lambda k: k['message_id'])
-        print('sorted inboxlist = ', inboxSorted)
+        # print('sorted inboxlist = ', inboxSorted)
         inbox = {}
         inbox.update({'data':inboxSorted})
-        print('inbox = ',inbox)
+        # print('inbox = ',inbox)
 
         for item in inbox['data']:
             inbox_user_id = item['user_id']
