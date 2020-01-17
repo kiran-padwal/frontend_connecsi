@@ -621,8 +621,8 @@
                                             <li>
                                                 <div class="analyse-result"
 
-                                                     {% if item['_source']['total_100video_views'] %}
-                                                     data-integers="{{ (item['_source']['total_100video_views']/100)|int }}">
+                                                     {% if item['_source']['total_100video_likes'] %}
+                                                     data-integers="{{ (item['_source']['total_100video_likes']/100)|int }}">
                                                      {% else %}
                                                      data-integers="0">
                                                      {% endif %}>
