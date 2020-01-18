@@ -1263,7 +1263,8 @@ def elasticSearch():
         response_regionCodes = requests.get(url=url_regionCodes)
         regionCodes_json = response_regionCodes.json()
 
-        regionCodes_json['data']=regionCodes_json['data'][0:61:1]
+        # regionCodes_json['data']=regionCodes_json['data'][0:61:1]
+        regionCodes_json['data'] = regionCodes_json['data']
         print("region codes are ", regionCodes_json, len(regionCodes_json['data']))
     except Exception as e:
         print(e)
