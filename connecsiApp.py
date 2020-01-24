@@ -1424,7 +1424,11 @@ def elasticSearch():
                 max_upper = form_filters['max_upper']
                 titleValue=''
                 if(form_filters['keyword-title']!=''):
-                    titleValue='title:'+form_filters['keyword-title']+'*'
+                    titleValue = 'title:' + form_filters['keyword-title'] + '*' + '%20OR%20desc:' + form_filters[
+                        'keyword-title'] + '*' + '%20OR%20video_details.title:' + form_filters[
+                                     'keyword-title'] + '*' + '%20OR%20video_details.description:' + form_filters[
+                                     'keyword-title'] + '*' + '%20OR%20video_details.tags:' + form_filters[
+                                     'keyword-title'] + '*'
                     if(categoryNewList==''):
                         titleValue+='%20AND%20'
                     else:
@@ -1670,7 +1674,7 @@ def elasticSearch():
 
 def exportCsv_part2(data, channel):
     print("hello ji")
-    print('my data = ', data)
+    # print('my data = ', data)
     print(os.getcwd())
     cwd = os.getcwd()
     with open(cwd + '/static/infList.csv', mode='w', encoding='utf-8') as csv_file:
