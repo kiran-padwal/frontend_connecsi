@@ -136,7 +136,7 @@
                                 <span class="bold-500-letter-spacing">Categories: </span>
                             </div>
                             <div class="col-12">
-                                {% set video_cat_names = item['video_cat_name'].split(',') %}
+                                {% set video_cat_names = item['video_cat_name'] %}
                                 {% for video_cat_name in video_cat_names %}
                                 <span class="offers_item__categories">{{ video_cat_name }}</span>
                                 {% endfor %}

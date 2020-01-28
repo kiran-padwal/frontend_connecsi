@@ -200,7 +200,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-5 sliderContainer">
+                            <div class="col-sm-6 sliderContainer">
                                 <label style="margin-bottom:20px;">Followers range</label>
                                 <div id="slider2" class="sliderUI" data-price="false"></div>
                                 <div class="row">
@@ -213,7 +213,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-5 sliderContainer">
+                            <div class="col-sm-6 sliderContainer">
                                 <label style="margin-bottom:20px;">Price range</label>
                                 <div id="slider3" class="sliderUI" data-price="true"></div>
                                 <div class="row">
@@ -226,15 +226,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-2">
-                                <label>Currency</label>
-                                <select class="form-control" name="currency" id="currency">
-                                    <option value="USD">USD</option>
-                                    <option value="EUR">EUR</option>
-                                    <option value="GBP">GBP</option>
-                                    <option value="INR">INR</option>
-                                </select>
-                            </div>
+                            <input type="hidden" name="currency" id="currency" value="{{session['default_currency']}}">
                         </div>
                         <div class="form-actions no-padding-bottom">
                             <div class="text-right">
@@ -295,7 +287,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-default bg-color1 color-white">Send</button>
+                    <button id="send_message_button" type="submit" class="btn btn-default bg-color1 color-white">Send</button>
                 </div>
             </form>
         </div>
@@ -316,6 +308,7 @@ $(document.body).on('click','.reply-classified', function (e) {
 });
 
 $("#send_message_form").submit(function (e) {
+        document.getElementById('send_message_button').disabled="true";
         var form = $(this);
         var url = form.attr('action');
         <!--var channel_id = $('#message_channel_id').val();-->
@@ -325,7 +318,10 @@ $("#send_message_form").submit(function (e) {
             data: form.serialize(), // serializes the form's elements.
             success: function (data) {
                 alert(data); // show response from the python script.
+                document.getElementById('send_message_button').disabled="";
+                document.getElementById("send_message_form").reset();
                 $('#sendMessage').modal('toggle');
+
                 <!--$( '#status'+channel_id).empty();-->
                 <!--$( 'div[id*=status]').empty();-->
             }

@@ -147,7 +147,7 @@
                                 </div>
                                 <div class="col-12 categories">
                                     <div class="cat d-flex flex-wrap">
-                                        {% set video_cat_names = item['video_cat_name'].split(',') %}
+                                        {% set video_cat_names = item['video_cat_name'] %}
                                         {% for video_cat_name in video_cat_names %}
                                         <span class="offers_item__categories">{{ video_cat_name }}</span>
                                         {% endfor %}

@@ -98,7 +98,7 @@
                                     <div class="row">
                                         <div class="col-md-6 my-1">
                                             <label for="videoCategories">Categories</label>
-                                            <select class="form-control" name="video_cat" id="videoCategories" required>
+                                            <select class="form-control" name="video_cat" id="videoCategories" multiple required>
                                                 {% for item in videoCategories['data'] %}
                                                 <option value="{{ item['video_cat_id'] }}">{{ item['video_cat_name']
                                                     }}

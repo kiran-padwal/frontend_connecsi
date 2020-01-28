@@ -111,7 +111,9 @@
                                     <div>
                                     <div class="font-small-3 bold-500-letter-spacing">Categories:</div>
                                     <div class="font-small-3 block">
-                                        <span class="block-xs bg-light-grey mb-1">{{ item['video_cat_name'] }}</span>
+                                        {% for r_name in item['video_cat_name'] %}
+                                        <span class="block-xs bg-light-grey mb-1">{{ r_name }}</span>
+                                        {% endfor %}
                                     </div>
                                     </div>
                                     <hr class="divide margin-y-md">

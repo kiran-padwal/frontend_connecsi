@@ -4163,7 +4163,8 @@ $("#create_alert_form").submit(function (e) {
                     format: {
                         from: Number,
                         to: function(value) {
-                            var c=$('#currency')[0].value;
+//                            var c=$('#currency')[0].value;
+                            var c=$('#currency')[0].children[1].innerText;
                             if(value=="0"){
                                 return ("No minimum")
                             }

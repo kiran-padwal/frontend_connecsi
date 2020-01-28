@@ -1,0 +1,608 @@
+{% extends 'admin_layout.html' %}
+{{ super() }}
+{% block body %}
+{{influencerName}}
+<style>
+#chartdiv {
+  width: 100%;
+  height: 500px;
+}
+
+</style>
+
+<h3>Analytics</h3>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-3" style="padding:0;">
+            <ul id="influencerName" class="dropdown-menu inner show" style="position:initial;">
+                {% for item in influencerName %}
+                    <li onclick="selectInfluencer(this)" data-ticked="true">
+                        <a role="option" class="dropdown-item" aria-disabled="false" tabindex="0" aria-selected="false" >
+                            <div class="row">
+                                <div class="col-2">
+                                    <i class="fa fa-check tick-size" aria-hidden="true"></i>
+                                </div>
+                                <div class="col-10">
+                                    <span class="text">{{ item }}</span>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                {% endfor %}
+
+            </ul>
+        </div>
+    <div class="col-sm-9">
+        <div class="row">
+            <div class="col-sm-3">
+            <div class="form-group">
+                <label>Campaign Status</label>
+                <select class="form-control" name="campaignStatus" id="campaign" onchange="renderAllGraph()" multiple>
+                    <option id="activeCampaign" value="Active" selected>Active</option>
+                    <option id="finishedCampaign"  value="Finished" selected>Finished</option>
+                    <option id="inactiveCampaign"  value="Inactive" selected>Inactive</option>
+                    <option id="newCampaign" value="New" selected>New</option>
+                    <option id="queuedCampaign" value="Queued" selected>Queued</option>
+                </select>
+            </div>
+        </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label>Country</label>
+                    <select class="form-control" id="country" name="country[]" data-live-search="true" data-live-search-style="begins" onchange="renderAllGraph()" multiple="multiple">
+                        <!--<select class="form-control" name="country">-->
+
+                            {% for item in regionCodes['data'] %}
+                                    {% if item['region_code'] in allRegions %}
+                                    <option  value="{{ item['region_code'] }}" selected>{{ item['country_name'] }}</option>
+                                    {% endif %}
+                            {% endfor %}
+
+
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="col-sm-5">
+                <div class="form-group">
+                    <label>Period</label>
+                    <div class="form-control" id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
+                        <i class="fa fa-calendar"></i>&nbsp;
+                        <span id="campaignDate"></span> <i class="fa fa-caret-down"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <div class="graph_container1">
+                <canvas id="Chart1"></canvas>
+              </div>
+        </div>
+        <div class="col-6">
+            <div class="graph_container2">
+                <canvas id="Chart2"></canvas>
+              </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <div class="graph_container3">
+                <canvas id="Chart3"></canvas>
+              </div>
+        </div>
+        <div class="col-6">
+            <div class="graph_container4">
+                <div id="chartdiv"></div>
+              </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Resources -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"></script>
+<script src="https://www.amcharts.com/lib/4/core.js"></script>
+<script src="https://www.amcharts.com/lib/4/charts.js"></script>
+<script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
+
+<!-- Chart code -->
+<script>
+
+</script>
+
+<script type="text/javascript">
+var calenderSDate='';
+var calenderEDate='';
+$(function() {
+
+    var start = moment().subtract(30, 'days');
+    var end = moment();
+
+    function cb(start, end) {
+        calenderSDate=start.format('YYYY-MM-DD');
+        calenderEDate=end.format('YYYY-MM-DD');
+        $('#reportrange span').html(start.format('MMM DD, YYYY') + ' - ' + end.format('MMM DD, YYYY'));
+    }
+
+    $('#reportrange').daterangepicker({
+        alwaysShowCalendars: true,
+        timePicker: false,
+        startDate: start,
+        endDate: end,
+        ranges: {
+           'Today': [moment(), moment()],
+           'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+           'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+           'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+           'This Month': [moment().startOf('month'), moment().endOf('month')],
+           'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        }
+    }, cb);
+    cb(start, end);
+    renderAllGraph();
+});
+$('#campaignDate').on('DOMSubtreeModified',function(){
+  renderAllGraph();
+})
+var analyticsData={{analyticsData | tojson | safe}};
+function filtering(data,countryArray,campaignArray,influencerArray){
+    newData=[];
+    for(var i=0;i<data.length;i++){
+        // anyone of influencerArray name should be there
+        firstName=data[i]['inf_first_name'];
+        lastName=data[i]['inf_last_name'];
+        name=firstName+lastName;
+        if(influencerArray.indexOf(name)>-1){
+            console.log("is there");
+            newData.push(data[i]);
+        }
+    }
+    console.log("after data influencer name",newData);
+    newCountryData=[];
+    for(var i=0;i<newData.length;i++){
+        // anyone of countryArray name should be there
+        country=newData[i]['inf_country'];
+        if(countryArray.indexOf(country)>-1){
+            console.log("is there");
+            newCountryData.push(newData[i]);
+        }
+    }
+    console.log("after data country name",newCountryData);
+    newCampaignData=[];
+    for(var i=0;i<newCountryData.length;i++){
+        // anyone of campaignArray name should be there
+        campaign=newCountryData[i]['campaign_status'];
+        if(campaignArray.indexOf(campaign)>-1){
+            console.log("is there");
+            newCampaignData.push(newCountryData[i]);
+        }
+    }
+    console.log("after data campaign name",newCampaignData);
+
+    var calenderStartDate=new Date(calenderSDate);
+    var calenderEndDate=new Date(calenderEDate);
+    finalData=[];
+    for(var i=0;i<newCampaignData.length;i++){
+        // anyone of dates  should be there
+        campaignStartDate=new Date(newCampaignData[i]['proposal_from_date']);
+        campaignEndDate=new Date(newCampaignData[i]['proposal_to_date']);
+        if(calenderStartDate<=campaignStartDate && calenderEndDate>=campaignEndDate){
+            finalData.push(newCampaignData[i]);
+        }
+
+    }
+    console.log("after final dates",finalData);
+    return finalData;
+}
+function renderAllGraph(){
+
+
+    var month=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+    var data=analyticsData;
+    var country=document.getElementById('country').children;
+    var countryFilter=[];
+    for(var i=0;i<country.length;i++){
+        if(country[i].selected==true){
+            countryFilter.push(country[i].value);
+        }
+    }
+    console.log("data1",countryFilter);
+    var campaign=document.getElementById('campaign').children;
+    var campaignFilter=[];
+    for(var i=0;i<campaign.length;i++){
+        if(campaign[i].selected==true){
+            campaignFilter.push(campaign[i].value);
+        }
+    }
+    console.log("data2",campaignFilter);
+    var influencerName=document.getElementById('influencerName').children;
+    var influencerFilter=[];
+    console.log(influencerName);
+    for(var i=0;i<influencerName.length;i++){
+
+        if(influencerName[i].dataset.ticked=="true"){
+            influencerFilter.push(influencerName[i].innerText);
+        }
+    }
+    console.log("data3",influencerFilter);
+    data=filtering(data['data'],countryFilter,campaignFilter,influencerFilter);
+    console.log("returend data",data);
+    graph1(data,countryFilter);
+    graph2(data,countryFilter);
+    graph3(data,countryFilter);
+    graph4(data,campaignFilter);
+<!--    graph2();-->
+<!--    graph3();-->
+<!--    graph4();-->
+
+
+
+}
+function graph2(data,countryArray){
+    $('#Chart2').remove(); // this is my <canvas> element
+    $('.graph_container2').append('<canvas id="Chart2"><canvas>');
+    country=[]
+    for(var i =0;i<countryArray.length;i++){
+        d={
+            c:countryArray[i],
+            newUsers:0
+        }
+        country.push(d);
+    }
+    for(var i =0;i<country.length;i++){
+        for(var j=0;j<data.length;j++){
+            if(data[j]['inf_country']==country[i]['c']){
+                for(var r=0;r<data[j]['proposal_channels'].length;r++){
+                    console.log("entry");
+                    country[i]['newUsers']+=data[j]['proposal_channels'][r]['new_users'];
+                }
+            }
+
+        }
+
+    }
+    console.log("yo",country);
+    new_users=[];
+    for(var i=0;i<country.length;i++){
+        new_users.push(country[i]['newUsers'])
+
+    }
+    new_users[0]=2000;
+    new_users[1]=5000;
+    console.log(new_users);
+
+
+    var topValue=Math.max.apply(null,new_users)+(Math.max.apply(null,new_users)/10);
+    var barOptions_stacked = {
+
+        tooltips: {
+            enabled: false
+        },
+        hover :{
+            animationDuration:0
+        },
+        scales: {
+            xAxes: [{
+                gridLines : {
+                    display : false
+                }
+            }],
+            yAxes: [{
+
+                display:false,
+                ticks: {
+					reverse: false,
+                      max: topValue
+                    }
+            }]
+        },
+        legend:{
+            display:true
+        },
+
+        animation: {
+            onComplete: function () {
+                var chartInstance = this.chart,
+                ctx = chartInstance.ctx;
+                ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'bottom';
+
+                this.data.datasets.forEach(function (dataset, i) {
+                    var meta = chartInstance.controller.getDatasetMeta(i);
+                    meta.data.forEach(function (bar, index) {
+                        var data = dataset.data[index];
+                        ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                    });
+                })
+            }
+        },
+        pointLabelFontFamily : "Quadon Extra Bold",
+        scaleFontFamily : "Quadon Extra Bold",
+    };
+    var ctx = document.getElementById("Chart2");
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: countryArray,
+            datasets: [{
+                label: 'New Users',
+                data: new_users,
+                backgroundColor: "rgba(63,203,226,1)",
+                hoverBackgroundColor: "rgba(46,185,235,1)",
+                pointRadius:5
+            }]
+        },
+
+        options: barOptions_stacked
+
+    });
+    Chart.defaults.global.elements.line.fill = false;
+
+
+
+
+
+
+
+
+
+}
+function graph3(data,countryArray){
+
+    $('#Chart3').remove(); // this is my <canvas> element
+    $('.graph_container3').append('<canvas id="Chart3"><canvas>');
+    var barOptions_stacked = {
+        tooltips: {
+            enabled: false
+        },
+        hover :{
+            animationDuration:0
+        },
+        scales: {
+            xAxes: [{
+                stacked: true
+            }],
+            yAxes: [{
+                barThickness: 15,
+                stacked: true
+            }]
+        },
+        legend:{
+            display:true
+        },
+
+        animation: {
+            onComplete: function () {
+                var chartInstance = this.chart;
+                var ctx = chartInstance.ctx;
+                ctx.textAlign = "left";
+                ctx.font = "9px Open Sans";
+                ctx.fillStyle = "#fff";
+
+
+            }
+        },
+        pointLabelFontFamily : "Quadon Extra Bold",
+        scaleFontFamily : "Quadon Extra Bold",
+    };
+    country=[]
+    for(var i =0;i<countryArray.length;i++){
+        d={
+            c:countryArray[i],
+            influencers:0
+        }
+        country.push(d);
+    }
+    for(var i =0;i<country.length;i++){
+        for(var j=0;j<data.length;j++){
+            if(data[j]['inf_country']==country[i]['c']){
+                country[i]['influencers']+=1;
+            }
+
+        }
+
+    }
+    influencers=[];
+    for(var i=0;i<country.length;i++){
+        influencers.push(country[i]['influencers'])
+
+    }
+    influencers[0]=2;
+    influencers[1]=4;
+
+    var ctx = document.getElementById("Chart3");
+    var myChart = new Chart(ctx, {
+        type: 'horizontalBar',
+        data: {
+            labels: countryArray,
+
+            datasets: [{
+                label: 'Influencers',
+                data: influencers,
+                backgroundColor: "rgba(163,103,126,1)",
+                hoverBackgroundColor: "rgba(140,85,100,1)"
+            }]
+        },
+
+        options: barOptions_stacked,
+    });
+}
+function graph4(data,campaignArray){
+    campaign={}
+    for(var i =0;i<campaignArray.length;i++){
+        campaign[campaignArray[i]]=0;
+    }
+    console.log("campaign status",campaign);
+    for(var i=0;i<data.length;i++){
+        campaign[data[i]['campaign_status']]+=1;
+    }
+    console.log("campaign status",campaign);
+    campaign['Active']=6;
+    campaign['Finished']=2;
+    campaign['Inactive']=5;
+    campaign['New']=10;
+    finalArray=[];
+    for(var i in campaign ){
+        d={
+            campaign:i,
+            count:campaign[i]
+        }
+        finalArray.push(d);
+    }
+    console.log("campaign status",finalArray);
+    am4core.ready(function() {
+
+    // Themes begin
+    am4core.useTheme(am4themes_animated);
+    // Themes end
+
+    var chart = am4core.create("chartdiv", am4charts.PieChart3D);
+    chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
+
+    chart.legend = new am4charts.Legend();
+
+    chart.data = finalArray;
+
+    var series = chart.series.push(new am4charts.PieSeries3D());
+    series.dataFields.value = "count";
+    series.dataFields.category = "campaign";
+
+    }); // end am4core.ready()
+}
+function graph1(data,countryArray){
+
+    $('#Chart1').remove(); // this is my <canvas> element
+    $('.graph_container1').append('<canvas id="Chart1"><canvas>');
+    var barOptions_stacked = {
+        tooltips: {
+            enabled: false
+        },
+        hover :{
+            animationDuration:0
+        },
+        scales: {
+            xAxes: [{
+                stacked: true
+            }],
+            yAxes: [{
+                barThickness: 15,
+                stacked: true
+            }]
+        },
+        legend:{
+            display:true
+        },
+
+        animation: {
+            onComplete: function () {
+                var chartInstance = this.chart;
+                var ctx = chartInstance.ctx;
+                ctx.textAlign = "left";
+                ctx.font = "9px Open Sans";
+                ctx.fillStyle = "#fff";
+
+
+            }
+        },
+        pointLabelFontFamily : "Quadon Extra Bold",
+        scaleFontFamily : "Quadon Extra Bold",
+    };
+    country=[]
+    for(var i =0;i<countryArray.length;i++){
+        d={
+            c:countryArray[i],
+            cost:0,
+            revenue:0
+        }
+        country.push(d);
+    }
+    for(var i =0;i<country.length;i++){
+        for(var j=0;j<data.length;j++){
+            if(data[j]['inf_country']==country[i]['c']){
+                country[i]['cost']+=data[j]['proposal_price'];
+                for(var r=0;r<data[j]['proposal_channels'].length;r++){
+                    country[i]['revenue']+=data[j]['proposal_channels'][r]['revenue_generated'];
+                }
+            }
+
+        }
+
+    }
+    cost=[];
+    revenue=[];
+    for(var i=0;i<country.length;i++){
+        cost.push(country[i]['cost']);
+        revenue.push(country[i]['revenue'])
+
+    }
+    var ctx = document.getElementById("Chart1");
+    var myChart = new Chart(ctx, {
+        type: 'horizontalBar',
+        data: {
+            labels: countryArray,
+
+            datasets: [{
+                label: 'cost',
+                data: cost,
+                backgroundColor: "rgba(163,103,126,1)",
+                hoverBackgroundColor: "rgba(140,85,100,1)"
+            },{
+                label: 'Revenue',
+                data: revenue,
+                backgroundColor: "rgba(63,203,226,1)",
+                hoverBackgroundColor: "rgba(46,185,235,1)"
+            }]
+        },
+
+        options: barOptions_stacked,
+    });
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function selectInfluencer(x){
+    console.log();
+    if(x.children[0].children[0].children[0].children[0].style.display=='' || x.children[0].children[0].children[0].children[0].style.display=='inline-block'){
+        x.children[0].children[0].children[0].children[0].style.display='none'
+        x.dataset.ticked="false";
+    }
+    else{
+        x.children[0].children[0].children[0].children[0].style.display='inline-block'
+        x.dataset.ticked="true";
+    }
+    renderAllGraph();
+}
+
+</script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+{% endblock %}

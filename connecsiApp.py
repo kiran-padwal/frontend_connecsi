@@ -2339,10 +2339,18 @@ def viewCampaigns():
         print(channel_status_campaign.json())
         channel_status_campaign_json = channel_status_campaign.json()
         print("campaign details",item1)
-        item1['from_date'] = datetime.datetime.strptime(item1['from_date'],
-                                                         '%d-%b-%y').strftime('%d %b %Y')
-        item1['to_date'] = datetime.datetime.strptime(item1['to_date'],
-                                                        '%d-%b-%y').strftime('%d %b %Y')
+        try:
+            item1['from_date'] = datetime.datetime.strptime(item1['from_date'],
+                                                         '%Y-%m-%d').strftime('%d %b %Y')
+        except:
+            item1['from_date'] = datetime.datetime.strptime(item1['from_date'],
+                                                            '%d-%b-%y').strftime('%d %b %Y')
+        try:
+            item1['to_date'] = datetime.datetime.strptime(item1['to_date'],
+                                                        '%Y-%m-%d').strftime('%d %b %Y')
+        except:
+            item1['to_date'] = datetime.datetime.strptime(item1['to_date'],
+                                                          '%d-%b-%y').strftime('%d %b %Y')
         item1['budget']=curreny[item1['currency']]+" "+str("%.2f" % item1['budget'])
         try:
             item1.update({'status':channel_status_campaign_json['data'][0]['status']})
@@ -2426,7 +2434,15 @@ def viewCampaignDetails(campaign_id):
             print(item)
             for item1 in item['icr_data_list']:
                 print(item1)
-
+    video_cat_list=view_campaign_details_data['data'][0]['video_cat_id'].split(",")
+    video_cat=[]
+    for item in video_cat_list:
+        new_url=base_url+'Youtube/videoCategories/'+str(item)
+        response=requests.get(url=new_url)
+        print(response)
+        r_json=response.json()
+        video_cat.append(r_json['data'][0]['video_cat_name'])
+    view_campaign_details_data['data'][0].update({'video_cat_name':video_cat})
     return render_template('campaign/viewCampaignDetails.html',view_campaign_details_data=view_campaign_details_data,channel_status_campaign_data=channel_status_campaign_data)
 
 
@@ -2761,6 +2777,11 @@ def saveCampaign():
         arrangements = request.form.getlist('arrangements')
         arrangements_string = ','.join(arrangements)
         payload.update({'arrangements': arrangements_string})
+
+        categories = request.form.getlist('video_cat')
+        categories_string = ','.join(categories)
+        payload.update({'video_cat': categories_string})
+
 
         kpis = request.form.getlist('kpis')
         kpis_string = ','.join(kpis)
@@ -3876,7 +3897,7 @@ def sendMessage():
            data = response.json()
            print(data)
            # if data['resposne'] == 1:
-           if(data['response']==1):
+           if(data['response']==1 and session['type']=='brand'):
                check = subscriptionReduction("Messages")
                if (check['response'] == 1):
                    print("done subscription Messages")
@@ -4757,6 +4778,10 @@ def saveClassified():
         payload.update({'regions':regions_string})
         # payload.update({"post_as_campaign": post_as_campaign})
 
+        categories = request.form.getlist('video_cat')
+        categories_string = ','.join(categories)
+        payload.update({'video_cat': categories_string})
+
         arrangements = request.form.getlist('arrangements')
         arrangements_string = ','.join(arrangements)
         payload.update({'arrangements': arrangements_string})
@@ -5226,9 +5251,28 @@ def viewClassifiedDetails(classified_id):
                     classified_details['data'][0]['classified_id'])
                 response4 = requests.post(url=url4, json=payload4)
                 print(response4.json())
+                video_list = classified_details['data'][0]['video_cat_id']
+                video_cat_list = video_list.split(",")
+                video_cat = []
+                for item in video_cat_list:
+                    new_url = base_url + 'Youtube/videoCategories/' + str(item)
+                    response = requests.get(url=new_url)
+                    r_json = response.json()
+                    video_cat.append(r_json['data'][0]['video_cat_name'])
+                classified_details['data'][0].update({'video_cat_name': video_cat})
                 return render_template('classifiedAds/viewClassifiedDetails.html', countClassified=countClassified,
                                        messageSubscription=messageSubscription, maxClassified=maxClassified,
                                        classified_details=classified_details, profile_data=profile_data_json)
+
+        video_list = classified_details['data'][0]['video_cat_id']
+        video_cat_list=video_list.split(",")
+        video_cat = []
+        for item in video_cat_list:
+            new_url = base_url + 'Youtube/videoCategories/' + str(item)
+            response = requests.get(url=new_url)
+            r_json = response.json()
+            video_cat.append(r_json['data'][0]['video_cat_name'])
+        classified_details['data'][0].update({'video_cat_name': video_cat})
         return render_template('classifiedAds/viewClassifiedDetails.html', countClassified=countClassified,
                                messageSubscription=messageSubscription, maxClassified=maxClassified,
                                classified_details=classified_details, profile_data=profile_data_json)
@@ -7816,6 +7860,45 @@ def changingAlertNotification():
     response=requests.put(url=url,json=payload)
     response_json=response.json()
     return jsonify(response_json)
+
+
+
+@connecsiApp.route('/Analytics', methods=['GET','POST'])
+@is_logged_in
+def analytics():
+
+    campaignStatus=['Active','Inactive','Queued','New','Finished']
+    url_analytics = base_url + 'Brand/getPlatformAnalysis/'+str(session['user_id'])
+    url_regionCodes = base_url + 'Youtube/regionCodes'
+    try:
+        response_regionCodes = requests.get(url=url_regionCodes)
+        regionCodes_json = response_regionCodes.json()
+
+        regionCodes_json['data']=regionCodes_json['data'][0:91:1]
+        print("region codes are ", regionCodes_json, len(regionCodes_json['data']))
+    except Exception as e:
+        print(e)
+
+    try:
+        analyticsData = requests.get(url=url_analytics)
+        analytics_json = analyticsData.json()
+        allRegions=[]
+        influencerName=[]
+        print("analytics ", analytics_json['data'])
+        for item in analytics_json['data']:
+            allRegions.append(item['inf_country'])
+            influencerName.append(item['inf_first_name']+item['inf_last_name'])
+        allRegions=list(dict.fromkeys(allRegions))
+        influencerName=list(dict.fromkeys(influencerName))
+        print("all",allRegions)
+    except Exception as e:
+        print(e)
+    allRegions.append('IN')
+    allRegions.append('DZ')
+    influencerName.append('Ashish Tyagi')
+    return render_template('analytics/dashboardAnalytics.html',campaignStatus=campaignStatus,regionCodes=regionCodes_json,analyticsData=analytics_json,allRegions=allRegions,influencerName=influencerName)
+
+
 
 if __name__ == '__main__':
     # connecsiApp.secret_key = 'connecsiSecretKey'
