@@ -5127,6 +5127,16 @@ def viewAllClassifiedAds():
     response = requests.get(view_profile_url)
     profile_data_json = response.json()
     print(profile_data_json)
+    for item1 in view_classified_data_list:
+        video_cat_list = item1['video_cat_id'].split(",")
+        video_cat = []
+        for item in video_cat_list:
+            new_url = base_url + 'Youtube/videoCategories/' + str(item)
+            response = requests.get(url=new_url)
+            print(response)
+            r_json = response.json()
+            video_cat.append(r_json['data'][0]['video_cat_name'])
+        item1.update({'video_cat_name': video_cat})
     return render_template('classifiedAds/view_all_classifiedAds.html',maxClassified=maxClassified,countClassified=countClassified,messageSubscription=messageSubscription,all_classified_data=view_classified_data_list,profile_data=profile_data_json)
 
 # @connecsiApp.route('/viewClassifiedDetails/<string:classified_id>')
