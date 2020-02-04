@@ -3872,8 +3872,8 @@ $("#create_alert_form").submit(function (e) {
     }).parent().addClass('active').siblings().removeClass('active').parents("li").addClass('open');
 
 
-    var selectedMessageHref = localStorage.getItem('messageHref');
-    $("a[href$='" + selectedMessageHref + "']").addClass('bg-blue-grey bg-lighten-5 highlighted-message');
+//    var selectedMessageHref = localStorage.getItem('messageHref');
+//    $("a[href$='" + selectedMessageHref + "']").addClass('bg-blue-grey bg-lighten-5 highlighted-message');
 
     if ($('#donut-dashboard-chart').length) {
         //dashboard chart

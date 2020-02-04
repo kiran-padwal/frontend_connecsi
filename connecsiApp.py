@@ -7909,6 +7909,665 @@ def analytics():
     return render_template('analytics/dashboardAnalytics.html',campaignStatus=campaignStatus,regionCodes=regionCodes_json,analyticsData=analytics_json,allRegions=allRegions,influencerName=influencerName)
 
 
+@connecsiApp.route('/getMessageDetailsFull/<string:message_id>',methods = ['GET'])
+@is_logged_in
+def getMessageDetailsFull(message_id):
+    currencyIndex = {'INR': '₹', 'USD': '$', 'EUR': '€', 'GBR': '£'}
+    message_id = str(message_id)
+    inbox = ''
+    full_conv = ''
+    conv_title = ''
+    length_conv = ''
+    countAutoProposal = 0
+    user_id = session['user_id']
+
+    subValues = getSubscriptionValues(str(user_id))
+    countMessages = 0
+    packageName = ''
+    messageSubscription = {
+        'Autofill Proposal': {
+            'text': '',
+            'heading': ''
+        }
+    }
+
+    maxAuto = 0
+    for i in subValues['data']:
+        if (i['feature_name'].lower() == 'autofill proposal'):
+            packageName = i['package_name']
+            countAutoProposal = i['units']
+            maxAuto = i['base_units'] + i['added_units']
+            messageSubscription['Autofill Proposal']['text'] = ''
+
+    if (countAutoProposal == 0):
+        messageSubscription['Autofill Proposal'][
+            'text'] = "You have reached the limit of Autofill Proposal. (Allowed: " + str(
+            maxAuto) + " ) Please customize your plan to add more or upgrade to unlock more features and add-ons."
+        messageSubscription['Autofill Proposal']['heading'] = "Limit Reached"
+
+    print('user id=', user_id)
+    type = session['type']
+    print('user type = ', type)
+    email_id = session['email_id']
+    print('email id =', email_id)
+    url = base_url + 'Messages/' + str(user_id) + '/' + type
+    conv_url = base_url + 'Messages/inbox/' + str(email_id)
+    try:
+        response = requests.get(url=url)
+        data = response.json()
+        # print('messages = ',data)
+        conv_resposne = requests.get(url=conv_url)
+        conv_data = conv_resposne.json()
+        # print('conv = ',conv_data)
+        ###################### get inbox
+        inboxList = []
+        message_id_list = []
+        for item in data['data']:
+            if item['to_email_id'] == email_id:
+                inboxList.append(item)
+                message_id_list.append(item['message_id'])
+        # print(mylist)
+        for item in conv_data['data']:
+            # if item['to_email_id'] == email_id and item['message_id'] not in message_id_list:
+            if item['to_email_id'] == email_id:
+                # message_id1 = item['message_id']
+                # print(message_id1)
+                # for message in data['data']:
+                #     if message_id1 == message['message_id']:
+                #        read = message['read']
+                #        item.update({'read': read})
+                inboxList.append(item)
+        print('inboxList  =', inboxList)
+        inboxSorted = sorted(inboxList, key=lambda k: k['message_id'])
+        # print('sorted inboxlist = ', inboxSorted)
+        inbox = {}
+        inbox1 = {}
+        inbox1.update({'data': inboxSorted})
+        inbox['data'] = list({each['message_id']: each for each in inbox1['data']}.values())
+
+        print('inbox = ', inbox)
+        print("length hai", len(inbox['data']))
+
+        for i in inbox['data']:
+            print("all", i['message_id'])
+
+        from_email_id = ''
+        main_brand_name = ''
+        main_brand_profile = ''
+        main_inf_name = ''
+        main_inf_profile = ''
+        if message_id == "0":
+            try:
+                message_id = inbox['data'][-1]['message_id']
+                from_email_id = inbox['data'][0]['from_email_id']
+                print('default message id = ', message_id)
+            except:
+                pass
+        else:
+            print('new message id = ', message_id)
+
+        for item in inbox['data']:
+            first_name = ''
+            profile_pic = ''
+            if (message_id == item['message_id']):
+                main_brand_name = item['brand_first_name']
+                main_brand_profile = item['brand_profile_pic']
+                main_inf_name = item['inf_first_name']
+                main_inf_profile = item['inf_youtube_profile_pic']
+            if item['user_type'] == 'brand':
+                first_name = item['brand_first_name']
+                profile_pic = item['brand_profile_pic']
+            elif item['user_type'] == 'influencer':
+                try:
+                    inbox_email_id = item['from_email_id']
+                except:
+                    inbox_email_id = item['conv_from_email_id']
+                first_name = item['inf_first_name']
+                profile_pic = item['inf_youtube_profile_pic']
+                if first_name == '':
+                    first_name = inbox_email_id
+                    main_inf_name = inbox_email_id
+            item.update({'first_name': first_name})
+            item.update({'profile_pic': profile_pic})
+            # print(item)
+
+        # #######################################
+
+        # print(from_email_id)
+        # ########################### get conversations
+
+        getConv_url = base_url + 'Messages/inbox/conversation/' + str(message_id)
+        print(getConv_url)
+        full_conv_resposne = requests.get(url=getConv_url)
+        full_conv_data = full_conv_resposne.json()
+        print('full_conv_data = ', full_conv_data)
+        inbox2 = {}
+        full_conv_data['data'] = list({each['conv_id']: each for each in full_conv_data['data']}.values())
+        #################################################
+        convList = []
+        for item in data['data']:
+            if item['message_id'] == int(message_id):
+                convList.append(item)
+        # print(mylist)
+        for item in full_conv_data['data']:
+            if item['message_id'] == int(message_id):
+                convList.append(item)
+        full_conv = {}
+        full_conv.update({'data': convList})
+        print('full_conv = ', full_conv)
+        length_conv = len(full_conv['data'])
+        print('length = ', length_conv)
+        collapse_id = 1
+        for item in full_conv['data']:
+            full_conv_user_id = item['user_id']
+            # print(full_conv_user_id)
+            full_conv_user_type = item['user_type']
+            first_name = ''
+            profile_pic = ''
+            if full_conv_user_type == 'brand':
+                first_name = main_brand_name
+                profile_pic = main_brand_profile
+            elif full_conv_user_type == 'influencer':
+                first_name = main_inf_name
+                profile_pic = main_inf_profile
+
+            item.update({'first_name': first_name})
+            item.update({'collapse_id': collapse_id})
+            item.update({'profile_pic': profile_pic})
+            # print(item)
+            collapse_id += 1
+        ################ remove deleted message from inbox and conv ##################
+        removed_deleted_messages_from_inbox = []
+
+        for item in inbox['data']:
+            try:
+                deleted_from_user_id_string = item['deleted_from_user_id']
+                deleted_from_user_id_list = deleted_from_user_id_string.split(',')
+                print('deleted user list from inbox', deleted_from_user_id_list)
+                if str(user_id) not in deleted_from_user_id_list:
+                    removed_deleted_messages_from_inbox.append(item)
+            except:
+                removed_deleted_messages_from_inbox.append(item)
+                pass
+        inbox.update({'data': removed_deleted_messages_from_inbox})
+        print('removed deleted from inbox', inbox)
+
+        inbox['data'] = inbox['data'][::-1]
+        inbox.update({'data': inbox['data']})
+        removed_deleted_messages_from_conv = []
+        for item in full_conv['data']:
+            try:
+                deleted_from_user_id_string = item['deleted_from_user_id']
+                deleted_from_user_id_list = deleted_from_user_id_string.split(',')
+                print('deleted user list from full conv', deleted_from_user_id_list)
+                if str(user_id) not in deleted_from_user_id_list:
+                    removed_deleted_messages_from_conv.append(item)
+            except:
+                removed_deleted_messages_from_conv.append(item)
+                pass
+        full_conv.update({'data': removed_deleted_messages_from_conv})
+        print('removed deleted from conv', full_conv)
+        ############################################################
+        # ####################################
+        try:
+            conv_title = full_conv['data'][0]['subject']
+        except:
+            pass
+
+        print('final conv = ', full_conv)
+        for item in full_conv['data']:
+            print(item)
+        print('final inbox =', inbox)
+        ############## sort inbox according to date ################
+        for item in inbox['data']:
+            print('message inbox = ', item)
+
+        inbox['data'].sort(key=lambda x: datetime.datetime.strptime(x['date'], '%A, %d. %B %Y %I:%M%p'), reverse=True)
+        message_id_list1 = []
+        for item in inbox['data']:
+            if item['message_id'] not in message_id_list1:
+                message_id_list1.append(item['message_id'])
+            else:
+                inbox['data'].remove(item)
+                print('after sorting inbox = ', item)
+        print(message_id_list1)
+        ############## sort end ####################################
+        print("data1", inbox)
+        today = datetime.datetime.now()
+
+        for i in inbox['data']:
+            diff = today - datetime.datetime.fromtimestamp(
+                time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple()))
+            print('difference', diff.days)
+            print("timing", datetime.datetime.fromtimestamp(
+                time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime(
+                "%I:%M%p"))
+            daysDiff = diff.days
+            hoursDiff = diff.days * 24 + diff.seconds // 3600
+            if (daysDiff == 0):
+                if (hoursDiff <= 12):
+                    i['date'] = datetime.datetime.fromtimestamp(time.mktime(
+                        datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%I:%M%p")
+
+                else:
+                    i['date'] = 'Today'
+            elif (daysDiff == 1):
+                i['date'] = 'Yesterday'
+            elif (daysDiff > 1 and daysDiff < 7):
+                i['date'] = datetime.datetime.fromtimestamp(
+                    time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime(
+                    "%a")
+            else:
+                pass
+                year = datetime.datetime.fromtimestamp(
+                    time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).year
+                if (year == today.year):
+                    i['date'] = datetime.datetime.fromtimestamp(time.mktime(
+                        datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%d %b")
+                else:
+                    i['date'] = datetime.datetime.fromtimestamp(time.mktime(
+                        datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime(
+                        '%d %b %y')
+        print("conversation", full_conv)
+        for i in full_conv['data']:
+            print(i)
+            try:
+                diff = today - datetime.datetime.fromtimestamp(
+                    time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple()))
+            except:
+                diff = today - datetime.datetime.fromtimestamp(
+                    time.mktime(datetime.datetime.strptime(i['conv_date'], "%A, %d. %B %Y %I:%M%p").timetuple()))
+            print('difference', diff.days)
+            daysDiff = diff.days
+            hoursDiff = diff.days * 24 + diff.seconds // 3600
+            if (daysDiff == 0):
+                if (hoursDiff <= 12):
+                    try:
+                        i['date'] = datetime.datetime.fromtimestamp(time.mktime(
+                            datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime(
+                            "%I:%M%p")
+                    except:
+                        i['date'] = datetime.datetime.fromtimestamp(time.mktime(
+                            datetime.datetime.strptime(i['conv_date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime(
+                            "%I:%M%p")
+
+                else:
+                    i['date'] = 'Today'
+            elif (daysDiff == 1):
+                i['date'] = 'Yesterday'
+            elif (daysDiff > 1 and daysDiff < 7):
+                try:
+
+                    i['date'] = datetime.datetime.fromtimestamp(time.mktime(
+                        datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%a")
+                except:
+                    i['date'] = datetime.datetime.fromtimestamp(time.mktime(
+                        datetime.datetime.strptime(i['conv_date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%a")
+
+            else:
+
+                try:
+                    year = datetime.datetime.fromtimestamp(
+                        time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).year
+                except:
+                    year = datetime.datetime.fromtimestamp(time.mktime(
+                        datetime.datetime.strptime(i['conv_date'], "%A, %d. %B %Y %I:%M%p").timetuple())).year
+
+                if (year == today.year):
+                    try:
+                        i['date'] = datetime.datetime.fromtimestamp(time.mktime(
+                            datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime(
+                            "%d %b")
+                    except:
+                        i['date'] = datetime.datetime.fromtimestamp(time.mktime(
+                            datetime.datetime.strptime(i['conv_date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime(
+                            "%d %b")
+
+                else:
+                    try:
+                        i['date'] = datetime.datetime.fromtimestamp(time.mktime(
+                            datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime(
+                            '%d %b %y')
+                    except:
+                        i['date'] = datetime.datetime.fromtimestamp(time.mktime(
+                            datetime.datetime.strptime(i['conv_date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime(
+                            '%d %b %y')
+
+        print('final conv default = ', full_conv,main_inf_profile,main_brand_profile)
+        print(main_inf_profile,main_brand_profile,"hello")
+        print(len(inbox['data']), inbox['data'][0])
+        view_campaign_data = {'data': []}
+        print("data2", inbox)
+        for i in inbox['data']:
+            print("all", i['message_id'])
+        return jsonify({'title':conv_title,'data':full_conv})
+    except Exception as e:
+        print(e)
+        pass
+
+    view_campaign_data = {'data': []}
+
+    print('final conv default = ', full_conv)
+    print("data2", inbox)
+
+    return jsonify({'title':conv_title,'data':full_conv})
+
+
+@connecsiApp.route('/inbox_new/<string:message_id>',methods = ['GET'])
+@is_logged_in
+def inbox_new(message_id):
+    currencyIndex = {'INR': '₹', 'USD': '$', 'EUR': '€', 'GBR': '£'}
+    message_id = str(message_id)
+    inbox = ''
+    full_conv=''
+    conv_title=''
+    length_conv=''
+    countAutoProposal=0
+    user_id = session['user_id']
+
+    subValues = getSubscriptionValues(str(user_id))
+    countMessages = 0
+    packageName=''
+    messageSubscription = {
+        'Autofill Proposal': {
+            'text':'',
+            'heading':''
+        }
+    }
+
+    maxAuto=0
+    for i in subValues['data']:
+        if (i['feature_name'].lower() == 'autofill proposal'):
+            packageName = i['package_name']
+            countAutoProposal = i['units']
+            maxAuto=i['base_units']+i['added_units']
+            messageSubscription['Autofill Proposal']['text'] = ''
+
+    if (countAutoProposal == 0):
+        messageSubscription['Autofill Proposal']['text'] = "You have reached the limit of Autofill Proposal. (Allowed: "+str(maxAuto)+" ) Please customize your plan to add more or upgrade to unlock more features and add-ons."
+        messageSubscription['Autofill Proposal']['heading'] = "Limit Reached"
+
+    print('user id=',user_id)
+    type = session['type']
+    print('user type = ',type)
+    email_id = session['email_id']
+    print('email id =', email_id)
+    url = base_url + 'Messages/' + str(user_id) + '/' + type
+    conv_url = base_url + 'Messages/inbox/' + str(email_id)
+    try:
+        response = requests.get(url=url)
+        data = response.json()
+        # print('messages = ',data)
+        conv_resposne = requests.get(url=conv_url)
+        conv_data = conv_resposne.json()
+        # print('conv = ',conv_data)
+        ###################### get inbox
+        inboxList=[]
+        message_id_list=[]
+        for item in data['data']:
+            if item['to_email_id'] == email_id:
+               inboxList.append(item)
+               message_id_list.append(item['message_id'])
+        # print(mylist)
+        for item in conv_data['data']:
+            # if item['to_email_id'] == email_id and item['message_id'] not in message_id_list:
+            if item['to_email_id'] == email_id :
+               # message_id1 = item['message_id']
+               # print(message_id1)
+               # for message in data['data']:
+               #     if message_id1 == message['message_id']:
+               #        read = message['read']
+               #        item.update({'read': read})
+               inboxList.append(item)
+        print('inboxList  =',inboxList)
+        inboxSorted = sorted(inboxList, key=lambda k: k['message_id'])
+        # print('sorted inboxlist = ', inboxSorted)
+        inbox = {}
+        inbox1={}
+        inbox1.update({'data':inboxSorted})
+        inbox['data'] = list({each['message_id']: each for each in inbox1['data']}.values())
+
+        print('inbox = ',inbox)
+        print("length hai",len(inbox['data']))
+
+        for i in inbox['data']:
+                print("all",i['message_id'])
+
+        from_email_id = ''
+        main_brand_name=''
+        main_brand_profile=''
+        main_inf_name=''
+        main_inf_profile=''
+        if message_id == "0":
+            try:
+                message_id = inbox['data'][-1]['message_id']
+                from_email_id = inbox['data'][0]['from_email_id']
+                print('default message id = ', message_id)
+            except:
+                pass
+        else:
+            print('new message id = ', message_id)
+
+
+        for item in inbox['data']:
+            first_name = ''
+            profile_pic = ''
+            if(message_id==item['message_id']):
+                main_brand_name=item['brand_first_name']
+                main_brand_profile=item['brand_profile_pic']
+                main_inf_name=item['inf_first_name']
+                main_inf_profile=item['inf_youtube_profile_pic']
+            if item['user_type'] == 'brand':
+                first_name = item['brand_first_name']
+                profile_pic = item['brand_profile_pic']
+            elif item['user_type'] == 'influencer':
+                try:
+                    inbox_email_id = item['from_email_id']
+                except:
+                    inbox_email_id = item['conv_from_email_id']
+                first_name = item['inf_first_name']
+                profile_pic = item['inf_youtube_profile_pic']
+                if first_name =='':
+                    first_name=inbox_email_id
+                    main_inf_name=inbox_email_id
+            item.update({'first_name': first_name})
+            item.update({'profile_pic': profile_pic})
+            # print(item)
+
+        # #######################################
+
+
+            # print(from_email_id)
+        # ########################### get conversations
+
+        getConv_url = base_url + 'Messages/inbox/conversation/' + str(message_id)
+        print(getConv_url)
+        full_conv_resposne = requests.get(url=getConv_url)
+        full_conv_data = full_conv_resposne.json()
+        print('full_conv_data = ',full_conv_data)
+        inbox2 = {}
+        full_conv_data['data'] = list({each['conv_id']: each for each in full_conv_data['data']}.values())
+        #################################################
+        convList = []
+        for item in data['data']:
+            if item['message_id'] == int(message_id):
+                convList.append(item)
+        # print(mylist)
+        for item in full_conv_data['data']:
+            if item['message_id'] == int(message_id):
+                convList.append(item)
+        full_conv = {}
+        full_conv.update({'data': convList})
+        print('full_conv = ', full_conv)
+        length_conv = len(full_conv['data'])
+        print('length = ',length_conv)
+        collapse_id = 1
+        for item in full_conv['data']:
+            full_conv_user_id = item['user_id']
+            # print(full_conv_user_id)
+            full_conv_user_type = item['user_type']
+            first_name = ''
+            profile_pic = ''
+            if full_conv_user_type == 'brand':
+                first_name = main_brand_name
+                profile_pic = main_brand_profile
+            elif full_conv_user_type == 'influencer':
+                first_name = main_inf_name
+                profile_pic = main_inf_profile
+
+            item.update({'first_name': first_name})
+            item.update({'collapse_id':collapse_id})
+            item.update({'profile_pic': profile_pic})
+            # print(item)
+            collapse_id+=1
+################ remove deleted message from inbox and conv ##################
+        removed_deleted_messages_from_inbox = []
+
+        for item in inbox['data']:
+            try:
+                deleted_from_user_id_string = item['deleted_from_user_id']
+                deleted_from_user_id_list = deleted_from_user_id_string.split(',')
+                print('deleted user list from inbox',deleted_from_user_id_list)
+                if str(user_id) not in deleted_from_user_id_list:
+                    removed_deleted_messages_from_inbox.append(item)
+            except:
+                removed_deleted_messages_from_inbox.append(item)
+                pass
+        inbox.update({'data': removed_deleted_messages_from_inbox})
+        print('removed deleted from inbox', inbox)
+
+        inbox['data'] = inbox['data'][::-1]
+        inbox.update({'data':inbox['data']})
+        removed_deleted_messages_from_conv = []
+        for item in full_conv['data']:
+            try:
+                deleted_from_user_id_string = item['deleted_from_user_id']
+                deleted_from_user_id_list = deleted_from_user_id_string.split(',')
+                print('deleted user list from full conv', deleted_from_user_id_list)
+                if str(user_id) not in deleted_from_user_id_list:
+                    removed_deleted_messages_from_conv.append(item)
+            except:
+                removed_deleted_messages_from_conv.append(item)
+                pass
+        full_conv.update({'data':removed_deleted_messages_from_conv})
+        print('removed deleted from conv',full_conv)
+############################################################
+        # ####################################
+        try:
+            conv_title = full_conv['data'][0]['subject']
+        except:pass
+
+        print('final conv = ',full_conv)
+        for item in full_conv['data']:
+            print(item)
+        print('final inbox =',inbox)
+        ############## sort inbox according to date ################
+        for item in inbox['data']:
+            print('message inbox = ',item)
+
+        inbox['data'].sort(key=lambda x: datetime.datetime.strptime(x['date'], '%A, %d. %B %Y %I:%M%p'),reverse=True)
+        message_id_list1 = []
+        for item in inbox['data']:
+            if item['message_id'] not in message_id_list1:
+                message_id_list1.append(item['message_id'])
+            else:
+                inbox['data'].remove(item)
+                print('after sorting inbox = ',item)
+        print(message_id_list1)
+        ############## sort end ####################################
+        print("data1", inbox)
+        today=datetime.datetime.now()
+
+        for i in inbox['data']:
+            diff=today-datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple()))
+            print('difference',diff.days)
+            print("timing",datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%I:%M%p"))
+            daysDiff=diff.days
+            hoursDiff=diff.days*24+diff.seconds//3600
+            if(daysDiff==0):
+                if(hoursDiff<=12):
+                    i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%I:%M%p")
+
+                else:
+                    i['date']='Today'
+            elif(daysDiff==1):
+                i['date']='Yesterday'
+            elif(daysDiff>1 and daysDiff<7):
+                i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%a")
+            else:
+                pass
+                year = datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).year
+                if(year==today.year):
+                    i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%d %b")
+                else:
+                    i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime('%d %b %y')
+        print("conversation",full_conv)
+        for i in full_conv['data']:
+            print(i)
+            try:
+                diff=today-datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple()))
+            except:
+                diff=today-datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['conv_date'], "%A, %d. %B %Y %I:%M%p").timetuple()))
+            print('difference',diff.days)
+            daysDiff=diff.days
+            hoursDiff=diff.days*24+diff.seconds//3600
+            if(daysDiff==0):
+                if(hoursDiff<=12):
+                    try:
+                        i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%I:%M%p")
+                    except:
+                        i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['conv_date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%I:%M%p")
+
+                else:
+                    i['date']='Today'
+            elif(daysDiff==1):
+                i['date']='Yesterday'
+            elif(daysDiff>1 and daysDiff<7):
+                try:
+
+                    i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%a")
+                except:
+                    i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['conv_date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%a")
+
+            else:
+
+                try:
+                    year = datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).year
+                except:
+                    year = datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['conv_date'], "%A, %d. %B %Y %I:%M%p").timetuple())).year
+
+                if(year==today.year):
+                    try:
+                        i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%d %b")
+                    except:
+                        i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['conv_date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%d %b")
+
+                else:
+                    try:
+                        i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime('%d %b %y')
+                    except:
+                        i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['conv_date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime('%d %b %y')
+
+        print('final conv default = ', full_conv)
+        print(len(inbox['data']),inbox['data'][0])
+        view_campaign_data = {'data': []}
+        print("data2", inbox)
+        for i in inbox['data']:
+                print("all",i['message_id'])
+        return render_template('email/inbox_new.html',currencySign=currencyIndex[session['default_currency']], maxAuto=maxAuto,packageName=packageName,countAutoProposal=countAutoProposal,messageSubscription=messageSubscription,inbox = inbox, full_conv = full_conv, conv_title=conv_title,view_campaign_data=view_campaign_data)
+    except Exception as e:
+        print(e)
+        pass
+
+    view_campaign_data = {'data':[]}
+
+    print('final conv default = ', full_conv)
+    print("data2",inbox)
+
+    return render_template('email/inbox_new.html',currencySign=currencyIndex[session['default_currency']],maxAuto=maxAuto,packageName=packageName,countAutoProposal=countAutoProposal,messageSubscription=messageSubscription,inbox=inbox, full_conv = full_conv,conv_title=conv_title,view_campaign_data=view_campaign_data)
+
+
+
 
 if __name__ == '__main__':
     # connecsiApp.secret_key = 'connecsiSecretKey'
