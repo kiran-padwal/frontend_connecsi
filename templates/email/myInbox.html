@@ -9,19 +9,14 @@
 
 {% set _ = glob.update({'channel_id' : 'None'}) %}
 {% set _ = glob.update({'total_unread_messages' : 0}) %}
-{% for item in full_conv['data'] %}
+{% for item in messages_data['data'] %}
     {% if item['channel_id'] %}
         {% set _ = glob.update({'channel_id' : item['channel_id'] }) %}
     {% endif %}
 {% endfor %}
-{% if full_conv['data'] %}
-    {% set _ = glob.update({'message_id' : full_conv['data'][0]['message_id']}) %}
-    {% set _ = glob.update({'from_email_id' : full_conv['data'][0]['from_email_id']}) %}
-{% else %}
-    {% set _ = glob.update({'message_id' : 0}) %}
-    {% set _ = glob.update({'from_email_id' : ''}) %}
-{% endif %}
+{% set _ = glob.update({'from_email_id' : conv_data['data'][0]['from_email_id']}) %}
 
+{% set _ = glob.update({'message_id' : conv_data['data'][0]['message_id']}) %}
 <div class="row">
     <div class="col-sm-12">
         <div class="content-header">Messages - Inbox</div>
@@ -69,7 +64,7 @@
                                                     <div class="list-group">
 
                                                         <div id="sideScroll" class="users-list-padding">
-                                                            {% for item in inbox['data'] %}
+                                                            {% for item in messages_data['data'] %}
                                                             <div style="padding-left:0.5rem!important;padding-right: 0!important;"
                                                                     {% if item['conv_id'] %}
                                                                         onclick="update_conversation_as_read('{{item['conv_id']}}')"
@@ -132,7 +127,7 @@
                                                     </p>
                                                 </div>
                                                 <div id="media_list" class="media-list" style="padding:0 1rem;">
-                                                    {% for item in full_conv['data'] %}
+                                                    {% for item in conv_data['data'] %}
                                                     <div id="headingCollapse{{ item['collapse_id'] }}" class="card-header p-0">
                                                         <a style="border-bottom:0.5px solid lightgrey!important;" data-toggle="collapse" href="#collapse{{ item['collapse_id'] }}" aria-expanded="false"
                                                            aria-controls="collapse{{ item['collapse_id'] }}"
@@ -320,7 +315,7 @@
                                     {% set channels_ids = [] %}
                                     {% for item1 in item['youtube_inf_data'] %}
                                     {{ channels_ids.append(item1['channel_id'])|default("", True) }}
-                                    {% endfor %}
+                                {% endfor %}
                                 <tr>
                                     <td>
                                         <div class="custom-control custom-checkbox custom-control-inline text-left">
@@ -753,15 +748,11 @@
 
 
 <script>
-{% if full_conv['data']%}
-    $("#message{{full_conv['data'][0]['message_id']}}").addClass('bg-blue-grey bg-lighten-5 highlighted-message');
-    var contactTopPosition = $("#message{{full_conv['data'][0]['message_id']}}").position().top;
+
+$("#message{{conv_data['data'][0]['message_id']}}").addClass('bg-blue-grey bg-lighten-5 highlighted-message');
+var contactTopPosition = $("#message{{conv_data['data'][0]['message_id']}}").position().top;
 $("#sideScroll").animate({scrollTop: contactTopPosition});
 console.log('hello ji',$('.media-list')[0].children.length,$('.media-list')[0].children[$('.media-list')[0].children.length-1].className='card-collapse collapse show');
-
-{% endif %}
-
-
 
 function update_message_as_read(message_id){
         <!--alert(message_id);-->
@@ -848,7 +839,6 @@ function update_message_as_read(message_id){
                 c+='</div></div>';
                 document.getElementById('media_list').innerHTML=c;
                 $("#loader-div").hide();
-                {% if full_conv['data']%}
                 console.log('hello ji',$('.media-list')[0].children.length,$('.media-list')[0].children[$('.media-list')[0].children.length-1].className='card-collapse collapse show');
                 var ele=document.getElementsByClassName('highlighted-message')[0];
                 ele.classList.remove('highlighted-message');
@@ -858,8 +848,6 @@ function update_message_as_read(message_id){
                 $('#message'+message_id).addClass('highlighted-message');
                 $('#message'+message_id).addClass('bg-lighten-5');
                 $('#message'+message_id).addClass('bg-blue-grey');
-                {% endif %}
-
             }
 
         });
@@ -1223,42 +1211,7 @@ function editProposal(message_id,campaign_id){
     }
 
 
-<!--function campaignList(channel_id,message_id) {-->
-<!--    alert('i m here in campaignlist');-->
-<!--    $( "input#campaign_id" ).prop('checked', false);-->
-<!--    $( "input#campaign_id" ).prop('disabled', false);-->
-<!--    $("#campaign_channel_id").val(channel_id);-->
-<!--    $.ajax({-->
-<!--               type: "GET",-->
-<!--               &lt;!&ndash;url: '/getCampaignsAddedToMessage/'+message_id,&ndash;&gt;-->
-<!--               url: '/getCampaignsAddedToMessageByChannelId/'+channel_id,-->
-<!--               contentType: 'application/json;charset=UTF-8',-->
-<!--               success: function(data)-->
-<!--               {-->
-<!--                   if (data.results.length != 0){-->
-<!--                   jQuery.each(data.results, function(i, val) {-->
-<!--                        {% for item in view_campaign_data['data'] %}-->
-<!--                                var campaign_campaign_id = val.campaign_id;-->
-<!--                                var campaign_id = "{{ item['campaign_id'] }}";-->
-<!--                                if (campaign_id == campaign_campaign_id){-->
 
-<!--                                    $('.campaign_id'+campaign_id).attr('disabled', true);-->
-<!--                                 }-->
-<!--                                 else{-->
-
-<!--                                      &lt;!&ndash;$('.campaign_id'+campaign_id).attr('disabled', false);&ndash;&gt;-->
-<!--                                 }-->
-
-<!--                        {% endfor %}-->
-<!--                    });-->
-<!--                    }-->
-<!--                    else{-->
-
-<!--                    }-->
-<!--                    }-->
-<!--                });-->
-
-<!--}-->
 
 
 
@@ -1374,83 +1327,83 @@ function getAllMappedChannel_ids1(channel_id){
 
 
 function getCampaignsAddedToMessage(){
-        var message_id = $("#message_id").val();
-        $.ajax({
-               type: "GET",
-               url: '/getCampaignsAddedToMessage/'+message_id,
-               async:false,
-               <!--data: form.serialize(), // serializes the form's elements.-->
-               contentType: 'application/json;charset=UTF-8',
+<!--        var message_id = $("#message_id").val();-->
+<!--        $.ajax({-->
+<!--               type: "GET",-->
+<!--               url: '/getCampaignsAddedToMessage/'+message_id,-->
+<!--               async:false,-->
+<!--               &lt;!&ndash;data: form.serialize(), // serializes the form's elements.&ndash;&gt;-->
+<!--               contentType: 'application/json;charset=UTF-8',-->
 
-               success: function(data)
-               {
-                   var myjson =  JSON.stringify(data);
-                   <!--alert(myjson); // show response from the python script.-->
-                   <!--var value = $("#campaignNameList").text();-->
-                   $( "#campaignNameList" ).empty();
-                   $( "#proposal_campaign_name" ).empty();
-                   $("#tab-proposal .tab-list").empty();
-                   $('#proposal_campaign_name').append('<option value=""></option>');
-                   jQuery.each(data.results, function(i, val) {
-                        <!--{# if  glob.from_email_id != session['email_id']  #}-->
-                        var color = '';
-                                if (val.status == 'Added'){
-                                    color = 'purple'
-                                }
-                                if (val.status == 'Contacted'){
-                                    color = 'orange'
-                                }
-                                if (val.status == 'Negotiations'){
-                                    color = 'orange'
-                                }
-                                if (val.status == 'Proposal Sent'){
-                                    color = 'light green'
-                                }
-                                if (val.status == 'Current Partner'){
-                                    color = 'dark green'
-                                }
-                        {% if  session['type'] != 'brand'  %}
-                            <!--alert(val.campaign_id);-->
-                            $('#reply_campaign_id').val(val.campaign_id);
-                            if(val.status == 'Proposal Sent'){
-                                var status = 'Proposal Received';
-                                var accepted = 'Accept';
-                                var rejected = 'Reject';
-                                $('#campaignNameList').append('<tr><td><a href="#" class="">'+val.campaign_name+'<a/></td><td style="color:'+color+'">&nbsp &nbsp'+status+'</td></tr>');
-                                $('#tab-proposal .tab-list').append('<tr><td><a href="#" onclick="getProposal('+val.message_id+','+val.campaign_id+')" class="">'+val.campaign_name+'<a/></td><td>&nbsp &nbsp<a href="#" onclick="accept_decline('+val.message_id+','+val.campaign_id+',\'' + accepted + '\')" data-toggle = "tooltip" title="Accept" class="fa fa-thumbs-up green" style="font-size:15pt;"></a></td><td>&nbsp<a href="#" onclick ="accept_decline('+val.message_id+','+val.campaign_id+',\'' + rejected + '\')" data-toggle = "tooltip" title="Decline" class="fa fa-thumbs-down red" style="font-size:15pt;"></a></td></tr>');
-                            }
-                            else if(val.status == 'Current Partner'){
-                                $('#campaignNameList').append('<tr><td><a href="#" class="">'+val.campaign_name+'<a/></td><td style="color:'+color+'">&nbsp &nbsp'+val.status+'</td></tr>');
-                                $('#tab-proposal .tab-list').append('<tr><td><a href="#" onclick="getProposal('+val.message_id+','+val.campaign_id+')" class="">'+val.campaign_name+'<a/></td></tr>');
-                            }
-                            else{
-                                $('#campaignNameList').append('<tr><td><a href="#" class="">'+val.campaign_name+'<a/></td><td style="color:'+color+'">&nbsp &nbsp'+val.status+'</td></tr>');
-                            }
-                        {% else %}
-                            if(val.campaign_id){
-                                <!--alert(val.campaign_id);-->
-                                $('#plus_circle').removeClass('fa fa-plus-circle');
-                                $('#reply_campaign_id').val(val.campaign_id);
-                            }
-                            $('#campaignNameList').append('<tr><td><a href="#" class="">'+val.campaign_name+'<a/></td><td style="color:'+color+'">&nbsp &nbsp'+val.status+'</td></tr>');
-                            if(val.status == 'Proposal Sent'){
-                                $('#tab-proposal .tab-list').append('<tr><td><a href="#" onclick="getProposal('+val.message_id+','+val.campaign_id+')" class="">'+val.campaign_name+'<a/></td><td>&nbsp &nbsp<a href="#" onclick="editProposal('+val.message_id+','+val.campaign_id+')" data-toggle="tooltip" title="Edit Proposal"><img src="/static/icons/edit.png" height="19px" width="17px"></a></td></tr>');
-                            }
-                            if(val.status == 'Current Partner'){
+<!--               success: function(data)-->
+<!--               {-->
+<!--                   var myjson =  JSON.stringify(data);-->
+<!--                   &lt;!&ndash;alert(myjson); // show response from the python script.&ndash;&gt;-->
+<!--                   &lt;!&ndash;var value = $("#campaignNameList").text();&ndash;&gt;-->
+<!--                   $( "#campaignNameList" ).empty();-->
+<!--                   $( "#proposal_campaign_name" ).empty();-->
+<!--                   $("#tab-proposal .tab-list").empty();-->
+<!--                   $('#proposal_campaign_name').append('<option value=""></option>');-->
+<!--                   jQuery.each(data.results, function(i, val) {-->
+<!--                        &lt;!&ndash;{# if  glob.from_email_id != session['email_id']  #}&ndash;&gt;-->
+<!--                        var color = '';-->
+<!--                                if (val.status == 'Added'){-->
+<!--                                    color = 'purple'-->
+<!--                                }-->
+<!--                                if (val.status == 'Contacted'){-->
+<!--                                    color = 'orange'-->
+<!--                                }-->
+<!--                                if (val.status == 'Negotiations'){-->
+<!--                                    color = 'orange'-->
+<!--                                }-->
+<!--                                if (val.status == 'Proposal Sent'){-->
+<!--                                    color = 'light green'-->
+<!--                                }-->
+<!--                                if (val.status == 'Current Partner'){-->
+<!--                                    color = 'dark green'-->
+<!--                                }-->
+<!--                        {% if  session['type'] != 'brand'  %}-->
+<!--                            &lt;!&ndash;alert(val.campaign_id);&ndash;&gt;-->
+<!--                            $('#reply_campaign_id').val(val.campaign_id);-->
+<!--                            if(val.status == 'Proposal Sent'){-->
+<!--                                var status = 'Proposal Received';-->
+<!--                                var accepted = 'Accept';-->
+<!--                                var rejected = 'Reject';-->
+<!--                                $('#campaignNameList').append('<tr><td><a href="#" class="">'+val.campaign_name+'<a/></td><td style="color:'+color+'">&nbsp &nbsp'+status+'</td></tr>');-->
+<!--                                $('#tab-proposal .tab-list').append('<tr><td><a href="#" onclick="getProposal('+val.message_id+','+val.campaign_id+')" class="">'+val.campaign_name+'<a/></td><td>&nbsp &nbsp<a href="#" onclick="accept_decline('+val.message_id+','+val.campaign_id+',\'' + accepted + '\')" data-toggle = "tooltip" title="Accept" class="fa fa-thumbs-up green" style="font-size:15pt;"></a></td><td>&nbsp<a href="#" onclick ="accept_decline('+val.message_id+','+val.campaign_id+',\'' + rejected + '\')" data-toggle = "tooltip" title="Decline" class="fa fa-thumbs-down red" style="font-size:15pt;"></a></td></tr>');-->
+<!--                            }-->
+<!--                            else if(val.status == 'Current Partner'){-->
+<!--                                $('#campaignNameList').append('<tr><td><a href="#" class="">'+val.campaign_name+'<a/></td><td style="color:'+color+'">&nbsp &nbsp'+val.status+'</td></tr>');-->
+<!--                                $('#tab-proposal .tab-list').append('<tr><td><a href="#" onclick="getProposal('+val.message_id+','+val.campaign_id+')" class="">'+val.campaign_name+'<a/></td></tr>');-->
+<!--                            }-->
+<!--                            else{-->
+<!--                                $('#campaignNameList').append('<tr><td><a href="#" class="">'+val.campaign_name+'<a/></td><td style="color:'+color+'">&nbsp &nbsp'+val.status+'</td></tr>');-->
+<!--                            }-->
+<!--                        {% else %}-->
+<!--                            if(val.campaign_id){-->
+<!--                                &lt;!&ndash;alert(val.campaign_id);&ndash;&gt;-->
+<!--                                $('#plus_circle').removeClass('fa fa-plus-circle');-->
+<!--                                $('#reply_campaign_id').val(val.campaign_id);-->
+<!--                            }-->
+<!--                            $('#campaignNameList').append('<tr><td><a href="#" class="">'+val.campaign_name+'<a/></td><td style="color:'+color+'">&nbsp &nbsp'+val.status+'</td></tr>');-->
+<!--                            if(val.status == 'Proposal Sent'){-->
+<!--                                $('#tab-proposal .tab-list').append('<tr><td><a href="#" onclick="getProposal('+val.message_id+','+val.campaign_id+')" class="">'+val.campaign_name+'<a/></td><td>&nbsp &nbsp<a href="#" onclick="editProposal('+val.message_id+','+val.campaign_id+')" data-toggle="tooltip" title="Edit Proposal"><img src="/static/icons/edit.png" height="19px" width="17px"></a></td></tr>');-->
+<!--                            }-->
+<!--                            if(val.status == 'Current Partner'){-->
 
-                                $('#tab-proposal .tab-list').append('<tr><td><a href="#" onclick="getProposal('+val.message_id+','+val.campaign_id+')" class="">'+val.campaign_name+'<a/></td><td>&nbsp &nbsp<a href="#" onclick="editProposal('+val.message_id+','+val.campaign_id+')" data-toggle="tooltip" title="Edit Proposal"><img src="/static/icons/edit.png" height="19px" width="17px"></a></td></tr>');
-                            }
-                        {% endif %}
-                        if(val.status!="Proposal Sent" && val.status!="Current Partner"){
-                            $('#proposal_campaign_name').append('<option value="'+val.campaign_id+'">'+val.campaign_name+'</option>');
-                        }
-                        <!--else if(val.status != "Current Partner" ){-->
-                            <!--$('#proposal_campaign_name').append('<option value="'+val.campaign_id+'">'+val.campaign_name+'</option>');-->
-                        <!--}-->
-                    });
+<!--                                $('#tab-proposal .tab-list').append('<tr><td><a href="#" onclick="getProposal('+val.message_id+','+val.campaign_id+')" class="">'+val.campaign_name+'<a/></td><td>&nbsp &nbsp<a href="#" onclick="editProposal('+val.message_id+','+val.campaign_id+')" data-toggle="tooltip" title="Edit Proposal"><img src="/static/icons/edit.png" height="19px" width="17px"></a></td></tr>');-->
+<!--                            }-->
+<!--                        {% endif %}-->
+<!--                        if(val.status!="Proposal Sent" && val.status!="Current Partner"){-->
+<!--                            $('#proposal_campaign_name').append('<option value="'+val.campaign_id+'">'+val.campaign_name+'</option>');-->
+<!--                        }-->
+<!--                        &lt;!&ndash;else if(val.status != "Current Partner" ){&ndash;&gt;-->
+<!--                            &lt;!&ndash;$('#proposal_campaign_name').append('<option value="'+val.campaign_id+'">'+val.campaign_name+'</option>');&ndash;&gt;-->
+<!--                        &lt;!&ndash;}&ndash;&gt;-->
+<!--                    });-->
 
-               }
-             });
+<!--               }-->
+<!--             });-->
 
     }
 

@@ -3328,7 +3328,7 @@ def inbox(message_id):
         print(getConv_url)
         full_conv_resposne = requests.get(url=getConv_url)
         full_conv_data = full_conv_resposne.json()
-        print('full_conv_data = ',full_conv_data)
+        # print('full_conv_data = ',full_conv_data)
         #################################################
         convList = []
         for item in data['data']:
@@ -3340,7 +3340,7 @@ def inbox(message_id):
                 convList.append(item)
         full_conv = {}
         full_conv.update({'data': convList})
-        print('full_conv = ', full_conv)
+        # print('full_conv = ', full_conv)
         length_conv = len(full_conv['data'])
         print('length = ',length_conv)
         collapse_id = 1
@@ -3381,14 +3381,14 @@ def inbox(message_id):
             try:
                 deleted_from_user_id_string = item['deleted_from_user_id']
                 deleted_from_user_id_list = deleted_from_user_id_string.split(',')
-                print('deleted user list from inbox',deleted_from_user_id_list)
+                # print('deleted user list from inbox',deleted_from_user_id_list)
                 if str(user_id) not in deleted_from_user_id_list:
                     removed_deleted_messages_from_inbox.append(item)
             except:
                 removed_deleted_messages_from_inbox.append(item)
                 pass
         inbox.update({'data': removed_deleted_messages_from_inbox})
-        print('removed deleted from inbox', inbox)
+        # print('removed deleted from inbox', inbox)
 
         inbox['data'] = inbox['data'][::-1]
         inbox.update({'data':inbox['data']})
@@ -3397,20 +3397,21 @@ def inbox(message_id):
             try:
                 deleted_from_user_id_string = item['deleted_from_user_id']
                 deleted_from_user_id_list = deleted_from_user_id_string.split(',')
-                print('deleted user list from full conv', deleted_from_user_id_list)
+                # print('deleted user list from full conv', deleted_from_user_id_list)
                 if str(user_id) not in deleted_from_user_id_list:
                     removed_deleted_messages_from_conv.append(item)
             except:
                 removed_deleted_messages_from_conv.append(item)
                 pass
         full_conv.update({'data':removed_deleted_messages_from_conv})
-        print('removed deleted from conv',full_conv)
+        # print('removed deleted from conv',full_conv)
 ############################################################
         # ####################################
         try:
             conv_title = full_conv['data'][0]['subject']
         except:pass
 
+        print("GETTING CAMPAIGNS ....")
         from templates.campaign.campaign import Campaign
         campaignObj = Campaign(user_id=user_id)
         view_campaign_data = campaignObj.get_all_campaigns()
@@ -3418,14 +3419,14 @@ def inbox(message_id):
             if item['deleted'] == 'true':
                 view_campaign_data['data'].remove(item)
 
-        print('final conv = ',full_conv)
-        for item in full_conv['data']:
-            print(item)
-        print('campaign data = ',view_campaign_data)
-        print('final inbox =',inbox)
+        # print('final conv = ',full_conv)
+        # for item in full_conv['data']:
+        #     print(item)
+        # print('campaign data = ',view_campaign_data)
+        # print('final inbox =',inbox)
         ############## sort inbox according to date ################
-        for item in inbox['data']:
-            print('message inbox = ',item)
+        # for item in inbox['data']:
+            # print('message inbox = ',item)
 
         inbox['data'].sort(key=lambda x: datetime.datetime.strptime(x['date'], '%A, %d. %B %Y %I:%M%p'),reverse=True)
         message_id_list1 = []
@@ -3434,10 +3435,10 @@ def inbox(message_id):
                 message_id_list1.append(item['message_id'])
             else:
                 inbox['data'].remove(item)
-                print('after sorting inbox = ',item)
+                # print('after sorting inbox = ',item)
         print(message_id_list1)
         ############## sort end ####################################
-        print("data1", inbox)
+        # print("data1", inbox)
         today=datetime.datetime.now()
 
         for i in inbox['data']:
@@ -3490,14 +3491,14 @@ def inbox(message_id):
         return render_template('email/inbox.html',currencySign=currencyIndex[session['default_currency']], maxAuto=maxAuto,packageName=packageName,countAutoProposal=countAutoProposal,messageSubscription=messageSubscription,inbox = inbox, full_conv = full_conv, conv_title=conv_title,view_campaign_data=view_campaign_data)
     except Exception as e:
         print(e)
-        pass
+        # pass
 
     from templates.campaign.campaign import Campaign
     campaignObj = Campaign(user_id=user_id)
     view_campaign_data = campaignObj.get_all_campaigns()
 
-    print('final conv default = ', full_conv)
-    print("data2",inbox)
+    # print('final conv default = ', full_conv)
+    # print("data2",inbox)
     return render_template('email/inbox.html',currencySign=currencyIndex[session['default_currency']],maxAuto=maxAuto,packageName=packageName,countAutoProposal=countAutoProposal,messageSubscription=messageSubscription,inbox=inbox, full_conv = full_conv,conv_title=conv_title,view_campaign_data=view_campaign_data)
 
 @connecsiApp.route('/update_message_as_read/<string:message_id>',methods=['GET'])
@@ -7249,7 +7250,7 @@ def getSubscriptionValues(u_id):
     print("get value")
     url2 = base_url + 'Brand/subscriptionPackageDetails/' + u_id
     response1 = requests.get(url2)
-    print('hello i m here',response1.json())
+    # print('hello i m here',response1.json())
     value=response1.json()
     if value['data']:
         print('hello')
@@ -7953,8 +7954,6 @@ def getMessageDetailsFull(message_id):
     url = base_url + 'Messages/' + str(user_id) + '/' + type
     conv_url = base_url + 'Messages/inbox/' + str(email_id)
     try:
-        response = requests.get(url=url)
-        data = response.json()
         # print('messages = ',data)
         conv_resposne = requests.get(url=conv_url)
         conv_data = conv_resposne.json()
@@ -7962,14 +7961,10 @@ def getMessageDetailsFull(message_id):
         ###################### get inbox
         inboxList = []
         message_id_list = []
-        for item in data['data']:
-            if item['to_email_id'] == email_id:
-                inboxList.append(item)
-                message_id_list.append(item['message_id'])
         # print(mylist)
         for item in conv_data['data']:
             # if item['to_email_id'] == email_id and item['message_id'] not in message_id_list:
-            if item['to_email_id'] == email_id:
+            # if item['to_email_id'] == email_id:
                 # message_id1 = item['message_id']
                 # print(message_id1)
                 # for message in data['data']:
@@ -8045,13 +8040,13 @@ def getMessageDetailsFull(message_id):
         full_conv_data['data'] = list({each['conv_id']: each for each in full_conv_data['data']}.values())
         #################################################
         convList = []
-        for item in data['data']:
-            if item['message_id'] == int(message_id):
-                convList.append(item)
         # print(mylist)
         for item in full_conv_data['data']:
             if item['message_id'] == int(message_id):
                 convList.append(item)
+        for item in inbox['data']:
+            if item['message_id'] == int(message_id):
+               convList.append(item)
         full_conv = {}
         full_conv.update({'data': convList})
         print('full_conv = ', full_conv)
@@ -8110,7 +8105,7 @@ def getMessageDetailsFull(message_id):
         ############################################################
         # ####################################
         try:
-            conv_title = full_conv['data'][0]['subject']
+            conv_title = full_conv['data'][0]['conv_subject']
         except:
             pass
 
@@ -8292,26 +8287,22 @@ def inbox_new(message_id):
     print('user type = ',type)
     email_id = session['email_id']
     print('email id =', email_id)
-    url = base_url + 'Messages/' + str(user_id) + '/' + type
+    # url = base_url + 'Messages/' + str(user_id) + '/' + type
     conv_url = base_url + 'Messages/inbox/' + str(email_id)
     try:
-        response = requests.get(url=url)
-        data = response.json()
+
         # print('messages = ',data)
         conv_resposne = requests.get(url=conv_url)
         conv_data = conv_resposne.json()
         # print('conv = ',conv_data)
+        # exit()
         ###################### get inbox
         inboxList=[]
         message_id_list=[]
-        for item in data['data']:
-            if item['to_email_id'] == email_id:
-               inboxList.append(item)
-               message_id_list.append(item['message_id'])
         # print(mylist)
         for item in conv_data['data']:
             # if item['to_email_id'] == email_id and item['message_id'] not in message_id_list:
-            if item['to_email_id'] == email_id :
+            # if item['to_email_id'] == email_id :
                # message_id1 = item['message_id']
                # print(message_id1)
                # for message in data['data']:
@@ -8319,7 +8310,7 @@ def inbox_new(message_id):
                #        read = message['read']
                #        item.update({'read': read})
                inboxList.append(item)
-        print('inboxList  =',inboxList)
+        # print('inboxList  =',inboxList)
         inboxSorted = sorted(inboxList, key=lambda k: k['message_id'])
         # print('sorted inboxlist = ', inboxSorted)
         inbox = {}
@@ -8327,9 +8318,9 @@ def inbox_new(message_id):
         inbox1.update({'data':inboxSorted})
         inbox['data'] = list({each['message_id']: each for each in inbox1['data']}.values())
 
-        print('inbox = ',inbox)
+        # print('inbox = ',inbox)
         print("length hai",len(inbox['data']))
-
+        # exit()
         for i in inbox['data']:
                 print("all",i['message_id'])
 
@@ -8385,17 +8376,21 @@ def inbox_new(message_id):
         full_conv_resposne = requests.get(url=getConv_url)
         full_conv_data = full_conv_resposne.json()
         print('full_conv_data = ',full_conv_data)
+        # exit()
+
         inbox2 = {}
         full_conv_data['data'] = list({each['conv_id']: each for each in full_conv_data['data']}.values())
         #################################################
         convList = []
-        for item in data['data']:
-            if item['message_id'] == int(message_id):
-                convList.append(item)
+
         # print(mylist)
         for item in full_conv_data['data']:
             if item['message_id'] == int(message_id):
                 convList.append(item)
+        for item in inbox['data']:
+            if item['message_id'] == int(message_id):
+               convList.append(item)
+
         full_conv = {}
         full_conv.update({'data': convList})
         print('full_conv = ', full_conv)
@@ -8434,7 +8429,7 @@ def inbox_new(message_id):
                 removed_deleted_messages_from_inbox.append(item)
                 pass
         inbox.update({'data': removed_deleted_messages_from_inbox})
-        print('removed deleted from inbox', inbox)
+        # print('removed deleted from inbox', inbox)
 
         inbox['data'] = inbox['data'][::-1]
         inbox.update({'data':inbox['data']})
@@ -8450,20 +8445,20 @@ def inbox_new(message_id):
                 removed_deleted_messages_from_conv.append(item)
                 pass
         full_conv.update({'data':removed_deleted_messages_from_conv})
-        print('removed deleted from conv',full_conv)
+        # print('removed deleted from conv',full_conv)
 ############################################################
         # ####################################
         try:
-            conv_title = full_conv['data'][0]['subject']
+            conv_title = full_conv['data'][0]['conv_subject']
         except:pass
 
         print('final conv = ',full_conv)
-        for item in full_conv['data']:
-            print(item)
+        # for item in full_conv['data']:
+        #     print(item)
         print('final inbox =',inbox)
         ############## sort inbox according to date ################
-        for item in inbox['data']:
-            print('message inbox = ',item)
+        # for item in inbox['data']:
+        #     print('message inbox = ',item)
 
         inbox['data'].sort(key=lambda x: datetime.datetime.strptime(x['date'], '%A, %d. %B %Y %I:%M%p'),reverse=True)
         message_id_list1 = []
@@ -8474,97 +8469,170 @@ def inbox_new(message_id):
                 inbox['data'].remove(item)
                 print('after sorting inbox = ',item)
         print(message_id_list1)
+
         ############## sort end ####################################
-        print("data1", inbox)
+        # print("data1", inbox)
         today=datetime.datetime.now()
 
-        for i in inbox['data']:
-            diff=today-datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple()))
-            print('difference',diff.days)
-            print("timing",datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%I:%M%p"))
-            daysDiff=diff.days
-            hoursDiff=diff.days*24+diff.seconds//3600
-            if(daysDiff==0):
-                if(hoursDiff<=12):
-                    i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%I:%M%p")
+        # for i in inbox['data']:
+        #     diff=today-datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple()))
+        #     print('difference',diff.days)
+        #     print("timing",datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%I:%M%p"))
+        #     daysDiff=diff.days
+        #     hoursDiff=diff.days*24+diff.seconds//3600
+        #     if(daysDiff==0):
+        #         if(hoursDiff<=12):
+        #             i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%I:%M%p")
+        #
+        #         else:
+        #             i['date']='Today'
+        #     elif(daysDiff==1):
+        #         i['date']='Yesterday'
+        #     elif(daysDiff>1 and daysDiff<7):
+        #         i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%a")
+        #     else:
+        #         pass
+        #         year = datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).year
+        #         if(year==today.year):
+        #             i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%d %b")
+        #         else:
+        #             i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime('%d %b %y')
+        # # print("conversation",full_conv)
+        # full_conv['data'].sort(key=lambda x: datetime.datetime.strptime(x['conv_date'], '%A, %d. %B %Y %I:%M%p'),
+        #                        reverse=True)
+        # for i in full_conv['data']:
+        #     # print(i)
+        #     try:
+        #         diff=today-datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple()))
+        #     except:
+        #         diff=today-datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['conv_date'], "%A, %d. %B %Y %I:%M%p").timetuple()))
+        #     print('difference',diff.days)
+        #     daysDiff=diff.days
+        #     hoursDiff=diff.days*24+diff.seconds//3600
+        #     if(daysDiff==0):
+        #         if(hoursDiff<=12):
+        #             try:
+        #                 i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%I:%M%p")
+        #             except:
+        #                 i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['conv_date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%I:%M%p")
+        #
+        #         else:
+        #             i['date']='Today'
+        #     elif(daysDiff==1):
+        #         i['date']='Yesterday'
+        #     elif(daysDiff>1 and daysDiff<7):
+        #         try:
+        #
+        #             i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%a")
+        #         except:
+        #             i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['conv_date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%a")
+        #
+        #     else:
+        #
+        #         try:
+        #             year = datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).year
+        #         except:
+        #             year = datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['conv_date'], "%A, %d. %B %Y %I:%M%p").timetuple())).year
+        #
+        #         if(year==today.year):
+        #             try:
+        #                 i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%d %b")
+        #             except:
+        #                 i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['conv_date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%d %b")
+        #
+        #         else:
+        #             try:
+        #                 i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime('%d %b %y')
+        #             except:
+        #                 i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['conv_date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime('%d %b %y')
 
-                else:
-                    i['date']='Today'
-            elif(daysDiff==1):
-                i['date']='Yesterday'
-            elif(daysDiff>1 and daysDiff<7):
-                i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%a")
-            else:
-                pass
-                year = datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).year
-                if(year==today.year):
-                    i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%d %b")
-                else:
-                    i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime('%d %b %y')
-        print("conversation",full_conv)
-        for i in full_conv['data']:
-            print(i)
-            try:
-                diff=today-datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple()))
-            except:
-                diff=today-datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['conv_date'], "%A, %d. %B %Y %I:%M%p").timetuple()))
-            print('difference',diff.days)
-            daysDiff=diff.days
-            hoursDiff=diff.days*24+diff.seconds//3600
-            if(daysDiff==0):
-                if(hoursDiff<=12):
-                    try:
-                        i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%I:%M%p")
-                    except:
-                        i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['conv_date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%I:%M%p")
-
-                else:
-                    i['date']='Today'
-            elif(daysDiff==1):
-                i['date']='Yesterday'
-            elif(daysDiff>1 and daysDiff<7):
-                try:
-
-                    i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%a")
-                except:
-                    i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['conv_date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%a")
-
-            else:
-
-                try:
-                    year = datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).year
-                except:
-                    year = datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['conv_date'], "%A, %d. %B %Y %I:%M%p").timetuple())).year
-
-                if(year==today.year):
-                    try:
-                        i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%d %b")
-                    except:
-                        i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['conv_date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%d %b")
-
-                else:
-                    try:
-                        i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime('%d %b %y')
-                    except:
-                        i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['conv_date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime('%d %b %y')
-
+        # full_conv['data'].sort(key=lambda x: datetime.datetime.strptime(x['conv_date'], '%A, %d. %B %Y %I:%M%p'),reverse=True)
         print('final conv default = ', full_conv)
-        print(len(inbox['data']),inbox['data'][0])
+        # print(len(inbox['data']),inbox['data'][0])
         view_campaign_data = {'data': []}
-        print("data2", inbox)
-        for i in inbox['data']:
-                print("all",i['message_id'])
+        # print("data2", inbox)
+        # for i in inbox['data']:
+        #         print("all",i['message_id'])
         return render_template('email/inbox_new.html',currencySign=currencyIndex[session['default_currency']], maxAuto=maxAuto,packageName=packageName,countAutoProposal=countAutoProposal,messageSubscription=messageSubscription,inbox = inbox, full_conv = full_conv, conv_title=conv_title,view_campaign_data=view_campaign_data)
     except Exception as e:
         print(e)
-        pass
+        # pass
 
-    view_campaign_data = {'data':[]}
+        # view_campaign_data = {'data':[]}
 
-    print('final conv default = ', full_conv)
-    print("data2",inbox)
+        # print('final conv default = ', full_conv)
+        # print("data2",inbox)
 
-    return render_template('email/inbox_new.html',currencySign=currencyIndex[session['default_currency']],maxAuto=maxAuto,packageName=packageName,countAutoProposal=countAutoProposal,messageSubscription=messageSubscription,inbox=inbox, full_conv = full_conv,conv_title=conv_title,view_campaign_data=view_campaign_data)
+        # return render_template('email/inbox_new.html',currencySign=currencyIndex[session['default_currency']],maxAuto=maxAuto,packageName=packageName,countAutoProposal=countAutoProposal,messageSubscription=messageSubscription,inbox=inbox, full_conv = full_conv,conv_title=conv_title,view_campaign_data=view_campaign_data)
+
+
+
+@connecsiApp.route('/myInbox/<string:message_id>',methods = ['GET'])
+@is_logged_in
+def myInbox(message_id):
+    currencyIndex = {'INR': '₹', 'USD': '$', 'EUR': '€', 'GBR': '£'}
+    message_id = str(message_id)
+    inbox = ''
+    full_conv=''
+    conv_title=''
+    length_conv=''
+    countAutoProposal=0
+    user_id = session['user_id']
+    from templates.campaign.campaign import Campaign
+    campaignObj = Campaign(user_id=user_id)
+    view_campaign_data = campaignObj.get_all_campaigns()
+    for item in view_campaign_data['data']:
+        if item['deleted'] == 'true':
+            view_campaign_data['data'].remove(item)
+    subValues = getSubscriptionValues(str(user_id))
+    countMessages = 0
+    packageName=''
+    messageSubscription = {
+        'Autofill Proposal': {
+            'text':'',
+            'heading':''
+        }
+    }
+
+    maxAuto=0
+    for i in subValues['data']:
+        if (i['feature_name'].lower() == 'autofill proposal'):
+            packageName = i['package_name']
+            countAutoProposal = i['units']
+            maxAuto=i['base_units']+i['added_units']
+            messageSubscription['Autofill Proposal']['text'] = ''
+
+    if (countAutoProposal == 0):
+        messageSubscription['Autofill Proposal']['text'] = "You have reached the limit of Autofill Proposal. (Allowed: "+str(maxAuto)+" ) Please customize your plan to add more or upgrade to unlock more features and add-ons."
+        messageSubscription['Autofill Proposal']['heading'] = "Limit Reached"
+
+    print('user id=',user_id)
+    type = session['type']
+    print('user type = ',type)
+    email_id = session['email_id']
+    print('email id =', email_id)
+    messages_url = base_url + 'Messages/inbox/' + str(email_id)
+    conv_url = base_url + 'Messages/inbox/conversation/'+str(message_id)
+    try:
+        messages_resposne = requests.get(url=messages_url)
+        messages_data = messages_resposne.json()
+        # print(messages_data)
+        conv_resposne = requests.get(url=conv_url)
+        conv_data = conv_resposne.json()
+        # print(conv_data)
+
+        # return render_template('email/inbox_new.html', currencySign=currencyIndex[session['default_currency']],
+        #                        maxAuto=maxAuto, packageName=packageName, countAutoProposal=countAutoProposal,
+        #                        messageSubscription=messageSubscription, inbox=messages_data, full_conv=full_conv,
+        #                        conv_title=conv_title)
+        return render_template('email/myInbox.html', currencySign=currencyIndex[session['default_currency']],
+                               maxAuto=maxAuto, packageName=packageName, countAutoProposal=countAutoProposal,
+                               messageSubscription=messageSubscription, messages_data=messages_data, conv_data=conv_data,
+                               conv_title="",view_campaign_data=view_campaign_data)
+    except Exception as e:
+        print(e)
+        return " i m here "
+
 
 
 

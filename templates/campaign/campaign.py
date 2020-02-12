@@ -17,7 +17,7 @@ class Campaign:
         try:
             view_campaigns_response = requests.get(url=self.url_view_campaigns)
             view_campaign_data = view_campaigns_response.json()
-            print('test', view_campaign_data)
+            # print('test', view_campaign_data)
             for item in view_campaign_data['data']:
                 # print(item)
                 region_id_list = item['regions'].split(',')
