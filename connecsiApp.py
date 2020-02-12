@@ -8474,38 +8474,41 @@ def inbox_new(message_id):
         # print("data1", inbox)
         today=datetime.datetime.now()
 
-        # for i in inbox['data']:
-        #     diff=today-datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple()))
-        #     print('difference',diff.days)
-        #     print("timing",datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%I:%M%p"))
-        #     daysDiff=diff.days
-        #     hoursDiff=diff.days*24+diff.seconds//3600
-        #     if(daysDiff==0):
-        #         if(hoursDiff<=12):
-        #             i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%I:%M%p")
-        #
-        #         else:
-        #             i['date']='Today'
-        #     elif(daysDiff==1):
-        #         i['date']='Yesterday'
-        #     elif(daysDiff>1 and daysDiff<7):
-        #         i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%a")
-        #     else:
-        #         pass
-        #         year = datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).year
-        #         if(year==today.year):
-        #             i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%d %b")
-        #         else:
-        #             i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime('%d %b %y')
-        # # print("conversation",full_conv)
+        for i in inbox['data']:
+            diff=today-datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple()))
+            print('difference',diff.days)
+            print("timing",datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%I:%M%p"))
+            daysDiff=diff.days
+            hoursDiff=diff.days*24+diff.seconds//3600
+            if(daysDiff==0):
+                if(hoursDiff<=12):
+                    i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%I:%M%p")
+
+                else:
+                    i['date']='Today'
+            elif(daysDiff==1):
+                i['date']='Yesterday'
+            elif(daysDiff>1 and daysDiff<7):
+                i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%a")
+            else:
+                pass
+                year = datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).year
+                if(year==today.year):
+                    i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%d %b")
+                else:
+                    i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime('%d %b %y')
+        # print("conversation",full_conv)
         # full_conv['data'].sort(key=lambda x: datetime.datetime.strptime(x['conv_date'], '%A, %d. %B %Y %I:%M%p'),
         #                        reverse=True)
         # for i in full_conv['data']:
         #     # print(i)
+        #     print("i m inside")
         #     try:
-        #         diff=today-datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple()))
-        #     except:
         #         diff=today-datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['conv_date'], "%A, %d. %B %Y %I:%M%p").timetuple()))
+        #     except Exception as e :
+        #         print(e)
+        #         pass
+        #         diff=today-datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple()))
         #     print('difference',diff.days)
         #     daysDiff=diff.days
         #     hoursDiff=diff.days*24+diff.seconds//3600
@@ -8514,6 +8517,7 @@ def inbox_new(message_id):
         #             try:
         #                 i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%I:%M%p")
         #             except:
+        #                 pass
         #                 i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['conv_date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%I:%M%p")
         #
         #         else:
@@ -8525,6 +8529,7 @@ def inbox_new(message_id):
         #
         #             i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%a")
         #         except:
+        #             pass
         #             i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['conv_date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%a")
         #
         #     else:
@@ -8532,18 +8537,21 @@ def inbox_new(message_id):
         #         try:
         #             year = datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).year
         #         except:
+        #             pass
         #             year = datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['conv_date'], "%A, %d. %B %Y %I:%M%p").timetuple())).year
         #
         #         if(year==today.year):
         #             try:
         #                 i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%d %b")
         #             except:
+        #                 pass
         #                 i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['conv_date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime("%d %b")
         #
         #         else:
         #             try:
         #                 i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime('%d %b %y')
         #             except:
+        #                 pass
         #                 i['date']=datetime.datetime.fromtimestamp(time.mktime(datetime.datetime.strptime(i['conv_date'], "%A, %d. %B %Y %I:%M%p").timetuple())).strftime('%d %b %y')
 
         # full_conv['data'].sort(key=lambda x: datetime.datetime.strptime(x['conv_date'], '%A, %d. %B %Y %I:%M%p'),reverse=True)
