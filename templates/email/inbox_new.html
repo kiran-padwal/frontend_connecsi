@@ -97,11 +97,21 @@
                                         </span>
                                         <div class="media-body">
                                             {% if item['read'] == 'false' %}
-                                            <h6 class="list-group-item-heading text-bold-500" style="color:black;display: -webkit-inline-box;">{{ item['first_name']|striptags|truncate(32, False, '...', 0) }}
+                                            <h6 class="list-group-item-heading text-bold-500" style="color:black;display: -webkit-inline-box;">
+                                                {% if item['from_email_id'] == session['email_id'] %}
+                                                    You
+                                                {% else %}
+                                                    {{ item['first_name']|striptags|truncate(32, False, '...', 0) }}
+                                                {% endif %}
                                                 <!--<span class="badge badge-primary">Unread</span>-->
                                                 {% set _ = glob.update({'total_unread_messages' : glob.total_unread_messages + 1 }) %}
                                                 {% else %}
-                                            <h6 class="list-group-item-heading" style="display: -webkit-inline-box;">{{ item['first_name']|striptags|truncate(32, False, '...', 0) }}
+                                            <h6 class="list-group-item-heading" style="display: -webkit-inline-box;">
+                                                {% if item['from_email_id'] == session['email_id'] %}
+                                                    You
+                                                {% else %}
+                                                    {{ item['first_name']|striptags|truncate(32, False, '...', 0) }}
+                                                {% endif %}
                                                 {% endif %}
                                             </h6>
                                             <h6 class="font-small-2 primary text-bold-300" style="display: -webkit-inline-box;float: right;margin-right:0.5rem;">{{ item['date'] }}</h6>
@@ -157,8 +167,8 @@
                                     </span>
                                                                 <div class="media-body">
                                                                     <h6 class="list-group-item-heading text-bold-500">
-                                                                        {% if item['to_email_id'] == session['email_id'] %}
-                                                                            {{ item['first_name'] }}
+                                                                        {% if item['from_email_id'] != session['email_id'] and item['conv_from_email_id'] != session['email_id']  %}
+                                                                            {{ item['inf_first_name'] }}
                                                                         {% else %}
                                                                             You
                                                                         {% endif %}
@@ -804,8 +814,8 @@ function update_message_as_read(message_id){
                 c+='</span>';
                 c+='<div class="media-body">';
                 c+='<h6 class="list-group-item-heading text-bold-500">';
-                if( allData[i]['to_email_id'] == '{{session['email_id']}}'){
-                    c+=allData[i]['first_name'];
+                if( allData[i]['from_email_id'] != '{{session['email_id']}}' && allData[i]['conv_from_email_id'] != '{{session['email_id']}}'){
+                    c+=allData[i]['inf_first_name'];
                 }
                 else{
                     c+='You';
