@@ -165,6 +165,7 @@
                                             {% endif %}
                                             {% endif %}
                                     </span>
+
                                                                 <div class="media-body">
                                                                     <h6 class="list-group-item-heading text-bold-500">
                                                                         {% if item['from_email_id'] != session['email_id'] and item['conv_from_email_id'] != session['email_id']  %}
@@ -173,11 +174,13 @@
                                                                             You
                                                                         {% endif %}
                                                                     </h6>
+
                                                                     <p class="list-group-item-text text-bold-300">
                                                                         <!--{{ item['subject']|striptags|truncate(35, False, '...', 0) }}-->
                                                                         <span class="float-right">
-                                                {% if item['to_email_id'] == session['email_id'] %}
-                                                <button class="reply-message transparent-btn color2" data-modal-target="#replyMessage" data-from-email-id="{{ item['from_email_id'] }}" data-subject="{{ item['subject'] }}" data-first_name="{{ item['first_name'] }}">
+                                                {% if item['conv_to_email_id'] == session['email_id'] %}
+
+                                                <button class="reply-message transparent-btn color2" data-modal-target="#replyMessage" data-from-email-id="{{ item['conv_from_email_id'] }}" data-subject="{{ item['subject'] }}" data-first_name="{{ item['first_name'] }}">
                                                     <i class="fa fa-reply mr-1" style="font-size:13pt;"></i>
                                                 </button>
                                                 {% endif %}
@@ -782,6 +785,7 @@ function update_message_as_read(message_id){
             type: "GET",
             url:'/getMessageDetailsFull/'+message_id,
             success:function(data){
+                getCampaignsAddedToMessage(message_id);
                 var allData=data.data.data;
                 var c='';
                 console.log('from conversation details',allData);
@@ -815,7 +819,12 @@ function update_message_as_read(message_id){
                 c+='<div class="media-body">';
                 c+='<h6 class="list-group-item-heading text-bold-500">';
                 if( allData[i]['from_email_id'] != '{{session['email_id']}}' && allData[i]['conv_from_email_id'] != '{{session['email_id']}}'){
-                    c+=allData[i]['inf_first_name'];
+                    if(!allData[i]['inf_first_name']){
+                        c+=allData[i]['brand_first_name'];
+                    }
+                    else{
+                        c+=allData[i]['inf_first_name'];
+                    }
                 }
                 else{
                     c+='You';
@@ -823,8 +832,8 @@ function update_message_as_read(message_id){
                 c+='</h6>';
                 c+='<p class="list-group-item-text text-bold-300">';
                 c+='<span class="float-right">';
-                    if( allData[i]['to_email_id'] == '{{session['email_id']}}'){
-                        c+='<button class="reply-message transparent-btn color2" data-modal-target="#replyMessage" data-from-email-id="'+allData[i]['from_email_id']+'" data-subject="'+allData[i]['subject']+'" data-first_name="'+allData[i]['first_name']+'"><i class="fa fa-reply mr-1" style="font-size:13pt;"></i></button>';
+                    if( allData[i]['conv_to_email_id'] == '{{session['email_id']}}'){
+                        c+='<button class="reply-message transparent-btn color2" data-modal-target="#replyMessage" data-from-email-id="'+allData[i]['conv_from_email_id']+'" data-subject="'+allData[i]['subject']+'" data-first_name="'+allData[i]['first_name']+'"><i class="fa fa-reply mr-1" style="font-size:13pt;"></i></button>';
                     }
                     if( allData[0]['from_email_id']!='business@connecsi.com'){
                         c+='<button class="delete-message transparent-btn hover-color1" href="#" data-location="/delete/'+allData[i]['message_id']+'/';
@@ -837,6 +846,9 @@ function update_message_as_read(message_id){
                         c+='/';
                         c+='{{ session['user_id'] }}';
                         c+='" class="#"><img src="/static/icons/delete.png" class="img-icon" alt=""></button>';
+                    }
+                    else{
+                        $('#plus_circle').removeClass('fa fa-plus-circle');
                     }
                 c+='</span>';
                 c+='</p><span class="float-left text muted text-bold-300 font-small-2 primary">'+allData[i]['date']+'</span>';
@@ -869,6 +881,7 @@ function update_message_as_read(message_id){
                 $('#message'+message_id).addClass('bg-lighten-5');
                 $('#message'+message_id).addClass('bg-blue-grey');
                 {% endif %}
+
 
             }
 
@@ -950,6 +963,9 @@ function update_conversation_as_read(message_id){
                         c+='{{ session['user_id'] }}';
                         c+='" class="#"><img src="/static/icons/delete.png" class="img-icon" alt=""></button>';
                     }
+                    else{
+                        $('#plus_circle').removeClass('fa fa-plus-circle');
+                    }
                 c+='</span>';
                 c+='</p><span class="float-left text muted text-bold-300 font-small-2 primary">'+allData[i]['date']+'</span>';
                 c+='</div>';
@@ -1018,6 +1034,7 @@ function accept_decline(message_id,campaign_id,status){
 // edit proposal
 function editProposal(message_id,campaign_id){
         if(confirm("Are you sure you want to EDIT this Proposal?")){
+            $( "#loader-div" ).show();
             $.ajax({
                    type: "GET",
                    url: '/getProposal/'+message_id+'/'+campaign_id,
@@ -1061,15 +1078,20 @@ function editProposal(message_id,campaign_id){
 
                                                    });
                                                    jQuery.each(finalData.results, function(i, val) {
+                                                    console.log("dates checking",val.proposal_from_date,val.proposal_to_date);
+                                                    var fromDate = moment(val.proposal_from_date, "DD-mmm-yy").format("DD-MM-YYYY");
+                                                    var toDate = moment(val.proposal_to_date, "DD-mmm-yy").format("DD-MM-YYYY");
+                                                    console.log("dates checking",typeof fromDate,toDate);
                                                     $('#edit_proposal_id').val(val.proposal_id);
                                                     $('#edit_proposal_campaign_name').empty();
                                                     $('#edit_proposal_campaign_name').val(val.campaign_name);
                                                     $('#edit_proposal_description').empty();
                                                     $('#edit_proposal_description').val(val.proposal_description);
                                                     $('#edit_proposal_from_date').empty();
-                                                    $('#edit_proposal_from_date').val(val.proposal_from_date);
+                                                    $('#edit_proposal_from_date').val(fromDate);
                                                     $('#edit_proposal_to_date').empty();
-                                                    $('#edit_proposal_to_date').val(val.proposal_to_date);
+                                                    $('#edit_proposal_to_date').val(toDate);
+                                                    console.log("dates checking change",$('#edit_proposal_from_date'),$('#edit_proposal_to_date'));
                                                     <!--$('#edit_proposal_channels').empty();-->
                                                     <!--$('#edit_proposal_channels').append(val.proposal_channels);-->
                                                     <!--alert(val.proposal_channels);-->
@@ -1120,7 +1142,7 @@ function editProposal(message_id,campaign_id){
                                                     $('#editProposal').modal('show');
 
                                                });
-
+                                                        $( "#loader-div" ).hide();
                                                }
                                              });
 
@@ -1212,6 +1234,7 @@ function editProposal(message_id,campaign_id){
                                                 $('#editProposal').modal('show');
 
                                            });
+                                                $( "#loader-div" ).hide();
 
                                            }
                                          });
@@ -1233,53 +1256,56 @@ function editProposal(message_id,campaign_id){
     }
 
 
-<!--function campaignList(channel_id,message_id) {-->
-<!--    alert('i m here in campaignlist');-->
-<!--    $( "input#campaign_id" ).prop('checked', false);-->
-<!--    $( "input#campaign_id" ).prop('disabled', false);-->
-<!--    $("#campaign_channel_id").val(channel_id);-->
-<!--    $.ajax({-->
-<!--               type: "GET",-->
-<!--               &lt;!&ndash;url: '/getCampaignsAddedToMessage/'+message_id,&ndash;&gt;-->
-<!--               url: '/getCampaignsAddedToMessageByChannelId/'+channel_id,-->
-<!--               contentType: 'application/json;charset=UTF-8',-->
-<!--               success: function(data)-->
-<!--               {-->
-<!--                   if (data.results.length != 0){-->
-<!--                   jQuery.each(data.results, function(i, val) {-->
-<!--                        {% for item in view_campaign_data['data'] %}-->
-<!--                                var campaign_campaign_id = val.campaign_id;-->
-<!--                                var campaign_id = "{{ item['campaign_id'] }}";-->
-<!--                                if (campaign_id == campaign_campaign_id){-->
+function campaignList(channel_id,message_id) {
+    alert('i m here in campaignlist');
+    console.log("campaign",channel_id);
+    $( "input#campaign_id" ).prop('checked', false);
+    $( "input#campaign_id" ).prop('disabled', false);
+    $("#campaign_channel_id").val(channel_id);
+    $.ajax({
+               type: "GET",
+               <!--url: '/getCampaignsAddedToMessage/'+message_id,-->
+               url: '/getCampaignsAddedToMessageByChannelId/'+channel_id,
+               contentType: 'application/json;charset=UTF-8',
+               success: function(data)
+               {
+                   if (data.results.length != 0){
+                   jQuery.each(data.results, function(i, val) {
+                        {% for item in view_campaign_data['data'] %}
+                                var campaign_campaign_id = val.campaign_id;
+                                var campaign_id = "{{ item['campaign_id'] }}";
+                                if (campaign_id == campaign_campaign_id){
 
-<!--                                    $('.campaign_id'+campaign_id).attr('disabled', true);-->
-<!--                                 }-->
-<!--                                 else{-->
+                                    $('.campaign_id'+campaign_id).attr('disabled', true);
+                                 }
+                                 else{
 
-<!--                                      &lt;!&ndash;$('.campaign_id'+campaign_id).attr('disabled', false);&ndash;&gt;-->
-<!--                                 }-->
+                                      <!--$('.campaign_id'+campaign_id).attr('disabled', false);-->
+                                 }
 
-<!--                        {% endfor %}-->
-<!--                    });-->
-<!--                    }-->
-<!--                    else{-->
+                        {% endfor %}
+                    });
+                    }
+                    else{
 
-<!--                    }-->
-<!--                    }-->
-<!--                });-->
+                    }
+                    }
+                });
 
-<!--}-->
+}
 
 
 
 
 function getAllMappedChannel_ids(channel_id){
+    channel_id=channel_id.split("@")[0];
     $.ajax({
                type: "GET",
                url: '/getMappedChannels/'+channel_id,
                contentType: 'application/json;charset=UTF-8',
                success: function(data)
                {
+                   console.log("mapped channels data",data);
                    $( '#proposal_channels').empty();
                    if (data.results.length != 0){
                    jQuery.each(data.results, function(i, val) {
@@ -1313,12 +1339,14 @@ function getAllMappedChannel_ids(channel_id){
 }
 
 function getAllMappedChannel_ids_unchecked(channel_id){
+    channel_id=channel_id.split("@")[0];
     $.ajax({
                type: "GET",
                url: '/getMappedChannels/'+channel_id,
                contentType: 'application/json;charset=UTF-8',
                success: function(data)
                {
+                    console.log("mapped channels data unchecked",data);
                    $( '#proposal_channels').empty();
                    if (data.results.length != 0){
                    jQuery.each(data.results, function(i, val) {
@@ -1351,6 +1379,7 @@ function getAllMappedChannel_ids_unchecked(channel_id){
 
 }
 function getAllMappedChannel_ids1(channel_id){
+    channel_id=channel_id.split("@")[0];
     $.ajax({
                type: "GET",
                url: '/getMappedChannels/'+channel_id,
@@ -1383,8 +1412,10 @@ function getAllMappedChannel_ids1(channel_id){
 
 
 
-function getCampaignsAddedToMessage(){
-        var message_id = $("#message_id").val();
+function getCampaignsAddedToMessage(message_id=0){
+        if(message_id==0){
+            message_id = $("#message_id").val();
+        }
         $.ajax({
                type: "GET",
                url: '/getCampaignsAddedToMessage/'+message_id,
@@ -1395,12 +1426,16 @@ function getCampaignsAddedToMessage(){
                success: function(data)
                {
                    var myjson =  JSON.stringify(data);
-                   <!--alert(myjson); // show response from the python script.-->
+<!--                   alert(myjson); // show response from the python script.-->
                    <!--var value = $("#campaignNameList").text();-->
                    $( "#campaignNameList" ).empty();
                    $( "#proposal_campaign_name" ).empty();
                    $("#tab-proposal .tab-list").empty();
                    $('#proposal_campaign_name').append('<option value=""></option>');
+                   console.log("heheheheheheeh   asxaioxnaosxn",{{full_conv['data'][0]['from_email_id']}});
+                   if(data.results.length==0){
+                        $('#plus_circle').addClass('fa fa-plus-circle');
+                   }
                    jQuery.each(data.results, function(i, val) {
                         <!--{# if  glob.from_email_id != session['email_id']  #}-->
                         var color = '';
@@ -1437,8 +1472,9 @@ function getCampaignsAddedToMessage(){
                                 $('#campaignNameList').append('<tr><td><a href="#" class="">'+val.campaign_name+'<a/></td><td style="color:'+color+'">&nbsp &nbsp'+val.status+'</td></tr>');
                             }
                         {% else %}
+                            console.log("inside else",val.status);
                             if(val.campaign_id){
-                                <!--alert(val.campaign_id);-->
+<!--                                alert(val.campaign_id);-->
                                 $('#plus_circle').removeClass('fa fa-plus-circle');
                                 $('#reply_campaign_id').val(val.campaign_id);
                             }
@@ -1464,59 +1500,59 @@ function getCampaignsAddedToMessage(){
 
     }
 
-<!--function getProposal(message_id,campaign_id){-->
+function getProposal(message_id,campaign_id){
 
-<!--        &lt;!&ndash;alert(campaign_id);&ndash;&gt;-->
-<!--        &lt;!&ndash;alert(message_id);&ndash;&gt;-->
+        <!--alert(campaign_id);-->
+        <!--alert(message_id);-->
+        $( "#loader-div" ).show();
+        $.ajax({
+            type: "GET",
+            url: '/getProposal/'+message_id+'/'+campaign_id,
+            success: function(data)
+            {
+                jQuery.each(data.results, function(i, val) {
 
-<!--        $.ajax({-->
-<!--            type: "GET",-->
-<!--            url: '/getProposal/'+message_id+'/'+campaign_id,-->
-<!--            success: function(data)-->
-<!--            {-->
-<!--                jQuery.each(data.results, function(i, val) {-->
+                    console.log(val.proposal_channels);
+                    $('#view_proposal_campaign_name').empty();
+                    $('#view_proposal_campaign_name').append(val.campaign_name);
+                    $('#view_proposal_description').empty();
+                    $('#view_proposal_description').append(val.proposal_description);
+                    $('#view_proposal_from_date').empty();
+                    $('#view_proposal_from_date').append(val.proposal_from_date);
+                    $('#view_proposal_to_date').empty();
+                    $('#view_proposal_to_date').append(val.proposal_to_date);
+                    $('#view_proposal_channels').empty();
+                    var proposal_c = val.proposal_channels.split('@').join(',').split(',');
+                    var channels_list=[];
+                    for(var i=0;i<proposal_c.length;i=i+2){
+                        channels_list.push(proposal_c[i]);
+                        $('#view_proposal_channels').append('<i class="fa fa-'+proposal_c[i]+'" style="padding:0 0.5em;"></i>');
+                    }
 
-<!--                    console.log(val.proposal_channels);-->
-<!--                    $('#view_proposal_campaign_name').empty();-->
-<!--                    $('#view_proposal_campaign_name').append(val.campaign_name);-->
-<!--                    $('#view_proposal_description').empty();-->
-<!--                    $('#view_proposal_description').append(val.proposal_description);-->
-<!--                    $('#view_proposal_from_date').empty();-->
-<!--                    $('#view_proposal_from_date').append(val.proposal_from_date);-->
-<!--                    $('#view_proposal_to_date').empty();-->
-<!--                    $('#view_proposal_to_date').append(val.proposal_to_date);-->
-<!--                    $('#view_proposal_channels').empty();-->
-<!--                    var proposal_c = val.proposal_channels.split('@').join(',').split(',');-->
-<!--                    var channels_list=[];-->
-<!--                    for(var i=0;i<proposal_c.length;i=i+2){-->
-<!--                        channels_list.push(proposal_c[i]);-->
-<!--                        $('#view_proposal_channels').append('<i class="fa fa-'+proposal_c[i]+'" style="padding:0 0.5em;"></i>');-->
-<!--                    }-->
+                    $('#view_proposal_arrangements').empty();
+                    <!--$('#view_proposal_arrangements').append(val.proposal_arrangements);-->
+                    <!--$('#view_proposal_kpis').empty();-->
+                    <!--$('#view_proposal_kpis').append(val.proposal_kpis);-->
+                    var prop_arrangements=val.proposal_arrangements.split(',').join(', ');
+                    $('#view_proposal_arrangements').append(prop_arrangements);
+                    $('#view_proposal_kpis').empty();
+                    var prop_kpis=val.proposal_kpis.split(',').join(', ');
+                    $('#view_proposal_kpis').append(prop_kpis);
+                    <!--ashish code end-->
+                    $('#view_proposal_price').empty();
+                    $('#view_proposal_price').append(val.proposal_price+' '+val.currency);
+                    $('#view_proposal_target_url').empty();
+                    $('#view_proposal_target_url').append(val.target_url);
+                    $('#view_proposal_ref_link').empty();
+                    $('#view_proposal_ref_link').append('<a data-toggle="tooltip" title="'+val.ref_link+'" href="'+val.ref_link+'" target="_blank"><i class="fa fa-external-link" style="font-size:15px;color:#6495ED;"></i></a>');
 
-<!--                    $('#view_proposal_arrangements').empty();-->
-<!--                    &lt;!&ndash;$('#view_proposal_arrangements').append(val.proposal_arrangements);&ndash;&gt;-->
-<!--                    &lt;!&ndash;$('#view_proposal_kpis').empty();&ndash;&gt;-->
-<!--                    &lt;!&ndash;$('#view_proposal_kpis').append(val.proposal_kpis);&ndash;&gt;-->
-<!--                    var prop_arrangements=val.proposal_arrangements.split(',').join(', ');-->
-<!--                    $('#view_proposal_arrangements').append(prop_arrangements);-->
-<!--                    $('#view_proposal_kpis').empty();-->
-<!--                    var prop_kpis=val.proposal_kpis.split(',').join(', ');-->
-<!--                    $('#view_proposal_kpis').append(prop_kpis);-->
-<!--                    &lt;!&ndash;ashish code end&ndash;&gt;-->
-<!--                    $('#view_proposal_price').empty();-->
-<!--                    $('#view_proposal_price').append(val.proposal_price+' '+val.currency);-->
-<!--                    $('#view_proposal_target_url').empty();-->
-<!--                    $('#view_proposal_target_url').append(val.target_url);-->
-<!--                    $('#view_proposal_ref_link').empty();-->
-<!--                    $('#view_proposal_ref_link').append('<a data-toggle="tooltip" title="'+val.ref_link+'" href="'+val.ref_link+'" target="_blank"><i class="fa fa-external-link" style="font-size:15px;color:#6495ED;"></i></a>');-->
+                    $('#viewProposal').modal('show');
 
-<!--                    $('#viewProposal').modal('show');-->
-
-<!--                });-->
-
-<!--            }-->
-<!--        });-->
-<!--    }-->
+                });
+                $( "#loader-div" ).hide();
+            }
+        });
+    }
 
     $(document).ready(function(){
 

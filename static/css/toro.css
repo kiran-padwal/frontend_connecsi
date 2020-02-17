@@ -2621,3 +2621,6 @@ div,h4,th,span{
     border-bottom:1px solid lightgray!important;
     border-left:1px solid lightgray!important;
 }
+.list-group-item{
+    cursor:pointer;
+}

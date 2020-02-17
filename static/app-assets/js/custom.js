@@ -1,4 +1,3 @@
-
 if($('.email-app-mail-content').length > 0){
     $('.email-app-mail-content').perfectScrollbar();
 }
@@ -3433,7 +3432,7 @@ $("#proposal_campaign_name").on("change",function(){
 
         if(changeValue!=''){
             if(countAutoProposal <= 0){
-
+                console.log("less",$('#proposal_campaign_name').attr('data-channel-id'));
                 getAllMappedChannel_ids_unchecked($('#proposal_campaign_name').attr('data-channel-id'));
                 $("#proposal_description").empty();
                 $("#proposal_from_date").empty();
@@ -3462,6 +3461,7 @@ $("#proposal_campaign_name").on("change",function(){
                 openMessage();
             }
             else{
+                    console.log("more",$('#proposal_campaign_name').attr('data-channel-id'));
                     getAllMappedChannel_ids($('#proposal_campaign_name').attr('data-channel-id'));
                     $("#proposal_description").empty();
                     $("#proposal_from_date").empty();
@@ -4437,7 +4437,8 @@ $("#create_alert_form").submit(function (e) {
                             '</div>'+
                             '</div>'+
                             '</div>'+
-                            '</div>'+
+
+     '</div>'+
 
                             '<div class="card-footer" style="padding:0;">' +
                             '<div class="offers_item__footer">' +
@@ -4922,9 +4923,42 @@ $("#create_alert_form").submit(function (e) {
 //        tinymce.init({selector: 'textarea#email-message', branding: false});
 //    }
 
+//    $('.add-campaign').on('click', function(e) {
+//        alert('imhere');
+//        $( "#loader-div" ).show();
+//        var $channel_id = $(this).attr('data-channel-id');
+//        $channel_id=$channel_id.split('@')[0];
+//        console.log($channel_id);
+//        var $message_id = $(this).attr('data-message-id');
+//        $( "input.campaign_ids" ).prop('checked', false);
+//        $( "input.campaign_ids" ).prop('disabled', false);
+//        $("#campaign_channel_id").val($channel_id);
+//
+//        $.ajax({
+//            type: "GET",
+//            url: '/getCampaignsAddedToMessageByChannelId/' + $channel_id,
+//            contentType: 'application/json;charset=UTF-8',
+//            success: function (data) {
+//                if (data.results.length != 0) {
+//                    jQuery.each(data.results, function (i, val) {
+//                        if($('#campaign_id'+val.campaign_id).length){
+//                            if(val.status != 'Added'){
+//                            $('#campaign_id'+val.campaign_id).attr('disabled', true);
+//                            }
+//                        }
+//                    });
+//                }
+//                $( "#loader-div" ).hide();
+//            }
+//        });
+//    });
+
     $('.add-campaign').on('click', function(e) {
-        alert('imhere');
+//        alert('imhere');
+        $( "#loader-div" ).show();
         var $channel_id = $(this).attr('data-channel-id');
+        $channel_id=$channel_id.split('@')[0];
+        console.log($channel_id);
         var $message_id = $(this).attr('data-message-id');
         $( "input.campaign_ids" ).prop('checked', false);
         $( "input.campaign_ids" ).prop('disabled', false);
@@ -4944,6 +4978,7 @@ $("#create_alert_form").submit(function (e) {
                         }
                     });
                 }
+                $( "#loader-div" ).hide();
             }
         });
     });
