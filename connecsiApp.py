@@ -2371,9 +2371,23 @@ def viewInfCampaigns():
     print(response_json)
     for item1 in response_json['data']:
         print(item1)
-        item1['proposal_from_date'] = datetime.datetime.strptime(item1['proposal_from_date'],'%Y-%m-%d').strftime('%d %b %Y')
-        item1['proposal_to_date'] = datetime.datetime.strptime(item1['proposal_to_date'],'%Y-%m-%d').strftime('%d %b %Y')
-        item1['proposal_price'] = curreny[item1['currency']] + " " + str("%.2f" % item1['proposal_price'])
+        try:
+            item1['proposal_from_date'] = datetime.datetime.strptime(item1['proposal_from_date'],
+                                                         '%Y-%m-%d').strftime('%d %b %Y')
+        except:
+            item1['proposal_from_date'] = datetime.datetime.strptime(item1['proposal_from_date'],
+                                                            '%d-%b-%y').strftime('%d %b %Y')
+        try:
+            item1['proposal_to_date'] = datetime.datetime.strptime(item1['proposal_to_date'],
+                                                         '%Y-%m-%d').strftime('%d %b %Y')
+        except:
+            item1['proposal_to_date'] = datetime.datetime.strptime(item1['proposal_to_date'],
+                                                            '%d-%b-%y').strftime('%d %b %Y')
+        # item1['proposal_from_date'] = datetime.datetime.strptime(item1['proposal_from_date'],'%d-%b-%y').strftime('%d %b %Y')
+        # item1['proposal_to_date'] = datetime.datetime.strptime(item1['proposal_to_date'],'%Y-%m-%d').strftime('%d %b %Y')
+        if item1['currency']:
+            item1['proposal_price'] = curreny[item1['currency']] + " " + str("%.2f" % item1['proposal_price'])
+        else:item1['proposal_price'] = "€" + " " + str("%.2f" % item1['proposal_price'])
     return render_template('campaign/view_all_inf_campaigns.html',view_inf_campaigns_data=response_json)
 
 
@@ -2464,8 +2478,17 @@ def viewInfCampaignDetails(proposal_id):
         url=base_url + 'Campaign/channel_status_for_campaign_by_campaign_id/' + str(campaign_id))
         print('status of channel =', channel_status_campaign.json())
         channel_status_campaign_data = channel_status_campaign.json()
-        item['proposal_to_date'] = datetime.datetime.strptime(item['proposal_to_date'], '%Y-%m-%d').strftime('%d %b %Y')
-        item['proposal_from_date'] = datetime.datetime.strptime(item['proposal_from_date'], '%Y-%m-%d').strftime('%d %b %Y')
+        try:
+            item['proposal_from_date'] = datetime.datetime.strptime(item['proposal_from_date'],'%Y-%m-%d').strftime('%d %b %Y')
+        except:
+            item['proposal_from_date'] = datetime.datetime.strptime(item['proposal_from_date'],'%d-%b-%y').strftime('%d %b %Y')
+
+        try:
+            item['proposal_to_date'] = datetime.datetime.strptime(item['proposal_to_date'],'%Y-%m-%d').strftime('%d %b %Y')
+        except:
+            item['proposal_to_date'] = datetime.datetime.strptime(item['proposal_to_date'],'%d-%b-%y').strftime('%d %b %Y')
+        # item['proposal_to_date'] = datetime.datetime.strptime(item['proposal_to_date'], '%Y-%m-%d').strftime('%d %b %Y')
+        # item['proposal_from_date'] = datetime.datetime.strptime(item['proposal_from_date'], '%Y-%m-%d').strftime('%d %b %Y')
         proposal_channels= item['proposal_channels']
 
         channel_id_list = proposal_channels.split(',')
