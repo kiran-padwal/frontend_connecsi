@@ -7901,11 +7901,24 @@ def changingAlertNotification():
     return jsonify(response_json)
 
 
+@connecsiApp.route('/saveTierInfo', methods=['POST'])
+@is_logged_in
+def saveTierInfo():
+    data = request.get_json()['data']
+    url_tier = base_url + 'Brand/UpdateTierToChannel/'+str(session['user_id'])+'/'+str(data['channel_id'])+'/'+str(data['tier'])+'/'+str(data['due_action'])+'/'+str(data['remark'])
+    try:
+        response = requests.post(url=url_tier)
+        response_json = response.json()
+        print("res",response_json)
+    except Exception as e:
+        print(e)
+
+    return response_json
 
 @connecsiApp.route('/Analytics', methods=['GET','POST'])
 @is_logged_in
 def analytics():
-
+    currencyIndex = {'INR': '₹', 'USD': '$', 'EUR': '€', 'GBR': '£'}
     campaignStatus=['Active','Inactive','Queued','New','Finished']
     url_analytics = base_url + 'Brand/getPlatformAnalysis/'+str(session['user_id'])
     url_regionCodes = base_url + 'Youtube/regionCodes'
@@ -7921,21 +7934,686 @@ def analytics():
     try:
         analyticsData = requests.get(url=url_analytics)
         analytics_json = analyticsData.json()
+        analytics_json = {
+  "data": [
+    {
+      "proposal_id": 11,
+      "campaign_id": 31,
+      "inf_first_name": "kiran",
+      "inf_last_name": "padwal influencer",
+      "inf_categories": "1,2,10,15,17,18,20,21",
+      "inf_country": "PL",
+      "proposal_price": 1233,
+      "proposal_from_date": "04-Feb-20",
+      "proposal_to_date": "08-Feb-20",
+      "regions": "DZ,AR,PL,US",
+      "video_cat_id": "1,2,10",
+      "campaign_status": "Queued",
+      "proposal_channels": [
+        {
+          "channel_name": "youtube",
+          "channel_id": "UCgdZZWMmLNT9xPaQjgDEXgg",
+          "youtube_title": "Kiran Padwal",
+          "revenue_generated": 100,
+          "new_users": 234
+        },
+        {
+          "channel_name": "twitter",
+          "channel_id": "962771351193948162",
+          "twitter_screen_name": "kiran_padwal786",
+          "revenue_generated": 200,
+          "new_users": 235
+        },
+        {
+          "channel_name": "instagram",
+          "channel_id": "4865256875",
+          "insta_username": "spidey_try",
+          "revenue_generated": 400,
+          "new_users": 236
+        }
+      ],
+      "inf_reports": [
+        {
+          "channel_name": "youtube",
+          "channel_id": "UCgdZZWMmLNT9xPaQjgDEXgg",
+          "inf_report_date_posted": "2019-12-21",
+          "inf_report_link_posted": "https://www.codeproject.com/Questions/665"
+        },
+        {
+          "channel_name": "youtube",
+          "channel_id": "UCgdZZWMmLNT9xPaQjgDEXgg",
+          "inf_report_date_posted": "2019-12-23",
+          "inf_report_link_posted": "https://www.codeproject.com/Questions/665hdkahdjshhd"
+        },
+        {
+          "channel_name": "youtube",
+          "channel_id": "UCgdZZWMmLNT9xPaQjgDEXgg",
+          "inf_report_date_posted": "2020-02-28",
+          "inf_report_link_posted": "https://www.codeproject.com/Questions/665"
+        },
+        {
+          "channel_name": "youtube",
+          "channel_id": "UCgdZZWMmLNT9xPaQjgDEXgg",
+          "inf_report_date_posted": "2020-02-29",
+          "inf_report_link_posted": "https://www.codeproject.com/Questions/665hdkahdjshhd"
+        },
+        {
+          "channel_name": "twitter",
+          "channel_id": "962771351193948162",
+          "inf_report_date_posted": "2019-12-22",
+          "inf_report_link_posted": "https://www.codeproject.com/Questions/665"
+        },
+        {
+          "channel_name": "twitter",
+          "channel_id": "962771351193948162",
+          "inf_report_date_posted": "2020-02-28",
+          "inf_report_link_posted": "https://www.codeproject.com/Questions/665"
+        },
+        {
+          "channel_name": "instagram",
+          "channel_id": "4865256875",
+          "inf_report_date_posted": "2020-02-29",
+          "inf_report_link_posted": "https://www.codeproject.com/Questions/665hdkahdjshhd"
+        }
+      ]
+    },
+    {
+      "proposal_id": 12,
+      "campaign_id": 33,
+      "inf_first_name": "Ashish",
+      "inf_last_name": "Tyagi",
+      "inf_categories": "1,2,10,15,17,18,20,21",
+      "inf_country": "IN",
+      "proposal_price": 2033,
+      "proposal_from_date": "14-Feb-20",
+      "proposal_to_date": "18-Feb-20",
+      "regions": "DZ,AR,PL,US",
+      "video_cat_id": "1,2,10",
+      "campaign_status": "Queued",
+      "proposal_channels": [
+        {
+          "channel_name": "youtube",
+          "channel_id": "123456",
+          "youtube_title": "Kiran Padwal",
+          "revenue_generated": 1100,
+          "new_users": 1234
+        },
+        {
+          "channel_name": "twitter",
+          "channel_id": "962771351193948162",
+          "twitter_screen_name": "kiran_padwal786",
+          "revenue_generated": 1200,
+          "new_users": 935
+        },
+        {
+          "channel_name": "instagram",
+          "channel_id": "4865256875",
+          "insta_username": "spidey_try",
+          "revenue_generated": 1400,
+          "new_users": 636
+        }
+      ],
+      "inf_reports": [
+        {
+          "channel_name": "youtube",
+          "channel_id": "UCgdZZWMmLNT9xPaQjgDEXgg",
+          "inf_report_date_posted": "2019-12-21",
+          "inf_report_link_posted": "https://www.codeproject.com/Questions/665"
+        },
+        {
+          "channel_name": "youtube",
+          "channel_id": "UCgdZZWMmLNT9xPaQjgDEXgg",
+          "inf_report_date_posted": "2019-12-23",
+          "inf_report_link_posted": "https://www.codeproject.com/Questions/665hdkahdjshhd"
+        }
+      ]
+    },
+    {
+      "proposal_id": 13,
+      "campaign_id": 33,
+      "inf_first_name": "Mohit",
+      "inf_last_name": "Kumar",
+      "inf_categories": "1,2,10,15,17,18,20,21",
+      "inf_country": "PL",
+      "proposal_price": 1003,
+      "proposal_from_date": "24-Feb-20",
+      "proposal_to_date": "28-Feb-20",
+      "regions": "DZ,AR,PL,US",
+      "video_cat_id": "1,2,10",
+      "campaign_status": "Queued",
+      "proposal_channels": [
+        {
+          "channel_name": "youtube",
+          "channel_id": "234567",
+          "youtube_title": "Kiran Padwal",
+          "revenue_generated": 400,
+          "new_users": 1234
+        },
+        {
+          "channel_name": "twitter",
+          "channel_id": "962771351193948162",
+          "twitter_screen_name": "kiran_padwal786",
+          "revenue_generated": 1200,
+          "new_users": 2350
+        },
+        {
+          "channel_name": "instagram",
+          "channel_id": "4865256875",
+          "insta_username": "spidey_try",
+          "revenue_generated": 4000,
+          "new_users": 2136
+        }
+      ],
+      "inf_reports": [
+        {
+          "channel_name": "youtube",
+          "channel_id": "UCgdZZWMmLNT9xPaQjgDEXgg",
+          "inf_report_date_posted": "2019-12-21",
+          "inf_report_link_posted": "https://www.codeproject.com/Questions/665"
+        },
+        {
+          "channel_name": "youtube",
+          "channel_id": "UCgdZZWMmLNT9xPaQjgDEXgg",
+          "inf_report_date_posted": "2019-12-23",
+          "inf_report_link_posted": "https://www.codeproject.com/Questions/665hdkahdjshhd"
+        }
+      ]
+    },
+    {
+      "proposal_id": 14,
+      "campaign_id": 34,
+      "inf_first_name": "Shivam",
+      "inf_last_name": "Singh",
+      "inf_categories": "1,2,10,15,17,18,20,21",
+      "inf_country": "IN",
+      "proposal_price": 3233,
+      "proposal_from_date": "14-Feb-20",
+      "proposal_to_date": "28-Feb-20",
+      "regions": "DZ,AR,PL,US",
+      "video_cat_id": "1,2,10",
+      "campaign_status": "Queued",
+      "proposal_channels": [
+        {
+          "channel_name": "youtube",
+          "channel_id": "345678",
+          "youtube_title": "Kiran Padwal",
+          "revenue_generated": 1010,
+          "new_users": 1234
+        },
+        {
+          "channel_name": "twitter",
+          "channel_id": "962771351193948162",
+          "twitter_screen_name": "kiran_padwal786",
+          "revenue_generated": 2001,
+          "new_users": 2235
+        },
+        {
+          "channel_name": "instagram",
+          "channel_id": "4865256875",
+          "insta_username": "spidey_try",
+          "revenue_generated": 1400,
+          "new_users": 2360
+        }
+      ],
+      "inf_reports": [
+        {
+          "channel_name": "youtube",
+          "channel_id": "UCgdZZWMmLNT9xPaQjgDEXgg",
+          "inf_report_date_posted": "2019-12-21",
+          "inf_report_link_posted": "https://www.codeproject.com/Questions/665"
+        }
+      ]
+    },
+    {
+      "proposal_id": 15,
+      "campaign_id": 35,
+      "inf_first_name": "Ashish",
+      "inf_last_name": "Tyagi",
+      "inf_categories": "1,2,10,15,17,18,20,21",
+      "inf_country": "IN",
+      "proposal_price": 3233,
+      "proposal_from_date": "14-Feb-20",
+      "proposal_to_date": "28-Feb-20",
+      "regions": "DZ,AR,PL,US",
+      "video_cat_id": "1,2,10",
+      "campaign_status": "Queued",
+      "proposal_channels": [
+        {
+          "channel_name": "youtube",
+          "channel_id": "123456",
+          "youtube_title": "Kiran Padwal",
+          "revenue_generated": 1010,
+          "new_users": 1234
+        },
+        {
+          "channel_name": "twitter",
+          "channel_id": "962771351193948162",
+          "twitter_screen_name": "kiran_padwal786",
+          "revenue_generated": 2001,
+          "new_users": 2235
+        },
+        {
+          "channel_name": "instagram",
+          "channel_id": "4865256875",
+          "insta_username": "spidey_try",
+          "revenue_generated": 1400,
+          "new_users": 2360
+        }
+      ],
+      "inf_reports": [
+        {
+          "channel_name": "youtube",
+          "channel_id": "UCgdZZWMmLNT9xPaQjgDEXgg",
+          "inf_report_date_posted": "2019-12-21",
+          "inf_report_link_posted": "https://www.codeproject.com/Questions/665"
+        }
+      ]
+    },
+    {
+      "proposal_id": 16,
+      "campaign_id": 36,
+      "inf_first_name": "Shivam",
+      "inf_last_name": "Singh",
+      "inf_categories": "1,2,10,15,17,18,20,21",
+      "inf_country": "PL",
+      "proposal_price": 4233,
+      "proposal_from_date": "14-Feb-20",
+      "proposal_to_date": "28-Feb-20",
+      "regions": "DZ,AR,PL,US",
+      "video_cat_id": "1,2,10",
+      "campaign_status": "Queued",
+      "proposal_channels": [
+        {
+          "channel_name": "youtube",
+          "channel_id": "345678",
+          "youtube_title": "Kiran Padwal",
+          "revenue_generated": 2010,
+          "new_users": 2234
+        },
+        {
+          "channel_name": "twitter",
+          "channel_id": "962771351193948162",
+          "twitter_screen_name": "kiran_padwal786",
+          "revenue_generated": 1001,
+          "new_users": 1235
+        },
+        {
+          "channel_name": "instagram",
+          "channel_id": "4865256875",
+          "insta_username": "spidey_try",
+          "revenue_generated": 3400,
+          "new_users": 1360
+        }
+      ],
+      "inf_reports": [
+        {
+          "channel_name": "youtube",
+          "channel_id": "UCgdZZWMmLNT9xPaQjgDEXgg",
+          "inf_report_date_posted": "2019-12-21",
+          "inf_report_link_posted": "https://www.codeproject.com/Questions/665"
+        }
+      ]
+    },
+    {
+      "proposal_id": 17,
+      "campaign_id": 37,
+      "inf_first_name": "Rahul",
+      "inf_last_name": "Singh",
+      "inf_categories": "1,2,10,15,17,18,20,21",
+      "inf_country": "US",
+      "proposal_price": 3233,
+      "proposal_from_date": "14-Feb-20",
+      "proposal_to_date": "28-Feb-20",
+      "regions": "DZ,AR,PL,US",
+      "video_cat_id": "1,2,10",
+      "campaign_status": "Queued",
+      "proposal_channels": [
+        {
+          "channel_name": "youtube",
+          "channel_id": "456789",
+          "youtube_title": "Kiran Padwal",
+          "revenue_generated": 1010,
+          "new_users": 1234
+        },
+        {
+          "channel_name": "twitter",
+          "channel_id": "962771351193948162",
+          "twitter_screen_name": "kiran_padwal786",
+          "revenue_generated": 2001,
+          "new_users": 2235
+        },
+        {
+          "channel_name": "instagram",
+          "channel_id": "4865256875",
+          "insta_username": "spidey_try",
+          "revenue_generated": 1400,
+          "new_users": 2360
+        }
+      ],
+      "inf_reports": [
+        {
+          "channel_name": "youtube",
+          "channel_id": "UCgdZZWMmLNT9xPaQjgDEXgg",
+          "inf_report_date_posted": "2019-12-21",
+          "inf_report_link_posted": "https://www.codeproject.com/Questions/665"
+        }
+      ]
+    },
+    {
+      "proposal_id": 18,
+      "campaign_id": 38,
+      "inf_first_name": "Rahul",
+      "inf_last_name": "Singh",
+      "inf_categories": "1,2,10,15,17,18,20,21",
+      "inf_country": "US",
+      "proposal_price": 1233,
+      "proposal_from_date": "14-Feb-20",
+      "proposal_to_date": "28-Feb-20",
+      "regions": "DZ,AR,PL,US",
+      "video_cat_id": "1,2,10",
+      "campaign_status": "Queued",
+      "proposal_channels": [
+        {
+          "channel_name": "youtube",
+          "channel_id": "456789",
+          "youtube_title": "Kiran Padwal",
+          "revenue_generated": 1010,
+          "new_users": 1234
+        },
+        {
+          "channel_name": "twitter",
+          "channel_id": "962771351193948162",
+          "twitter_screen_name": "kiran_padwal786",
+          "revenue_generated": 2001,
+          "new_users": 2235
+        },
+        {
+          "channel_name": "instagram",
+          "channel_id": "4865256875",
+          "insta_username": "spidey_try",
+          "revenue_generated": 1400,
+          "new_users": 2360
+        }
+      ],
+      "inf_reports": [
+        {
+          "channel_name": "youtube",
+          "channel_id": "UCgdZZWMmLNT9xPaQjgDEXgg",
+          "inf_report_date_posted": "2019-12-21",
+          "inf_report_link_posted": "https://www.codeproject.com/Questions/665"
+        }
+      ]
+    },
+    {
+      "proposal_id": 19,
+      "campaign_id": 39,
+      "inf_first_name": "Rahul",
+      "inf_last_name": "Singh",
+      "inf_categories": "1,2,10,15,17,18,20,21",
+      "inf_country": "US",
+      "proposal_price": 3233,
+      "proposal_from_date": "14-Feb-20",
+      "proposal_to_date": "28-Feb-20",
+      "regions": "DZ,AR,PL,US",
+      "video_cat_id": "1,2,10",
+      "campaign_status": "New",
+      "proposal_channels": [
+        {
+          "channel_name": "youtube",
+          "channel_id": "456789",
+          "youtube_title": "Kiran Padwal",
+          "revenue_generated": 1010,
+          "new_users": 1234
+        },
+        {
+          "channel_name": "twitter",
+          "channel_id": "962771351193948162",
+          "twitter_screen_name": "kiran_padwal786",
+          "revenue_generated": 2001,
+          "new_users": 2235
+        },
+        {
+          "channel_name": "instagram",
+          "channel_id": "4865256875",
+          "insta_username": "spidey_try",
+          "revenue_generated": 1400,
+          "new_users": 2360
+        }
+      ],
+      "inf_reports": [
+        {
+          "channel_name": "youtube",
+          "channel_id": "UCgdZZWMmLNT9xPaQjgDEXgg",
+          "inf_report_date_posted": "2019-12-21",
+          "inf_report_link_posted": "https://www.codeproject.com/Questions/665"
+        }
+      ]
+    },
+    {
+      "proposal_id": 20,
+      "campaign_id": 40,
+      "inf_first_name": "Rahul",
+      "inf_last_name": "Singh",
+      "inf_categories": "1,2,10,15,17,18,20,21",
+      "inf_country": "US",
+      "proposal_price": 3233,
+      "proposal_from_date": "14-Feb-20",
+      "proposal_to_date": "28-Feb-20",
+      "regions": "DZ,AR,PL,US",
+      "video_cat_id": "1,2,10",
+      "campaign_status": "Queued",
+      "proposal_channels": [
+        {
+          "channel_name": "youtube",
+          "channel_id": "456789",
+          "youtube_title": "Kiran Padwal",
+          "revenue_generated": 1010,
+          "new_users": 1234
+        },
+        {
+          "channel_name": "twitter",
+          "channel_id": "962771351193948162",
+          "twitter_screen_name": "kiran_padwal786",
+          "revenue_generated": 2001,
+          "new_users": 2235
+        },
+        {
+          "channel_name": "instagram",
+          "channel_id": "4865256875",
+          "insta_username": "spidey_try",
+          "revenue_generated": 1400,
+          "new_users": 2360
+        }
+      ],
+      "inf_reports": [
+        {
+          "channel_name": "youtube",
+          "channel_id": "UCgdZZWMmLNT9xPaQjgDEXgg",
+          "inf_report_date_posted": "2019-12-21",
+          "inf_report_link_posted": "https://www.codeproject.com/Questions/665"
+        }
+      ]
+    },
+    {
+      "proposal_id": 21,
+      "campaign_id": 41,
+      "inf_first_name": "Rahul",
+      "inf_last_name": "Singh",
+      "inf_categories": "1,2,10,15,17,18,20,21",
+      "inf_country": "US",
+      "proposal_price": 3233,
+      "proposal_from_date": "14-Feb-20",
+      "proposal_to_date": "28-Feb-20",
+      "regions": "DZ,AR,PL,US",
+      "video_cat_id": "1,2,10",
+      "campaign_status": "Queued",
+      "proposal_channels": [
+        {
+          "channel_name": "youtube",
+          "channel_id": "456789",
+          "youtube_title": "Kiran Padwal",
+          "revenue_generated": 1010,
+          "new_users": 1234
+        },
+        {
+          "channel_name": "twitter",
+          "channel_id": "962771351193948162",
+          "twitter_screen_name": "kiran_padwal786",
+          "revenue_generated": 2001,
+          "new_users": 2235
+        },
+        {
+          "channel_name": "instagram",
+          "channel_id": "4865256875",
+          "insta_username": "spidey_try",
+          "revenue_generated": 1400,
+          "new_users": 2360
+        }
+      ],
+      "inf_reports": [
+        {
+          "channel_name": "youtube",
+          "channel_id": "UCgdZZWMmLNT9xPaQjgDEXgg",
+          "inf_report_date_posted": "2019-12-21",
+          "inf_report_link_posted": "https://www.codeproject.com/Questions/665"
+        }
+      ]
+    },
+      {
+          "proposal_id": 22,
+          "campaign_id": 42,
+          "inf_first_name": "Aman",
+          "inf_last_name": "Singh",
+          "inf_categories": "1,2,10,15,17,18,20,21",
+          "inf_country": "US",
+          "proposal_price": 3233,
+          "proposal_from_date": "14-Feb-20",
+          "proposal_to_date": "28-Feb-20",
+          "regions": "DZ,AR,PL,US",
+          "video_cat_id": "1,2,10",
+          "campaign_status": "Queued",
+          "proposal_channels": [
+              {
+                  "channel_name": "youtube",
+                  "channel_id": "135790",
+                  "youtube_title": "Kiran Padwal",
+                  "revenue_generated": 1010,
+                  "new_users": 1234
+              },
+              {
+                  "channel_name": "twitter",
+                  "channel_id": "962771351193948162",
+                  "twitter_screen_name": "kiran_padwal786",
+                  "revenue_generated": 2001,
+                  "new_users": 2235
+              },
+              {
+                  "channel_name": "instagram",
+                  "channel_id": "4865256875",
+                  "insta_username": "spidey_try",
+                  "revenue_generated": 1400,
+                  "new_users": 2360
+              }
+          ],
+          "inf_reports": [
+              {
+                  "channel_name": "youtube",
+                  "channel_id": "UCgdZZWMmLNT9xPaQjgDEXgg",
+                  "inf_report_date_posted": "2019-12-21",
+                  "inf_report_link_posted": "https://www.codeproject.com/Questions/665"
+              }
+          ]
+      }
+  ]
+}
         allRegions=[]
         influencerName=[]
+        influencerid={}
         print("analytics ", analytics_json['data'])
+        url_tier = base_url + 'Brand/getTierChannelDetails/' + str(session['user_id'])
+        try:
+            response_tier = requests.get(url=url_tier)
+            tier_json = response_tier.json()
+            print("tier_json are ", tier_json)
+
+
+        except Exception as e:
+            print(e)
         for item in analytics_json['data']:
             allRegions.append(item['inf_country'])
-            influencerName.append(item['inf_first_name']+item['inf_last_name'])
+            name=item['inf_first_name']+' '+item['inf_last_name']
+            influencerName.append(name)
+            for channel in item['proposal_channels']:
+                if(channel['channel_name']=='youtube'):
+
+                    influencerid[name]={
+                        'channel_id': channel['channel_id'],
+                        'tier':None,
+                        'due_action':None,
+                        'remark':None
+                    }
+                    break
+
+        # influenceridNew = list(set(influencerid))
+        print("ids", influencerid)
+        for key, value in influencerid.items():
+            print(key, value['channel_id'])
+            for item in tier_json['data']:
+                if(value['channel_id']==item['channel_id']):
+                    value['tier']=item['tier']
+                    value['due_action']=item['due_action']
+                    value['remark']=item['remark']
+                    break
+        print(influencerid)
         allRegions=list(dict.fromkeys(allRegions))
         influencerName=list(dict.fromkeys(influencerName))
         print("all",allRegions)
     except Exception as e:
         print(e)
-    allRegions.append('IN')
-    allRegions.append('DZ')
-    influencerName.append('Ashish Tyagi')
-    return render_template('analytics/dashboardAnalytics.html',campaignStatus=campaignStatus,regionCodes=regionCodes_json,analyticsData=analytics_json,allRegions=allRegions,influencerName=influencerName)
+    # allRegions.append('IN')
+    # allRegions.append('DZ')
+    # influencerName.append('Ashish Tyagi')
+    return render_template('analytics/dashboardAnalytics.html',influencerid=influencerid,currencySign=currencyIndex[session['default_currency']],campaignStatus=campaignStatus,regionCodes=regionCodes_json,analyticsData=analytics_json,allRegions=allRegions,influencerName=influencerName)
+
+
+# @connecsiApp.route('/Analytics', methods=['GET','POST'])
+# @is_logged_in
+# def analytics():
+#
+#     campaignStatus=['Active','Inactive','Queued','New','Finished']
+#     url_analytics = base_url + 'Brand/getPlatformAnalysis/'+str(session['user_id'])
+#     url_regionCodes = base_url + 'Youtube/regionCodes'
+#     try:
+#         response_regionCodes = requests.get(url=url_regionCodes)
+#         regionCodes_json = response_regionCodes.json()
+#
+#         regionCodes_json['data']=regionCodes_json['data'][0:91:1]
+#         print("region codes are ", regionCodes_json, len(regionCodes_json['data']))
+#     except Exception as e:
+#         print(e)
+#
+#     try:
+#         analyticsData = requests.get(url=url_analytics)
+#         analytics_json = analyticsData.json()
+#         allRegions=[]
+#         influencerName=[]
+#         print("analytics ", analytics_json['data'])
+#         for item in analytics_json['data']:
+#             allRegions.append(item['inf_country'])
+#             influencerName.append(item['inf_first_name']+item['inf_last_name'])
+#         allRegions=list(dict.fromkeys(allRegions))
+#         influencerName=list(dict.fromkeys(influencerName))
+#         print("all",allRegions)
+#     except Exception as e:
+#         print(e)
+#     allRegions.append('IN')
+#     allRegions.append('DZ')
+#     influencerName.append('Ashish Tyagi')
+#     return render_template('analytics/dashboardAnalytics.html',campaignStatus=campaignStatus,regionCodes=regionCodes_json,analyticsData=analytics_json,allRegions=allRegions,influencerName=influencerName)
+
+
+
+
 
 
 # @connecsiApp.route('/getMessageDetailsFull/<string:message_id>',methods = ['GET'])

@@ -1,7 +1,6 @@
 {% extends 'admin_layout.html' %}
 {{ super() }}
 {% block body %}
-{{influencerName}}
 <style>
 #chartdiv {
   width: 100%;
@@ -9,9 +8,18 @@
 }
 
 </style>
-
 <h3>Analytics</h3>
-<div class="container">
+<!--{{session['default_currency']}}-->
+<ul class="nav nav-tabs">
+  <li class="nav-item" id="graphs">
+    <a id="graphs-show-link" class="nav-link  active-tab" href="#">Graphs</a>
+  </li>
+  <li class="nav-item" id="tables">
+    <a id="tables-show-link" class="nav-link" href="#">Tables</a>
+  </li>
+</ul>
+
+<div class="container" id="graphs-show">
     <div class="row">
         <div class="col-sm-3" style="padding:0;">
             <ul id="influencerName" class="dropdown-menu inner show" style="position:initial;">
@@ -105,7 +113,103 @@
     </div>
 
 </div>
-
+<div id="tables-show">
+    <table id="myTable">
+  <tr>
+   <!--When a header is clicked, run the sortTable function, with a parameter, 0 for sorting by names, 1 for sorting by country:-->
+    <th onclick="sortTable(this,0)">
+        <div class="df">
+            <div class="table-text">Partners</div>
+            <div class="table-icon">
+                <i class="fas fa-sort show"></i>
+                <i class="fas fa-caret-up hide"></i>
+                <i class="fas fa-caret-down hide"></i>
+            </div>
+        </div>
+    </th>
+    <th onclick="sortTable(this,1)">
+        <div class="df">
+            <div class="table-text">Region</div>
+            <div class="table-icon">
+                <i class="fas fa-sort show"></i>
+                <i class="fas fa-caret-up hide"></i>
+                <i class="fas fa-caret-down hide"></i>
+            </div>
+        </div>
+    </th>
+    <th onclick="sortTable(this,2)">
+        <div class="df">
+            <div class="table-text">Avg. Cost</div>
+            <div class="table-icon">
+                <i class="fas fa-sort show"></i>
+                <i class="fas fa-caret-up hide"></i>
+                <i class="fas fa-caret-down hide"></i>
+            </div>
+        </div>
+    </th>
+    <th onclick="sortTable(this,3)">
+        <div class="df">
+            <div class="table-text">Avg. Revenue</div>
+            <div class="table-icon">
+                <i class="fas fa-sort show"></i>
+                <i class="fas fa-caret-up hide"></i>
+                <i class="fas fa-caret-down hide"></i>
+            </div>
+        </div>
+    </th>
+    <th onclick="sortTable(this,4)">
+        <div class="df">
+            <div class="table-text">ROI</div>
+            <div class="table-icon">
+                <i class="fas fa-sort show"></i>
+                <i class="fas fa-caret-up hide"></i>
+                <i class="fas fa-caret-down hide"></i>
+            </div>
+        </div>
+    </th>
+    <th onclick="sortTable(this,5)">
+        <div class="df">
+            <div class="table-text">New Users</div>
+            <div class="table-icon">
+                <i class="fas fa-sort show"></i>
+                <i class="fas fa-caret-up hide"></i>
+                <i class="fas fa-caret-down hide"></i>
+            </div>
+        </div>
+    </th>
+    <th onclick="sortTable(this,6)">
+        <div class="df">
+            <div class="table-text">Tier</div>
+            <div class="table-icon">
+                <i class="fas fa-sort show"></i>
+                <i class="fas fa-caret-up hide"></i>
+                <i class="fas fa-caret-down hide"></i>
+            </div>
+        </div>
+    </th>
+    <th onclick="sortTable(this,7)">
+        <div class="df">
+            <div class="table-text">Due Action</div>
+            <div class="table-icon">
+                <i class="fas fa-sort show"></i>
+                <i class="fas fa-caret-up hide"></i>
+                <i class="fas fa-caret-down hide"></i>
+            </div>
+        </div>
+    </th>
+    <th>
+        <div class="df">
+            <div class="table-text">Remarks</div>
+<!--            <div class="table-icon">-->
+<!--                <i class="fas fa-sort show"></i>-->
+<!--                <i class="fas fa-caret-up hide"></i>-->
+<!--                <i class="fas fa-caret-down hide"></i>-->
+<!--            </div>-->
+        </div>
+    </th>
+  </tr>
+</table>
+</div>
 <!-- Resources -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"></script>
 <script src="https://www.amcharts.com/lib/4/core.js"></script>
@@ -115,11 +219,300 @@
 <!-- Chart code -->
 <script>
 
+function checkSwitch(v,n){
+    var first=v.children[0].children[1].children[0].classList.contains('show');
+    var second=v.children[0].children[1].children[1].classList.contains('show');
+    var third=v.children[0].children[1].children[2].classList.contains('show');
+    var childs=$('#myTable')[0].children[0].children[0].children;
+    for(var i=0;i<childs.length-1;i++){
+        if(n!=i){
+            if(childs[i].children[0].children[1].children[1].classList.contains('show')){
+                childs[i].children[0].children[1].children[1].classList.remove('show');
+                childs[i].children[0].children[1].children[1].classList.add('hide');
+                childs[i].children[0].children[1].children[2].classList.remove('hide');
+                childs[i].children[0].children[1].children[2].classList.add('show');
+                childs[i].children[0].children[1].children[0].classList.remove('hide');
+                childs[i].children[0].children[1].children[0].classList.add('show');
+            }
+            if(childs[i].children[0].children[1].children[2].classList.contains('show')){
+                childs[i].children[0].children[1].children[2].classList.remove('show');
+                childs[i].children[0].children[1].children[2].classList.add('hide');
+                childs[i].children[0].children[1].children[0].classList.remove('hide');
+                childs[i].children[0].children[1].children[0].classList.add('show');
+            }
+        }
+
+    }
+    if(first){
+        v.children[0].children[1].children[0].classList.remove('show');
+        v.children[0].children[1].children[0].classList.add('hide');
+        v.children[0].children[1].children[1].classList.remove('hide');
+        v.children[0].children[1].children[1].classList.add('show');
+    }
+
+    if(second){
+        v.children[0].children[1].children[1].classList.remove('show');
+        v.children[0].children[1].children[1].classList.add('hide');
+        v.children[0].children[1].children[2].classList.remove('hide');
+        v.children[0].children[1].children[2].classList.add('show');
+    }
+
+    if(third){
+        v.children[0].children[1].children[2].classList.remove('show');
+        v.children[0].children[1].children[2].classList.add('hide');
+        v.children[0].children[1].children[1].classList.remove('hide');
+        v.children[0].children[1].children[1].classList.add('show');
+    }
+}
+function sortTable(v,n) {
+  checkSwitch(v,n);
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("myTable");
+  switching = true;
+  //Set the sorting direction to ascending:
+  dir = "asc";
+  var icons=v.children[0].children[1].children;
+  /*Make a loop that will continue until
+  no switching has been done:*/
+  while (switching) {
+    //start by saying: no switching is done:
+    switching = false;
+    rows = table.rows;
+    /*Loop through all table rows (except the
+    first, which contains table headers):*/
+    for (i = 1; i < (rows.length - 1); i++) {
+      //start by saying there should be no switching:
+      shouldSwitch = false;
+      /*Get the two elements you want to compare,
+      one from current row and one from the next:*/
+      x = rows[i].getElementsByTagName("TD")[n];
+      y = rows[i + 1].getElementsByTagName("TD")[n];
+      /*check if the two rows should switch place,
+      based on the direction, asc or desc:*/
+      if(n==5  || n==4){
+        if (dir == "asc") {
+        if (parseInt(x.innerHTML.toLowerCase()) > parseInt(y.innerHTML.toLowerCase())) {
+          //if so, mark as a switch and break the loop:
+          shouldSwitch= true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (parseInt(x.innerHTML.toLowerCase()) < parseInt(y.innerHTML.toLowerCase())) {
+          //if so, mark as a switch and break the loop:
+          shouldSwitch = true;
+          break;
+        }
+      }
+      }else if(n==2 || n==3){
+        x1=x.innerHTML;
+        y1=y.innerHTML;
+        if (dir == "asc") {
+        if (parseInt(x1.substring(3,)) > parseInt(y1.substring(3,))) {
+          //if so, mark as a switch and break the loop:
+          shouldSwitch= true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (parseInt(x1.substring(3,)) < parseInt(y1.substring(3,))) {
+          //if so, mark as a switch and break the loop:
+          shouldSwitch = true;
+          break;
+        }
+      }
+      }else{
+        if (dir == "asc") {
+        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+          //if so, mark as a switch and break the loop:
+          shouldSwitch= true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+          //if so, mark as a switch and break the loop:
+          shouldSwitch = true;
+          break;
+        }
+      }
+      }
+
+    }
+    if (shouldSwitch) {
+      /*If a switch has been marked, make the switch
+      and mark that a switch has been done:*/
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      //Each time a switch is done, increase this count by 1:
+      switchcount ++;
+    } else {
+      /*If no switching has been done AND the direction is "asc",
+      set the direction to "desc" and run the while loop again.*/
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
 </script>
 
 <script type="text/javascript">
+$('#tables-show').hide();
+$('#graphs').click(function(){
+    $('#graphs-show').show();
+    $('#tables-show').hide();
+    $('#graphs-show-link').addClass('active-tab')
+    $('#tables-show-link').removeClass('active-tab')
+});
+$('#tables').click(function(){
+    $('#graphs-show').hide();
+    $('#tables-show').show();
+    $('#graphs-show-link').removeClass('active-tab')
+    $('#tables-show-link').addClass('active-tab')
+});
+function makeTable(data){
+    var influencerList={{influencerName | tojson | safe}};
+    console.log("yes yes",data,influencerList);
+    partnerList=[]
+    for(var i =0;i<influencerList.length;i++){
+        d={
+            partner:influencerList[i],
+            region:'',
+            avgCost:0,
+            avgRevenue:0,
+            roi:0,
+            newUsers:0,
+            tier:null,
+            dueAction:null,
+            count:0,
+            remarks:null
+
+        }
+        partnerList.push(d);
+    }
+    for(var i =0;i<partnerList.length;i++){
+        for(var j=0;j<data.length;j++){
+            if(data[j]['inf_first_name']+' '+data[j]['inf_last_name']==partnerList[i].partner){
+                partnerList[i]['avgCost']+=data[j]['proposal_price'];
+                partnerList[i]['region']=data[j]['inf_country'];
+                partnerList[i]['count']+=1;
+                for(var r=0;r<data[j]['proposal_channels'].length;r++){
+                    partnerList[i]['avgRevenue']+=data[j]['proposal_channels'][r]['revenue_generated'];
+                    partnerList[i]['newUsers']+=data[j]['proposal_channels'][r]['new_users'];
+                }
+            }
+
+        }
+
+    }
+    for(var i=0;i<partnerList.length;i++){
+        avgC=partnerList[i]['avgCost'];
+        avgR=partnerList[i]['avgRevenue'];
+        partnerList[i]['avgCost']='{{currencySign}} '+ partnerList[i]['avgCost']/partnerList[i]['count'];
+        partnerList[i]['avgRevenue']='{{currencySign}} '+partnerList[i]['avgRevenue']/partnerList[i]['count'];
+        partnerList[i]['roi']=(avgR/avgC).toFixed(2);
+    }
+    console.log("final",partnerList);
+    var influencerListData={{influencerid | tojson | safe }}
+    console.log(influencerListData);
+    var html='';
+    for(var i=0;i<partnerList.length;i++){
+        var n=partnerList[i]['partner'];
+        console.log("i",partnerList[i],influencerListData[n]);
+
+
+        var remark=influencerListData[n]['remark'];
+        if(remark==null){
+            remark='';
+        }
+        var tier;
+        if(influencerListData[n]['tier']==null){
+            tier='<select class="form-control">';
+            tier+='<option value="" selected>NA</option>';
+            for(var m=1;m<=3;m++){
+                    tier+='<option value="'+m+'">Tier'+m+'</option>';
+            }
+            tier+='</selected>';
+
+        }else{
+            tier='<select class="form-control">';
+            for(var m=1;m<=3;m++){
+                if(influencerListData[n]['tier']==m){
+                    tier+='<option selected value="'+m+'">Tier'+m+'</option>';
+                }else{
+                    tier+='<option value="'+m+'">Tier'+m+'</option>';
+                }
+            }
+            tier+='</selected>';
+        }
+        var due;
+        var action=['','Continue','Renegotiate','Terminate'];
+        if(influencerListData[n]['due_action']==null){
+            due='<select class="form-control">';
+            due+='<option value="" selected>NA</option>';
+            for(var m=1;m<=3;m++){
+                    due+='<option value="'+action[m]+'">'+action[m]+'</option>';
+            }
+            due+='</selected>';
+        }else{
+            due='<select class="form-control">';
+            for(var m=1;m<=3;m++){
+                if(influencerListData[n]['due_action']==action[m]){
+                    due+='<option selected value="'+action[m]+'">'+action[m]+'</option>';
+                }else{
+                    due+='<option value="'+action[m]+'">'+action[m]+'</option>';
+                }
+            }
+            due+='</selected>';
+        }
+
+        html+='<tr id="'+influencerListData[partnerList[i]['partner']]['channel_id']+'"><td>'+partnerList[i]['partner']+'</td><td>'+partnerList[i]['region']+'</td><td>'+partnerList[i]['avgCost']+'</td><td>'+partnerList[i]['avgRevenue']+'</td><td>'+partnerList[i]['roi']+'</td><td>'+partnerList[i]['newUsers']+'</td><td>'+tier+'</td><td>'+due+'</td><td><input class="form-control" type="text" value="'+remark+'"></td><td><i SSdata-toggle="tooltip" title="Save"class="fa fa-check myTablecheck" aria-hidden="true" onclick="saveTierInfo(this)"></i></td></tr>';
+    }
+    document.getElementById('myTable').innerHTML+=html;
+
+
+<!--<div class="form-group"><select class="form-control" name="tier" id="campaign" onchange="renderAllGraph()" multiple>-->
+<!--                    <option id="activeCampaign" value="Active" selected>Active</option>-->
+<!--                    <option id="finishedCampaign"  value="Finished" selected>Finished</option>-->
+<!--                    <option id="inactiveCampaign"  value="Inactive" selected>Inactive</option>-->
+<!--                    <option id="newCampaign" value="New" selected>New</option>-->
+<!--                    <option id="queuedCampaign" value="Queued" selected>Queued</option>-->
+<!--                </select>-->
+<!--            </div>-->
+}
 var calenderSDate='';
 var calenderEDate='';
+function saveTierInfo(x){
+    console.log(x);
+    console.log(x.parentNode.parentNode.children);
+    var channel_id=x.parentNode.parentNode.id;
+    var remark=x.parentNode.parentNode.children[8].children[0].value;
+    var due_action=x.parentNode.parentNode.children[7].children[0].children[0].value;
+    var tier=x.parentNode.parentNode.children[6].children[0].children[0].value;
+    console.log(channel_id,tier,due_action,remark);
+    if(tier==""||remark==""||due_action==""){
+        return;
+    }
+        document.getElementById('loader-div').style.display="block";
+
+    $.ajax({
+        type: "POST",
+        url: '/saveTierInfo',
+        contentType: 'application/json',
+        data:JSON.stringify({'data':{
+            'channel_id':channel_id,
+            'tier':tier,
+            'due_action':due_action,
+            'remark':remark
+        }}),
+        dataType: "json",
+        success: function (data) {
+            console.log("save",data);
+                document.getElementById('loader-div').style.display="none";
+
+        }
+    });
+
+}
 $(function() {
 
     var start = moment().subtract(30, 'days');
@@ -152,13 +545,15 @@ $('#campaignDate').on('DOMSubtreeModified',function(){
   renderAllGraph();
 })
 var analyticsData={{analyticsData | tojson | safe}};
+console.log("analystics data",analyticsData);
+makeTable(analyticsData['data']);
 function filtering(data,countryArray,campaignArray,influencerArray){
     newData=[];
     for(var i=0;i<data.length;i++){
         // anyone of influencerArray name should be there
         firstName=data[i]['inf_first_name'];
         lastName=data[i]['inf_last_name'];
-        name=firstName+lastName;
+        name=firstName+' '+lastName;
         if(influencerArray.indexOf(name)>-1){
             console.log("is there");
             newData.push(data[i]);
@@ -275,8 +670,8 @@ function graph2(data,countryArray){
         new_users.push(country[i]['newUsers'])
 
     }
-    new_users[0]=2000;
-    new_users[1]=5000;
+<!--    new_users[0]=2000;-->
+<!--    new_users[1]=5000;-->
     console.log(new_users);
 
 
@@ -446,10 +841,10 @@ function graph4(data,campaignArray){
         campaign[data[i]['campaign_status']]+=1;
     }
     console.log("campaign status",campaign);
-    campaign['Active']=6;
-    campaign['Finished']=2;
-    campaign['Inactive']=5;
-    campaign['New']=10;
+<!--    campaign['Active']=6;-->
+<!--    campaign['Finished']=2;-->
+<!--    campaign['Inactive']=5;-->
+<!--    campaign['New']=10;-->
     finalArray=[];
     for(var i in campaign ){
         d={
