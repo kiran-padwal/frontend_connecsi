@@ -20,6 +20,10 @@
 </ul>
 
 <div class="container" id="graphs-show">
+    {% if analyticsData['data'] | length == 0 %}
+        <h4 style="text-align:center;margin-top:2rem;">No data Available</h4>
+    {% else %}
+
     <div class="row">
         <div class="col-sm-3" style="padding:0;">
             <ul id="influencerName" class="dropdown-menu inner show" style="position:initial;">
@@ -111,10 +115,17 @@
         </div>
 
     </div>
+    {% endif %}
+
+
 
 </div>
 <div id="tables-show">
-    <table id="myTable">
+    {% if analyticsData['data'] | length == 0 %}
+
+        <h4 style="text-align:center;margin-top:2rem;">No data Available</h4>
+    {% else %}
+        <table id="myTable">
   <tr>
    <!--When a header is clicked, run the sortTable function, with a parameter, 0 for sorting by names, 1 for sorting by country:-->
     <th onclick="sortTable(this,0)">
@@ -209,6 +220,8 @@
     </th>
   </tr>
 </table>
+    {% endif %}
+
 </div>
 <!-- Resources -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"></script>
@@ -372,6 +385,9 @@ $('#tables').click(function(){
 function makeTable(data){
     var influencerList={{influencerName | tojson | safe}};
     console.log("yes yes",data,influencerList);
+    if(analyticsData['data'].length==0){
+        return;
+    }
     partnerList=[]
     for(var i =0;i<influencerList.length;i++){
         d={
@@ -602,6 +618,9 @@ function renderAllGraph(){
     var month=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
     var data=analyticsData;
+    if(analyticsData['data'].length==0){
+        return;
+    }
     var country=document.getElementById('country').children;
     var countryFilter=[];
     for(var i=0;i<country.length;i++){
@@ -627,7 +646,7 @@ function renderAllGraph(){
             influencerFilter.push(influencerName[i].innerText);
         }
     }
-    console.log("data3",influencerFilter);
+    console.log("data3",influencerFilter,data['data']);
     data=filtering(data['data'],countryFilter,campaignFilter,influencerFilter);
     console.log("returend data",data);
     graph1(data,countryFilter);
@@ -694,7 +713,7 @@ function graph2(data,countryArray){
 
                 display:false,
                 ticks: {
-					reverse: false,
+               reverse: false,
                       max: topValue
                     }
             }]
