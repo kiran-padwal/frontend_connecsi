@@ -1,0 +1,304 @@
+
+{% extends 'admin_layout.html' %}
+{{ super() }}
+{% block body %}
+<div class="row">
+    <div class="col-sm-12">
+        <div class="content-header">Dashboard
+        <div class="btn-wrapper">
+            <!-- Single Button Dropdown -->
+            <div class="btn-group mr-1 mb-1">
+                <div class="input-group-btn">
+                    <button type="button" class="btn btn-primary dropdown-toggle gradient-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Search
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="/searchInfluencers">Influencers</a>
+                        <div role="separator" class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Classified Ads</a>
+                    </div>
+                </div>
+            </div>
+            <div class="btn-group mr-1 mb-1">
+                <div class="input-group-btn">
+                    <button type="button" class="btn btn-primary dropdown-toggle border-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Create
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="/searchInfluencers">Campaigns</a>
+                        <div role="separator" class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Classified Ads</a>
+                    </div>
+                </div>
+              </div>
+        </div>
+
+        </div>
+        <p class="content-sub-header"></p>
+    </div>
+</div>
+
+
+        <div class="row">
+            <div class="col-xl-12 col-lg-12  col-md-12 col-12">
+                <div class="row match-height">
+                    <div class="col-xl-3 col-lg-6 col-md-6 col-12">
+                        <div class="card bg-color1 tail">
+                            <div class="card-body">
+                                <div class="px-3 py-3">
+                                    <div class="media quotes">
+                                        <div class="quote-item" style="display: none">
+                                            <div class="media-body white text-left">
+                                                <h3>5</h3>
+                                                <span>Active Campaigns</span>
+                                            </div>
+                                            <div class="media-right align-self-center">
+                                                <i class="fa fa-bullseye white font-large-2"></i>
+                                            </div>
+                                        </div>
+                                        <div class="quote-item" style="display: none">
+                                            <div class="media-body white text-left">
+                                                <h3>10</h3>
+                                                <span>New Campaigns</span>
+                                            </div>
+                                            <div class="media-right align-self-center">
+                                                <i class="fa fa-bullseye white font-large-2"></i>
+                                            </div>
+                                        </div>
+                                        <div class="quote-item" style="display: none">
+                                            <div class="media-body white text-left">
+                                                <h3>4</h3>
+                                                <span>Completed Campaigns</span>
+                                            </div>
+                                            <div class="media-right align-self-center">
+                                                <i class="fa fa-bullseye white font-large-2"></i>
+                                            </div>
+<!--&gt;>>>>>> 51c25d079bf4d2b362608a8408d566781ced9070-->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-6 col-md-6 col-12">
+
+                        <div class="card bg-color2 tail">
+                            <div class="card-body">
+                                <div class="px-3 py-3">
+                                    <div class="media quotes">
+                                        <div class="quote-item" style="display: none">
+                                            <div class="media-body white text-left">
+                                                <h3>25</h3>
+                                                <span>Active Partners</span>
+                                            </div>
+                                            <div class="media-right align-self-center">
+                                                <i class="fa fa-handshake-o white font-large-2"></i>
+                                            </div>
+                                        </div>
+                                        <div class="quote-item" style="display: none">
+                                            <div class="media-body white text-left">
+                                                <h3>50</h3>
+                                                <span>Favorites</span>
+                                            </div>
+                                            <div class="media-right align-self-center">
+                                                <i class="fa fa-star white font-large-2"></i>
+                                            </div>
+<!--&gt;>>>>>> 51c25d079bf4d2b362608a8408d566781ced9070-->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-6 col-md-6 col-12">
+
+                        <div class="card bg-color3 tail">
+                            <div class="card-body">
+                                <div class="px-3 py-3">
+                                    <div class="media quotes">
+                                        <div class="quote-item" style="display: none">
+                                            <div class="media-body white text-left">
+                                                <h3>$20 000</h3>
+                                                <span>Spent this Month</span>
+                                            </div>
+                                            <div class="media-right align-self-center">
+                                                <i class="fa fa-dollar white font-large-2"></i>
+                                            </div>
+                                        </div>
+                                        <div class="quote-item" style="display: none">
+                                            <div class="media-body white text-left">
+                                                <h3>$4 000</h3>
+                                                <span>Budget in Hand</span>
+                                            </div>
+                                            <div class="media-right align-self-center">
+                                                <i class="fa fa-usd white font-large-2"></i>
+                                            </div>
+                                        </div>
+                                        <div class="quote-item" style="display: none">
+                                            <div class="media-body white text-left">
+                                                <h3>$25 000</h3>
+                                                <span>Total Budget</span>
+                                            </div>
+                                            <div class="media-right align-self-center">
+                                                <i class="fa fa-usd white font-large-2"></i>
+                                            </div>
+<!--&gt;>>>>>> 51c25d079bf4d2b362608a8408d566781ced9070-->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-6 col-md-6 col-12">
+
+                        <div class="card bg-color4 tail">
+                            <div class="card-body">
+                                <div class="px-3 py-3">
+                                    <div class="media quotes">
+                                        <div class="quote-item" style="display: none">
+                                            <div class="media-body white text-left">
+                                                <h3>$20 000</h3>
+                                                <span>Revenue</span>
+                                            </div>
+                                            <div class="media-right align-self-center">
+                                                <i class="fa fa-money white font-large-2"></i>
+                                            </div>
+                                        </div>
+                                        <div class="quote-item" style="display: none">
+                                            <div class="media-body white text-left">
+                                                <h3>4000</h3>
+                                                <span>New Users</span>
+                                            </div>
+                                            <div class="media-right align-self-center">
+                                                <i class="fa fa-user-plus white font-large-2"></i>
+                                            </div>
+                                        </div>
+                                        <div class="quote-item" style="display: none">
+                                            <div class="media-body white text-left">
+                                                <h3>5 000</h3>
+                                                <span>New Followers</span>
+                                            </div>
+                                            <div class="media-right align-self-center">
+                                                <i class="fa fa-users white font-large-2"></i>
+                                            </div>
+<!--&gt;>>>>>> 51c25d079bf4d2b362608a8408d566781ced9070-->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-6 mb-1">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Top 10 Influencers</h4>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-responsive-xl text-left table-cell-middle">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Influencers</th>
+                                        <th>Channels</th>
+                                        <th>Engagemnets</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for item in top10Inf['data'] %}
+                                    <tr>
+                                        <th scope="row">{{loop.index}}</th>
+                                        <!--<td><img class="media-object height-50 img-border gradient-summer" src="static/app-assets/img/portrait/avatars/avatar-08.png" alt="" />Pew Dew Pie</td>-->
+                                        <td><img src="{{item['channel_img']}}" class="rounded-circle img-border gradient-summer" height="42" width="42" alt="Card image">{{item['title']}}</td>
+                                        <td>
+                                            <a href="#" class="fa fa-youtube-square red"></a>
+                                        {% if item['facebook_url'] %}
+                                        <a href="#" class="fa fa-facebook-square"></a>
+                                        {% endif %}
+                                        {% if item['twitter_url'] %}
+                                        <a href="#" class="fa fa-twitter-square"></a>
+                                        {% endif %}
+                                        {% if item['insta_url'] %}
+                                        <a href="#" class="fa fa-instagram" style="color:#9E57DD;"></a>
+                                        {% endif %}
+                                            <!--<a href="#" class="fa fa-facebook-square"></a>-->
+                                            <!--<a href="#" class="fa fa-twitter-square"></a>-->
+                                            <!--<a href="#" class="fa fa-youtube-square red"></a>-->
+                                        </td>
+                                        <td class="engagement-col">
+                                            {% if item['total_videos'] %}
+                                        {% set total = (item['total_100video_likes'] + item['total_100video_comments'] + item['total_100video_shares'])%}
+                                        <!--{{ total }} <br>-->
+                                        {% set total = (total/item['total_videos'])|round|int %}
+                                        <!--{{ total }} <br>-->
+                                        {% set total = (total/item['subscriberCount_gained']) %}
+                                        {% set total = total|round(4, 'floor')*100 %}
+                                        {% set total = total|round(2, 'floor') %}
+                                        {{ total }}
+                                        {% endif %}
+                                            <div class="engagement-bar">
+                                                <div class="engagement-bar__block engagement-color--forestgreen"></div>
+                                                <div class="engagement-bar__block engagement-color--forestgreen"></div>
+                                                <div class="engagement-bar__block engagement-color--forestgreen"></div>
+                                                <div class="engagement-bar__block engagement-color--forestgreen"></div>
+                                                <div class="engagement-bar__block engagement-color--forestgreen"></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-6 mb-1">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Campaigns By Channels</h4>
+                            </div>
+                            <div class="card-body">
+
+                                <div class="donut-chart">
+                                <div id="donut-dashboard-chart" class="height-250 donut donut-chart-graph"></div>
+
+                                <div class="card-block">
+                                    <div class="row mb-3">
+                                        <div class="col-xs-12 col-sm-6 chart-item" data-name="youtube" data-class="ct3" data-value="35">
+                                            <span class="mb-1 text-muted d-block">35% - youtube</span>
+                                            <div class="progress" style="height: 5px;">
+                                                <div class="progress-bar bg-color3" role="progressbar" style="width: 35%;"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-6 chart-item" data-name="twitter" data-class="ct1" data-value="23">
+                                            <span class="mb-1 text-muted d-block">23% - twitter</span>
+                                            <div class="progress" style="height: 5px;">
+                                                <div class="progress-bar bg-color1" role="progressbar" style="width: 23%;"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-6 chart-item" data-name="instagram" data-class="ct2" data-value="28">
+                                            <span class="mb-1 text-muted d-block">28% - instagram</span>
+                                            <div class="progress" style="height: 5px;">
+                                                <div class="progress-bar bg-color2" role="progressbar" style="width: 28%;"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-6 chart-item" data-name="facebook" data-class="ct4" data-value="14">
+                                            <span class="mb-1 text-muted d-block">14% - facebook</span>
+                                            <div class="progress" style="height: 5px;">
+                                                <div class="progress-bar bg-color4" role="progressbar" style="width: 14%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+<!--&gt;>>>>>> 51c25d079bf4d2b362608a8408d566781ced9070-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+<!--&gt;>>>>>> 51c25d079bf4d2b362608a8408d566781ced9070-->
+<!--Statistics cards Ends-->
+{% endblock %}

@@ -176,8 +176,8 @@ def saveBrand():
                   "to_email_id": request.form.get('email'),
                   "date": datetime.datetime.now().strftime("%A, %d. %B %Y %I:%M%p"),
                   "subject": "Welcome To Connecsi",
-                  # "message": "Please click "+activation_link+" to activate your account"
-                  "message": "'"+email_content+"'"
+                  "message": "Please click "+activation_link+" to activate your account"
+                  # "message": "'"+email_content+"'"
                 }
                 user_id = 1
                 type = 'brand'
@@ -365,6 +365,7 @@ def login():
     if request.method=='POST':
         if 'brand' in request.form:
             url = base_url + 'User/login'
+            print(url)
             payload = request.form.to_dict()
             print(payload)
             del payload['brand']
@@ -414,6 +415,7 @@ def login():
                         print("login try",response_profile_json)
                         session['default_currency']=response_profile_json['data']['default_currency']
                         return redirect(url_for('admin'))
+                        # return redirect(url_for('profileView'))
                     else:
                         flash("You have not Activated your account, To Activate your account please click on the activation link sent to your email address", 'danger')
                         return render_template('user/login.html', title=title)
@@ -435,7 +437,77 @@ def login():
 @connecsiApp.route('/admin')
 @is_logged_in
 def admin():
-    title='Dashboard'
+    # title = 'Dashboard'
+    # top10Inf_url = base_url + 'Youtube/top10Influencers'
+    # currencyIndex = {'INR': '₹', 'USD': '$', 'EUR': '€', 'GBR': '£'}
+    # response = requests.get(top10Inf_url)
+    # # print(response.json())
+    # top10Inf = response.json()
+    # print(top10Inf)
+    # # for item in top10Inf['data']:
+    # #     # print(item)
+    # #     # print(item['channel_id'])
+    # #     total_videos_url = base_url + 'Youtube/totalVideos/'+str(item['channel_id'])
+    # #     try:
+    # #         response = requests.get(total_videos_url)
+    # #         total_videos = response.json()
+    # #         # print(total_videos)
+    # #         for item1 in total_videos['data']:
+    # #             # print(item1)
+    # #             item.update(item1)
+    # #
+    # #     except:pass
+    # #     print(item)
+    # #
+    # user_id = session['user_id']
+    # # from templates.campaign.campaign import Campaign
+    # # campaignObj = Campaign(user_id=user_id)
+    # # # campaignObj = templates.campaign.campaign.Campaign(user_id=user_id)
+    # # view_campaign_data = campaignObj.get_all_campaigns()
+    # # view_campaign_data_list = []
+    # # active_campaigns = 0
+    # # completed_campaigns = 0
+    # # new_campaigns = 0
+    # # for item in view_campaign_data['data']:
+    # #     if item['deleted'] != 'true':
+    # #         view_campaign_data_list.append(item)
+    # #     if item['campaign_status'] == 'Finished':
+    # #         completed_campaigns = completed_campaigns + 1
+    # #     if item['campaign_status'] == 'Active':
+    # #         active_campaigns = active_campaigns + 1
+    # #     if item['campaign_status'] == 'New':
+    # #         new_campaigns = new_campaigns + 1
+    # # # print(view_campaign_data_list)
+    # # for item1 in view_campaign_data_list:
+    # #     campaign_id = item1['campaign_id']
+    # #     channel_status_campaign = requests.get(url=base_url + 'Campaign/channel_status_for_campaign_by_campaign_id/' + str(campaign_id))
+    # #     # print(channel_status_campaign.json())
+    # #     channel_status_campaign_json = channel_status_campaign.json()
+    # #     try:
+    # #         item1.update({'status': channel_status_campaign_json['data'][0]['status']})
+    # #     except:
+    # #         item1.update({'status': ''})
+    # #         pass
+    # # print('final campaign list with status = ', view_campaign_data_list)
+    #
+    # try:
+    #     print("hello Ashish")
+    #     res_fav_list = requests.get(url=base_url + 'Brand/getInfluencerFavListNew/' + str(user_id))
+    #     favListJson = res_fav_list.json()
+    #     favListCount = len(favListJson['data'])
+    #     print("hello kiran")
+    #     return render_template('user/index.html',top10Inf=top10Inf)
+    # except Exception as e:
+    #     print("exception as ",e)
+    #     return "hello world"
+    #     # pass
+    #     # favListCount = 0
+    #     # return render_template('index_old.html', currencySign=currencyIndex[session['default_currency']],
+    #     #                title=title,
+    #     #                top10Inf=top10Inf, new_campaigns=new_campaigns,
+    #     #                completed_campaigns=completed_campaigns, active_campaigns=active_campaigns,
+    #     #                favListCount=0)
+    title = 'Dashboard'
     top10Inf_url = base_url + 'Youtube/top10Influencers'
     currencyIndex = {'INR': '₹', 'USD': '$', 'EUR': '€', 'GBR': '£'}
     try:
@@ -470,12 +542,12 @@ def admin():
         for item in view_campaign_data['data']:
             if item['deleted'] != 'true':
                 view_campaign_data_list.append(item)
-            if item['campaign_status']=='Finished':
-                completed_campaigns = completed_campaigns+1
-            if item['campaign_status']=='Active':
-                active_campaigns = active_campaigns+1
-            if item['campaign_status']=='New':
-                new_campaigns = new_campaigns+1
+            if item['campaign_status'] == 'Finished':
+                completed_campaigns = completed_campaigns + 1
+            if item['campaign_status'] == 'Active':
+                active_campaigns = active_campaigns + 1
+            if item['campaign_status'] == 'New':
+                new_campaigns = new_campaigns + 1
         # print(view_campaign_data_list)
         for item1 in view_campaign_data_list:
             campaign_id = item1['campaign_id']
@@ -488,19 +560,25 @@ def admin():
             except:
                 item1.update({'status': ''})
                 pass
-        print('final campaign list with status = ',view_campaign_data_list)
+        print('final campaign list with status = ', view_campaign_data_list)
 
         try:
-            res_fav_list = requests.get(url=base_url+'Brand/getInfluencerFavListNew/'+str(user_id))
+            res_fav_list = requests.get(url=base_url + 'Brand/getInfluencerFavListNew/' + str(user_id))
             favListJson = res_fav_list.json()
             favListCount = len(favListJson['data'])
         except:
             pass
             favListCount = 0
-        return render_template('index.html', currencySign=currencyIndex[session['default_currency']],title=title, top10Inf=top10Inf,new_campaigns=new_campaigns,
-                               completed_campaigns=completed_campaigns,active_campaigns=active_campaigns,favListCount=favListCount)
+        print(session['default_currency'])
+        # currencySign = currencyIndex[session['default_currency']]
+        # print()
+        return render_template('index.html', title=title,currencySign = currencyIndex[session['default_currency']],
+                               top10Inf=top10Inf, new_campaigns=new_campaigns,
+                               completed_campaigns=completed_campaigns, active_campaigns=active_campaigns,
+                               favListCount=favListCount)
     except Exception as e:
         print(e)
+
 
 @connecsiApp.route('/getTop20Influencers/<string:channel_name>',methods=['GET'])
 @is_logged_in
@@ -1445,7 +1523,7 @@ def elasticSearch():
                 print("catergory ",categoryNewList)
                 if(form_filters['channel']=='Youtube'):
 
-                    youtube_elastic_search_url = 'http://35.230.103.215:9200/connecsi_admin/youtube_channel_details/_search?' \
+                    youtube_elastic_search_url = 'http://127.0.0.1:9200/connecsi_admin/youtube_channel_details/_search?' \
                                                  'q='+titleValue+''+categoryNewList+'subscribercount_gained:['+min_lower+'+TO+'+max_upper+']' + countryString + '' \
                                                  '&sort=subscribercount_gained:' + subscribercount_gained + '' \
                                                  '&size=' + size + '&from=' + offset
@@ -1475,7 +1553,7 @@ def elasticSearch():
 
                 elif(form_filters['channel']=='Twitter'):
                     print("hellohifd")
-                    youtube_elastic_search_url = 'http://35.230.103.215:9200/twitter_channel_details_index/twitter_channel_details/_search?' \
+                    youtube_elastic_search_url = 'http://127.0.0.1:9200/twitter_channel_details_index/twitter_channel_details/_search?' \
                                                  'q=' + titleValue + 'no_of_followers:[' + min_lower + '+TO+' + max_upper + ']' + countryString + '' \
                                                  '&sort=no_of_followers:' + subscribercount_gained + '' \
                                                  '&size=' + size + '&from=' + offset
@@ -1529,7 +1607,7 @@ def elasticSearch():
                             pass
 
                 else:
-                    youtube_elastic_search_url ='http://35.230.103.215:9200/insta_channel_details_index/insta_channel_details/_search?'\
+                    youtube_elastic_search_url ='http://127.0.0.1:9200/insta_channel_details_index/insta_channel_details/_search?'\
                                                 'q='+titleValue+'no_of_followers:['+min_lower+'+TO+'+max_upper+']' + countryString + '' \
                                                 '&sort=no_of_followers:' + subscribercount_gained + '' \
                      '&size=' + size + '&from=' + offset
@@ -1624,7 +1702,7 @@ def elasticSearch():
         size="20"
         offset = "0"
         try:
-            youtube_elastic_search_url = 'http://35.230.103.215:9200/connecsi_admin/_search?' \
+            youtube_elastic_search_url = 'http://127.0.0.1:9200/connecsi_admin/_search?' \
                              '&sort=subscribercount_gained:'+subscribercount_gained+'' \
                              '&size='+size+'&from='+offset
             print(youtube_elastic_search_url)
