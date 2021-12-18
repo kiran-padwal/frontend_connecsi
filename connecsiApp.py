@@ -662,11 +662,13 @@ def editProfile():
     title='Edit Profile'
     type = session['type']
     user_id = session['user_id']
+    print(user_id)
     if type == 'brand':
         url_regionCodes = base_url + 'Youtube/regionCodes'
         regionCodes_json = ''
         response_regionCodes = requests.get(url=url_regionCodes)
         regionCodes_json = response_regionCodes.json()
+        print(regionCodes_json)
         url = base_url + 'Brand/'+str(user_id)
         try:
             response = requests.get(url)
